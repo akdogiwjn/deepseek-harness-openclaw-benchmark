@@ -149,9 +149,33 @@ See `results/W8_REPORT.md` and `results/w8-code-mode-summary.json`.
 `scripts/run-openclaw-minimal.sh` still defaults to `--code-mode direct` through
 `OPENCLAW_CODE_MODE`; W8 overrides it to `code` only for the Code Mode condition.
 
+## W9 DSH session state semantics
+
+W9 is a DSH white-box mechanism suite with three independent deterministic
+cases: a real hard crash followed by `ctx.agents.resume()` repair, a live Session
+prefix fork with an open-turn negative case, and keyless `llm-replay` of a
+normally completed session. See `results/W9_REPORT.md` and
+`results/w9-session-summary.json`.
+
+The Python sdk-minimal carrier creates rather than cold-resumes a Session when a
+new runtime receives `session/prompt`, so W9-A deliberately invokes the official
+programmatic resume API after creating the crash through sdk-minimal.
+
+## W10 DSH filesystem capability seam
+
+W10 swaps `ctx.fs` between `fs-local` and `fs-sandbox` in an A/B/A-prime
+sequence while retaining native `tool-fs` and the same deterministic call
+script. The sandbox variant permits the inside edit and rejects the sibling-path
+edit with `FS_SANDBOX_DENIED`. Native mutation schemas are expected to differ by
+the sandbox escalation fields. See `results/W10_REPORT.md` and
+`results/w10-fs-seam-summary.json`.
+
+W9 and W10 complement the cross-runtime workloads as DSH white-box mechanism
+case studies. They must not be interpreted as DSH-versus-OpenClaw rankings.
+
 ## Frozen evidence
 
-The redacted minimal raw inputs for deterministic W4-W8 are committed under
+The redacted minimal raw inputs for deterministic W4-W10 are committed under
 `evidence/`. They include request logs, process records, case metadata, required
 workspace outputs, and selected structured trace events. Verify their SHA256
 manifest and rebuild every committed summary with:

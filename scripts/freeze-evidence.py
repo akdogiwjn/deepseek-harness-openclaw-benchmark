@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze the minimal, redacted input closure for deterministic W4-W8 summaries."""
+"""Freeze the minimal, redacted input closure for deterministic W4-W10 summaries."""
 
 from __future__ import annotations
 
@@ -42,6 +42,8 @@ GROUPS = {
         "w8-openclaw-direct-01",
         "w8-openclaw-code-01",
     ],
+    "W9": ["w9-crash-002", "w9-replay-007"],
+    "W10": ["w10-local-a-001", "w10-sandbox-b-002", "w10-local-aprime-001"],
 }
 
 TRACE_SESSION_IDS = {
@@ -160,11 +162,16 @@ def main() -> None:
             for source in sorted(source_dir.iterdir()):
                 if not source.is_file() or source.name == "server.log":
                     continue
+                if group == "W9" and source.name not in {
+                    "case.json", "crash-prefix.jsonl", "resumed-session.jsonl",
+                    "resume-observation.json", "recorded-session.jsonl", "replayed-session.jsonl",
+                }:
+                    continue
                 target = target_dir / source.name
                 if source.suffix == ".json":
                     copy_json(source, target, root)
                 elif source.suffix == ".jsonl":
-                    copy_jsonl(source, target, root, compact_w6=group == "W6")
+                    copy_jsonl(source, target, root, compact_w6=group == "W6" or (group == "W10" and source.name == "requests.jsonl"))
             session_id = TRACE_SESSION_IDS.get(name)
             if session_id:
                 freeze_trace(root, session_id, target_dir / "dsh.trace.jsonl")
@@ -175,6 +182,18 @@ def main() -> None:
                 target = workspace_root / name
                 target.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(root / "workspaces" / name / "w8.log", target / "w8.log")
+        if group == "W9":
+            copy_json(root / "results" / "w9-fork-001.json", group_root / "w9-fork-001.json", root)
+        if group == "W10":
+            for name in names:
+                workspace = root / "workspaces" / name
+                state = {
+                    "inside": (workspace / "workspace" / "inside.txt").read_text(encoding="utf-8").strip(),
+                    "outside": (workspace / "outside" / "outside.txt").read_text(encoding="utf-8").strip(),
+                }
+                (group_root / "results" / name / "workspace-state.json").write_text(
+                    json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+                )
 
     revisions: dict[str, str] = {}
     for line in (root / "configs" / "revisions.env").read_text(encoding="utf-8").splitlines():
@@ -183,7 +202,7 @@ def main() -> None:
             revisions[key] = value
     manifest = {
         "format_version": 1,
-        "scope": "minimal redacted input closure for deterministic W4-W8 summaries",
+        "scope": "minimal redacted input closure for deterministic W4-W10 summaries",
         "source_revisions": revisions,
         "redactions": [
             "benchmark absolute root -> $BENCH_ROOT",

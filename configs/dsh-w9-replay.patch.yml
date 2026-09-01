@@ -1,0 +1,17 @@
+- id: llm-deepseek
+  disabled: true
+
+- insert:
+    - id: llm-replay
+      name: '../sources/deepseek-harness/packages/test-support/llm-replay/lib/index.js'
+      config:
+        file: !!js process.env.W9_REPLAY_FILE
+        providers:
+          - id: deepseek-official
+            name: W9 deterministic replay
+            models:
+              - id: deepseek-v4-flash
+                contextWindow: 1000000
+                defaultMaxTokens: 256000
+                reasoningEfforts: [high]
+                defaultReasoningEffort: high

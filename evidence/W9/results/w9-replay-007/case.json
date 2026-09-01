@@ -1,0 +1,145 @@
+{
+  "scenario": "W9-C keyless LLM replay",
+  "recorded_model_calls": 2,
+  "provider_requests_after_replay": 2,
+  "recorded_projection": [
+    {
+      "type": "turn/start",
+      "turn": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 1,
+      "content": [
+        {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      ]
+    },
+    {
+      "type": "tool/call",
+      "turn": 1,
+      "step": 1,
+      "name": "bash",
+      "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+    },
+    {
+      "type": "tool/result",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 2,
+      "content": [
+        {
+          "type": "text",
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      ]
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "turn/end",
+      "turn": 1
+    }
+  ],
+  "replayed_projection": [
+    {
+      "type": "turn/start",
+      "turn": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 1,
+      "content": [
+        {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      ]
+    },
+    {
+      "type": "tool/call",
+      "turn": 1,
+      "step": 1,
+      "name": "bash",
+      "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+    },
+    {
+      "type": "tool/result",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 2,
+      "content": [
+        {
+          "type": "text",
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      ]
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "turn/end",
+      "turn": 1
+    }
+  ],
+  "checks": {
+    "recording_completed": true,
+    "replay_completed": true,
+    "provider_not_contacted_during_replay": true,
+    "record_effect_once": true,
+    "replay_effect_once": true,
+    "normalized_execution_projection_equal": true
+  }
+}

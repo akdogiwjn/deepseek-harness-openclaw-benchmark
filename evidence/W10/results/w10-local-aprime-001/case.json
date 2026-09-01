@@ -1,0 +1,5 @@
+{
+  "scenario": "W10 native tool-fs provider swap",
+  "variant": "local",
+  "provider_requests": 4
+}

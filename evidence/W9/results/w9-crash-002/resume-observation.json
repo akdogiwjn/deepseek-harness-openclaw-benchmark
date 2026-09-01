@@ -1,0 +1,305 @@
+{
+  "session_id": "dsh-w9-crash-002",
+  "before_followup_event_types": [
+    "agent/inbox/spliced",
+    "turn/start",
+    "agent/inbox/spliced",
+    "step/start",
+    "user/message",
+    "session/title",
+    "request/header",
+    "request/context",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/message",
+    "tool/call",
+    "tool/result",
+    "step/end",
+    "step/start",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/message",
+    "tool/call",
+    "tool/result",
+    "step/end",
+    "turn/end",
+    "session/end-seed"
+  ],
+  "after_followup_event_types": [
+    "agent/inbox/spliced",
+    "turn/start",
+    "agent/inbox/spliced",
+    "step/start",
+    "user/message",
+    "session/title",
+    "request/header",
+    "request/context",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/message",
+    "tool/call",
+    "tool/result",
+    "step/end",
+    "step/start",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/message",
+    "tool/call",
+    "tool/result",
+    "step/end",
+    "turn/end",
+    "session/end-seed",
+    "agent/inbox/spliced",
+    "turn/start",
+    "agent/inbox/spliced",
+    "step/start",
+    "user/message",
+    "request/header",
+    "request/context",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/chunk",
+    "assistant/message",
+    "step/end",
+    "turn/end"
+  ],
+  "request_messages": [
+    [
+      {
+        "content": [
+          {
+            "type": "text",
+            "text": "Execute the deterministic provider instructions until the task completes."
+          }
+        ],
+        "source": {
+          "kind": "user"
+        },
+        "role": "user",
+        "id": "abddb3be-83eb-4447-aae3-c592c618ed2c"
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool-call",
+            "id": "callw9001",
+            "name": "bash",
+            "arguments": "{\"command\":\"printf 'W9_EFFECT_001\\\\n' >> effects.log\"}"
+          }
+        ],
+        "source": {
+          "kind": "model",
+          "provider": "deepseek-official",
+          "model": "deepseek-v4-flash"
+        },
+        "id": "23f02eca-fff7-494a-b737-f4debaef99e6"
+      },
+      {
+        "source": {
+          "kind": "tool",
+          "callId": "callw9001"
+        },
+        "content": [
+          {
+            "type": "tool-result",
+            "toolCallId": "callw9001",
+            "content": [
+              {
+                "type": "text",
+                "text": ""
+              }
+            ],
+            "isError": false
+          }
+        ],
+        "role": "user",
+        "id": "87e8318f-cf84-4aba-8112-1d18a1e63c4a"
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool-call",
+            "id": "callw9002",
+            "name": "bash",
+            "arguments": "{\"command\":\"printf 'W9_EFFECT_002_STARTED\\\\n' >> effects.log; while :; do sleep 1; done\"}"
+          }
+        ],
+        "source": {
+          "kind": "model",
+          "provider": "deepseek-official",
+          "model": "deepseek-v4-flash"
+        },
+        "id": "f9f8e776-2266-4c5b-a47c-63ab895942bb"
+      },
+      {
+        "id": "interrupted-tool-result-callw9002-25",
+        "role": "user",
+        "source": {
+          "kind": "tool",
+          "callId": "callw9002"
+        },
+        "content": [
+          {
+            "type": "tool-result",
+            "toolCallId": "callw9002",
+            "isError": true,
+            "content": [
+              {
+                "type": "text",
+                "text": "The tool call was interrupted after it was recorded, but no result was durably recorded. Its outcome is unknown. Decide whether to retry from the tool semantics: retry only if the operation is read-only or idempotent; if it may have side effects, first verify external state or ask the user. Do not retry blindly."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "content": [
+          {
+            "type": "text",
+            "text": "Continue the task. Inspect existing state before performing any side effect."
+          }
+        ],
+        "source": {
+          "kind": "user"
+        },
+        "role": "user",
+        "id": "c1d862e9-dfa8-486a-9646-72da606dbd09"
+      }
+    ]
+  ],
+  "final_messages": [
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Execute the deterministic provider instructions until the task completes."
+        }
+      ],
+      "source": {
+        "kind": "user"
+      },
+      "role": "user",
+      "id": "abddb3be-83eb-4447-aae3-c592c618ed2c"
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_EFFECT_001\\\\n' >> effects.log\"}"
+        }
+      ],
+      "source": {
+        "kind": "model",
+        "provider": "deepseek-official",
+        "model": "deepseek-v4-flash"
+      },
+      "id": "23f02eca-fff7-494a-b737-f4debaef99e6"
+    },
+    {
+      "source": {
+        "kind": "tool",
+        "callId": "callw9001"
+      },
+      "content": [
+        {
+          "type": "tool-result",
+          "toolCallId": "callw9001",
+          "content": [
+            {
+              "type": "text",
+              "text": ""
+            }
+          ],
+          "isError": false
+        }
+      ],
+      "role": "user",
+      "id": "87e8318f-cf84-4aba-8112-1d18a1e63c4a"
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "tool-call",
+          "id": "callw9002",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_EFFECT_002_STARTED\\\\n' >> effects.log; while :; do sleep 1; done\"}"
+        }
+      ],
+      "source": {
+        "kind": "model",
+        "provider": "deepseek-official",
+        "model": "deepseek-v4-flash"
+      },
+      "id": "f9f8e776-2266-4c5b-a47c-63ab895942bb"
+    },
+    {
+      "id": "interrupted-tool-result-callw9002-25",
+      "role": "user",
+      "source": {
+        "kind": "tool",
+        "callId": "callw9002"
+      },
+      "content": [
+        {
+          "type": "tool-result",
+          "toolCallId": "callw9002",
+          "isError": true,
+          "content": [
+            {
+              "type": "text",
+              "text": "The tool call was interrupted after it was recorded, but no result was durably recorded. Its outcome is unknown. Decide whether to retry from the tool semantics: retry only if the operation is read-only or idempotent; if it may have side effects, first verify external state or ask the user. Do not retry blindly."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "content": [
+        {
+          "type": "text",
+          "text": "Continue the task. Inspect existing state before performing any side effect."
+        }
+      ],
+      "source": {
+        "kind": "user"
+      },
+      "role": "user",
+      "id": "c1d862e9-dfa8-486a-9646-72da606dbd09"
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "COMPLETED_W9_CRASH_RESUME"
+        }
+      ],
+      "source": {
+        "kind": "model",
+        "provider": "w9-resume",
+        "model": "deterministic"
+      },
+      "id": "3eccecf9-4bca-48db-8594-9ceccda98363"
+    }
+  ]
+}

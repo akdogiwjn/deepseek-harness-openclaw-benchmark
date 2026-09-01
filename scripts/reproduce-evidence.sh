@@ -46,6 +46,16 @@ fi
   "$evidence/W8/results/w8-openclaw-direct-01" \
   "$evidence/W8/results/w8-openclaw-code-01" \
   "$temp_dir/w8.json"
+"$python" "$BENCH_ROOT/scripts/summarize-w9.py" \
+  "$evidence/W9/results/w9-crash-002" \
+  "$evidence/W9/w9-fork-001.json" \
+  "$evidence/W9/results/w9-replay-007" \
+  "$temp_dir/w9.json"
+"$python" "$BENCH_ROOT/scripts/summarize-w10.py" \
+  "$evidence/W10/results/w10-local-a-001" \
+  "$evidence/W10/results/w10-sandbox-b-002" \
+  "$evidence/W10/results/w10-local-aprime-001" \
+  "$temp_dir/w10.json"
 
 compare_json() {
   local generated="$1"
@@ -61,4 +71,6 @@ compare_json "$temp_dir/w5.json" "$BENCH_ROOT/results/w5-compaction-summary.json
 compare_json "$temp_dir/w6.json" "$BENCH_ROOT/results/w6-tool-failure-summary.json"
 compare_json "$temp_dir/w7.json" "$BENCH_ROOT/results/w7-long-chain-summary.json"
 compare_json "$temp_dir/w8.json" "$BENCH_ROOT/results/w8-code-mode-summary.json"
-echo "[done] frozen evidence reproduces all W4-W8 summaries"
+compare_json "$temp_dir/w9.json" "$BENCH_ROOT/results/w9-session-summary.json"
+compare_json "$temp_dir/w10.json" "$BENCH_ROOT/results/w10-fs-seam-summary.json"
+echo "[done] frozen evidence reproduces all W4-W10 summaries"

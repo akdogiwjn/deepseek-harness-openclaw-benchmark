@@ -1,0 +1,334 @@
+{
+  "task": "W9 DSH session state semantics",
+  "scope": "DSH white-box mechanism cases; not a DSH-versus-OpenClaw comparison",
+  "crash_resume": {
+    "scenario": "W9-A crash/resume",
+    "session_id": "dsh-w9-crash-002",
+    "crash_call_id": "callw9002",
+    "crash_prefix_sha256": "7fd9b95097a3ff473da4ba63fb5138d04eac1843f9aa6cf6c62917511cd940d3",
+    "final_session_sha256": "9570b8efc2abde9bed65daeb48b24fb073e9709c9e5feef9f40ff65be10149ac",
+    "event_count_before_crash": 25,
+    "event_count_after_resume": 44,
+    "synthetic_error_code": "TOOL_OUTCOME_UNKNOWN",
+    "event_order_tail": [
+      "turn/start",
+      "agent/inbox/spliced",
+      "step/start",
+      "user/message",
+      "request/header",
+      "request/context",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/message",
+      "step/end",
+      "turn/end"
+    ],
+    "effects": [
+      "W9_EFFECT_001",
+      "W9_EFFECT_002_STARTED"
+    ],
+    "resumed_model_calls": 1,
+    "resume_seed_event_types": [
+      "agent/inbox/spliced",
+      "turn/start",
+      "agent/inbox/spliced",
+      "step/start",
+      "user/message",
+      "session/title",
+      "request/header",
+      "request/context",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/message",
+      "tool/call",
+      "tool/result",
+      "step/end",
+      "step/start",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/chunk",
+      "assistant/message",
+      "tool/call",
+      "tool/result",
+      "step/end",
+      "turn/end",
+      "session/end-seed"
+    ],
+    "checks": {
+      "committed_prefix_byte_identical": true,
+      "seq_contiguous": true,
+      "session_end_seed_present": true,
+      "interrupted_turn_closed": true,
+      "synthetic_unknown_result": true,
+      "effect_001_once": true,
+      "effect_002_started_once": true,
+      "resume_completed": true,
+      "crash_history_visible_to_resumed_model": true
+    }
+  },
+  "fork": {
+    "scenario": "W9-B fork",
+    "boundary": 5,
+    "parent_header": {
+      "id": "w9-parent",
+      "cwd": "/deterministic/w9-workspace"
+    },
+    "child_header": {
+      "id": "w9-child",
+      "cwd": "/deterministic/w9-workspace",
+      "parentSession": "w9-parent",
+      "seedLength": 6
+    },
+    "parent_prefix_length": 6,
+    "child_first_live_seq": 6,
+    "open_turn_rejection": {
+      "code": "OPEN_TURN",
+      "message": "fork boundary 0 in session \"w9-open\" ends inside open turn 1"
+    },
+    "parent_messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "SEED_TURN_1"
+          }
+        ],
+        "source": {
+          "kind": "user"
+        }
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "SEED_TURN_2"
+          }
+        ],
+        "source": {
+          "kind": "user"
+        }
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "PARENT_ONLY"
+          }
+        ],
+        "source": {
+          "kind": "user"
+        }
+      }
+    ],
+    "child_messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "SEED_TURN_1"
+          }
+        ],
+        "source": {
+          "kind": "user"
+        }
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "SEED_TURN_2"
+          }
+        ],
+        "source": {
+          "kind": "user"
+        }
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "CHILD_ONLY"
+          }
+        ],
+        "source": {
+          "kind": "user"
+        }
+      }
+    ],
+    "checks": {
+      "parent_prefix_equals_child_seed": true,
+      "parent_lineage_recorded": true,
+      "seed_length_exact": true,
+      "cwd_preserved": true,
+      "end_seed_after_prefix": true,
+      "derive_messages_equal_at_boundary": true,
+      "parent_does_not_contain_child_only": true,
+      "child_does_not_contain_parent_only": true,
+      "open_turn_rejected": true
+    }
+  },
+  "llm_replay": {
+    "scenario": "W9-C keyless LLM replay",
+    "recorded_model_calls": 2,
+    "provider_requests_after_replay": 2,
+    "recorded_projection": [
+      {
+        "type": "turn/start",
+        "turn": 1
+      },
+      {
+        "type": "step/start",
+        "turn": 1,
+        "step": 1
+      },
+      {
+        "type": "assistant/message",
+        "turn": 1,
+        "step": 1,
+        "content": [
+          {
+            "type": "tool-call",
+            "id": "callw9001",
+            "name": "bash",
+            "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+          }
+        ]
+      },
+      {
+        "type": "tool/call",
+        "turn": 1,
+        "step": 1,
+        "name": "bash",
+        "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+      },
+      {
+        "type": "tool/result",
+        "turn": 1,
+        "step": 1
+      },
+      {
+        "type": "step/end",
+        "turn": 1,
+        "step": 1
+      },
+      {
+        "type": "step/start",
+        "turn": 1,
+        "step": 2
+      },
+      {
+        "type": "assistant/message",
+        "turn": 1,
+        "step": 2,
+        "content": [
+          {
+            "type": "text",
+            "text": "COMPLETED_W9_RECORDED_SESSION"
+          }
+        ]
+      },
+      {
+        "type": "step/end",
+        "turn": 1,
+        "step": 2
+      },
+      {
+        "type": "turn/end",
+        "turn": 1
+      }
+    ],
+    "replayed_projection": [
+      {
+        "type": "turn/start",
+        "turn": 1
+      },
+      {
+        "type": "step/start",
+        "turn": 1,
+        "step": 1
+      },
+      {
+        "type": "assistant/message",
+        "turn": 1,
+        "step": 1,
+        "content": [
+          {
+            "type": "tool-call",
+            "id": "callw9001",
+            "name": "bash",
+            "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+          }
+        ]
+      },
+      {
+        "type": "tool/call",
+        "turn": 1,
+        "step": 1,
+        "name": "bash",
+        "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+      },
+      {
+        "type": "tool/result",
+        "turn": 1,
+        "step": 1
+      },
+      {
+        "type": "step/end",
+        "turn": 1,
+        "step": 1
+      },
+      {
+        "type": "step/start",
+        "turn": 1,
+        "step": 2
+      },
+      {
+        "type": "assistant/message",
+        "turn": 1,
+        "step": 2,
+        "content": [
+          {
+            "type": "text",
+            "text": "COMPLETED_W9_RECORDED_SESSION"
+          }
+        ]
+      },
+      {
+        "type": "step/end",
+        "turn": 1,
+        "step": 2
+      },
+      {
+        "type": "turn/end",
+        "turn": 1
+      }
+    ],
+    "checks": {
+      "recording_completed": true,
+      "replay_completed": true,
+      "provider_not_contacted_during_replay": true,
+      "record_effect_once": true,
+      "replay_effect_once": true,
+      "normalized_execution_projection_equal": true
+    }
+  },
+  "notes": [
+    "W9-A uses sdk-minimal only to create the crash, then invokes the official ctx.agents.resume() path because the Python SDK server creates rather than cold-resumes sessions after process restart.",
+    "W9-C uses a completed session; LLM replay does not reproduce crash scheduling or external-world rollback.",
+    "Side effects execute independently in fresh recording and replay workspaces."
+  ]
+}

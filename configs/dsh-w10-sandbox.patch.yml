@@ -1,0 +1,25 @@
+- id: sandbox-policy
+  config:
+    mode: workspace-write
+    workspaceRoot: !!js process.cwd()
+
+- id: fs-local
+  disabled: true
+
+- id: persistent-bash
+  disabled: true
+
+- id: persistent-pwsh
+  disabled: true
+
+- id: str-replace-editor
+  disabled: true
+
+- insert:
+    - id: fs-sandbox
+      name: '../sources/deepseek-harness/packages/fs/fs-sandbox/lib/index.js'
+      config:
+        cwd: !!js process.cwd()
+
+    - id: tool-fs
+      name: '@deepseek-ai/dsh-tool-fs'

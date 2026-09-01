@@ -1,0 +1,107 @@
+{
+  "scenario": "W9-B fork",
+  "boundary": 5,
+  "parent_header": {
+    "id": "w9-parent",
+    "cwd": "/deterministic/w9-workspace"
+  },
+  "child_header": {
+    "id": "w9-child",
+    "cwd": "/deterministic/w9-workspace",
+    "parentSession": "w9-parent",
+    "seedLength": 6
+  },
+  "parent_prefix_length": 6,
+  "child_first_live_seq": 6,
+  "open_turn_rejection": {
+    "code": "OPEN_TURN",
+    "message": "fork boundary 0 in session \"w9-open\" ends inside open turn 1"
+  },
+  "parent_messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "SEED_TURN_1"
+        }
+      ],
+      "source": {
+        "kind": "user"
+      }
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "SEED_TURN_2"
+        }
+      ],
+      "source": {
+        "kind": "user"
+      }
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "PARENT_ONLY"
+        }
+      ],
+      "source": {
+        "kind": "user"
+      }
+    }
+  ],
+  "child_messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "SEED_TURN_1"
+        }
+      ],
+      "source": {
+        "kind": "user"
+      }
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "SEED_TURN_2"
+        }
+      ],
+      "source": {
+        "kind": "user"
+      }
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "CHILD_ONLY"
+        }
+      ],
+      "source": {
+        "kind": "user"
+      }
+    }
+  ],
+  "checks": {
+    "parent_prefix_equals_child_seed": true,
+    "parent_lineage_recorded": true,
+    "seed_length_exact": true,
+    "cwd_preserved": true,
+    "end_seed_after_prefix": true,
+    "derive_messages_equal_at_boundary": true,
+    "parent_does_not_contain_child_only": true,
+    "child_does_not_contain_parent_only": true,
+    "open_turn_rejected": true
+  }
+}

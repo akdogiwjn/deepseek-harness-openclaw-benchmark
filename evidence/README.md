@@ -1,7 +1,7 @@
 # Frozen deterministic evidence
 
 This directory contains the minimal redacted input closure used to rebuild the
-committed W4-W8 summaries. It excludes API headers, credentials, server readiness
+committed W4-W10 summaries. It excludes API headers, credentials, server readiness
 logs, and full DSH sessions. Selected DSH tool-call/result events are retained
 only where a report depends on structured trace semantics.
 
@@ -17,3 +17,8 @@ scripts/reproduce-evidence.sh
 
 `manifest.json` documents the revisions and redactions. `MANIFEST.sha256` binds
 every frozen file, including the manifest itself.
+
+W9 retains the sanitized crash prefix, repaired Session, resume observation,
+fork result, and completed recording/replay Sessions. W10 retains sanitized
+Session logs, compact request metadata, and final workspace state for all three
+A/B/A-prime conditions.

@@ -1,0 +1,17 @@
+- id: sandbox-policy
+  config:
+    mode: workspace-write
+    workspaceRoot: !!js process.cwd()
+
+- id: persistent-bash
+  disabled: true
+
+- id: persistent-pwsh
+  disabled: true
+
+- id: str-replace-editor
+  disabled: true
+
+- insert:
+    - id: tool-fs
+      name: '@deepseek-ai/dsh-tool-fs'

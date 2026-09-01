@@ -1,0 +1,209 @@
+{
+  "task": "W10 native tool-fs capability seam swap",
+  "design": "A/B/A-prime with fresh workspaces and sessions",
+  "local_a": {
+    "artifact": "results/w10-local-a-001",
+    "variant": "local",
+    "provider_requests": 4,
+    "tool_names": [
+      "edit",
+      "read",
+      "write"
+    ],
+    "tool_schema_sha256": "4d60165015b0beb67d6243ef076b091a74c04fb90448e09275f2c24ee160d703",
+    "edit_properties": [
+      "file_path",
+      "new_string",
+      "old_string",
+      "replace_all"
+    ],
+    "scripted_calls": [
+      {
+        "name": "read",
+        "arguments": {
+          "file_path": "inside.txt"
+        }
+      },
+      {
+        "name": "edit",
+        "arguments": {
+          "file_path": "inside.txt",
+          "old_string": "INSIDE_ORIGINAL",
+          "new_string": "INSIDE_CHANGED"
+        }
+      },
+      {
+        "name": "edit",
+        "arguments": {
+          "file_path": "../outside/outside.txt",
+          "old_string": "OUTSIDE_ORIGINAL",
+          "new_string": "OUTSIDE_CHANGED"
+        }
+      }
+    ],
+    "tool_results": [
+      {
+        "name": "read",
+        "arguments": "{\"file_path\":\"inside.txt\"}",
+        "is_error": false,
+        "error_code": null
+      },
+      {
+        "name": "edit",
+        "arguments": "{\"file_path\":\"inside.txt\",\"old_string\":\"INSIDE_ORIGINAL\",\"new_string\":\"INSIDE_CHANGED\"}",
+        "is_error": false,
+        "error_code": null
+      },
+      {
+        "name": "edit",
+        "arguments": "{\"file_path\":\"../outside/outside.txt\",\"old_string\":\"OUTSIDE_ORIGINAL\",\"new_string\":\"OUTSIDE_CHANGED\"}",
+        "is_error": false,
+        "error_code": null
+      }
+    ],
+    "inside": "INSIDE_CHANGED",
+    "outside": "OUTSIDE_CHANGED"
+  },
+  "sandbox_b": {
+    "artifact": "results/w10-sandbox-b-002",
+    "variant": "sandbox",
+    "provider_requests": 4,
+    "tool_names": [
+      "edit",
+      "read",
+      "write"
+    ],
+    "tool_schema_sha256": "c8aa58cd8cbcda5095c7cd95dd7bda5cea1927de374737deb777c8397df9b130",
+    "edit_properties": [
+      "file_path",
+      "justification",
+      "new_string",
+      "old_string",
+      "replace_all",
+      "sandbox_permissions"
+    ],
+    "scripted_calls": [
+      {
+        "name": "read",
+        "arguments": {
+          "file_path": "inside.txt"
+        }
+      },
+      {
+        "name": "edit",
+        "arguments": {
+          "file_path": "inside.txt",
+          "old_string": "INSIDE_ORIGINAL",
+          "new_string": "INSIDE_CHANGED"
+        }
+      },
+      {
+        "name": "edit",
+        "arguments": {
+          "file_path": "../outside/outside.txt",
+          "old_string": "OUTSIDE_ORIGINAL",
+          "new_string": "OUTSIDE_CHANGED"
+        }
+      }
+    ],
+    "tool_results": [
+      {
+        "name": "read",
+        "arguments": "{\"file_path\":\"inside.txt\"}",
+        "is_error": false,
+        "error_code": null
+      },
+      {
+        "name": "edit",
+        "arguments": "{\"file_path\":\"inside.txt\",\"old_string\":\"INSIDE_ORIGINAL\",\"new_string\":\"INSIDE_CHANGED\"}",
+        "is_error": false,
+        "error_code": null
+      },
+      {
+        "name": "edit",
+        "arguments": "{\"file_path\":\"../outside/outside.txt\",\"old_string\":\"OUTSIDE_ORIGINAL\",\"new_string\":\"OUTSIDE_CHANGED\"}",
+        "is_error": true,
+        "error_code": "FS_SANDBOX_DENIED"
+      }
+    ],
+    "inside": "INSIDE_CHANGED",
+    "outside": "OUTSIDE_ORIGINAL"
+  },
+  "local_a_prime": {
+    "artifact": "results/w10-local-aprime-001",
+    "variant": "local",
+    "provider_requests": 4,
+    "tool_names": [
+      "edit",
+      "read",
+      "write"
+    ],
+    "tool_schema_sha256": "4d60165015b0beb67d6243ef076b091a74c04fb90448e09275f2c24ee160d703",
+    "edit_properties": [
+      "file_path",
+      "new_string",
+      "old_string",
+      "replace_all"
+    ],
+    "scripted_calls": [
+      {
+        "name": "read",
+        "arguments": {
+          "file_path": "inside.txt"
+        }
+      },
+      {
+        "name": "edit",
+        "arguments": {
+          "file_path": "inside.txt",
+          "old_string": "INSIDE_ORIGINAL",
+          "new_string": "INSIDE_CHANGED"
+        }
+      },
+      {
+        "name": "edit",
+        "arguments": {
+          "file_path": "../outside/outside.txt",
+          "old_string": "OUTSIDE_ORIGINAL",
+          "new_string": "OUTSIDE_CHANGED"
+        }
+      }
+    ],
+    "tool_results": [
+      {
+        "name": "read",
+        "arguments": "{\"file_path\":\"inside.txt\"}",
+        "is_error": false,
+        "error_code": null
+      },
+      {
+        "name": "edit",
+        "arguments": "{\"file_path\":\"inside.txt\",\"old_string\":\"INSIDE_ORIGINAL\",\"new_string\":\"INSIDE_CHANGED\"}",
+        "is_error": false,
+        "error_code": null
+      },
+      {
+        "name": "edit",
+        "arguments": "{\"file_path\":\"../outside/outside.txt\",\"old_string\":\"OUTSIDE_ORIGINAL\",\"new_string\":\"OUTSIDE_CHANGED\"}",
+        "is_error": false,
+        "error_code": null
+      }
+    ],
+    "inside": "INSIDE_CHANGED",
+    "outside": "OUTSIDE_CHANGED"
+  },
+  "checks": {
+    "a_equals_a_prime": true,
+    "scripted_calls_identical": true,
+    "inside_changed_all_variants": true,
+    "outside_changed_under_local": true,
+    "outside_denied_under_sandbox": true,
+    "native_schema_delta_observed": true
+  },
+  "notes": [
+    "The agent loop, deterministic provider script, sandbox-policy mode, and tool-fs consumer package are held constant.",
+    "The mounted ctx.fs provider changes from fs-local to fs-sandbox.",
+    "Native tool-fs intentionally adds escalation fields under a confining provider, so full schema hashes are not expected to match.",
+    "The post-tool model transcript differs because the third tool result differs."
+  ]
+}

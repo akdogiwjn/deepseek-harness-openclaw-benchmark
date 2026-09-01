@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "scope": "minimal redacted input closure for deterministic W4-W8 summaries",
+  "scope": "minimal redacted input closure for deterministic W4-W10 summaries",
   "source_revisions": {
     "DSH_REPO_URL": "https://github.com/deepseek-ai/deepseek-harness.git",
     "DSH_COMMIT": "dd6322d604e00eec1ba5e0c8541159906a21094a",
