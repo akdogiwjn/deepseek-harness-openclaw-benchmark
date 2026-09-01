@@ -3,15 +3,19 @@
   "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
   "token_metrics": "not reported; payload bytes are measured exactly",
   "deepseek_harness": {
-    "artifact": "results/w7-dsh-chain-001",
+    "artifact": "evidence/W7/results/w7-dsh-chain-002",
     "runtime": "dsh",
     "runtime_completed": true,
     "process_exit_code": 0,
-    "wall_seconds": 6.491492422996089,
+    "wall_seconds": 6.163912603864446,
     "provider_requests": 21,
     "tool_calls": 20,
     "final_response": "COMPLETED_W7_LONG_TOOL_CHAIN",
-    "all_previous_markers_present": true,
+    "all_prior_markers_present_in_every_request": true,
+    "all_prior_markers_in_tool_results_in_every_request": true,
+    "final_request_contains_all_tool_result_markers": true,
+    "final_request_tool_result_count": 20,
+    "all_tool_calls_and_results_paired": true,
     "context": {
       "first_request_body_bytes": 6351,
       "final_request_body_bytes": 11271,
@@ -27,28 +31,32 @@
       "tool_schema_bytes": 4016
     },
     "phase_seconds": {
-      "process_start_to_first_request": 0.44556450843811035,
-      "first_to_final_request": 4.859118938446045,
-      "final_request_to_process_end": 1.1868090629577637
+      "process_start_to_first_request": 0.44837236404418945,
+      "first_to_final_request": 4.52873158454895,
+      "final_request_to_process_end": 1.1868085861206055
     },
     "inter_request_seconds": {
-      "total": 4.859119045,
-      "median": 0.218892849,
-      "minimum": 0.207822423,
-      "maximum": 0.710748372
+      "total": 4.528731653,
+      "median": 0.2004086555,
+      "minimum": 0.196952708,
+      "maximum": 0.708556202
     },
     "reported_tool_summary": null
   },
   "openclaw": {
-    "artifact": "results/w7-openclaw-chain-001",
+    "artifact": "evidence/W7/results/w7-openclaw-chain-002",
     "runtime": "openclaw",
     "runtime_completed": true,
     "process_exit_code": 0,
-    "wall_seconds": 6.618740533944219,
+    "wall_seconds": 6.543294460047036,
     "provider_requests": 21,
     "tool_calls": 20,
     "final_response": "COMPLETED_W7_LONG_TOOL_CHAIN",
-    "all_previous_markers_present": true,
+    "all_prior_markers_present_in_every_request": true,
+    "all_prior_markers_in_tool_results_in_every_request": true,
+    "final_request_contains_all_tool_result_markers": true,
+    "final_request_tool_result_count": 20,
+    "all_tool_calls_and_results_paired": true,
     "context": {
       "first_request_body_bytes": 17503,
       "final_request_body_bytes": 22923,
@@ -64,15 +72,15 @@
       "tool_schema_bytes": 3266
     },
     "phase_seconds": {
-      "process_start_to_first_request": 5.437187433242798,
-      "first_to_final_request": 0.9443576335906982,
-      "final_request_to_process_end": 0.23719549179077148
+      "process_start_to_first_request": 5.3740880489349365,
+      "first_to_final_request": 0.9342801570892334,
+      "final_request_to_process_end": 0.2349262237548828
     },
     "inter_request_seconds": {
-      "total": 0.944357547,
-      "median": 0.027886107,
-      "minimum": 0.024588167,
-      "maximum": 0.414602061
+      "total": 0.934280215,
+      "median": 0.0285712025,
+      "minimum": 0.025624983,
+      "maximum": 0.392666008
     },
     "reported_tool_summary": {
       "calls": 20,

@@ -15,7 +15,7 @@
       "reason": "different prompt envelopes and token estimators require different numeric thresholds to align observed trigger positions"
     },
     "deepseek_harness": {
-      "artifact": "results/w5-dsh-compaction-005",
+      "artifact": "evidence/W5/results/w5-dsh-compaction-005",
       "runtime": "dsh",
       "runtime_completed": true,
       "process_exit_code": 0,
@@ -67,7 +67,7 @@
       }
     },
     "openclaw": {
-      "artifact": "results/w5-openclaw-compaction-005",
+      "artifact": "evidence/W5/results/w5-openclaw-compaction-005",
       "runtime": "openclaw",
       "runtime_completed": true,
       "process_exit_code": 0,
@@ -127,7 +127,7 @@
       "planned_tool_calls": 10
     },
     "deepseek_harness": {
-      "artifact": "results/w5-dsh-compaction-003",
+      "artifact": "evidence/W5/results/w5-dsh-compaction-003",
       "runtime": "dsh",
       "runtime_completed": true,
       "process_exit_code": 0,
@@ -139,7 +139,7 @@
       "error": null
     },
     "openclaw": {
-      "artifact": "results/w5-openclaw-compaction-003",
+      "artifact": "evidence/W5/results/w5-openclaw-compaction-003",
       "runtime": "openclaw",
       "runtime_completed": false,
       "process_exit_code": 1,
@@ -156,24 +156,24 @@
   },
   "excluded_pilots": [
     {
-      "artifact": "results/w5-dsh-compaction-001",
+      "artifact": "evidence/W5/results/w5-dsh-compaction-001",
       "reason": "catalog model capacity overrode the intended DSH_CONTEXT_WINDOW fallback"
     },
     {
-      "artifact": "results/w5-openclaw-compaction-001",
+      "artifact": "evidence/W5/results/w5-openclaw-compaction-001",
       "reason": "env.sh overwrote the requested compaction config path with the minimal config"
     },
     {
       "artifacts": [
-        "results/w5-dsh-compaction-002",
-        "results/w5-openclaw-compaction-002"
+        "evidence/W5/results/w5-dsh-compaction-002",
+        "evidence/W5/results/w5-openclaw-compaction-002"
       ],
       "reason": "mock stopped two agent requests after first compaction, producing unequal tool-call counts"
     },
     {
       "artifacts": [
-        "results/w5-dsh-compaction-004",
-        "results/w5-openclaw-compaction-004"
+        "evidence/W5/results/w5-dsh-compaction-004",
+        "evidence/W5/results/w5-openclaw-compaction-004"
       ],
       "reason": "same 32K numeric threshold did not trigger DSH within ten calls and exhausted OpenClaw recovery attempts"
     }

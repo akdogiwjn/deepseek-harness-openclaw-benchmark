@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T06:24:25.299386+00:00",
+  "wall_seconds": 22.154752865200862,
+  "exit_code": 2,
+  "stdout": "{\n  \"ok\": false,\n  \"status\": \"timeout\",\n  \"final\": \"\",\n  \"payloads\": [],\n  \"model\": null,\n  \"provider\": null,\n  \"sessionId\": \"87f3ae76-e4f7-4568-b5fc-dc6dcd0b9d01\",\n  \"error\": {\n    \"message\": \"LLM request failed: network connection error.\",\n    \"kind\": \"timeout\"\n  }\n}\n",
+  "stderr": "$ node scripts/run-node.mjs agent exec --code-mode direct --config $BENCH_ROOT/configs/openclaw-minimal.json --cwd $BENCH_ROOT/workspaces/w4-openclaw-001 --model bench-proxy/deepseek-v4-flash --thinking high --timeout 600 --json 'Complete this turn. If a model event is malformed, recover if the runtime supports it.'\n[secrets] agent: gateway secrets.resolve unavailable (gateway secrets.resolve requires credentials before opening a websocket\nFix: configure gateway.auth token/password, pair this device, or pass --token/--password.\nConfig: $OPENCLAW_TEMP/openclaw.json); resolved command secrets locally.\n[diagnostic] lane task error: lane=main durationMs=17260 error=\"LLM request failed: network connection error.\"\n[diagnostic] lane task error: lane=session:agent:main:explicit:87f3ae76-e4f7-4568-b5fc-dc6dcd0b9d01 durationMs=17263 error=\"LLM request failed: network connection error.\"\nLLM request failed: network connection error.\n[ELIFECYCLE] Command failed with exit code 2.\n"
+}

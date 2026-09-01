@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T10:20:51.573887+00:00",
+  "wall_seconds": 3.7339294902049005,
+  "exit_code": 0,
+  "stdout": "{\"runtime\": \"deepseek-harness-sdk-minimal\", \"model\": \"deepseek-v4-flash\", \"session_id\": \"dsh-w8-dsh-direct-01\", \"patches\": [], \"finish_reason\": \"completed\", \"wall_seconds\": 3.5726400001440197, \"final_response\": \"COMPLETED_W8_CODE_MODE_ABLATION\"}\n",
+  "stderr": ""
+}

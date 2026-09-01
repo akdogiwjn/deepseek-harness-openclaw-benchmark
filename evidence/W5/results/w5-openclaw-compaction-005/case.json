@@ -1,0 +1,7 @@
+{
+  "runtime": "openclaw",
+  "runtime_exit_code": 0,
+  "provider_requests": 12,
+  "agent_requests": 9,
+  "compaction_requests": 3
+}

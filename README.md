@@ -19,7 +19,29 @@ The two native tool surfaces are intentionally recorded as different rather than
 
 ## Run
 
-The runners automatically read the selected provider's `apiKey` and `baseURL` from `/home/lcq/.config/opencode/opencode.json` without copying or printing the secret. OpenCode `{env:VARIABLE}` credential references are resolved from the current process environment. Override `OPENCODE_CONFIG`, `BENCH_API_KEY`, or `BENCH_BASE_URL` only when needed.
+### Bootstrap from a fresh clone
+
+The repository pins the upstream revisions and local toolchain in
+`configs/revisions.env`. On Linux ARM64 or x64, install and build everything
+from a fresh benchmark checkout with:
+
+```bash
+scripts/bootstrap.sh
+scripts/bootstrap.sh --verify-only
+```
+
+Bootstrap clones both upstream repositories at their exact commits, verifies
+the pinned Node archive checksum from `SHASUMS256.txt`, installs each repository
+with its frozen pnpm lockfile, builds both runtimes, creates `.venv`, and installs
+the DSH Python SDK from the pinned checkout. It refuses to change dirty upstream
+checkouts or replace an unexpected existing path. Network access is required for
+the initial installation; deterministic W4–W8 runs use only their loopback mock.
+
+The runners automatically read the selected provider's `apiKey` and `baseURL`
+from `${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json` without copying
+or printing the secret. OpenCode `{env:VARIABLE}` credential references are
+resolved from the current process environment. Override `OPENCODE_CONFIG`,
+`BENCH_API_KEY`, or `BENCH_BASE_URL` only when needed.
 
 Both runtimes use the same OpenAI-compatible proxy route:
 
@@ -126,6 +148,19 @@ See `results/W8_REPORT.md` and `results/w8-code-mode-summary.json`.
 
 `scripts/run-openclaw-minimal.sh` still defaults to `--code-mode direct` through
 `OPENCLAW_CODE_MODE`; W8 overrides it to `code` only for the Code Mode condition.
+
+## Frozen evidence
+
+The redacted minimal raw inputs for deterministic W4-W8 are committed under
+`evidence/`. They include request logs, process records, case metadata, required
+workspace outputs, and selected structured trace events. Verify their SHA256
+manifest and rebuild every committed summary with:
+
+```bash
+scripts/reproduce-evidence.sh
+```
+
+See `evidence/README.md` for the redaction and omission policy.
 
 ## State
 

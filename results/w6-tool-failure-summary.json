@@ -5,7 +5,7 @@
     "nonzero_child_exit": {
       "stimulus": "child shell prints stdout and stderr, then exits 17",
       "deepseek_harness": {
-        "artifact": "results/w6-dsh-nonzero-002",
+        "artifact": "evidence/W6/results/w6-dsh-nonzero-002",
         "runtime_completed": true,
         "process_exit_code": 0,
         "wall_seconds": 2.4910934849176556,
@@ -15,7 +15,7 @@
         "final_response": "RECOVERED_AFTER_NONZERO_EXIT"
       },
       "openclaw": {
-        "artifact": "results/w6-openclaw-nonzero-002",
+        "artifact": "evidence/W6/results/w6-openclaw-nonzero-002",
         "runtime_completed": true,
         "process_exit_code": 0,
         "wall_seconds": 6.021164460107684,
@@ -28,7 +28,7 @@
     "missing_required_argument": {
       "stimulus": "valid shell tool name with empty argument object",
       "deepseek_harness": {
-        "artifact": "results/w6-dsh-invalid-args-001",
+        "artifact": "evidence/W6/results/w6-dsh-invalid-args-001",
         "runtime_completed": true,
         "process_exit_code": 0,
         "wall_seconds": 0.5606950789224356,
@@ -39,7 +39,7 @@
         "final_response": "RECOVERED_AFTER_INVALID_TOOL_ARGUMENTS"
       },
       "openclaw": {
-        "artifact": "results/w6-openclaw-invalid-args-001",
+        "artifact": "evidence/W6/results/w6-openclaw-invalid-args-001",
         "runtime_completed": true,
         "process_exit_code": 0,
         "wall_seconds": 5.70392691087909,
@@ -53,8 +53,8 @@
   "excluded_trials": [
     {
       "artifacts": [
-        "results/w6-dsh-nonzero-001",
-        "results/w6-openclaw-nonzero-001"
+        "evidence/W6/results/w6-dsh-nonzero-001",
+        "evidence/W6/results/w6-openclaw-nonzero-001"
       ],
       "reason": "direct exit builtin terminated DSH persistent shell but only OpenClaw's one-shot shell"
     }

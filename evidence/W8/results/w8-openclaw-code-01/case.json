@@ -1,0 +1,8 @@
+{
+  "runtime": "openclaw",
+  "mode": "code",
+  "steps": 8,
+  "runtime_exit_code": 0,
+  "provider_requests": 2,
+  "marker_count": 8
+}

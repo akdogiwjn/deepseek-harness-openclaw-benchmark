@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T06:26:16.450804+00:00",
+  "wall_seconds": 5.655863899039105,
+  "exit_code": 1,
+  "stdout": "{\n  \"ok\": false,\n  \"status\": \"error\",\n  \"final\": \"\",\n  \"payloads\": [\n    {\n      \"text\": \"⚠️ bench-proxy/deepseek-v4-flash request failed.\",\n      \"mediaUrl\": null,\n      \"isError\": true\n    }\n  ],\n  \"usage\": {\n    \"input\": 10,\n    \"output\": 1,\n    \"total\": 11,\n    \"cost\": {\n      \"total\": 0\n    }\n  },\n  \"costUsd\": 0,\n  \"codeModeEngaged\": false,\n  \"assistantTurns\": 1,\n  \"model\": \"deepseek-v4-flash\",\n  \"provider\": \"bench-proxy\",\n  \"sessionId\": \"60071849-2fc4-4c39-bd8f-dfb874cd5e8a\",\n  \"error\": {\n    \"message\": \"Provider returned an incomplete or malformed tool call\",\n    \"kind\": \"incomplete_turn\"\n  }\n}\n",
+  "stderr": "$ node scripts/run-node.mjs agent exec --code-mode direct --config $BENCH_ROOT/configs/openclaw-minimal.json --cwd $BENCH_ROOT/workspaces/w4-openclaw-002 --model bench-proxy/deepseek-v4-flash --thinking high --timeout 600 --json 'Complete this turn. If a model event is malformed, recover if the runtime supports it.'\n[secrets] agent: gateway secrets.resolve unavailable (gateway secrets.resolve requires credentials before opening a websocket\nFix: configure gateway.auth token/password, pair this device, or pass --token/--password.\nConfig: $OPENCLAW_TEMP/openclaw.json); resolved command secrets locally.\nProvider returned an incomplete or malformed tool call\n[ELIFECYCLE] Command failed with exit code 1.\n"
+}

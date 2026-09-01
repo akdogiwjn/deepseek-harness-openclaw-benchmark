@@ -4,7 +4,7 @@
   "underlying_operations_per_condition": 8,
   "deepseek_harness": {
     "direct": {
-      "artifact": "results/w8-dsh-direct-01",
+      "artifact": "evidence/W8/results/w8-dsh-direct-01",
       "runtime": "dsh",
       "mode": "direct",
       "runtime_completed": true,
@@ -36,7 +36,7 @@
       }
     },
     "code": {
-      "artifact": "results/w8-dsh-code-01",
+      "artifact": "evidence/W8/results/w8-dsh-code-01",
       "runtime": "dsh",
       "mode": "code",
       "runtime_completed": true,
@@ -77,7 +77,7 @@
   },
   "openclaw": {
     "direct": {
-      "artifact": "results/w8-openclaw-direct-01",
+      "artifact": "evidence/W8/results/w8-openclaw-direct-01",
       "runtime": "openclaw",
       "mode": "direct",
       "runtime_completed": true,
@@ -118,7 +118,7 @@
       }
     },
     "code": {
-      "artifact": "results/w8-openclaw-code-01",
+      "artifact": "evidence/W8/results/w8-openclaw-code-01",
       "runtime": "openclaw",
       "mode": "code",
       "runtime_completed": true,

@@ -30,8 +30,9 @@
   },
   "excluded_trials": [
     {
-      "artifact": "results/w4-recovery-001/openclaw.raw.json",
-      "reason": "proxy environment prevented loopback connection; mock received zero requests"
+      "artifact": "evidence/W4/results/w4-recovery-001/openclaw.raw.json",
+      "provider_requests": 1,
+      "reason": "proxy environment produced a transport timeout instead of the deterministic malformed-call outcome"
     }
   ],
   "notes": [

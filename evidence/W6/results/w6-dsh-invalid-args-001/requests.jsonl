@@ -1,0 +1,2 @@
+{"request":1,"path":"/v1/chat/completions","time_ns":1788249598532036948,"tool_names":["bash","str_replace_editor"],"message_count":2,"assistant_tool_calls":[],"tool_results":[]}
+{"request":2,"path":"/v1/chat/completions","time_ns":1788249598555225985,"tool_names":["bash","str_replace_editor"],"message_count":4,"assistant_tool_calls":[{"id":"call_tool_failure","type":"function","function":{"name":"bash","arguments":"{}"}}],"tool_results":[{"role":"tool","tool_call_id":"call_tool_failure","content":"Error: invalid arguments: missing required property \"command\""}]}

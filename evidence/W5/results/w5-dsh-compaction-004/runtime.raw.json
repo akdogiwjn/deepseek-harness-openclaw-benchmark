@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T08:34:59.710955+00:00",
+  "wall_seconds": 3.7945269159972668,
+  "exit_code": 0,
+  "stdout": "{\"runtime\": \"deepseek-harness-sdk-minimal\", \"model\": \"w5-compaction-mock\", \"session_id\": \"dsh-w5-dsh-compaction-004\", \"patches\": [\"dsh-compaction.patch.yml\"], \"finish_reason\": \"completed\", \"wall_seconds\": 3.634076023939997, \"final_response\": \"W5_NO_COMPACTION_TRIGGERED\"}\n",
+  "stderr": ""
+}

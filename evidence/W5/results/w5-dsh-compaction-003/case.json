@@ -1,0 +1,7 @@
+{
+  "runtime": "dsh",
+  "runtime_exit_code": 0,
+  "provider_requests": 12,
+  "agent_requests": 11,
+  "compaction_requests": 1
+}

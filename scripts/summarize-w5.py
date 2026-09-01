@@ -129,6 +129,7 @@ def main() -> None:
     parser.add_argument("openclaw_stress", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
+    evidence_results = args.dsh_main.parent
     output = {
         "task": "W5 deterministic automatic compaction",
         "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
@@ -160,24 +161,24 @@ def main() -> None:
         },
         "excluded_pilots": [
             {
-                "artifact": "results/w5-dsh-compaction-001",
+                "artifact": str(evidence_results / "w5-dsh-compaction-001"),
                 "reason": "catalog model capacity overrode the intended DSH_CONTEXT_WINDOW fallback"
             },
             {
-                "artifact": "results/w5-openclaw-compaction-001",
+                "artifact": str(evidence_results / "w5-openclaw-compaction-001"),
                 "reason": "env.sh overwrote the requested compaction config path with the minimal config"
             },
             {
                 "artifacts": [
-                    "results/w5-dsh-compaction-002",
-                    "results/w5-openclaw-compaction-002"
+                    str(evidence_results / "w5-dsh-compaction-002"),
+                    str(evidence_results / "w5-openclaw-compaction-002")
                 ],
                 "reason": "mock stopped two agent requests after first compaction, producing unequal tool-call counts"
             },
             {
                 "artifacts": [
-                    "results/w5-dsh-compaction-004",
-                    "results/w5-openclaw-compaction-004"
+                    str(evidence_results / "w5-dsh-compaction-004"),
+                    str(evidence_results / "w5-openclaw-compaction-004")
                 ],
                 "reason": "same 32K numeric threshold did not trigger DSH within ten calls and exhausted OpenClaw recovery attempts"
             }

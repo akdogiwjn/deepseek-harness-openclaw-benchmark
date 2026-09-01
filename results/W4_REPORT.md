@@ -30,10 +30,11 @@ provider error in
 in `src/agents/embedded-agent-runner/result-fallback-classifier.ts:207`.
 
 One preliminary OpenClaw attempt is excluded because inherited proxy variables
-prevented any loopback request. The corrected sample cleared external proxy
-variables, the mock observed exactly one request, and OpenClaw returned the
-expected malformed-tool error. This infrastructure exclusion does not affect the
-recovery comparison.
+produced a transport timeout after one request instead of the deterministic
+malformed-call outcome. The corrected sample cleared external proxy variables;
+the mock observed exactly one request and OpenClaw returned the expected
+malformed-tool error. This infrastructure exclusion does not affect the recovery
+comparison.
 
 The behavioral tradeoff is concrete: DSH is permissive at the provider boundary
 and lets the model repair through a tool-error observation; OpenClaw is strict at

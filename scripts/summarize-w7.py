@@ -40,12 +40,25 @@ def summarize(result_dir: Path) -> dict[str, Any]:
         (right["time_ns"] - left["time_ns"]) / 1_000_000_000
         for left, right in zip(requests, requests[1:])
     ]
-    marker_checks = [
-        item["previous_marker_present"]
-        for item in requests[1:]
+    marker_checks = [item["all_prior_markers_present"] for item in requests]
+    tool_result_marker_checks = [
+        item["all_prior_markers_in_tool_results"] for item in requests
     ]
-    if not all(marker_checks):
-        raise ValueError(f"{result_dir}: a prior tool marker disappeared from context")
+    pairing_checks = [
+        not item["unpaired_assistant_tool_call_ids"]
+        and not item["orphan_tool_result_ids"]
+        for item in requests
+    ]
+    if not all(marker_checks) or not all(tool_result_marker_checks):
+        raise ValueError(f"{result_dir}: prior tool-result markers disappeared")
+    if not all(pairing_checks):
+        raise ValueError(f"{result_dir}: assistant calls and tool results are unpaired")
+    final_request = requests[-1]
+    expected_final_markers = [f"W7_STEP_{step:03d}" for step in range(1, case["steps"] + 1)]
+    if final_request["expected_prior_markers"] != expected_final_markers:
+        raise ValueError(f"{result_dir}: final cumulative marker expectation is incomplete")
+    if final_request["tool_result_count"] != case["steps"]:
+        raise ValueError(f"{result_dir}: final request lacks twenty tool-result messages")
     process_started = datetime.fromisoformat(raw["started_at"]).timestamp()
     first_request_time = requests[0]["time_ns"] / 1_000_000_000
     final_request_time = requests[-1]["time_ns"] / 1_000_000_000
@@ -60,7 +73,11 @@ def summarize(result_dir: Path) -> dict[str, Any]:
         "provider_requests": len(requests),
         "tool_calls": len(requests) - 1,
         "final_response": final_response,
-        "all_previous_markers_present": all(marker_checks),
+        "all_prior_markers_present_in_every_request": all(marker_checks),
+        "all_prior_markers_in_tool_results_in_every_request": all(tool_result_marker_checks),
+        "final_request_contains_all_tool_result_markers": True,
+        "final_request_tool_result_count": final_request["tool_result_count"],
+        "all_tool_calls_and_results_paired": all(pairing_checks),
         "context": {
             "first_request_body_bytes": body_sizes[0],
             "final_request_body_bytes": body_sizes[-1],

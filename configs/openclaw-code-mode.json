@@ -1,7 +1,6 @@
 {
   "agents": {
     "defaults": {
-      "workspace": "/home/lcq/deepseek-harness-openclaw-benchmark/workspaces",
       "sandbox": {
         "mode": "off"
       },

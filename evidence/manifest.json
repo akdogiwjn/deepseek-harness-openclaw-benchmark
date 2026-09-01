@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "scope": "minimal redacted input closure for deterministic W4-W8 summaries",
+  "source_revisions": {
+    "DSH_REPO_URL": "https://github.com/deepseek-ai/deepseek-harness.git",
+    "DSH_COMMIT": "dd6322d604e00eec1ba5e0c8541159906a21094a",
+    "OPENCLAW_REPO_URL": "https://github.com/openclaw/openclaw.git",
+    "OPENCLAW_COMMIT": "3c1b351555e0ebc1b022842523191691e89c7684",
+    "NODE_VERSION": "24.15.0",
+    "DSH_PNPM_VERSION": "11.7.0",
+    "OPENCLAW_PNPM_VERSION": "12.1.0"
+  },
+  "redactions": [
+    "benchmark absolute root -> $BENCH_ROOT",
+    "OpenClaw temporary config directory -> $OPENCLAW_TEMP",
+    "host name -> $HOST",
+    "W6 request messages compacted to assistant tool calls and tool results"
+  ],
+  "omitted": [
+    "API keys and HTTP headers",
+    "server readiness logs",
+    "full DSH sessions"
+  ]
+}

@@ -17,13 +17,13 @@ FINAL_MARKER = "COMPLETED_W5_AFTER_COMPACTION"
 NO_COMPACTION_MARKER = "W5_NO_COMPACTION_TRIGGERED"
 
 
-def text_chunks(response_id: str, content: str) -> list[dict[str, Any]]:
+def text_chunks(response_id: str, content: str, model: str) -> list[dict[str, Any]]:
     return [
         {
             "id": response_id,
             "object": "chat.completion.chunk",
             "created": 999,
-            "model": "deepseek-v4-flash",
+            "model": model,
             "choices": [
                 {
                     "index": 0,
@@ -36,14 +36,14 @@ def text_chunks(response_id: str, content: str) -> list[dict[str, Any]]:
             "id": response_id,
             "object": "chat.completion.chunk",
             "created": 999,
-            "model": "deepseek-v4-flash",
+            "model": model,
             "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}],
             "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
         },
     ]
 
 
-def tool_chunks(step: int, tool_name: str) -> list[dict[str, Any]]:
+def tool_chunks(step: int, tool_name: str, model: str) -> list[dict[str, Any]]:
     marker = f"W5_STEP_{step:03d}"
     command = (
         f"printf 'ANCHOR_ALPHA {marker}\\n'; "
@@ -55,7 +55,7 @@ def tool_chunks(step: int, tool_name: str) -> list[dict[str, Any]]:
             "id": f"mock-w5-{step:03d}",
             "object": "chat.completion.chunk",
             "created": step,
-            "model": "deepseek-v4-flash",
+            "model": model,
             "choices": [
                 {
                     "index": 0,
@@ -83,7 +83,7 @@ def tool_chunks(step: int, tool_name: str) -> list[dict[str, Any]]:
             "id": f"mock-w5-{step:03d}",
             "object": "chat.completion.chunk",
             "created": step,
-            "model": "deepseek-v4-flash",
+            "model": model,
             "choices": [{"index": 0, "delta": {}, "finish_reason": "tool_calls"}],
             "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
         },
@@ -160,6 +160,9 @@ class Handler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", "0"))
         raw = self.rfile.read(length)
         body = json.loads(raw)
+        response_model = body.get("model", "w5-compaction-mock")
+        if not isinstance(response_model, str) or not response_model:
+            response_model = "w5-compaction-mock"
         state: State = self.server.state  # type: ignore[attr-defined]
         kind, ordinal = state.record(self.path, raw, body)
 
@@ -167,13 +170,14 @@ class Handler(BaseHTTPRequestHandler):
             chunks = text_chunks(
                 f"mock-w5-summary-{ordinal}",
                 f"{SUMMARY_MARKER}\n- Preserve ANCHOR_ALPHA.\n- Continue the scripted chain.",
+                response_model,
             )
         elif ordinal <= state.tool_steps:
-            chunks = self._tool_response(body, ordinal)
+            chunks = self._tool_response(body, ordinal, response_model)
         elif state.compaction_requests > 0:
-            chunks = text_chunks("mock-w5-final", FINAL_MARKER)
+            chunks = text_chunks("mock-w5-final", FINAL_MARKER, response_model)
         else:
-            chunks = text_chunks("mock-w5-no-compaction", NO_COMPACTION_MARKER)
+            chunks = text_chunks("mock-w5-no-compaction", NO_COMPACTION_MARKER, response_model)
 
         payload = "".join(
             f"data: {json.dumps(chunk, separators=(',', ':'))}\n\n" for chunk in chunks
@@ -186,7 +190,9 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(encoded)
 
-    def _tool_response(self, body: dict[str, Any], step: int) -> list[dict[str, Any]]:
+    def _tool_response(
+        self, body: dict[str, Any], step: int, model: str
+    ) -> list[dict[str, Any]]:
         declared = {
             item.get("function", {}).get("name", "")
             for item in body.get("tools", [])
@@ -195,7 +201,7 @@ class Handler(BaseHTTPRequestHandler):
         tool_name = "bash" if "bash" in declared else "exec"
         if tool_name not in declared:
             raise RuntimeError("neither bash nor exec was declared")
-        return tool_chunks(step, tool_name)
+        return tool_chunks(step, tool_name, model)
 
     def log_message(self, format: str, *args: object) -> None:
         return

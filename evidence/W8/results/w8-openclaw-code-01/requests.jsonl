@@ -1,0 +1,2 @@
+{"request":1,"path":"/v1/chat/completions","time_ns":1788258183751956495,"request_body_bytes":19766,"message_count":2,"messages_bytes":14002,"tool_schema_bytes":5563,"tool_names":["exec","wait"],"detected_mode":"code","detected_runtime":"openclaw"}
+{"request":2,"path":"/v1/chat/completions","time_ns":1788258184852280139,"request_body_bytes":23563,"message_count":4,"messages_bytes":17799,"tool_schema_bytes":5563,"tool_names":["exec","wait"],"detected_mode":"code","detected_runtime":"openclaw"}

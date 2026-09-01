@@ -1,0 +1,7 @@
+annotated-types==0.8.0
+hatchling==1.30.1
+pydantic==2.13.5
+pydantic-core==2.46.5
+pytest==9.1.1
+typing-extensions==4.16.0
+typing-inspection==0.4.4

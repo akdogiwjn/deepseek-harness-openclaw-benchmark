@@ -97,8 +97,37 @@ class State:
             number = self.requests
             messages = body.get("messages", [])
             tools = body.get("tools", [])
-            expected_previous = f"W7_STEP_{number - 1:03d}" if number > 1 else None
+            expected_prior = [
+                f"W7_STEP_{step:03d}"
+                for step in range(1, min(number, self.steps + 1))
+            ]
             messages_json = json.dumps(messages, ensure_ascii=False, separators=(",", ":"))
+            tool_messages = [
+                message
+                for message in messages
+                if isinstance(message, dict) and message.get("role") == "tool"
+            ]
+            tool_messages_json = json.dumps(
+                tool_messages, ensure_ascii=False, separators=(",", ":")
+            )
+            missing_prior = [
+                marker for marker in expected_prior if marker not in messages_json
+            ]
+            missing_tool_result_markers = [
+                marker for marker in expected_prior if marker not in tool_messages_json
+            ]
+            assistant_tool_call_ids = {
+                call.get("id")
+                for message in messages
+                if isinstance(message, dict) and message.get("role") == "assistant"
+                for call in message.get("tool_calls", [])
+                if isinstance(call, dict) and isinstance(call.get("id"), str)
+            }
+            tool_result_ids = {
+                message.get("tool_call_id")
+                for message in tool_messages
+                if isinstance(message.get("tool_call_id"), str)
+            }
             record = {
                 "request": number,
                 "path": path,
@@ -114,13 +143,31 @@ class State:
                     for item in tools
                     if isinstance(item, dict)
                 ],
-                "expected_previous_marker": expected_previous,
-                "previous_marker_present": (
-                    expected_previous in messages_json if expected_previous is not None else None
+                "expected_prior_markers": expected_prior,
+                "missing_prior_markers": missing_prior,
+                "all_prior_markers_present": not missing_prior,
+                "missing_tool_result_markers": missing_tool_result_markers,
+                "all_prior_markers_in_tool_results": not missing_tool_result_markers,
+                "assistant_tool_call_count": len(assistant_tool_call_ids),
+                "tool_result_count": len(tool_result_ids),
+                "unpaired_assistant_tool_call_ids": sorted(
+                    assistant_tool_call_ids - tool_result_ids
                 ),
+                "orphan_tool_result_ids": sorted(tool_result_ids - assistant_tool_call_ids),
             }
             with self.log_path.open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(record, ensure_ascii=False) + "\n")
+            if missing_prior or missing_tool_result_markers:
+                raise ValueError(
+                    f"request {number} lost prior tool-result markers: "
+                    f"context={missing_prior}, tool_results={missing_tool_result_markers}"
+                )
+            if assistant_tool_call_ids != tool_result_ids:
+                raise ValueError(
+                    f"request {number} has unpaired tool messages: "
+                    f"calls={sorted(assistant_tool_call_ids - tool_result_ids)}, "
+                    f"results={sorted(tool_result_ids - assistant_tool_call_ids)}"
+                )
             return number
 
 
@@ -129,11 +176,15 @@ class Handler(BaseHTTPRequestHandler):
     server_version = "HarnessLongChainMock/1"
 
     def do_POST(self) -> None:  # noqa: N802
-        length = int(self.headers.get("Content-Length", "0"))
-        raw = self.rfile.read(length)
-        body = json.loads(raw)
-        state: State = self.server.state  # type: ignore[attr-defined]
-        request_number = state.record(self.path, raw, body)
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            raw = self.rfile.read(length)
+            body = json.loads(raw)
+            state: State = self.server.state  # type: ignore[attr-defined]
+            request_number = state.record(self.path, raw, body)
+        except Exception as error:
+            self.send_error(400, str(error))
+            return
 
         if request_number <= state.steps:
             declared = {

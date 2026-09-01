@@ -1,0 +1,2 @@
+{"request":1,"path":"/v1/chat/completions","time_ns":1788258065500272408,"request_body_bytes":9293,"message_count":2,"messages_bytes":6096,"tool_schema_bytes":975,"tool_names":["run_code"],"detected_mode":"code","detected_runtime":"dsh"}
+{"request":2,"path":"/v1/chat/completions","time_ns":1788258067785019243,"request_body_bytes":10162,"message_count":4,"messages_bytes":6965,"tool_schema_bytes":975,"tool_names":["run_code"],"detected_mode":"code","detected_runtime":"dsh"}

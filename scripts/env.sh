@@ -3,7 +3,18 @@ set -euo pipefail
 
 BENCH_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export BENCH_ROOT
-export PATH="$BENCH_ROOT/.venv/bin:$BENCH_ROOT/bin:$BENCH_ROOT/node-v24.15.0-linux-arm64/bin:${PATH:-/usr/bin:/bin}"
+source "$BENCH_ROOT/configs/revisions.env"
+case "$(uname -m)" in
+  aarch64|arm64) bench_node_arch="arm64" ;;
+  x86_64|amd64) bench_node_arch="x64" ;;
+  *)
+    echo "unsupported architecture: $(uname -m)" >&2
+    return 2 2>/dev/null || exit 2
+    ;;
+esac
+BENCH_NODE_DIR="${BENCH_NODE_DIR:-$BENCH_ROOT/node-v${NODE_VERSION}-linux-$bench_node_arch}"
+export BENCH_NODE_DIR
+export PATH="$BENCH_ROOT/.venv/bin:$BENCH_ROOT/bin:$BENCH_NODE_DIR/bin:${PATH:-/usr/bin:/bin}"
 export COREPACK_HOME="$BENCH_ROOT/.corepack"
 export PNPM_HOME="$BENCH_ROOT/.pnpm-home"
 export DSH_HOME="$BENCH_ROOT/sessions/dsh-home"
@@ -13,7 +24,7 @@ export DSH_MODEL="${DSH_MODEL:-deepseek-v4-flash}"
 export OPENCLAW_MODEL="${OPENCLAW_MODEL:-bench-proxy/deepseek-v4-flash}"
 export OPENCLAW_LOG_LEVEL="${OPENCLAW_LOG_LEVEL:-error}"
 
-OPENCODE_CONFIG="${OPENCODE_CONFIG:-/home/lcq/.config/opencode/opencode.json}"
+OPENCODE_CONFIG="${OPENCODE_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.json}"
 if [[ -f "$OPENCODE_CONFIG" ]]; then
   opencode_provider="$(jq -er '.model | split("/")[0] | select(length > 0)' "$OPENCODE_CONFIG")"
   opencode_key_ref="$(jq -er --arg provider "$opencode_provider" '.provider[$provider].options.apiKey | select(type == "string" and length > 0)' "$OPENCODE_CONFIG")"

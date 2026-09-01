@@ -1,0 +1,8 @@
+{
+  "runtime": "dsh",
+  "mode": "direct",
+  "steps": 8,
+  "runtime_exit_code": 0,
+  "provider_requests": 9,
+  "marker_count": 8
+}

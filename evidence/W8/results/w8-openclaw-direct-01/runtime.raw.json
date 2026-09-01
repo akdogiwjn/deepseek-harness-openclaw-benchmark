@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T10:21:55.627423+00:00",
+  "wall_seconds": 6.314381275093183,
+  "exit_code": 0,
+  "stdout": "{\n  \"ok\": true,\n  \"status\": \"ok\",\n  \"final\": \"COMPLETED_W8_CODE_MODE_ABLATION\",\n  \"payloads\": [\n    {\n      \"text\": \"COMPLETED_W8_CODE_MODE_ABLATION\",\n      \"mediaUrl\": null\n    }\n  ],\n  \"codeModeEngaged\": false,\n  \"assistantTurns\": 9,\n  \"toolSummary\": {\n    \"calls\": 8,\n    \"tools\": [\n      \"exec\"\n    ],\n    \"failures\": 0\n  },\n  \"model\": \"deepseek-v4-flash\",\n  \"provider\": \"bench-proxy\",\n  \"sessionId\": \"740ded1d-ba7d-4793-ac3f-ed24ce605b28\"\n}\n",
+  "stderr": "$ node scripts/run-node.mjs agent exec --code-mode direct --config $BENCH_ROOT/configs/openclaw-minimal.json --cwd $BENCH_ROOT/workspaces/w8-openclaw-direct-01 --model bench-proxy/deepseek-v4-flash --thinking high --timeout 600 --json 'Execute the deterministic shell operations supplied by the provider until completion.'\n[secrets] agent: gateway secrets.resolve unavailable (gateway secrets.resolve requires credentials before opening a websocket\nFix: configure gateway.auth token/password, pair this device, or pass --token/--password.\nConfig: $OPENCLAW_TEMP/openclaw.json); resolved command secrets locally.\n"
+}

@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T08:27:45.036728+00:00",
+  "wall_seconds": 8.192956906976178,
+  "exit_code": 0,
+  "stdout": "{\n  \"ok\": true,\n  \"status\": \"ok\",\n  \"final\": \"W5_NO_COMPACTION_TRIGGERED\",\n  \"payloads\": [\n    {\n      \"text\": \"W5_NO_COMPACTION_TRIGGERED\",\n      \"mediaUrl\": null\n    }\n  ],\n  \"codeModeEngaged\": false,\n  \"assistantTurns\": 21,\n  \"toolSummary\": {\n    \"calls\": 20,\n    \"tools\": [\n      \"exec\"\n    ],\n    \"failures\": 0\n  },\n  \"model\": \"w5-compaction-mock\",\n  \"provider\": \"bench-proxy\",\n  \"sessionId\": \"67b2e5aa-9c57-4157-8d9f-e58ba83e820b\"\n}\n",
+  "stderr": "$ node scripts/run-node.mjs agent exec --code-mode direct --config $BENCH_ROOT/configs/openclaw-minimal.json --cwd $BENCH_ROOT/workspaces/w5-openclaw-compaction-001 --model bench-proxy/w5-compaction-mock --thinking high --timeout 600 --json 'Execute the deterministic tool sequence through automatic compaction and finish the turn.'\n[secrets] agent: gateway secrets.resolve unavailable (gateway secrets.resolve requires credentials before opening a websocket\nFix: configure gateway.auth token/password, pair this device, or pass --token/--password.\nConfig: $OPENCLAW_TEMP/openclaw.json); resolved command secrets locally.\n"
+}

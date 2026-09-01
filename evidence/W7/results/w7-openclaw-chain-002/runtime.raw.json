@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-01T11:11:39.418366+00:00",
+  "wall_seconds": 6.543294460047036,
+  "exit_code": 0,
+  "stdout": "{\n  \"ok\": true,\n  \"status\": \"ok\",\n  \"final\": \"COMPLETED_W7_LONG_TOOL_CHAIN\",\n  \"payloads\": [\n    {\n      \"text\": \"COMPLETED_W7_LONG_TOOL_CHAIN\",\n      \"mediaUrl\": null\n    }\n  ],\n  \"codeModeEngaged\": false,\n  \"assistantTurns\": 21,\n  \"toolSummary\": {\n    \"calls\": 20,\n    \"tools\": [\n      \"exec\"\n    ],\n    \"failures\": 0\n  },\n  \"model\": \"deepseek-v4-flash\",\n  \"provider\": \"bench-proxy\",\n  \"sessionId\": \"0ffea5e0-5767-4e26-a613-1bf9440e28d3\"\n}\n",
+  "stderr": "$ node scripts/run-node.mjs agent exec --code-mode direct --config $BENCH_ROOT/configs/openclaw-minimal.json --cwd $BENCH_ROOT/workspaces/w7-openclaw-chain-002 --model bench-proxy/deepseek-v4-flash --thinking high --timeout 600 --json 'Execute the deterministic sequence of tool calls until the provider completes the turn.'\n[secrets] agent: gateway secrets.resolve unavailable (gateway secrets.resolve requires credentials before opening a websocket\nFix: configure gateway.auth token/password, pair this device, or pass --token/--password.\nConfig: $OPENCLAW_TEMP/openclaw.json); resolved command secrets locally.\n"
+}
