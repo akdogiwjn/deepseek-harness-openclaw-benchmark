@@ -1,0 +1,133 @@
+{
+  "task": "W3 weighted quota consumption",
+  "model": "deepseek-v4-flash",
+  "paired_attempts": 5,
+  "deepseek_harness": {
+    "runtime_completed": 5,
+    "successes": 5,
+    "attempts": 5,
+    "success_rate": 1.0,
+    "wall_seconds": {
+      "mean": 86.45468050623313,
+      "median": 87.94921794405673,
+      "min": 63.1240514999954,
+      "max": 119.85694088507444
+    },
+    "successful_wall_seconds": {
+      "mean": 86.45468050623313,
+      "median": 87.94921794405673,
+      "min": 63.1240514999954,
+      "max": 119.85694088507444
+    },
+    "interaction_steps": {
+      "mean": 15.6,
+      "median": 14,
+      "min": 11,
+      "max": 20
+    },
+    "tool_calls": {
+      "mean": 20.6,
+      "median": 20,
+      "min": 19,
+      "max": 23
+    },
+    "runtime_status_counts": {
+      "completed": 5
+    },
+    "runtime_error_kinds": {},
+    "usage": {
+      "input": {
+        "mean": 30424.6,
+        "median": 29127,
+        "min": 23354,
+        "max": 39671
+      },
+      "output": {
+        "mean": 8155.4,
+        "median": 7454,
+        "min": 5325,
+        "max": 10976
+      },
+      "cache_read": {
+        "mean": 81203.2,
+        "median": 80640,
+        "min": 41216,
+        "max": 120064
+      },
+      "reasoning": {
+        "mean": 4823.6,
+        "median": 3625,
+        "min": 2605,
+        "max": 8114
+      }
+    }
+  },
+  "openclaw": {
+    "runtime_completed": 2,
+    "successes": 2,
+    "attempts": 5,
+    "success_rate": 0.4,
+    "wall_seconds": {
+      "mean": 60.168867306783795,
+      "median": 61.546497110044584,
+      "min": 33.1084921839647,
+      "max": 79.50154810003005
+    },
+    "successful_wall_seconds": {
+      "mean": 73.77896262297872,
+      "median": 73.77896262297872,
+      "min": 68.0563771459274,
+      "max": 79.50154810003005
+    },
+    "interaction_steps": {
+      "mean": 8.6,
+      "median": 8,
+      "min": 6,
+      "max": 12
+    },
+    "tool_calls": {
+      "mean": 15.4,
+      "median": 15,
+      "min": 12,
+      "max": 19
+    },
+    "runtime_status_counts": {
+      "error": 3,
+      "ok": 2
+    },
+    "runtime_error_kinds": {
+      "incomplete_turn": 3
+    },
+    "usage": {
+      "input": {
+        "mean": 17566.6,
+        "median": 19773,
+        "min": 8436,
+        "max": 21988
+      },
+      "output": {
+        "mean": 5582.0,
+        "median": 5853,
+        "min": 2505,
+        "max": 8013
+      },
+      "cache_read": {
+        "mean": 52531.2,
+        "median": 42240,
+        "min": 28160,
+        "max": 79616
+      },
+      "reasoning": {
+        "mean": 2880.0,
+        "median": 3324,
+        "min": 492,
+        "max": 4982
+      }
+    }
+  },
+  "notes": [
+    "Success means the external hidden verifier passed.",
+    "Wall-time distributions include every attempted runtime invocation, including runtime and verifier failures.",
+    "Provider/runtime token counters are reported separately and are not treated as equivalent."
+  ]
+}

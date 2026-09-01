@@ -1,0 +1,45 @@
+# Local runtimes and package managers
+.corepack/
+.pnpm-home/
+.venv/
+bin/
+node-v*/
+node-v*.tar.xz
+
+# Upstream source checkouts
+sources/
+
+# Runtime state and traces
+sessions/
+
+# Generated Python files
+__pycache__/
+*.py[cod]
+
+# Trial workspaces: only commit templates
+workspaces/*
+!workspaces/w1-template/
+!workspaces/w1-template/**
+!workspaces/w2-template/
+!workspaces/w2-template/**
+!workspaces/w3-template/
+!workspaces/w3-template/**
+!workspaces/w4-template/
+!workspaces/w4-template/**
+
+# Raw per-trial results
+results/*/
+
+# Keep selected small result directories
+!results/w1-pilot-001/
+results/w1-pilot-001/*
+!results/w1-pilot-001/summary.json
+
+!results/w2-invalid/
+results/w2-invalid/*
+!results/w2-invalid/README.md
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store

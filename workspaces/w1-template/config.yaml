@@ -1,0 +1,10 @@
+service:
+  name: demo-api
+  timeout: 30  # seconds
+  retries:
+    count: 3
+    timeout: 5
+
+database:
+  host: localhost
+  timeout: 30

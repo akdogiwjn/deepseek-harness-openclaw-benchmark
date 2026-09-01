@@ -1,0 +1,115 @@
+{
+  "task": "W3 weighted quota consumption",
+  "model": "deepseek-v4-flash",
+  "valid_pairs": 3,
+  "deepseek_harness": {
+    "successes": 3,
+    "attempts": 3,
+    "success_rate": 1.0,
+    "wall_seconds": {
+      "mean": 71.69953323035345,
+      "median": 64.02533024700824,
+      "min": 63.1240514999954,
+      "max": 87.94921794405673
+    },
+    "successful_wall_seconds": {
+      "mean": 71.69953323035345,
+      "median": 64.02533024700824,
+      "min": 63.1240514999954,
+      "max": 87.94921794405673
+    },
+    "interaction_steps": {
+      "mean": 14.666666666666666,
+      "median": 14,
+      "min": 11,
+      "max": 19
+    },
+    "tool_calls": {
+      "mean": 20.666666666666668,
+      "median": 20,
+      "min": 19,
+      "max": 23
+    },
+    "usage": {
+      "input": {
+        "mean": 25957.0,
+        "median": 25390,
+        "min": 23354,
+        "max": 29127
+      },
+      "output": {
+        "mean": 6406.666666666667,
+        "median": 6441,
+        "min": 5325,
+        "max": 7454
+      },
+      "cache_read": {
+        "mean": 68437.33333333333,
+        "median": 60672,
+        "min": 41216,
+        "max": 103424
+      },
+      "reasoning": {
+        "mean": 3201.0,
+        "median": 3373,
+        "min": 2605,
+        "max": 3625
+      }
+    }
+  },
+  "openclaw": {
+    "successes": 0,
+    "attempts": 3,
+    "success_rate": 0.0,
+    "wall_seconds": {
+      "mean": 51.09547042932051,
+      "median": 58.631421993952245,
+      "min": 33.1084921839647,
+      "max": 61.546497110044584
+    },
+    "successful_wall_seconds": null,
+    "interaction_steps": {
+      "mean": 7.0,
+      "median": 7,
+      "min": 6,
+      "max": 8
+    },
+    "tool_calls": {
+      "mean": 13.666666666666666,
+      "median": 14,
+      "min": 12,
+      "max": 15
+    },
+    "usage": {
+      "input": {
+        "mean": 15357.333333333334,
+        "median": 16295,
+        "min": 8436,
+        "max": 21341
+      },
+      "output": {
+        "mean": 4475.333333333333,
+        "median": 5068,
+        "min": 2505,
+        "max": 5853
+      },
+      "cache_read": {
+        "mean": 37290.666666666664,
+        "median": 41472,
+        "min": 28160,
+        "max": 42240
+      },
+      "reasoning": {
+        "mean": 2031.3333333333333,
+        "median": 2244,
+        "min": 492,
+        "max": 3358
+      }
+    }
+  },
+  "notes": [
+    "Success means the external hidden verifier passed.",
+    "Wall-time distributions include all completed agent runs, including verifier failures.",
+    "Provider/runtime token counters are reported separately and are not treated as equivalent."
+  ]
+}

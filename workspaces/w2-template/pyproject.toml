@@ -1,0 +1,8 @@
+[build-system]
+requires = []
+build-backend = ""
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+pythonpath = ["."]

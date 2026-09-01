@@ -1,0 +1,42 @@
+{
+  "task": "W4 deterministic malformed tool-call recovery",
+  "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
+  "stimulus": {
+    "first_response": "tool call with empty name and truncated JSON arguments",
+    "second_response": "normal text completion with a fixed recovery marker"
+  },
+  "deepseek_harness": {
+    "runtime_completed": true,
+    "process_exit_code": 0,
+    "wall_seconds": 0.5547343379585072,
+    "provider_requests": 2,
+    "model_steps": 2,
+    "tool_calls": 1,
+    "llm_retries": 0,
+    "malformed_event_treatment": "empty-name tool call",
+    "tool_result": "unknown tool error with isError=true",
+    "final_response": "RECOVERED_AFTER_MALFORMED_TOOL_CALL"
+  },
+  "openclaw": {
+    "runtime_completed": false,
+    "process_exit_code": 1,
+    "wall_seconds": 5.655863899039105,
+    "provider_requests": 1,
+    "assistant_turns": 1,
+    "runtime_status": "error",
+    "runtime_error_kind": "incomplete_turn",
+    "runtime_error_message": "Provider returned an incomplete or malformed tool call",
+    "final_response": ""
+  },
+  "excluded_trials": [
+    {
+      "artifact": "results/w4-recovery-001/openclaw.raw.json",
+      "reason": "proxy environment prevented loopback connection; mock received zero requests"
+    }
+  ],
+  "notes": [
+    "Both valid samples received byte-equivalent scripted first responses from fresh mock servers.",
+    "DSH recovery was an ordinary second model step after a structured tool error, not an llm/retry event.",
+    "No real model, external gateway, or production API key was used."
+  ]
+}
