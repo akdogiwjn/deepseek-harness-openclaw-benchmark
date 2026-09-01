@@ -1,0 +1,93 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "/home/lcq/deepseek-harness-openclaw-benchmark/workspaces",
+      "sandbox": {
+        "mode": "off"
+      },
+      "compaction": {
+        "enabled": true,
+        "mode": "default",
+        "keepRecentTokens": 2000,
+        "qualityGuard": {
+          "enabled": false
+        },
+        "memoryFlush": {
+          "enabled": false
+        },
+        "midTurnPrecheck": {
+          "enabled": true
+        }
+      },
+      "contextPruning": {
+        "mode": "off"
+      }
+    }
+  },
+  "models": {
+    "mode": "replace",
+    "providers": {
+      "bench-proxy": {
+        "baseUrl": "${BENCH_BASE_URL}",
+        "apiKey": {
+          "source": "env",
+          "provider": "default",
+          "id": "BENCH_API_KEY"
+        },
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "w5-compaction-mock",
+            "name": "W5 deterministic compaction benchmark mock",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 1000000,
+            "contextTokens": 32000,
+            "maxTokens": 2048,
+            "compat": {
+              "supportsReasoningEffort": true,
+              "supportsUsageInStreaming": true,
+              "maxTokensField": "max_tokens"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tools": {
+    "allow": [
+      "exec",
+      "read",
+      "write",
+      "edit",
+      "apply_patch"
+    ],
+    "exec": {
+      "mode": "full"
+    },
+    "fs": {
+      "workspaceOnly": true
+    },
+    "codeMode": {
+      "enabled": false
+    }
+  },
+  "plugins": {
+    "allow": [
+      "deepseek"
+    ],
+    "entries": {
+      "deepseek": {
+        "enabled": true
+      }
+    }
+  }
+}

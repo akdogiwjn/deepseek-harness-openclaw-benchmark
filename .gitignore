@@ -26,6 +26,14 @@ workspaces/*
 !workspaces/w3-template/**
 !workspaces/w4-template/
 !workspaces/w4-template/**
+!workspaces/w5-template/
+!workspaces/w5-template/**
+!workspaces/w6-template/
+!workspaces/w6-template/**
+!workspaces/w7-template/
+!workspaces/w7-template/**
+!workspaces/w8-template/
+!workspaces/w8-template/**
 
 # Raw per-trial results
 results/*/

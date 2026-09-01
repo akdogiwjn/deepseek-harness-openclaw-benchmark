@@ -1,0 +1,177 @@
+{
+  "task": "W8 deterministic direct tool calling versus code mode",
+  "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
+  "underlying_operations_per_condition": 8,
+  "deepseek_harness": {
+    "direct": {
+      "artifact": "results/w8-dsh-direct-01",
+      "runtime": "dsh",
+      "mode": "direct",
+      "runtime_completed": true,
+      "wall_seconds": 3.7339294902049005,
+      "provider_requests": 9,
+      "model_visible_tool_calls": 8,
+      "underlying_shell_calls": 8,
+      "markers_exact_and_ordered": true,
+      "provider_visible_tools": [
+        "bash",
+        "str_replace_editor"
+      ],
+      "request_payload": {
+        "first_body_bytes": 6349,
+        "final_body_bytes": 8333,
+        "total_body_bytes": 66069,
+        "first_tool_schema_bytes": 4016
+      },
+      "phase_seconds": {
+        "process_start_to_first_request": 0.44432616233825684,
+        "first_to_final_request": 2.1023125648498535,
+        "final_request_to_process_end": 1.1872906684875488
+      },
+      "reported": {
+        "code_mode_engaged": null,
+        "assistant_turns": null,
+        "bridge_calls": null,
+        "tool_summary": null
+      }
+    },
+    "code": {
+      "artifact": "results/w8-dsh-code-01",
+      "runtime": "dsh",
+      "mode": "code",
+      "runtime_completed": true,
+      "wall_seconds": 3.9423676889855415,
+      "provider_requests": 2,
+      "model_visible_tool_calls": 1,
+      "underlying_shell_calls": 8,
+      "markers_exact_and_ordered": true,
+      "provider_visible_tools": [
+        "run_code"
+      ],
+      "request_payload": {
+        "first_body_bytes": 9293,
+        "final_body_bytes": 10162,
+        "total_body_bytes": 19455,
+        "first_tool_schema_bytes": 975
+      },
+      "phase_seconds": {
+        "process_start_to_first_request": 0.46999049186706543,
+        "first_to_final_request": 2.2847466468811035,
+        "final_request_to_process_end": 1.1876306533813477
+      },
+      "reported": {
+        "code_mode_engaged": null,
+        "assistant_turns": null,
+        "bridge_calls": null,
+        "tool_summary": null
+      }
+    },
+    "paired_change": {
+      "provider_request_reduction": 7,
+      "provider_request_reduction_percent": 77.77777777777779,
+      "model_visible_tool_call_reduction": 7,
+      "total_request_body_reduction_bytes": 46614,
+      "total_request_body_reduction_percent": 70.55351223720656,
+      "wall_seconds_change": 0.20843819878064096
+    }
+  },
+  "openclaw": {
+    "direct": {
+      "artifact": "results/w8-openclaw-direct-01",
+      "runtime": "openclaw",
+      "mode": "direct",
+      "runtime_completed": true,
+      "wall_seconds": 6.314381275093183,
+      "provider_requests": 9,
+      "model_visible_tool_calls": 8,
+      "underlying_shell_calls": 8,
+      "markers_exact_and_ordered": true,
+      "provider_visible_tools": [
+        "apply_patch",
+        "edit",
+        "exec",
+        "read",
+        "write"
+      ],
+      "request_payload": {
+        "first_body_bytes": 17501,
+        "final_body_bytes": 19685,
+        "total_body_bytes": 167337,
+        "first_tool_schema_bytes": 3266
+      },
+      "phase_seconds": {
+        "process_start_to_first_request": 5.403571367263794,
+        "first_to_final_request": 0.6855154037475586,
+        "final_request_to_process_end": 0.2252945899963379
+      },
+      "reported": {
+        "code_mode_engaged": false,
+        "assistant_turns": 9,
+        "bridge_calls": null,
+        "tool_summary": {
+          "calls": 8,
+          "tools": [
+            "exec"
+          ],
+          "failures": 0
+        }
+      }
+    },
+    "code": {
+      "artifact": "results/w8-openclaw-code-01",
+      "runtime": "openclaw",
+      "mode": "code",
+      "runtime_completed": true,
+      "wall_seconds": 6.714639164041728,
+      "provider_requests": 2,
+      "model_visible_tool_calls": 1,
+      "underlying_shell_calls": 8,
+      "markers_exact_and_ordered": true,
+      "provider_visible_tools": [
+        "exec",
+        "wait"
+      ],
+      "request_payload": {
+        "first_body_bytes": 19766,
+        "final_body_bytes": 23563,
+        "total_body_bytes": 43329,
+        "first_tool_schema_bytes": 5563
+      },
+      "phase_seconds": {
+        "process_start_to_first_request": 5.370926380157471,
+        "first_to_final_request": 1.1003236770629883,
+        "final_request_to_process_end": 0.24338912963867188
+      },
+      "reported": {
+        "code_mode_engaged": true,
+        "assistant_turns": 2,
+        "bridge_calls": {
+          "search": 0,
+          "describe": 0,
+          "call": 8
+        },
+        "tool_summary": {
+          "calls": 9,
+          "tools": [
+            "exec"
+          ],
+          "failures": 0
+        }
+      }
+    },
+    "paired_change": {
+      "provider_request_reduction": 7,
+      "provider_request_reduction_percent": 77.77777777777779,
+      "model_visible_tool_call_reduction": 7,
+      "total_request_body_reduction_bytes": 124008,
+      "total_request_body_reduction_percent": 74.10674268093726,
+      "wall_seconds_change": 0.40025788894854486
+    }
+  },
+  "notes": [
+    "The provider scripted every outer call; no real model or production credential participated.",
+    "Code conditions execute the same eight shell commands through one model-visible program call.",
+    "Single cold-process wall times are mechanism traces, not population performance estimates.",
+    "Payload bytes are exact serialized HTTP request sizes, not tokenizer counts."
+  ]
+}

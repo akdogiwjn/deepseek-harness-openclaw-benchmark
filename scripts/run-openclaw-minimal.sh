@@ -28,7 +28,7 @@ fi
 
 cd "$BENCH_ROOT/sources/openclaw"
 exec pnpm openclaw agent exec \
-  --code-mode direct \
+  --code-mode "${OPENCLAW_CODE_MODE:-direct}" \
   --config "$OPENCLAW_CONFIG_PATH" \
   --cwd "$workspace" \
   --model "$OPENCLAW_MODEL" \

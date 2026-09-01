@@ -1,0 +1,74 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "/home/lcq/deepseek-harness-openclaw-benchmark/workspaces",
+      "sandbox": {
+        "mode": "off"
+      },
+      "compaction": {
+        "enabled": false
+      },
+      "contextPruning": {
+        "mode": "off"
+      }
+    }
+  },
+  "models": {
+    "mode": "replace",
+    "providers": {
+      "bench-proxy": {
+        "baseUrl": "${BENCH_BASE_URL}",
+        "apiKey": {
+          "source": "env",
+          "provider": "default",
+          "id": "BENCH_API_KEY"
+        },
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "deepseek-v4-flash",
+            "name": "DeepSeek V4 Flash via benchmark proxy",
+            "reasoning": true,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 1000000,
+            "maxTokens": 256000,
+            "compat": {
+              "supportsReasoningEffort": true,
+              "supportsUsageInStreaming": true,
+              "maxTokensField": "max_tokens"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tools": {
+    "allow": ["exec", "read", "write", "edit", "apply_patch"],
+    "exec": {
+      "mode": "full"
+    },
+    "fs": {
+      "workspaceOnly": true
+    },
+    "codeMode": {
+      "enabled": true,
+      "runtime": "quickjs-wasi",
+      "mode": "only",
+      "languages": ["javascript", "typescript"]
+    }
+  },
+  "plugins": {
+    "allow": ["deepseek"],
+    "entries": {
+      "deepseek": {
+        "enabled": true
+      }
+    }
+  }
+}

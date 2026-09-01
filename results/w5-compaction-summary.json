@@ -1,0 +1,186 @@
+{
+  "task": "W5 deterministic automatic compaction",
+  "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
+  "calibrated_main_pair": {
+    "shared": {
+      "context_window_tokens": 32000,
+      "retained_recent_tokens": 2000,
+      "tool_calls": 8,
+      "tool_output_payload_chars_per_call": 4096,
+      "fixed_summary": "W5_FIXED_COMPACTION_SUMMARY"
+    },
+    "trigger_calibration": {
+      "deepseek_harness_heuristic_threshold_tokens": 4800,
+      "openclaw_prompt_budget_before_reserve_tokens": 12000,
+      "reason": "different prompt envelopes and token estimators require different numeric thresholds to align observed trigger positions"
+    },
+    "deepseek_harness": {
+      "artifact": "results/w5-dsh-compaction-005",
+      "runtime": "dsh",
+      "runtime_completed": true,
+      "process_exit_code": 0,
+      "wall_seconds": 3.688752526883036,
+      "provider_requests": 12,
+      "agent_requests": 9,
+      "compaction_requests": 3,
+      "tool_calls": 8,
+      "final_response": "COMPLETED_W5_AFTER_COMPACTION",
+      "compaction_boundaries": [
+        {
+          "compaction_request": 5,
+          "after_agent_request_ordinal": 4,
+          "compaction_request_body_bytes": 17246,
+          "agent_body_before_bytes": 19823,
+          "agent_body_after_bytes": 15718,
+          "agent_body_reduction_bytes": 4105
+        },
+        {
+          "compaction_request": 8,
+          "after_agent_request_ordinal": 6,
+          "compaction_request_body_bytes": 17585,
+          "agent_body_before_bytes": 20162,
+          "agent_body_after_bytes": 15718,
+          "agent_body_reduction_bytes": 4444
+        },
+        {
+          "compaction_request": 11,
+          "after_agent_request_ordinal": 8,
+          "compaction_request_body_bytes": 17585,
+          "agent_body_before_bytes": 20162,
+          "agent_body_after_bytes": 15718,
+          "agent_body_reduction_bytes": 4444
+        }
+      ],
+      "payload_bytes": {
+        "all_requests": 192522,
+        "agent_requests": 140106,
+        "compaction_requests": 52416,
+        "first_agent_request": 6491,
+        "maximum_agent_request": 20162,
+        "final_agent_request": 15718
+      },
+      "phase_seconds": {
+        "process_start_to_first_request": 0.49333620071411133,
+        "first_to_final_request": 2.001948833465576,
+        "final_request_to_process_end": 1.193467378616333,
+        "median_inter_request": 0.184995421
+      }
+    },
+    "openclaw": {
+      "artifact": "results/w5-openclaw-compaction-005",
+      "runtime": "openclaw",
+      "runtime_completed": true,
+      "process_exit_code": 0,
+      "wall_seconds": 7.169939832994714,
+      "provider_requests": 12,
+      "agent_requests": 9,
+      "compaction_requests": 3,
+      "tool_calls": 8,
+      "final_response": "COMPLETED_W5_AFTER_COMPACTION",
+      "compaction_boundaries": [
+        {
+          "compaction_request": 5,
+          "after_agent_request_ordinal": 4,
+          "compaction_request_body_bytes": 8067,
+          "agent_body_before_bytes": 30850,
+          "agent_body_after_bytes": 22504,
+          "agent_body_reduction_bytes": 8346
+        },
+        {
+          "compaction_request": 8,
+          "after_agent_request_ordinal": 6,
+          "compaction_request_body_bytes": 6931,
+          "agent_body_before_bytes": 26950,
+          "agent_body_after_bytes": 22442,
+          "agent_body_reduction_bytes": 4508
+        },
+        {
+          "compaction_request": 11,
+          "after_agent_request_ordinal": 8,
+          "compaction_request_body_bytes": 6869,
+          "agent_body_before_bytes": 26888,
+          "agent_body_after_bytes": 22442,
+          "agent_body_reduction_bytes": 4446
+        }
+      ],
+      "payload_bytes": {
+        "all_requests": 239817,
+        "agent_requests": 217950,
+        "compaction_requests": 21867,
+        "first_agent_request": 17512,
+        "maximum_agent_request": 30850,
+        "final_agent_request": 22442
+      },
+      "phase_seconds": {
+        "process_start_to_first_request": 5.409754991531372,
+        "first_to_final_request": 1.54176664352417,
+        "final_request_to_process_end": 0.21841812133789062,
+        "median_inter_request": 0.099955968
+      }
+    }
+  },
+  "same_numeric_16k_stress_pair": {
+    "shared": {
+      "context_window_tokens": 16000,
+      "trigger_tokens": 8000,
+      "retained_recent_tokens": 2000,
+      "planned_tool_calls": 10
+    },
+    "deepseek_harness": {
+      "artifact": "results/w5-dsh-compaction-003",
+      "runtime": "dsh",
+      "runtime_completed": true,
+      "process_exit_code": 0,
+      "wall_seconds": 3.71409725304693,
+      "provider_requests": 12,
+      "agent_requests": 11,
+      "compaction_requests": 1,
+      "final_response": "COMPLETED_W5_AFTER_COMPACTION",
+      "error": null
+    },
+    "openclaw": {
+      "artifact": "results/w5-openclaw-compaction-003",
+      "runtime": "openclaw",
+      "runtime_completed": false,
+      "process_exit_code": 1,
+      "wall_seconds": 6.958192166872323,
+      "provider_requests": 8,
+      "agent_requests": 5,
+      "compaction_requests": 3,
+      "final_response": "",
+      "error": {
+        "message": "Context overflow: prompt too large for the model (precheck).",
+        "kind": "context_overflow"
+      }
+    }
+  },
+  "excluded_pilots": [
+    {
+      "artifact": "results/w5-dsh-compaction-001",
+      "reason": "catalog model capacity overrode the intended DSH_CONTEXT_WINDOW fallback"
+    },
+    {
+      "artifact": "results/w5-openclaw-compaction-001",
+      "reason": "env.sh overwrote the requested compaction config path with the minimal config"
+    },
+    {
+      "artifacts": [
+        "results/w5-dsh-compaction-002",
+        "results/w5-openclaw-compaction-002"
+      ],
+      "reason": "mock stopped two agent requests after first compaction, producing unequal tool-call counts"
+    },
+    {
+      "artifacts": [
+        "results/w5-dsh-compaction-004",
+        "results/w5-openclaw-compaction-004"
+      ],
+      "reason": "same 32K numeric threshold did not trigger DSH within ten calls and exhausted OpenClaw recovery attempts"
+    }
+  ],
+  "notes": [
+    "The mock scripted tool calls and returned the same fixed summary; no real model or production credential participated.",
+    "The calibrated pair compares compaction mechanics after aligning observed trigger positions, not equal policy parameters.",
+    "Single-run wall times are mechanism traces, not population-level performance estimates."
+  ]
+}

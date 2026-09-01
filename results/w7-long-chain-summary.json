@@ -1,0 +1,90 @@
+{
+  "task": "W7 deterministic 20-call tool chain",
+  "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
+  "token_metrics": "not reported; payload bytes are measured exactly",
+  "deepseek_harness": {
+    "artifact": "results/w7-dsh-chain-001",
+    "runtime": "dsh",
+    "runtime_completed": true,
+    "process_exit_code": 0,
+    "wall_seconds": 6.491492422996089,
+    "provider_requests": 21,
+    "tool_calls": 20,
+    "final_response": "COMPLETED_W7_LONG_TOOL_CHAIN",
+    "all_previous_markers_present": true,
+    "context": {
+      "first_request_body_bytes": 6351,
+      "final_request_body_bytes": 11271,
+      "request_body_growth_bytes": 4920,
+      "median_request_growth_per_step_bytes": 246.0,
+      "total_request_body_bytes": 185031,
+      "first_message_count": 2,
+      "final_message_count": 42,
+      "message_count_growth": 40,
+      "first_messages_bytes": 194,
+      "final_messages_bytes": 5114,
+      "messages_growth_bytes": 4920,
+      "tool_schema_bytes": 4016
+    },
+    "phase_seconds": {
+      "process_start_to_first_request": 0.44556450843811035,
+      "first_to_final_request": 4.859118938446045,
+      "final_request_to_process_end": 1.1868090629577637
+    },
+    "inter_request_seconds": {
+      "total": 4.859119045,
+      "median": 0.218892849,
+      "minimum": 0.207822423,
+      "maximum": 0.710748372
+    },
+    "reported_tool_summary": null
+  },
+  "openclaw": {
+    "artifact": "results/w7-openclaw-chain-001",
+    "runtime": "openclaw",
+    "runtime_completed": true,
+    "process_exit_code": 0,
+    "wall_seconds": 6.618740533944219,
+    "provider_requests": 21,
+    "tool_calls": 20,
+    "final_response": "COMPLETED_W7_LONG_TOOL_CHAIN",
+    "all_previous_markers_present": true,
+    "context": {
+      "first_request_body_bytes": 17503,
+      "final_request_body_bytes": 22923,
+      "request_body_growth_bytes": 5420,
+      "median_request_growth_per_step_bytes": 271.0,
+      "total_request_body_bytes": 424473,
+      "first_message_count": 2,
+      "final_message_count": 42,
+      "message_count_growth": 40,
+      "first_messages_bytes": 14036,
+      "final_messages_bytes": 19456,
+      "messages_growth_bytes": 5420,
+      "tool_schema_bytes": 3266
+    },
+    "phase_seconds": {
+      "process_start_to_first_request": 5.437187433242798,
+      "first_to_final_request": 0.9443576335906982,
+      "final_request_to_process_end": 0.23719549179077148
+    },
+    "inter_request_seconds": {
+      "total": 0.944357547,
+      "median": 0.027886107,
+      "minimum": 0.024588167,
+      "maximum": 0.414602061
+    },
+    "reported_tool_summary": {
+      "calls": 20,
+      "tools": [
+        "exec"
+      ],
+      "failures": 0
+    }
+  },
+  "notes": [
+    "The provider scripted every call; no real model or production credential participated.",
+    "Inter-request intervals include tool execution plus agent-loop and local transport work.",
+    "Single-run wall times are mechanism traces, not population-level performance estimates."
+  ]
+}

@@ -34,6 +34,9 @@ scripts/run-dsh-minimal.sh workspaces/task-001 dsh-w1-001 'Make the requested ch
 scripts/run-openclaw-minimal.sh workspaces/task-001 'Make the requested change and verify it.'
 ```
 
+The OpenClaw runner's `--code-mode direct` option maps the per-run Code Mode
+override to `false`; it selects direct tool calling and does not enable Code Mode.
+
 The first exact-edit fixture is ready. Prepare independent copies with:
 
 ```bash
@@ -85,6 +88,44 @@ W4 uses a deterministic local SSE mock to inject the same malformed tool call
 into each runtime. It isolates provider-boundary validation and recovery from
 model randomness and gateway latency. See `results/W4_REPORT.md` and
 `results/w4-recovery-summary.json`.
+
+## W5 deterministic automatic compaction
+
+W5 adds explicit compaction services to the otherwise minimal runtimes, scripts
+large tool results, and returns the same fixed summary to every summarizer call.
+The calibrated main pair aligns observed trigger positions rather than pretending
+the runtimes' estimators and prompt envelopes use equivalent numeric thresholds.
+See `results/W5_REPORT.md` and `results/w5-compaction-summary.json`.
+
+Run the calibrated pair with `scripts/run-w5-case.sh`. Set
+`W5_VARIANT=stress` to reproduce the separate same-numeric 16K pressure case.
+
+## W6 deterministic tool failures
+
+W6 uses a local deterministic provider to issue one valid shell tool call and
+then a fixed completion. It covers a child process exiting with code 17 and a
+tool call missing its required `command` argument. This separates execution and
+argument-validation failures from the malformed provider event tested by W4.
+See `results/W6_REPORT.md` and `results/w6-tool-failure-summary.json`.
+
+## W7 deterministic long tool chain
+
+W7 scripts twenty sequential native shell calls followed by one fixed completion.
+It records exact request-body growth, message growth, provider round trips, and
+inter-request timing without assigning fake token counts to the local mock.
+See `results/W7_REPORT.md` and `results/w7-long-chain-summary.json`.
+
+## W8 direct calling versus code mode
+
+W8 is a paired within-runtime ablation. A deterministic local provider causes
+eight identical sequential shell operations in four conditions: DSH native and
+PTC, then OpenClaw direct and Code Mode. Direct conditions expose eight model
+tool calls; code conditions expose one model program call that dispatches the
+same eight underlying tools. This isolates executor collapse from model choice.
+See `results/W8_REPORT.md` and `results/w8-code-mode-summary.json`.
+
+`scripts/run-openclaw-minimal.sh` still defaults to `--code-mode direct` through
+`OPENCLAW_CODE_MODE`; W8 overrides it to `code` only for the Code Mode condition.
 
 ## State
 

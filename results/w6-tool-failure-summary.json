@@ -1,0 +1,67 @@
+{
+  "task": "W6 deterministic tool-failure handling",
+  "model_endpoint": "local deterministic OpenAI-compatible SSE mock",
+  "scenarios": {
+    "nonzero_child_exit": {
+      "stimulus": "child shell prints stdout and stderr, then exits 17",
+      "deepseek_harness": {
+        "artifact": "results/w6-dsh-nonzero-002",
+        "runtime_completed": true,
+        "process_exit_code": 0,
+        "wall_seconds": 2.4910934849176556,
+        "provider_requests": 2,
+        "tool_is_error": false,
+        "observation": "W6_STDOUT; W6_STDERR; [exit code: 17]",
+        "final_response": "RECOVERED_AFTER_NONZERO_EXIT"
+      },
+      "openclaw": {
+        "artifact": "results/w6-openclaw-nonzero-002",
+        "runtime_completed": true,
+        "process_exit_code": 0,
+        "wall_seconds": 6.021164460107684,
+        "provider_requests": 2,
+        "tool_summary_failures": 0,
+        "observation": "W6_STDOUT; W6_STDERR; (Command exited with code 17)",
+        "final_response": "RECOVERED_AFTER_NONZERO_EXIT"
+      }
+    },
+    "missing_required_argument": {
+      "stimulus": "valid shell tool name with empty argument object",
+      "deepseek_harness": {
+        "artifact": "results/w6-dsh-invalid-args-001",
+        "runtime_completed": true,
+        "process_exit_code": 0,
+        "wall_seconds": 0.5606950789224356,
+        "provider_requests": 2,
+        "tool_is_error": true,
+        "error_name": "ToolArgsError",
+        "error_code": "INVALID_ARGS",
+        "final_response": "RECOVERED_AFTER_INVALID_TOOL_ARGUMENTS"
+      },
+      "openclaw": {
+        "artifact": "results/w6-openclaw-invalid-args-001",
+        "runtime_completed": true,
+        "process_exit_code": 0,
+        "wall_seconds": 5.70392691087909,
+        "provider_requests": 2,
+        "tool_summary_failures": 1,
+        "error": "Validation failed for tool exec: command is required",
+        "final_response": "RECOVERED_AFTER_INVALID_TOOL_ARGUMENTS"
+      }
+    }
+  },
+  "excluded_trials": [
+    {
+      "artifacts": [
+        "results/w6-dsh-nonzero-001",
+        "results/w6-openclaw-nonzero-001"
+      ],
+      "reason": "direct exit builtin terminated DSH persistent shell but only OpenClaw's one-shot shell"
+    }
+  ],
+  "notes": [
+    "Each valid sample used a fresh workspace, session, result directory, and mock server.",
+    "Both runtimes requested the fixed second completion for both valid scenarios.",
+    "Wall times are single mechanism-trace metadata, not performance estimates."
+  ]
+}

@@ -30,6 +30,11 @@ def main() -> None:
         parser.error("DEEPSEEK_API_KEY is not set")
 
     started = time.monotonic()
+    patches = tuple(
+        item
+        for item in os.environ.get("BENCH_DSH_PATCHES", "").split(os.pathsep)
+        if item
+    )
     with DeepSeekHarness(
         provider="deepseek-official",
         model=os.environ.get("DSH_MODEL", "deepseek-v4-flash"),
@@ -38,6 +43,7 @@ def main() -> None:
         dsh_home=str(root / "sessions" / "dsh-home"),
         dsh_bin=str(root / "sources" / "deepseek-harness" / "apps" / "cli" / "lib" / "bin.js"),
         profile="sdk-minimal",
+        patches=patches,
     ) as harness:
         result = harness.run(args.prompt, session_id=args.session_id)
 
@@ -47,6 +53,7 @@ def main() -> None:
                 "runtime": "deepseek-harness-sdk-minimal",
                 "model": os.environ.get("DSH_MODEL", "deepseek-v4-flash"),
                 "session_id": result.session_id,
+                "patches": [Path(item).name for item in patches],
                 "finish_reason": result.finish_reason,
                 "wall_seconds": time.monotonic() - started,
                 "final_response": result.final_response,
