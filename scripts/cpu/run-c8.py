@@ -81,16 +81,6 @@ def run_sample(
     cycles = perf.get("cycles")
     if instructions is not None and cycles:
         derived["ipc"] = instructions / cycles
-    if subtest in ("incremental", "repeat") and iterations > 0:
-        if instructions is not None:
-            derived["process_instructions_per_measure"] = instructions / iterations
-        if cycles is not None:
-            derived["process_cycles_per_measure"] = cycles / iterations
-    if n > 0:
-        if instructions is not None:
-            derived["process_instructions_per_event"] = instructions / n
-        if cycles is not None:
-            derived["process_cycles_per_event"] = cycles / n
     return {
         "fixture": fixture_result,
         "perf": perf,
@@ -123,10 +113,6 @@ def aggregate(samples: list[dict[str, Any]], sizes: list[int]) -> tuple[dict[str
         "cycles_kernel_ratio": ("perf", "cycles_kernel_ratio"),
         "instructions_kernel_ratio": ("perf", "instructions_kernel_ratio"),
         "ipc": ("derived", "ipc"),
-        "process_cycles_per_measure": ("derived", "process_cycles_per_measure"),
-        "process_instructions_per_measure": ("derived", "process_instructions_per_measure"),
-        "process_cycles_per_event": ("derived", "process_cycles_per_event"),
-        "process_instructions_per_event": ("derived", "process_instructions_per_event"),
         "surface_nodes": ("fixture", "surface_nodes"),
         "surface_tokens": ("fixture", "surface_tokens"),
     }
@@ -150,6 +136,8 @@ def aggregate(samples: list[dict[str, Any]], sizes: list[int]) -> tuple[dict[str
     slope_key = "per_schema_byte_slope" if is_schema else "per_surface_node_slope"
     fits: dict[str, Any] = {}
     for name, points in medians.items():
+        if name not in ("internal_cpu_us_per_measure", "internal_wall_ns_per_measure"):
+            continue
         if len(points) < 2:
             continue
         xs = [point[0] for point in points]
@@ -239,7 +227,12 @@ def main() -> None:
             "perf_mode": mode,
             "perf_events": perf_events if use_perf else [],
             "observed_perf_event_labels": samples[0]["perf_event_labels"] if samples else {},
-            "internal_scope": "TokenMeter.measure() prompt-window timing; construction excluded",
+            "internal_scope": {
+                "cold": "first TokenMeter.measure(session) prompt-window",
+                "repeat": "TokenMeter.measure(session) batch",
+                "shape": "TokenMeter.measure(session[, header]) batch",
+                "incremental": "append one text turn + TokenMeter.measure(session) batch",
+            }[args.subtest] + "; construction excluded",
             "perf_scope": "whole Node fixture process; construction, measured calls, and teardown included",
         },
         "host": {

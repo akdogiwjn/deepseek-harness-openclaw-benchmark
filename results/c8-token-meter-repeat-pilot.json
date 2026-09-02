@@ -1,6 +1,6 @@
 {
   "benchmark": "C8 token-meter / context-pressure CPU scaling",
-  "created_at": "2026-09-02T10:20:27.757985+00:00",
+  "created_at": "2026-09-02T10:46:56.099354+00:00",
   "design": {
     "subtest": "repeat",
     "shape": null,
@@ -48,7 +48,7 @@
       "cpu-migrations": "cpu-migrations",
       "page-faults": "page-faults"
     },
-    "internal_scope": "TokenMeter.measure() prompt-window timing; construction excluded",
+    "internal_scope": "TokenMeter.measure(session) batch; construction excluded",
     "perf_scope": "whole Node fixture process; construction, measured calls, and teardown included"
   },
   "host": {
@@ -64,59 +64,39 @@
     "10": {
       "samples": 5,
       "internal_wall_ns_per_measure": {
-        "median": 51257.011,
-        "min": 48703.257,
-        "max": 51800.498
+        "median": 51847.101,
+        "min": 49763.811,
+        "max": 53705.718
       },
       "internal_cpu_us_per_measure": {
-        "median": 51.048,
-        "min": 48.562,
-        "max": 51.585
+        "median": 51.615,
+        "min": 49.627,
+        "max": 53.453
       },
       "cycles": {
-        "median": 507863236.0,
-        "min": 496216892.0,
-        "max": 521893894.0
+        "median": 522321434.0,
+        "min": 495261064.0,
+        "max": 525951064.0
       },
       "instructions": {
-        "median": 752527464.0,
-        "min": 750611203.0,
-        "max": 765806675.0
+        "median": 755368544.0,
+        "min": 749134055.0,
+        "max": 761609171.0
       },
       "cycles_kernel_ratio": {
-        "median": 0.13013508012540612,
-        "min": 0.12748816888174988,
-        "max": 0.13978360321648062
+        "median": 0.13711772930995592,
+        "min": 0.13316230251897535,
+        "max": 0.14670700424858646
       },
       "instructions_kernel_ratio": {
-        "median": 0.07721543568807211,
-        "min": 0.07625663487459156,
-        "max": 0.07762828724360235
+        "median": 0.07687556267883189,
+        "min": 0.0743879251422512,
+        "max": 0.07886743163083053
       },
       "ipc": {
-        "median": 1.5067706489376835,
-        "min": 1.4434554679806237,
-        "max": 1.5144718612279728
-      },
-      "process_cycles_per_measure": {
-        "median": 507863.236,
-        "min": 496216.892,
-        "max": 521893.894
-      },
-      "process_instructions_per_measure": {
-        "median": 752527.464,
-        "min": 750611.203,
-        "max": 765806.675
-      },
-      "process_cycles_per_event": {
-        "median": 50786323.6,
-        "min": 49621689.2,
-        "max": 52189389.4
-      },
-      "process_instructions_per_event": {
-        "median": 75252746.4,
-        "min": 75061120.3,
-        "max": 76580667.5
+        "median": 1.4581235259053145,
+        "min": 1.445638959673252,
+        "max": 1.51260438070698
       },
       "surface_nodes": {
         "median": 10.0,
@@ -132,59 +112,39 @@
     "100": {
       "samples": 5,
       "internal_wall_ns_per_measure": {
-        "median": 136689.559,
-        "min": 131889.696,
-        "max": 140588.61
+        "median": 135204.46,
+        "min": 131753.119,
+        "max": 140921.032
       },
       "internal_cpu_us_per_measure": {
-        "median": 138.868,
-        "min": 134.223,
-        "max": 142.953
+        "median": 135.265,
+        "min": 132.599,
+        "max": 141.583
       },
       "cycles": {
-        "median": 853616664.0,
-        "min": 819738222.0,
-        "max": 863407570.0
+        "median": 850506596.0,
+        "min": 815916782.0,
+        "max": 869528910.0
       },
       "instructions": {
-        "median": 1645658487.0,
-        "min": 1636456525.0,
-        "max": 1651587040.0
+        "median": 1650174776.0,
+        "min": 1637132544.0,
+        "max": 1662215515.0
       },
       "cycles_kernel_ratio": {
-        "median": 0.09101264723909525,
-        "min": 0.0851707282725071,
-        "max": 0.09870688864621321
+        "median": 0.09056798928054043,
+        "min": 0.08488512618925394,
+        "max": 0.09634210879182882
       },
       "instructions_kernel_ratio": {
-        "median": 0.03736491930933206,
-        "min": 0.03716519447407868,
-        "max": 0.03796306918690597
+        "median": 0.03710954185371461,
+        "min": 0.035747100160498396,
+        "max": 0.03772553284102874
       },
       "ipc": {
-        "median": 1.922746041893109,
-        "min": 1.9123977984117049,
-        "max": 2.007541484383779
-      },
-      "process_cycles_per_measure": {
-        "median": 853616.664,
-        "min": 819738.222,
-        "max": 863407.57
-      },
-      "process_instructions_per_measure": {
-        "median": 1645658.487,
-        "min": 1636456.525,
-        "max": 1651587.04
-      },
-      "process_cycles_per_event": {
-        "median": 8536166.64,
-        "min": 8197382.22,
-        "max": 8634075.7
-      },
-      "process_instructions_per_event": {
-        "median": 16456584.87,
-        "min": 16364565.25,
-        "max": 16515870.4
+        "median": 1.9432955979097428,
+        "min": 1.8977802313668903,
+        "max": 2.006494510367848
       },
       "surface_nodes": {
         "median": 100.0,
@@ -200,59 +160,39 @@
     "1000": {
       "samples": 5,
       "internal_wall_ns_per_measure": {
-        "median": 1073330.839,
-        "min": 1026630.838,
-        "max": 1091298.534
+        "median": 1077083.98,
+        "min": 1076508.242,
+        "max": 1221542.863
       },
       "internal_cpu_us_per_measure": {
-        "median": 1072.512,
-        "min": 1024.131,
-        "max": 1086.524
+        "median": 1074.218,
+        "min": 1071.705,
+        "max": 1217.967
       },
       "cycles": {
-        "median": 4054838948.0,
-        "min": 3874481757.0,
-        "max": 4094868870.0
+        "median": 4062191830.0,
+        "min": 4031762746.0,
+        "max": 4490574388.0
       },
       "instructions": {
-        "median": 10362595927.0,
-        "min": 10319895182.0,
-        "max": 10377849561.0
+        "median": 10319632221.0,
+        "min": 10303816854.0,
+        "max": 10363743462.0
       },
       "cycles_kernel_ratio": {
-        "median": 0.04125662099651069,
-        "min": 0.0379555130784424,
-        "max": 0.04200544243169285
+        "median": 0.04013116633484867,
+        "min": 0.039036029214532635,
+        "max": 0.04157469356899587
       },
       "instructions_kernel_ratio": {
-        "median": 0.012703801104091462,
-        "min": 0.012671153244321614,
-        "max": 0.013105872066986272
+        "median": 0.01265635539216466,
+        "min": 0.01256188909705762,
+        "max": 0.012907693171054582
       },
       "ipc": {
-        "median": 2.557983555701014,
-        "min": 2.5306294916838206,
-        "max": 2.6647951910849583
-      },
-      "process_cycles_per_measure": {
-        "median": 4054838.948,
-        "min": 3874481.757,
-        "max": 4094868.87
-      },
-      "process_instructions_per_measure": {
-        "median": 10362595.927,
-        "min": 10319895.182,
-        "max": 10377849.561
-      },
-      "process_cycles_per_event": {
-        "median": 4054838.948,
-        "min": 3874481.757,
-        "max": 4094868.87
-      },
-      "process_instructions_per_event": {
-        "median": 10362595.927,
-        "min": 10319895.182,
-        "max": 10377849.561
+        "median": 2.5431349715456446,
+        "min": 2.294543183948699,
+        "max": 2.5624725165609017
       },
       "surface_nodes": {
         "median": 1000.0,
@@ -268,59 +208,39 @@
     "5000": {
       "samples": 5,
       "internal_wall_ns_per_measure": {
-        "median": 5875034.65,
-        "min": 5476687.44,
-        "max": 5928725.505
+        "median": 5950817.945,
+        "min": 5719713.295,
+        "max": 6277341.825
       },
       "internal_cpu_us_per_measure": {
-        "median": 5853.27,
-        "min": 5453.915,
-        "max": 5900.985
+        "median": 5924.285,
+        "min": 5691.52,
+        "max": 6247.31
       },
       "cycles": {
-        "median": 5992322600.0,
-        "min": 5943229212.0,
-        "max": 6228450426.0
+        "median": 6220539205.0,
+        "min": 5988790171.0,
+        "max": 6345709436.0
       },
       "instructions": {
-        "median": 13145844733.0,
-        "min": 13039932999.0,
-        "max": 13192331771.0
+        "median": 13089205298.0,
+        "min": 13046530118.0,
+        "max": 13251625121.0
       },
       "cycles_kernel_ratio": {
-        "median": 0.06726358152441045,
-        "min": 0.05807150152430044,
-        "max": 0.07482984948580786
+        "median": 0.06739016505651538,
+        "min": 0.06369960397285357,
+        "max": 0.07548860639485577
       },
       "instructions_kernel_ratio": {
-        "median": 0.02780706416180382,
-        "min": 0.024854962801278052,
-        "max": 0.029890483949929367
+        "median": 0.025006246867206625,
+        "min": 0.024549896092553442,
+        "max": 0.032412276227882154
       },
       "ipc": {
-        "median": 2.1883370828533164,
-        "min": 2.118076065264969,
-        "max": 2.2057242457543236
-      },
-      "process_cycles_per_measure": {
-        "median": 29961613.0,
-        "min": 29716146.06,
-        "max": 31142252.13
-      },
-      "process_instructions_per_measure": {
-        "median": 65729223.665,
-        "min": 65199664.995,
-        "max": 65961658.855
-      },
-      "process_cycles_per_event": {
-        "median": 1198464.52,
-        "min": 1188645.8424,
-        "max": 1245690.0852
-      },
-      "process_instructions_per_event": {
-        "median": 2629168.9466,
-        "min": 2607986.5998,
-        "max": 2638466.3542
+        "median": 2.1029588156761947,
+        "min": 2.062685887214329,
+        "max": 2.178491773042285
       },
       "surface_nodes": {
         "median": 5000.0,
@@ -336,59 +256,39 @@
     "10000": {
       "samples": 5,
       "internal_wall_ns_per_measure": {
-        "median": 11508268.14,
-        "min": 11285159.42,
-        "max": 12104363.24
+        "median": 11667450.69,
+        "min": 11375086.06,
+        "max": 12002587.95
       },
       "internal_cpu_us_per_measure": {
-        "median": 11457.3,
-        "min": 11255.73,
-        "max": 12050.15
+        "median": 11636.19,
+        "min": 11323.96,
+        "max": 11959.75
       },
       "cycles": {
-        "median": 11813338622.0,
-        "min": 11280518687.0,
-        "max": 11902887115.0
+        "median": 11594475039.0,
+        "min": 11399423827.0,
+        "max": 11930197558.0
       },
       "instructions": {
-        "median": 19454188424.0,
-        "min": 19353263641.0,
-        "max": 19543918023.0
+        "median": 19558528273.0,
+        "min": 19338973648.0,
+        "max": 19720247074.0
       },
       "cycles_kernel_ratio": {
-        "median": 0.304404834997542,
-        "min": 0.2906531035869948,
-        "max": 0.3146369529355988
+        "median": 0.29857738098150044,
+        "min": 0.29171243770441835,
+        "max": 0.31371098989770957
       },
       "instructions_kernel_ratio": {
-        "median": 0.18900462924849018,
-        "min": 0.18815944026543735,
-        "max": 0.18986541131899545
+        "median": 0.1884432723952941,
+        "min": 0.1877350538311009,
+        "max": 0.18947516650548568
       },
       "ipc": {
-        "median": 1.642154586679967,
-        "min": 1.638255218127616,
-        "max": 1.723656331500513
-      },
-      "process_cycles_per_measure": {
-        "median": 118133386.22,
-        "min": 112805186.87,
-        "max": 119028871.15
-      },
-      "process_instructions_per_measure": {
-        "median": 194541884.24,
-        "min": 193532636.41,
-        "max": 195439180.23
-      },
-      "process_cycles_per_event": {
-        "median": 1181333.8622,
-        "min": 1128051.8687,
-        "max": 1190288.7115
-      },
-      "process_instructions_per_event": {
-        "median": 1945418.8424,
-        "min": 1935326.3641,
-        "max": 1954391.8023
+        "median": 1.6679473268906142,
+        "min": 1.6394136122150542,
+        "max": 1.7299336679887094
       },
       "surface_nodes": {
         "median": 10000.0,
@@ -404,56 +304,12 @@
   },
   "linear_fits_over_surface_nodes": {
     "internal_wall_ns_per_measure": {
-      "intercept": 12602.755280706566,
-      "per_surface_node_slope": 1153.4181516198926
+      "intercept": 7640.530021171551,
+      "per_surface_node_slope": 1169.7207651082645
     },
     "internal_cpu_us_per_measure": {
-      "intercept": 15.17683947409887,
-      "per_surface_node_slope": 1.1481759033289576
-    },
-    "cycles": {
-      "intercept": 1278244601.9393458,
-      "per_surface_node_slope": 1044739.7306209354
-    },
-    "instructions": {
-      "intercept": 3652286855.1503143,
-      "per_surface_node_slope": 1682146.5399905916
-    },
-    "cycles_kernel_ratio": {
-      "intercept": 0.06641948631949017,
-      "per_surface_node_slope": 1.874458927905112e-05
-    },
-    "instructions_kernel_ratio": {
-      "intercept": 0.028051926945913887,
-      "per_surface_node_slope": 1.2652775591695853e-05
-    },
-    "ipc": {
-      "intercept": 2.0290357712253946,
-      "per_surface_node_slope": -2.0309555559396875e-05
-    },
-    "process_cycles_per_measure": {
-      "intercept": -5849912.865263414,
-      "per_surface_node_slope": 11344.561290770767
-    },
-    "process_instructions_per_measure": {
-      "intercept": -6477747.36940439,
-      "per_surface_node_slope": 18958.449821851143
-    },
-    "process_cycles_per_event": {
-      "intercept": 21353746.863599647,
-      "per_surface_node_slope": -2545.723572178661
-    },
-    "process_instructions_per_event": {
-      "intercept": 34297285.33811954,
-      "per_surface_node_slope": -4024.823817790048
-    },
-    "surface_nodes": {
-      "intercept": 0.0,
-      "per_surface_node_slope": 1.0
-    },
-    "surface_tokens": {
-      "intercept": -0.09470487837097608,
-      "per_surface_node_slope": 74.0000914664427
+      "intercept": 6.437065111476386,
+      "per_surface_node_slope": 1.1663182913992935
     }
   },
   "samples": [
@@ -467,9 +323,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 136689.559,
-          "cpu_total_us": 139.06,
-          "cpu_user_us": 135.078
+          "wall_ns": 135204.46,
+          "cpu_total_us": 134.831,
+          "cpu_user_us": 134.102
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -477,22 +333,22 @@
         }
       },
       "perf": {
-        "task-clock": 294.55,
-        "cycles_u": 769358819.0,
-        "instructions_u": 1579961466.0,
-        "cycles_k": 84257845.0,
-        "instructions_k": 61326596.0,
-        "branches": 334194164.0,
-        "branch-misses": 8172046.0,
-        "cache-references": 614290254.0,
-        "cache-misses": 7640456.0,
-        "context-switches": 195.0,
+        "task-clock": 293.46,
+        "cycles_u": 768566997.0,
+        "instructions_u": 1591451603.0,
+        "cycles_k": 81939599.0,
+        "instructions_k": 61334121.0,
+        "branches": 336272607.0,
+        "branch-misses": 8353165.0,
+        "cache-references": 614755910.0,
+        "cache-misses": 7816367.0,
+        "context-switches": 180.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8402.0,
-        "instructions": 1641288062.0,
-        "instructions_kernel_ratio": 0.03736491930933206,
-        "cycles": 853616664.0,
-        "cycles_kernel_ratio": 0.09870688864621321
+        "page-faults": 8358.0,
+        "instructions": 1652785724.0,
+        "instructions_kernel_ratio": 0.03710954185371461,
+        "cycles": 850506596.0,
+        "cycles_kernel_ratio": 0.09634210879182882
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -509,13 +365,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 136689.559,
-        "internal_cpu_us_per_measure": 139.06,
-        "ipc": 1.922746041893109,
-        "process_instructions_per_measure": 1641288.062,
-        "process_cycles_per_measure": 853616.664,
-        "process_instructions_per_event": 16412880.62,
-        "process_cycles_per_event": 8536166.64
+        "internal_wall_ns_per_measure": 135204.46,
+        "internal_cpu_us_per_measure": 134.831,
+        "ipc": 1.9432955979097428
       },
       "sample_index": 1
     },
@@ -529,9 +381,9 @@
         "payload_bytes": 256,
         "iterations": 200,
         "measure": {
-          "wall_ns": 5662412.67,
-          "cpu_total_us": 5637.48,
-          "cpu_user_us": 5318.61
+          "wall_ns": 6277341.825,
+          "cpu_total_us": 6247.31,
+          "cpu_user_us": 6028.49
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -539,22 +391,22 @@
         }
       },
       "perf": {
-        "task-clock": 2095.11,
-        "cycles_u": 5632666377.0,
-        "instructions_u": 12812240061.0,
-        "cycles_k": 440767783.0,
-        "instructions_k": 369094315.0,
-        "branches": 2715567732.0,
-        "branch-misses": 37438272.0,
-        "cache-references": 4876337574.0,
-        "cache-misses": 60473635.0,
-        "context-switches": 924.0,
+        "task-clock": 2188.97,
+        "cycles_u": 5941490258.0,
+        "instructions_u": 12767866668.0,
+        "cycles_k": 404219178.0,
+        "instructions_k": 321338630.0,
+        "branches": 2689527034.0,
+        "branch-misses": 37258354.0,
+        "cache-references": 4851416848.0,
+        "cache-misses": 64141365.0,
+        "context-switches": 937.0,
         "cpu-migrations": 0.0,
-        "page-faults": 78436.0,
-        "instructions": 13181334376.0,
-        "instructions_kernel_ratio": 0.028001286096802983,
-        "cycles": 6073434160.0,
-        "cycles_kernel_ratio": 0.07257307338621087
+        "page-faults": 69045.0,
+        "instructions": 13089205298.0,
+        "instructions_kernel_ratio": 0.024549896092553442,
+        "cycles": 6345709436.0,
+        "cycles_kernel_ratio": 0.06369960397285357
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -571,13 +423,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 5662412.67,
-        "internal_cpu_us_per_measure": 5637.48,
-        "ipc": 2.170326380223738,
-        "process_instructions_per_measure": 65906671.88,
-        "process_cycles_per_measure": 30367170.8,
-        "process_instructions_per_event": 2636266.8752,
-        "process_cycles_per_event": 1214686.832
+        "internal_wall_ns_per_measure": 6277341.825,
+        "internal_cpu_us_per_measure": 6247.31,
+        "ipc": 2.062685887214329
       },
       "sample_index": 2
     },
@@ -591,9 +439,9 @@
         "payload_bytes": 256,
         "iterations": 100,
         "measure": {
-          "wall_ns": 11369671.92,
-          "cpu_total_us": 11340.25,
-          "cpu_user_us": 10636.68
+          "wall_ns": 12002587.95,
+          "cpu_total_us": 11959.75,
+          "cpu_user_us": 11415.97
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -601,22 +449,22 @@
         }
       },
       "perf": {
-        "task-clock": 3896.05,
-        "cycles_u": 8011000095.0,
-        "instructions_u": 15785373266.0,
-        "cycles_k": 3282487105.0,
-        "instructions_k": 3680717451.0,
-        "branches": 3928369234.0,
-        "branch-misses": 63321141.0,
-        "cache-references": 7117398587.0,
-        "cache-misses": 113733077.0,
-        "context-switches": 1713.0,
+        "task-clock": 4116.18,
+        "cycles_u": 8307425205.0,
+        "instructions_u": 15872855202.0,
+        "cycles_k": 3622772353.0,
+        "instructions_k": 3685673071.0,
+        "branches": 3950930539.0,
+        "branch-misses": 63633242.0,
+        "cache-references": 7139999582.0,
+        "cache-misses": 117592339.0,
+        "context-switches": 1850.0,
         "cpu-migrations": 0.0,
-        "page-faults": 717012.0,
-        "instructions": 19466090717.0,
-        "instructions_kernel_ratio": 0.18908354556190266,
-        "cycles": 11293487200.0,
-        "cycles_kernel_ratio": 0.2906531035869948
+        "page-faults": 717780.0,
+        "instructions": 19558528273.0,
+        "instructions_kernel_ratio": 0.1884432723952941,
+        "cycles": 11930197558.0,
+        "cycles_kernel_ratio": 0.30366407055603933
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -633,13 +481,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 11369671.92,
-        "internal_cpu_us_per_measure": 11340.25,
-        "ipc": 1.723656331500513,
-        "process_instructions_per_measure": 194660907.17,
-        "process_cycles_per_measure": 112934872.0,
-        "process_instructions_per_event": 1946609.0717,
-        "process_cycles_per_event": 1129348.72
+        "internal_wall_ns_per_measure": 12002587.95,
+        "internal_cpu_us_per_measure": 11959.75,
+        "ipc": 1.6394136122150542
       },
       "sample_index": 3
     },
@@ -653,9 +497,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 48703.257,
-          "cpu_total_us": 48.562,
-          "cpu_user_us": 44.463
+          "wall_ns": 49763.811,
+          "cpu_total_us": 49.627,
+          "cpu_user_us": 49.345
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -663,22 +507,22 @@
         }
       },
       "perf": {
-        "task-clock": 171.26,
-        "cycles_u": 431641667.0,
-        "instructions_u": 693168356.0,
-        "cycles_k": 64575225.0,
-        "instructions_k": 58338164.0,
-        "branches": 150760160.0,
-        "branch-misses": 6159090.0,
-        "cache-references": 291489162.0,
-        "cache-misses": 5046075.0,
-        "context-switches": 149.0,
+        "task-clock": 170.91,
+        "cycles_u": 429306886.0,
+        "instructions_u": 691543953.0,
+        "cycles_k": 65954178.0,
+        "instructions_k": 57590102.0,
+        "branches": 150345629.0,
+        "branch-misses": 6131552.0,
+        "cache-references": 290182063.0,
+        "cache-misses": 4901382.0,
+        "context-switches": 152.0,
         "cpu-migrations": 0.0,
-        "page-faults": 7975.0,
-        "instructions": 751506520.0,
-        "instructions_kernel_ratio": 0.07762828724360235,
-        "cycles": 496216892.0,
-        "cycles_kernel_ratio": 0.13013508012540612
+        "page-faults": 7918.0,
+        "instructions": 749134055.0,
+        "instructions_kernel_ratio": 0.07687556267883189,
+        "cycles": 495261064.0,
+        "cycles_kernel_ratio": 0.13317052923021624
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -695,13 +539,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 48703.257,
-        "internal_cpu_us_per_measure": 48.562,
-        "ipc": 1.5144718612279728,
-        "process_instructions_per_measure": 751506.52,
-        "process_cycles_per_measure": 496216.892,
-        "process_instructions_per_event": 75150652.0,
-        "process_cycles_per_event": 49621689.2
+        "internal_wall_ns_per_measure": 49763.811,
+        "internal_cpu_us_per_measure": 49.627,
+        "ipc": 1.51260438070698
       },
       "sample_index": 4
     },
@@ -715,9 +555,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 136008.08,
-          "cpu_total_us": 135.688,
-          "cpu_user_us": 135.624
+          "wall_ns": 132243.987,
+          "cpu_total_us": 135.265,
+          "cpu_user_us": 135.254
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -725,22 +565,22 @@
         }
       },
       "perf": {
-        "task-clock": 285.74,
-        "cycles_u": 757602525.0,
-        "instructions_u": 1588961968.0,
-        "cycles_k": 70532897.0,
-        "instructions_k": 62625072.0,
-        "branches": 336100227.0,
-        "branch-misses": 8236074.0,
-        "cache-references": 618998353.0,
-        "cache-misses": 8028020.0,
-        "context-switches": 203.0,
+        "task-clock": 288.75,
+        "cycles_u": 764892706.0,
+        "instructions_u": 1599507549.0,
+        "cycles_k": 71989944.0,
+        "instructions_k": 62707966.0,
+        "branches": 338434139.0,
+        "branch-misses": 8483769.0,
+        "cache-references": 621098858.0,
+        "cache-misses": 7909717.0,
+        "context-switches": 192.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8853.0,
-        "instructions": 1651587040.0,
-        "instructions_kernel_ratio": 0.037918117836526495,
-        "cycles": 828135422.0,
-        "cycles_kernel_ratio": 0.0851707282725071
+        "page-faults": 8667.0,
+        "instructions": 1662215515.0,
+        "instructions_kernel_ratio": 0.03772553284102874,
+        "cycles": 836882650.0,
+        "cycles_kernel_ratio": 0.08602155152816228
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -757,13 +597,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 136008.08,
-        "internal_cpu_us_per_measure": 135.688,
-        "ipc": 1.9943441569149545,
-        "process_instructions_per_measure": 1651587.04,
-        "process_cycles_per_measure": 828135.422,
-        "process_instructions_per_event": 16515870.4,
-        "process_cycles_per_event": 8281354.22
+        "internal_wall_ns_per_measure": 132243.987,
+        "internal_cpu_us_per_measure": 135.265,
+        "ipc": 1.9861990387780175
       },
       "sample_index": 5
     },
@@ -777,9 +613,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 131889.696,
-          "cpu_total_us": 134.223,
-          "cpu_user_us": 134.223
+          "wall_ns": 131753.119,
+          "cpu_total_us": 132.599,
+          "cpu_user_us": 128.378
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -787,22 +623,22 @@
         }
       },
       "perf": {
-        "task-clock": 282.82,
-        "cycles_u": 746657786.0,
-        "instructions_u": 1583184240.0,
-        "cycles_k": 73080436.0,
-        "instructions_k": 62474247.0,
-        "branches": 334987758.0,
-        "branch-misses": 8304448.0,
-        "cache-references": 616628288.0,
-        "cache-misses": 7676411.0,
-        "context-switches": 182.0,
+        "task-clock": 281.53,
+        "cycles_u": 746657583.0,
+        "instructions_u": 1576891259.0,
+        "cycles_k": 69259199.0,
+        "instructions_k": 60241285.0,
+        "branches": 333055772.0,
+        "branch-misses": 8063950.0,
+        "cache-references": 613369597.0,
+        "cache-misses": 7871516.0,
+        "context-switches": 198.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8557.0,
-        "instructions": 1645658487.0,
-        "instructions_kernel_ratio": 0.03796306918690597,
-        "cycles": 819738222.0,
-        "cycles_kernel_ratio": 0.08915094360453038
+        "page-faults": 8216.0,
+        "instructions": 1637132544.0,
+        "instructions_kernel_ratio": 0.03679682822309102,
+        "cycles": 815916782.0,
+        "cycles_kernel_ratio": 0.08488512618925394
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -819,13 +655,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 131889.696,
-        "internal_cpu_us_per_measure": 134.223,
-        "ipc": 2.007541484383779,
-        "process_instructions_per_measure": 1645658.487,
-        "process_cycles_per_measure": 819738.222,
-        "process_instructions_per_event": 16456584.87,
-        "process_cycles_per_event": 8197382.22
+        "internal_wall_ns_per_measure": 131753.119,
+        "internal_cpu_us_per_measure": 132.599,
+        "ipc": 2.006494510367848
       },
       "sample_index": 6
     },
@@ -839,9 +671,9 @@
         "payload_bytes": 256,
         "iterations": 200,
         "measure": {
-          "wall_ns": 5476687.44,
-          "cpu_total_us": 5453.915,
-          "cpu_user_us": 5095.8
+          "wall_ns": 6106164.095,
+          "cpu_total_us": 6079.14,
+          "cpu_user_us": 5720.375
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -849,22 +681,22 @@
         }
       },
       "perf": {
-        "task-clock": 2055.98,
-        "cycles_u": 5513900105.0,
-        "instructions_u": 12752909072.0,
-        "cycles_k": 445976683.0,
-        "instructions_k": 392935661.0,
-        "branches": 2704560907.0,
-        "branch-misses": 37519585.0,
-        "cache-references": 4872404715.0,
-        "cache-misses": 62999073.0,
-        "context-switches": 819.0,
+        "task-clock": 2145.79,
+        "cycles_u": 5807934247.0,
+        "instructions_u": 12733303587.0,
+        "cycles_k": 412604958.0,
+        "instructions_k": 326578639.0,
+        "branches": 2686766484.0,
+        "branch-misses": 37000550.0,
+        "cache-references": 4839843630.0,
+        "cache-misses": 62628761.0,
+        "context-switches": 908.0,
         "cpu-migrations": 0.0,
-        "page-faults": 83434.0,
-        "instructions": 13145844733.0,
-        "instructions_kernel_ratio": 0.029890483949929367,
-        "cycles": 5959876788.0,
-        "cycles_kernel_ratio": 0.07482984948580786
+        "page-faults": 70527.0,
+        "instructions": 13059882226.0,
+        "instructions_kernel_ratio": 0.025006246867206625,
+        "cycles": 6220539205.0,
+        "cycles_kernel_ratio": 0.06632945222310516
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -881,13 +713,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 5476687.44,
-        "internal_cpu_us_per_measure": 5453.915,
-        "ipc": 2.2057242457543236,
-        "process_instructions_per_measure": 65729223.665,
-        "process_cycles_per_measure": 29799383.94,
-        "process_instructions_per_event": 2629168.9466,
-        "process_cycles_per_event": 1191975.3576
+        "internal_wall_ns_per_measure": 6106164.095,
+        "internal_cpu_us_per_measure": 6079.14,
+        "ipc": 2.099477520453952
       },
       "sample_index": 7
     },
@@ -901,9 +729,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 51800.498,
-          "cpu_total_us": 51.576,
-          "cpu_user_us": 51.437
+          "wall_ns": 52521.031,
+          "cpu_total_us": 52.278,
+          "cpu_user_us": 48.029
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -911,22 +739,22 @@
         }
       },
       "perf": {
-        "task-clock": 180.15,
-        "cycles_u": 448941685.0,
-        "instructions_u": 695346650.0,
-        "cycles_k": 72952209.0,
-        "instructions_k": 57983945.0,
-        "branches": 151188104.0,
-        "branch-misses": 6198406.0,
-        "cache-references": 290099272.0,
-        "cache-misses": 4975623.0,
-        "context-switches": 137.0,
+        "task-clock": 180.34,
+        "cycles_u": 445830644.0,
+        "instructions_u": 695794567.0,
+        "cycles_k": 76651840.0,
+        "instructions_k": 59573977.0,
+        "branches": 151814275.0,
+        "branch-misses": 6201255.0,
+        "cache-references": 291500584.0,
+        "cache-misses": 5129754.0,
+        "context-switches": 156.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8047.0,
-        "instructions": 753330595.0,
-        "instructions_kernel_ratio": 0.07697011827854941,
-        "cycles": 521893894.0,
-        "cycles_kernel_ratio": 0.13978360321648062
+        "page-faults": 8232.0,
+        "instructions": 755368544.0,
+        "instructions_kernel_ratio": 0.07886743163083053,
+        "cycles": 522482484.0,
+        "cycles_kernel_ratio": 0.14670700424858646
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -943,13 +771,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 51800.498,
-        "internal_cpu_us_per_measure": 51.576,
-        "ipc": 1.4434554679806237,
-        "process_instructions_per_measure": 753330.595,
-        "process_cycles_per_measure": 521893.894,
-        "process_instructions_per_event": 75333059.5,
-        "process_cycles_per_event": 52189389.4
+        "internal_wall_ns_per_measure": 52521.031,
+        "internal_cpu_us_per_measure": 52.278,
+        "ipc": 1.445729889769855
       },
       "sample_index": 8
     },
@@ -963,9 +787,9 @@
         "payload_bytes": 256,
         "iterations": 100,
         "measure": {
-          "wall_ns": 11915539.07,
-          "cpu_total_us": 11864.05,
-          "cpu_user_us": 11352.04
+          "wall_ns": 11667450.69,
+          "cpu_total_us": 11636.19,
+          "cpu_user_us": 11219.25
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -973,22 +797,22 @@
         }
       },
       "perf": {
-        "task-clock": 4087.3,
-        "cycles_u": 8196345275.0,
-        "instructions_u": 15760510937.0,
-        "cycles_k": 3650400812.0,
-        "instructions_k": 3693677487.0,
-        "branches": 3929391892.0,
-        "branch-misses": 63352439.0,
-        "cache-references": 7108873417.0,
-        "cache-misses": 115418871.0,
-        "context-switches": 1806.0,
+        "task-clock": 3997.08,
+        "cycles_u": 8157270419.0,
+        "instructions_u": 15849876449.0,
+        "cycles_k": 3429010221.0,
+        "instructions_k": 3688762783.0,
+        "branches": 3940935395.0,
+        "branch-misses": 63146697.0,
+        "cache-references": 7136085286.0,
+        "cache-misses": 124197840.0,
+        "context-switches": 1753.0,
         "cpu-migrations": 0.0,
-        "page-faults": 720028.0,
-        "instructions": 19454188424.0,
-        "instructions_kernel_ratio": 0.18986541131899545,
-        "cycles": 11846746087.0,
-        "cycles_kernel_ratio": 0.30813531286922397
+        "page-faults": 719011.0,
+        "instructions": 19538639232.0,
+        "instructions_kernel_ratio": 0.18879322859693407,
+        "cycles": 11586280640.0,
+        "cycles_kernel_ratio": 0.2959543556334917
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1005,13 +829,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 11915539.07,
-        "internal_cpu_us_per_measure": 11864.05,
-        "ipc": 1.642154586679967,
-        "process_instructions_per_measure": 194541884.24,
-        "process_cycles_per_measure": 118467460.87,
-        "process_instructions_per_event": 1945418.8424,
-        "process_cycles_per_event": 1184674.6087
+        "internal_wall_ns_per_measure": 11667450.69,
+        "internal_cpu_us_per_measure": 11636.19,
+        "ipc": 1.6863599147206572
       },
       "sample_index": 9
     },
@@ -1025,9 +845,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 51257.011,
-          "cpu_total_us": 51.048,
-          "cpu_user_us": 43.225
+          "wall_ns": 50567.603,
+          "cpu_total_us": 50.425,
+          "cpu_user_us": 46.329
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1035,22 +855,22 @@
         }
       },
       "perf": {
-        "task-clock": 179.63,
-        "cycles_u": 449115935.0,
-        "instructions_u": 694420728.0,
-        "cycles_k": 71351107.0,
-        "instructions_k": 58106736.0,
-        "branches": 151190043.0,
-        "branch-misses": 6365050.0,
-        "cache-references": 288974602.0,
-        "cache-misses": 5104374.0,
-        "context-switches": 142.0,
+        "task-clock": 171.8,
+        "cycles_u": 431542185.0,
+        "instructions_u": 692120888.0,
+        "cycles_k": 66292861.0,
+        "instructions_k": 57718744.0,
+        "branches": 150675467.0,
+        "branch-misses": 6157157.0,
+        "cache-references": 290834972.0,
+        "cache-misses": 4987394.0,
+        "context-switches": 152.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8053.0,
-        "instructions": 752527464.0,
-        "instructions_kernel_ratio": 0.07721543568807211,
-        "cycles": 520467042.0,
-        "cycles_kernel_ratio": 0.13709053838609822
+        "page-faults": 7919.0,
+        "instructions": 749839632.0,
+        "instructions_kernel_ratio": 0.07697478438963067,
+        "cycles": 497835046.0,
+        "cycles_kernel_ratio": 0.13316230251897535
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1067,13 +887,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 51257.011,
-        "internal_cpu_us_per_measure": 51.048,
-        "ipc": 1.445869581113649,
-        "process_instructions_per_measure": 752527.464,
-        "process_cycles_per_measure": 520467.042,
-        "process_instructions_per_event": 75252746.4,
-        "process_cycles_per_event": 52046704.2
+        "internal_wall_ns_per_measure": 50567.603,
+        "internal_cpu_us_per_measure": 50.425,
+        "ipc": 1.5062009756540924
       },
       "sample_index": 10
     },
@@ -1087,9 +903,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 1037432.969,
-          "cpu_total_us": 1034.894,
-          "cpu_user_us": 1030.827
+          "wall_ns": 1077083.98,
+          "cpu_total_us": 1074.218,
+          "cpu_user_us": 1066.225
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1097,22 +913,22 @@
         }
       },
       "perf": {
-        "task-clock": 1353.11,
-        "cycles_u": 3765420301.0,
-        "instructions_u": 10184643956.0,
-        "cycles_k": 157428119.0,
-        "instructions_k": 135251226.0,
-        "branches": 2116249201.0,
-        "branch-misses": 22505183.0,
-        "cache-references": 3761342952.0,
-        "cache-misses": 29353681.0,
-        "context-switches": 709.0,
+        "task-clock": 1390.74,
+        "cycles_u": 3870746661.0,
+        "instructions_u": 10183929389.0,
+        "cycles_k": 161016085.0,
+        "instructions_k": 132214673.0,
+        "branches": 2116611941.0,
+        "branch-misses": 23046040.0,
+        "cache-references": 3760204067.0,
+        "cache-misses": 31314237.0,
+        "context-switches": 732.0,
         "cpu-migrations": 0.0,
-        "page-faults": 28508.0,
-        "instructions": 10319895182.0,
-        "instructions_kernel_ratio": 0.013105872066986272,
-        "cycles": 3922848420.0,
-        "cycles_kernel_ratio": 0.040131073685482854
+        "page-faults": 28036.0,
+        "instructions": 10316144062.0,
+        "instructions_kernel_ratio": 0.01281628796625853,
+        "cycles": 4031762746.0,
+        "cycles_kernel_ratio": 0.03993689488791164
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1129,13 +945,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 1037432.969,
-        "internal_cpu_us_per_measure": 1034.894,
-        "ipc": 2.63071474528195,
-        "process_instructions_per_measure": 10319895.182,
-        "process_cycles_per_measure": 3922848.42,
-        "process_instructions_per_event": 10319895.182,
-        "process_cycles_per_event": 3922848.42
+        "internal_wall_ns_per_measure": 1077083.98,
+        "internal_cpu_us_per_measure": 1074.218,
+        "ipc": 2.5587180377205656
       },
       "sample_index": 11
     },
@@ -1149,9 +961,9 @@
         "payload_bytes": 256,
         "iterations": 100,
         "measure": {
-          "wall_ns": 11285159.42,
-          "cpu_total_us": 11255.73,
-          "cpu_user_us": 10596.2
+          "wall_ns": 11375086.06,
+          "cpu_total_us": 11323.96,
+          "cpu_user_us": 10918.68
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1159,22 +971,22 @@
         }
       },
       "perf": {
-        "task-clock": 3891.33,
-        "cycles_u": 7970801607.0,
-        "instructions_u": 15765454449.0,
-        "cycles_k": 3309717080.0,
-        "instructions_k": 3672420311.0,
-        "branches": 3920751747.0,
-        "branch-misses": 64078877.0,
-        "cache-references": 7116791335.0,
-        "cache-misses": 116564953.0,
-        "context-switches": 1686.0,
+        "task-clock": 3932.4,
+        "cycles_u": 8074070114.0,
+        "instructions_u": 16018065428.0,
+        "cycles_k": 3325353713.0,
+        "instructions_k": 3702181646.0,
+        "branches": 3983054284.0,
+        "branch-misses": 64509336.0,
+        "cache-references": 7182347123.0,
+        "cache-misses": 122400853.0,
+        "context-switches": 1740.0,
         "cpu-migrations": 0.0,
-        "page-faults": 716980.0,
-        "instructions": 19437874760.0,
-        "instructions_kernel_ratio": 0.18893116435533613,
-        "cycles": 11280518687.0,
-        "cycles_kernel_ratio": 0.2934011433192531
+        "page-faults": 721650.0,
+        "instructions": 19720247074.0,
+        "instructions_kernel_ratio": 0.1877350538311009,
+        "cycles": 11399423827.0,
+        "cycles_kernel_ratio": 0.29171243770441835
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1191,13 +1003,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 11285159.42,
-        "internal_cpu_us_per_measure": 11255.73,
-        "ipc": 1.7231366127162908,
-        "process_instructions_per_measure": 194378747.6,
-        "process_cycles_per_measure": 112805186.87,
-        "process_instructions_per_event": 1943787.476,
-        "process_cycles_per_event": 1128051.8687
+        "internal_wall_ns_per_measure": 11375086.06,
+        "internal_cpu_us_per_measure": 11323.96,
+        "ipc": 1.7299336679887094
       },
       "sample_index": 12
     },
@@ -1211,9 +1019,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 1073330.839,
-          "cpu_total_us": 1072.512,
-          "cpu_user_us": 1064.591
+          "wall_ns": 1221542.863,
+          "cpu_total_us": 1217.967,
+          "cpu_user_us": 1206.046
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1221,22 +1029,22 @@
         }
       },
       "perf": {
-        "task-clock": 1398.73,
-        "cycles_u": 3884513644.0,
-        "instructions_u": 10240444840.0,
-        "cycles_k": 170325304.0,
-        "instructions_k": 131766510.0,
-        "branches": 2126184603.0,
-        "branch-misses": 22737374.0,
-        "cache-references": 3773828943.0,
-        "cache-misses": 31898587.0,
-        "context-switches": 739.0,
+        "task-clock": 1548.93,
+        "cycles_u": 4315280195.0,
+        "instructions_u": 10173408086.0,
+        "cycles_k": 175294193.0,
+        "instructions_k": 130408768.0,
+        "branches": 2113503557.0,
+        "branch-misses": 26683402.0,
+        "cache-references": 3743350154.0,
+        "cache-misses": 32393375.0,
+        "context-switches": 749.0,
         "cpu-migrations": 0.0,
-        "page-faults": 28017.0,
-        "instructions": 10372211350.0,
-        "instructions_kernel_ratio": 0.012703801104091462,
-        "cycles": 4054838948.0,
-        "cycles_kernel_ratio": 0.04200544243169285
+        "page-faults": 27558.0,
+        "instructions": 10303816854.0,
+        "instructions_kernel_ratio": 0.01265635539216466,
+        "cycles": 4490574388.0,
+        "cycles_kernel_ratio": 0.039036029214532635
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1253,13 +1061,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 1073330.839,
-        "internal_cpu_us_per_measure": 1072.512,
-        "ipc": 2.557983555701014,
-        "process_instructions_per_measure": 10372211.35,
-        "process_cycles_per_measure": 4054838.948,
-        "process_instructions_per_event": 10372211.35,
-        "process_cycles_per_event": 4054838.948
+        "internal_wall_ns_per_measure": 1221542.863,
+        "internal_cpu_us_per_measure": 1217.967,
+        "ipc": 2.294543183948699
       },
       "sample_index": 13
     },
@@ -1273,9 +1077,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 138165.179,
-          "cpu_total_us": 138.868,
-          "cpu_user_us": 138.868
+          "wall_ns": 135375.792,
+          "cpu_total_us": 135.841,
+          "cpu_user_us": 135.841
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1283,22 +1087,22 @@
         }
       },
       "perf": {
-        "task-clock": 294.96,
-        "cycles_u": 776979679.0,
-        "instructions_u": 1575637300.0,
-        "cycles_k": 77795337.0,
-        "instructions_k": 60819225.0,
-        "branches": 333121715.0,
-        "branch-misses": 8124148.0,
-        "cache-references": 611753475.0,
-        "cache-misses": 7923484.0,
-        "context-switches": 203.0,
+        "task-clock": 293.73,
+        "cycles_u": 771450973.0,
+        "instructions_u": 1582100692.0,
+        "cycles_k": 79807365.0,
+        "instructions_k": 61314151.0,
+        "branches": 334550532.0,
+        "branch-misses": 8177818.0,
+        "cache-references": 615859635.0,
+        "cache-misses": 7782778.0,
+        "context-switches": 198.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8406.0,
-        "instructions": 1636456525.0,
-        "instructions_kernel_ratio": 0.03716519447407868,
-        "cycles": 854775016.0,
-        "cycles_kernel_ratio": 0.09101264723909525
+        "page-faults": 8405.0,
+        "instructions": 1643414843.0,
+        "instructions_kernel_ratio": 0.03730899185994513,
+        "cycles": 851258338.0,
+        "cycles_kernel_ratio": 0.09375222707069684
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1315,13 +1119,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 138165.179,
-        "internal_cpu_us_per_measure": 138.868,
-        "ipc": 1.9144880165753464,
-        "process_instructions_per_measure": 1636456.525,
-        "process_cycles_per_measure": 854775.016,
-        "process_instructions_per_event": 16364565.25,
-        "process_cycles_per_event": 8547750.16
+        "internal_wall_ns_per_measure": 135375.792,
+        "internal_cpu_us_per_measure": 135.841,
+        "ipc": 1.9305712139761737
       },
       "sample_index": 14
     },
@@ -1335,9 +1135,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 1091298.534,
-          "cpu_total_us": 1086.524,
-          "cpu_user_us": 1066.617
+          "wall_ns": 1080635.412,
+          "cpu_total_us": 1075.638,
+          "cpu_user_us": 1059.602
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1345,22 +1145,22 @@
         }
       },
       "perf": {
-        "task-clock": 1412.54,
-        "cycles_u": 3925928417.0,
-        "instructions_u": 10231289886.0,
-        "cycles_k": 168940453.0,
-        "instructions_k": 131306041.0,
-        "branches": 2123339006.0,
-        "branch-misses": 22746895.0,
-        "cache-references": 3770361776.0,
-        "cache-misses": 32929848.0,
+        "task-clock": 1407.94,
+        "cycles_u": 3911955845.0,
+        "instructions_u": 10189647915.0,
+        "cycles_k": 169693313.0,
+        "instructions_k": 129984306.0,
+        "branches": 2116750612.0,
+        "branch-misses": 22968887.0,
+        "cache-references": 3758518239.0,
+        "cache-misses": 32763847.0,
         "context-switches": 738.0,
         "cpu-migrations": 0.0,
-        "page-faults": 27805.0,
-        "instructions": 10362595927.0,
-        "instructions_kernel_ratio": 0.012671153244321614,
-        "cycles": 4094868870.0,
-        "cycles_kernel_ratio": 0.04125662099651069
+        "page-faults": 27702.0,
+        "instructions": 10319632221.0,
+        "instructions_kernel_ratio": 0.01259582737217007,
+        "cycles": 4081649158.0,
+        "cycles_kernel_ratio": 0.04157469356899587
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1377,13 +1177,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 1091298.534,
-        "internal_cpu_us_per_measure": 1086.524,
-        "ipc": 2.5306294916838206,
-        "process_instructions_per_measure": 10362595.927,
-        "process_cycles_per_measure": 4094868.87,
-        "process_instructions_per_event": 10362595.927,
-        "process_cycles_per_event": 4094868.87
+        "internal_wall_ns_per_measure": 1080635.412,
+        "internal_cpu_us_per_measure": 1075.638,
+        "ipc": 2.5282996704343397
       },
       "sample_index": 15
     },
@@ -1397,9 +1193,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 1081749.119,
-          "cpu_total_us": 1076.901,
-          "cpu_user_us": 1072.924
+          "wall_ns": 1076508.242,
+          "cpu_total_us": 1071.705,
+          "cpu_user_us": 1067.574
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1407,22 +1203,22 @@
         }
       },
       "perf": {
-        "task-clock": 1406.52,
-        "cycles_u": 3908037785.0,
-        "instructions_u": 10246277900.0,
-        "cycles_k": 169452994.0,
-        "instructions_k": 131571661.0,
-        "branches": 2126194242.0,
-        "branch-misses": 22686097.0,
-        "cache-references": 3771374412.0,
-        "cache-misses": 31991102.0,
-        "context-switches": 734.0,
+        "task-clock": 1401.19,
+        "cycles_u": 3893411129.0,
+        "instructions_u": 10197356571.0,
+        "cycles_k": 168780701.0,
+        "instructions_k": 133345533.0,
+        "branches": 2119349044.0,
+        "branch-misses": 22648849.0,
+        "cache-references": 3764468730.0,
+        "cache-misses": 33466121.0,
+        "context-switches": 726.0,
         "cpu-migrations": 0.0,
-        "page-faults": 27918.0,
-        "instructions": 10377849561.0,
-        "instructions_kernel_ratio": 0.012678123750651275,
-        "cycles": 4077490779.0,
-        "cycles_kernel_ratio": 0.04155815504788417
+        "page-faults": 28436.0,
+        "instructions": 10330702104.0,
+        "instructions_kernel_ratio": 0.012907693171054582,
+        "cycles": 4062191830.0,
+        "cycles_kernel_ratio": 0.04154917051270816
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1439,13 +1235,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 1081749.119,
-        "internal_cpu_us_per_measure": 1076.901,
-        "ipc": 2.5451558626320563,
-        "process_instructions_per_measure": 10377849.561,
-        "process_cycles_per_measure": 4077490.779,
-        "process_instructions_per_event": 10377849.561,
-        "process_cycles_per_event": 4077490.779
+        "internal_wall_ns_per_measure": 1076508.242,
+        "internal_cpu_us_per_measure": 1071.705,
+        "ipc": 2.5431349715456446
       },
       "sample_index": 16
     },
@@ -1459,9 +1251,9 @@
         "payload_bytes": 256,
         "iterations": 100,
         "measure": {
-          "wall_ns": 11508268.14,
-          "cpu_total_us": 11457.3,
-          "cpu_user_us": 10847.04
+          "wall_ns": 11916187.19,
+          "cpu_total_us": 11862.15,
+          "cpu_user_us": 11248.05
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1469,22 +1261,22 @@
         }
       },
       "perf": {
-        "task-clock": 4106.73,
-        "cycles_u": 8157798982.0,
-        "instructions_u": 15850027043.0,
-        "cycles_k": 3745088133.0,
-        "instructions_k": 3693890980.0,
-        "branches": 3948603131.0,
-        "branch-misses": 63887629.0,
-        "cache-references": 7137674207.0,
-        "cache-misses": 116050027.0,
-        "context-switches": 1851.0,
+        "task-clock": 3999.81,
+        "cycles_u": 8132627048.0,
+        "instructions_u": 15674718396.0,
+        "cycles_k": 3461847991.0,
+        "instructions_k": 3664255252.0,
+        "branches": 3903203056.0,
+        "branch-misses": 62845852.0,
+        "cache-references": 7074087791.0,
+        "cache-misses": 116197284.0,
+        "context-switches": 1742.0,
         "cpu-migrations": 0.0,
-        "page-faults": 719932.0,
-        "instructions": 19543918023.0,
-        "instructions_kernel_ratio": 0.18900462924849018,
-        "cycles": 11902887115.0,
-        "cycles_kernel_ratio": 0.3146369529355988
+        "page-faults": 713420.0,
+        "instructions": 19338973648.0,
+        "instructions_kernel_ratio": 0.18947516650548568,
+        "cycles": 11594475039.0,
+        "cycles_kernel_ratio": 0.29857738098150044
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1501,13 +1293,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 11508268.14,
-        "internal_cpu_us_per_measure": 11457.3,
-        "ipc": 1.641947691696646,
-        "process_instructions_per_measure": 195439180.23,
-        "process_cycles_per_measure": 119028871.15,
-        "process_instructions_per_event": 1954391.8023,
-        "process_cycles_per_event": 1190288.7115
+        "internal_wall_ns_per_measure": 11916187.19,
+        "internal_cpu_us_per_measure": 11862.15,
+        "ipc": 1.6679473268906142
       },
       "sample_index": 17
     },
@@ -1521,9 +1309,9 @@
         "payload_bytes": 256,
         "iterations": 100,
         "measure": {
-          "wall_ns": 12104363.24,
-          "cpu_total_us": 12050.15,
-          "cpu_user_us": 11519.05
+          "wall_ns": 11424175.57,
+          "cpu_total_us": 11368.98,
+          "cpu_user_us": 10823.7
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1531,22 +1319,22 @@
         }
       },
       "perf": {
-        "task-clock": 4075.71,
-        "cycles_u": 8217301228.0,
-        "instructions_u": 15711764387.0,
-        "cycles_k": 3596037394.0,
-        "instructions_k": 3641499254.0,
-        "branches": 3905055561.0,
-        "branch-misses": 63372847.0,
-        "cache-references": 7076251248.0,
-        "cache-misses": 117015941.0,
-        "context-switches": 1891.0,
+        "task-clock": 4103.14,
+        "cycles_u": 8161973508.0,
+        "instructions_u": 15964761646.0,
+        "cycles_k": 3730936604.0,
+        "instructions_k": 3700224164.0,
+        "branches": 3971252501.0,
+        "branch-misses": 63669702.0,
+        "cache-references": 7163778996.0,
+        "cache-misses": 118567233.0,
+        "context-switches": 1852.0,
         "cpu-migrations": 0.0,
-        "page-faults": 704343.0,
-        "instructions": 19353263641.0,
-        "instructions_kernel_ratio": 0.18815944026543735,
-        "cycles": 11813338622.0,
-        "cycles_kernel_ratio": 0.304404834997542
+        "page-faults": 721878.0,
+        "instructions": 19664985810.0,
+        "instructions_kernel_ratio": 0.18816307317742223,
+        "cycles": 11892910112.0,
+        "cycles_kernel_ratio": 0.31371098989770957
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1563,13 +1351,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 12104363.24,
-        "internal_cpu_us_per_measure": 12050.15,
-        "ipc": 1.638255218127616,
-        "process_instructions_per_measure": 193532636.41,
-        "process_cycles_per_measure": 118133386.22,
-        "process_instructions_per_event": 1935326.3641,
-        "process_cycles_per_event": 1181333.8622
+        "internal_wall_ns_per_measure": 11424175.57,
+        "internal_cpu_us_per_measure": 11368.98,
+        "ipc": 1.653504955877699
       },
       "sample_index": 18
     },
@@ -1583,9 +1367,9 @@
         "payload_bytes": 256,
         "iterations": 200,
         "measure": {
-          "wall_ns": 5928725.505,
-          "cpu_total_us": 5900.985,
-          "cpu_user_us": 5661.36
+          "wall_ns": 5950817.945,
+          "cpu_total_us": 5924.285,
+          "cpu_user_us": 5725.73
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1593,22 +1377,22 @@
         }
       },
       "perf": {
-        "task-clock": 2148.63,
-        "cycles_u": 5809502543.0,
-        "instructions_u": 12825491755.0,
-        "cycles_k": 418947883.0,
-        "instructions_k": 366840016.0,
-        "branches": 2718067787.0,
-        "branch-misses": 38191099.0,
-        "cache-references": 4887664167.0,
-        "cache-misses": 64652907.0,
-        "context-switches": 913.0,
+        "task-clock": 2173.78,
+        "cycles_u": 5876765548.0,
+        "instructions_u": 12922333835.0,
+        "cycles_k": 424653682.0,
+        "instructions_k": 329291286.0,
+        "branches": 2733166742.0,
+        "branch-misses": 37888172.0,
+        "cache-references": 4903314085.0,
+        "cache-misses": 69056977.0,
+        "context-switches": 967.0,
         "cpu-migrations": 0.0,
-        "page-faults": 78651.0,
-        "instructions": 13192331771.0,
-        "instructions_kernel_ratio": 0.02780706416180382,
-        "cycles": 6228450426.0,
-        "cycles_kernel_ratio": 0.06726358152441045
+        "page-faults": 70049.0,
+        "instructions": 13251625121.0,
+        "instructions_kernel_ratio": 0.02484912476720824,
+        "cycles": 6301419230.0,
+        "cycles_kernel_ratio": 0.06739016505651538
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1625,13 +1409,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 5928725.505,
-        "internal_cpu_us_per_measure": 5900.985,
-        "ipc": 2.118076065264969,
-        "process_instructions_per_measure": 65961658.855,
-        "process_cycles_per_measure": 31142252.13,
-        "process_instructions_per_event": 2638466.3542,
-        "process_cycles_per_event": 1245690.0852
+        "internal_wall_ns_per_measure": 5950817.945,
+        "internal_cpu_us_per_measure": 5924.285,
+        "ipc": 2.1029588156761947
       },
       "sample_index": 19
     },
@@ -1645,9 +1425,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 51727.447,
-          "cpu_total_us": 51.585,
-          "cpu_user_us": 47.609
+          "wall_ns": 51847.101,
+          "cpu_total_us": 51.615,
+          "cpu_user_us": 47.653
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1655,22 +1435,22 @@
         }
       },
       "perf": {
-        "task-clock": 175.26,
-        "cycles_u": 443116682.0,
-        "instructions_u": 707408835.0,
-        "cycles_k": 64746554.0,
-        "instructions_k": 58397840.0,
-        "branches": 154108467.0,
-        "branch-misses": 6442533.0,
-        "cache-references": 294545396.0,
-        "cache-misses": 5062934.0,
-        "context-switches": 140.0,
+        "task-clock": 180.27,
+        "cycles_u": 450701905.0,
+        "instructions_u": 704954645.0,
+        "cycles_k": 71619529.0,
+        "instructions_k": 56654526.0,
+        "branches": 153268293.0,
+        "branch-misses": 6267747.0,
+        "cache-references": 294194726.0,
+        "cache-misses": 5075788.0,
+        "context-switches": 141.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8147.0,
-        "instructions": 765806675.0,
-        "instructions_kernel_ratio": 0.07625663487459156,
-        "cycles": 507863236.0,
-        "cycles_kernel_ratio": 0.12748816888174988
+        "page-faults": 7817.0,
+        "instructions": 761609171.0,
+        "instructions_kernel_ratio": 0.0743879251422512,
+        "cycles": 522321434.0,
+        "cycles_kernel_ratio": 0.13711772930995592
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1687,13 +1467,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 51727.447,
-        "internal_cpu_us_per_measure": 51.585,
-        "ipc": 1.5078994121165328,
-        "process_instructions_per_measure": 765806.675,
-        "process_cycles_per_measure": 507863.236,
-        "process_instructions_per_event": 76580667.5,
-        "process_cycles_per_event": 50786323.6
+        "internal_wall_ns_per_measure": 51847.101,
+        "internal_cpu_us_per_measure": 51.615,
+        "ipc": 1.4581235259053145
       },
       "sample_index": 20
     },
@@ -1707,9 +1483,9 @@
         "payload_bytes": 256,
         "iterations": 200,
         "measure": {
-          "wall_ns": 5875766.91,
-          "cpu_total_us": 5859.9,
-          "cpu_user_us": 5680.625
+          "wall_ns": 5719713.295,
+          "cpu_total_us": 5691.52,
+          "cpu_user_us": 5393.185
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1717,22 +1493,22 @@
         }
       },
       "perf": {
-        "task-clock": 2066.93,
-        "cycles_u": 5644339429.0,
-        "instructions_u": 12787293119.0,
-        "cycles_k": 347983171.0,
-        "instructions_k": 325928639.0,
-        "branches": 2695949781.0,
-        "branch-misses": 37896083.0,
-        "cache-references": 4882122745.0,
-        "cache-misses": 72286930.0,
-        "context-switches": 812.0,
+        "task-clock": 2104.52,
+        "cycles_u": 5647169448.0,
+        "instructions_u": 12817848579.0,
+        "cycles_k": 453293294.0,
+        "instructions_k": 353299870.0,
+        "branches": 2710201217.0,
+        "branch-misses": 37419542.0,
+        "cache-references": 4880216700.0,
+        "cache-misses": 61068128.0,
+        "context-switches": 903.0,
         "cpu-migrations": 0.0,
-        "page-faults": 69911.0,
-        "instructions": 13113221758.0,
-        "instructions_kernel_ratio": 0.024854962801278052,
-        "cycles": 5992322600.0,
-        "cycles_kernel_ratio": 0.05807150152430044
+        "page-faults": 75478.0,
+        "instructions": 13171148449.0,
+        "instructions_kernel_ratio": 0.026823771014958364,
+        "cycles": 6100462742.0,
+        "cycles_kernel_ratio": 0.07430473935677058
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1749,13 +1525,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 5875766.91,
-        "internal_cpu_us_per_measure": 5859.9,
-        "ipc": 2.1883370828533164,
-        "process_instructions_per_measure": 65566108.79,
-        "process_cycles_per_measure": 29961613.0,
-        "process_instructions_per_event": 2622644.3516,
-        "process_cycles_per_event": 1198464.52
+        "internal_wall_ns_per_measure": 5719713.295,
+        "internal_cpu_us_per_measure": 5691.52,
+        "ipc": 2.1590408803450734
       },
       "sample_index": 21
     },
@@ -1769,9 +1541,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 49413.156,
-          "cpu_total_us": 49.273,
-          "cpu_user_us": 41.659
+          "wall_ns": 53705.718,
+          "cpu_total_us": 53.453,
+          "cpu_user_us": 49.755
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1779,22 +1551,22 @@
         }
       },
       "perf": {
-        "task-clock": 171.93,
-        "cycles_u": 433910529.0,
-        "instructions_u": 692421812.0,
-        "cycles_k": 64248367.0,
-        "instructions_k": 58189391.0,
-        "branches": 150785267.0,
-        "branch-misses": 6304266.0,
-        "cache-references": 289808439.0,
-        "cache-misses": 4947970.0,
-        "context-switches": 143.0,
+        "task-clock": 181.51,
+        "cycles_u": 453395652.0,
+        "instructions_u": 703145814.0,
+        "cycles_k": 72555412.0,
+        "instructions_k": 57189535.0,
+        "branches": 152895134.0,
+        "branch-misses": 6330419.0,
+        "cache-references": 293303138.0,
+        "cache-misses": 5128770.0,
+        "context-switches": 147.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8127.0,
-        "instructions": 750611203.0,
-        "instructions_kernel_ratio": 0.077522678541743,
-        "cycles": 498158896.0,
-        "cycles_kernel_ratio": 0.12897163438390147
+        "page-faults": 7873.0,
+        "instructions": 760335349.0,
+        "instructions_kernel_ratio": 0.07521619910900657,
+        "cycles": 525951064.0,
+        "cycles_kernel_ratio": 0.1379508797799485
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1811,13 +1583,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 49413.156,
-        "internal_cpu_us_per_measure": 49.273,
-        "ipc": 1.5067706489376835,
-        "process_instructions_per_measure": 750611.203,
-        "process_cycles_per_measure": 498158.896,
-        "process_instructions_per_event": 75061120.3,
-        "process_cycles_per_event": 49815889.6
+        "internal_wall_ns_per_measure": 53705.718,
+        "internal_cpu_us_per_measure": 53.453,
+        "ipc": 1.445638959673252
       },
       "sample_index": 22
     },
@@ -1831,9 +1599,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 1026630.838,
-          "cpu_total_us": 1024.131,
-          "cpu_user_us": 1012.355
+          "wall_ns": 1077016.729,
+          "cpu_total_us": 1072.402,
+          "cpu_user_us": 1060.388
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1841,22 +1609,22 @@
         }
       },
       "perf": {
-        "task-clock": 1336.45,
-        "cycles_u": 3727423814.0,
-        "instructions_u": 10193466542.0,
-        "cycles_k": 147057943.0,
-        "instructions_k": 131233812.0,
-        "branches": 2117870735.0,
-        "branch-misses": 22691044.0,
-        "cache-references": 3766116061.0,
-        "cache-misses": 29322314.0,
-        "context-switches": 736.0,
+        "task-clock": 1395.07,
+        "cycles_u": 3882123334.0,
+        "instructions_u": 10233555266.0,
+        "cycles_k": 162307736.0,
+        "instructions_k": 130188196.0,
+        "branches": 2124406422.0,
+        "branch-misses": 22783462.0,
+        "cache-references": 3772888720.0,
+        "cache-misses": 33757525.0,
+        "context-switches": 740.0,
         "cpu-migrations": 0.0,
-        "page-faults": 28114.0,
-        "instructions": 10324700354.0,
-        "instructions_kernel_ratio": 0.01271066544310483,
-        "cycles": 3874481757.0,
-        "cycles_kernel_ratio": 0.0379555130784424
+        "page-faults": 27578.0,
+        "instructions": 10363743462.0,
+        "instructions_kernel_ratio": 0.01256188909705762,
+        "cycles": 4044431070.0,
+        "cycles_kernel_ratio": 0.04013116633484867
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1873,13 +1641,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 1026630.838,
-        "internal_cpu_us_per_measure": 1024.131,
-        "ipc": 2.6647951910849583,
-        "process_instructions_per_measure": 10324700.354,
-        "process_cycles_per_measure": 3874481.757,
-        "process_instructions_per_event": 10324700.354,
-        "process_cycles_per_event": 3874481.757
+        "internal_wall_ns_per_measure": 1077016.729,
+        "internal_cpu_us_per_measure": 1072.402,
+        "ipc": 2.5624725165609017
       },
       "sample_index": 23
     },
@@ -1893,9 +1657,9 @@
         "payload_bytes": 256,
         "iterations": 200,
         "measure": {
-          "wall_ns": 5875034.65,
-          "cpu_total_us": 5853.27,
-          "cpu_user_us": 5275.415
+          "wall_ns": 5734528.16,
+          "cpu_total_us": 5718.14,
+          "cpu_user_us": 5299.96
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1903,22 +1667,22 @@
         }
       },
       "perf": {
-        "task-clock": 2049.95,
-        "cycles_u": 5554516544.0,
-        "instructions_u": 12702110116.0,
-        "cycles_k": 388712668.0,
-        "instructions_k": 337822883.0,
-        "branches": 2677471322.0,
-        "branch-misses": 36918669.0,
-        "cache-references": 4842081733.0,
-        "cache-misses": 67091146.0,
-        "context-switches": 836.0,
+        "task-clock": 2065.68,
+        "cycles_u": 5536704747.0,
+        "instructions_u": 12623662380.0,
+        "cycles_k": 452085424.0,
+        "instructions_k": 422867738.0,
+        "branches": 2682006889.0,
+        "branch-misses": 37040936.0,
+        "cache-references": 4843264400.0,
+        "cache-misses": 65457035.0,
+        "context-switches": 770.0,
         "cpu-migrations": 0.0,
-        "page-faults": 75803.0,
-        "instructions": 13039932999.0,
-        "instructions_kernel_ratio": 0.02590679591880624,
-        "cycles": 5943229212.0,
-        "cycles_kernel_ratio": 0.06540428681686188
+        "page-faults": 89492.0,
+        "instructions": 13046530118.0,
+        "instructions_kernel_ratio": 0.032412276227882154,
+        "cycles": 5988790171.0,
+        "cycles_kernel_ratio": 0.07548860639485577
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1935,13 +1699,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 5875034.65,
-        "internal_cpu_us_per_measure": 5853.27,
-        "ipc": 2.194082128394277,
-        "process_instructions_per_measure": 65199664.995,
-        "process_cycles_per_measure": 29716146.06,
-        "process_instructions_per_event": 2607986.5998,
-        "process_cycles_per_event": 1188645.8424
+        "internal_wall_ns_per_measure": 5734528.16,
+        "internal_cpu_us_per_measure": 5718.14,
+        "ipc": 2.178491773042285
       },
       "sample_index": 24
     },
@@ -1955,9 +1715,9 @@
         "payload_bytes": 256,
         "iterations": 1000,
         "measure": {
-          "wall_ns": 140588.61,
-          "cpu_total_us": 142.953,
-          "cpu_user_us": 142.891
+          "wall_ns": 140921.032,
+          "cpu_total_us": 141.583,
+          "cpu_user_us": 141.583
         },
         "checks": {
           "surface_nodes_exact": true,
@@ -1965,22 +1725,22 @@
         }
       },
       "perf": {
-        "task-clock": 297.94,
-        "cycles_u": 782833472.0,
-        "instructions_u": 1589508688.0,
-        "cycles_k": 80574098.0,
-        "instructions_k": 61670048.0,
-        "branches": 336063132.0,
-        "branch-misses": 8285988.0,
-        "cache-references": 616889702.0,
-        "cache-misses": 8092644.0,
-        "context-switches": 217.0,
+        "task-clock": 300.04,
+        "cycles_u": 790777425.0,
+        "instructions_u": 1591185813.0,
+        "cycles_k": 78751485.0,
+        "instructions_k": 58988963.0,
+        "branches": 336327415.0,
+        "branch-misses": 8451915.0,
+        "cache-references": 616253735.0,
+        "cache-misses": 8382690.0,
+        "context-switches": 203.0,
         "cpu-migrations": 0.0,
-        "page-faults": 8539.0,
-        "instructions": 1651178736.0,
-        "instructions_kernel_ratio": 0.03734910500930773,
-        "cycles": 863407570.0,
-        "cycles_kernel_ratio": 0.09332104651340965
+        "page-faults": 8063.0,
+        "instructions": 1650174776.0,
+        "instructions_kernel_ratio": 0.035747100160498396,
+        "cycles": 869528910.0,
+        "cycles_kernel_ratio": 0.09056798928054043
       },
       "perf_event_labels": {
         "task-clock": "task-clock",
@@ -1997,13 +1757,9 @@
         "page-faults": "page-faults"
       },
       "derived": {
-        "internal_wall_ns_per_measure": 140588.61,
-        "internal_cpu_us_per_measure": 142.953,
-        "ipc": 1.9123977984117049,
-        "process_instructions_per_measure": 1651178.736,
-        "process_cycles_per_measure": 863407.57,
-        "process_instructions_per_event": 16511787.36,
-        "process_cycles_per_event": 8634075.7
+        "internal_wall_ns_per_measure": 140921.032,
+        "internal_cpu_us_per_measure": 141.583,
+        "ipc": 1.8977802313668903
       },
       "sample_index": 25
     }

@@ -89,7 +89,8 @@ count, because `estimateHeader` re-runs `JSON.stringify(tools)` on every measure
    mid-range surface size `N + (K+1)/2`, not the initial `N`.
 
 4. **Surface shape is a minor term.** At 1,000 nodes the three surface shapes
-   differ by <2% CPU despite different heuristic token prices, so event count,
+   differ by about 2.5% peak-to-peak (1062 -> 1088 us) despite different heuristic
+   token prices, so event count,
    not message shape, drives the accounting cost for this fixed 256 B payload and
    simple text/tool blocks. Reasoning, image, and provider-image-pricing blocks
    were not measured.
