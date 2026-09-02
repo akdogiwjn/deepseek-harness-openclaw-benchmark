@@ -216,7 +216,7 @@ def main() -> None:
             "shape": args.shape if args.subtest == "shape" else None,
             "surface_events": args.sizes,
             "x_axis": "schema_bytes" if (args.subtest == "shape" and args.shape == "schema")
-            else ("effective_surface_nodes" if args.subtest == "incremental" else "surface_events"),
+            else ("effective_surface_nodes" if args.subtest == "incremental" else "surface_nodes"),
             "repeats": args.repeats,
             "base_iterations": args.iterations,
             "iterations_scaling": "max(20, base // max(1, size // 1000)); cold uses 1",
@@ -253,7 +253,7 @@ def main() -> None:
             "TokenMeter uses the fixed char/4 heuristic, not a real BPE tokenizer; this measures the context-pressure accounting path, not tokenization.",
             "measure() is O(surface): it reprices every node and deep-clones the result; the repeat subtest isolates that path.",
             "Whole-process perf includes session construction and teardown; only the internal prompt-window timing is construction-free.",
-            "cycles/instructions per measure divide whole-process perf by iterations and therefore absorb a fixed construction intercept.",
+            "Whole-process cycles/instructions include session construction, measured calls, and teardown and are diagnostic only; they are not used for per-measure CPU-cost fits.",
             "Surface here is text user/message nodes; tool/result and tool-schema shape costs are the C8-D condition.",
         ],
     }
