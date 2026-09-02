@@ -1,5 +1,6 @@
 {
   "scenario": "W10 native tool-fs provider swap",
   "variant": "local",
-  "provider_requests": 4
+  "provider_requests": 4,
+  "outside_path_precondition": true
 }

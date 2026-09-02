@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-09-02T01:16:55.795798+00:00",
+  "wall_seconds": 0.5936350680422038,
+  "exit_code": 0,
+  "stdout": "{\"runtime\": \"deepseek-harness-sdk-minimal\", \"model\": \"deepseek-v4-flash\", \"session_id\": \"dsh-w10-local-aprime-003\", \"patches\": [\"dsh-w10-local.patch.yml\"], \"finish_reason\": \"completed\", \"wall_seconds\": 0.4284884980879724, \"final_response\": \"COMPLETED_W10_FS_SEAM\"}\n",
+  "stderr": ""
+}

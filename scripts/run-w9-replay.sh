@@ -105,6 +105,17 @@ def projection(rows):
         projected.append(item)
     return projected
 
+def stream_projection(rows):
+    return [
+        {
+            "turn": row["data"]["turn"],
+            "step": row["data"]["step"],
+            "chunk": row["data"]["chunk"],
+        }
+        for row in rows
+        if row.get("type") == "assistant/chunk"
+    ]
+
 record_events = events(result / "recorded-session.jsonl")
 replay_events = events(result / "replayed-session.jsonl")
 checks = {
@@ -114,6 +125,7 @@ checks = {
     "record_effect_once": (record_workspace / "replay.log").read_text().splitlines() == ["W9_REPLAY_EFFECT"],
     "replay_effect_once": (replay_workspace / "replay.log").read_text().splitlines() == ["W9_REPLAY_EFFECT"],
     "normalized_execution_projection_equal": projection(record_events) == projection(replay_events),
+    "normalized_assistant_chunk_stream_equal": stream_projection(record_events) == stream_projection(replay_events),
 }
 if not all(checks.values()):
     raise SystemExit(f"W9 replay checks failed: {checks}")
@@ -123,6 +135,8 @@ case = {
     "provider_requests_after_replay": after,
     "recorded_projection": projection(record_events),
     "replayed_projection": projection(replay_events),
+    "recorded_stream_projection": stream_projection(record_events),
+    "replayed_stream_projection": stream_projection(replay_events),
     "checks": checks,
 }
 (result / "case.json").write_text(json.dumps(case, ensure_ascii=False, indent=2) + "\n")

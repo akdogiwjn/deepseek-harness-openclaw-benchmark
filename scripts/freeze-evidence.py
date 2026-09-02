@@ -42,8 +42,8 @@ GROUPS = {
         "w8-openclaw-direct-01",
         "w8-openclaw-code-01",
     ],
-    "W9": ["w9-crash-002", "w9-replay-007"],
-    "W10": ["w10-local-a-001", "w10-sandbox-b-002", "w10-local-aprime-001"],
+    "W9": ["w9-crash-003", "w9-replay-008"],
+    "W10": ["w10-local-a-003", "w10-sandbox-b-004", "w10-local-aprime-003"],
 }
 
 TRACE_SESSION_IDS = {
@@ -151,6 +151,8 @@ def main() -> None:
 
     for group, names in GROUPS.items():
         group_root = evidence / group
+        if args.refresh and group_root.exists():
+            shutil.rmtree(group_root)
         result_root = group_root / "results"
         result_root.mkdir(parents=True, exist_ok=True)
         for name in names:

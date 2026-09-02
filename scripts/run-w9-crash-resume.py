@@ -122,6 +122,7 @@ def run() -> None:
             args.session_id,
             str(root / "sessions" / "dsh-home" / "sessions"),
             str(result_dir / "resume-observation.json"),
+            crash_call_id,
         ],
         cwd=root,
         env=os.environ.copy(),
@@ -161,7 +162,10 @@ def run() -> None:
         "effect_001_once": effects.count("W9_EFFECT_001") == 1,
         "effect_002_started_once": effects.count("W9_EFFECT_002_STARTED") == 1,
         "resume_completed": resume_json.get("final_response") == "COMPLETED_W9_CRASH_RESUME",
-        "crash_history_visible_to_resumed_model": resume_json.get("prior_history_visible") is True,
+        "resume_bash_probe_registered": resume_json.get("bash_probe_registered") is True,
+        "dangling_call_not_dispatched": resume_json.get("bash_probe_invocations") == 0,
+        "repaired_context_visible_to_resumed_model": resume_json.get("resume_context_complete") is True
+        and all(resume_observation.get("resume_context_checks", {}).values()),
     }
     if not all(checks.values()):
         raise RuntimeError(f"W9 crash/resume verification failed: {checks}")
@@ -194,6 +198,8 @@ def run() -> None:
         "effects": effects,
         "resumed_model_calls": resume_json.get("model_calls"),
         "resume_seed_event_types": resume_observation["before_followup_event_types"],
+        "resume_bash_probe": resume_observation["bash_probe"],
+        "resume_context_checks": resume_observation["resume_context_checks"],
         "checks": checks,
     }
     (result_dir / "case.json").write_text(

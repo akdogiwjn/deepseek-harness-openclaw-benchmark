@@ -64,12 +64,15 @@ def summarize(path: Path) -> dict[str, Any]:
         raise ValueError(f"{path}: runtime did not complete")
     if len(requests) != 4 or case["provider_requests"] != 4:
         raise ValueError(f"{path}: expected four provider requests")
+    if case.get("outside_path_precondition") is not True:
+        raise ValueError(f"{path}: outside target was not proven beyond sandbox writable roots")
     if len(projection) != 3:
         raise ValueError(f"{path}: expected three tool results")
     return {
         "artifact": f"results/{path.name}",
         "variant": case["variant"],
         "provider_requests": len(requests),
+        "outside_path_precondition": case["outside_path_precondition"],
         "tool_names": requests[0]["tool_names"],
         "tool_schema_sha256": requests[0]["tool_schema_sha256"],
         "edit_properties": requests[0]["edit_properties"],
@@ -101,6 +104,9 @@ def main() -> None:
     checks = {
         "a_equals_a_prime": normalized_local(local_a) == normalized_local(local_aprime),
         "scripted_calls_identical": common_calls,
+        "outside_path_precondition_all_variants": all(
+            item["outside_path_precondition"] is True for item in (local_a, sandbox, local_aprime)
+        ),
         "inside_changed_all_variants": all(
             item["inside"] == "INSIDE_CHANGED" for item in (local_a, sandbox, local_aprime)
         ),
@@ -123,6 +129,7 @@ def main() -> None:
         "notes": [
             "The agent loop, deterministic provider script, sandbox-policy mode, and tool-fs consumer package are held constant.",
             "The mounted ctx.fs provider changes from fs-local to fs-sandbox.",
+            "Each runner canonicalizes the sibling target and fails before execution if it falls under the workspace, /tmp, or os.tmpdir().",
             "Native tool-fs intentionally adds escalation fields under a confining provider, so full schema hashes are not expected to match.",
             "The post-tool model transcript differs because the third tool result differs.",
         ],

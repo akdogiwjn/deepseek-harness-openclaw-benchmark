@@ -19,8 +19,31 @@ if [[ ! "$trial_id" =~ ^[A-Za-z0-9._-]+$ || ! "$port" =~ ^[0-9]+$ ]]; then
 fi
 case_root="$BENCH_ROOT/workspaces/w10-$trial_id"
 workspace="$case_root/workspace"
+outside="$case_root/outside/outside.txt"
 result_dir="$BENCH_ROOT/results/w10-$trial_id"
 [[ -d "$workspace" ]] || "$BENCH_ROOT/scripts/prepare-w10.sh" "$trial_id" >/dev/null
+"$BENCH_ROOT/.venv/bin/python" - "$workspace" "$outside" <<'PY'
+import sys
+import tempfile
+from pathlib import Path
+
+workspace = Path(sys.argv[1]).resolve(strict=True)
+outside = Path(sys.argv[2]).resolve(strict=True)
+roots = {workspace, Path("/tmp").resolve()}
+roots.add(Path(tempfile.gettempdir()).resolve())
+
+def contained(path: Path, root: Path) -> bool:
+    return path == root or root in path.parents
+
+violations = [str(root) for root in roots if contained(outside, root)]
+if violations:
+    joined = ", ".join(sorted(violations))
+    raise SystemExit(
+        "W10 requires an outside path beyond every fs-sandbox writable root; "
+        f"{outside} is contained by: {joined}. Move the checkout outside platform temp roots."
+    )
+print(f"W10 outside-path precondition passed: {outside}")
+PY
 if [[ -e "$result_dir" ]]; then
   echo "refusing to overwrite existing result directory: $result_dir" >&2
   exit 2
@@ -60,6 +83,6 @@ session_file="$(find "$BENCH_ROOT/sessions/dsh-home/sessions" \
   -path "*/dsh-w10-$trial_id/session.jsonl" -print -quit)"
 [[ -n "$session_file" ]] || { echo "session log not found" >&2; exit 1; }
 cp "$session_file" "$result_dir/session.jsonl"
-printf '{"scenario":"W10 native tool-fs provider swap","variant":"%s","provider_requests":%s}\n' \
+printf '{"scenario":"W10 native tool-fs provider swap","variant":"%s","provider_requests":%s,"outside_path_precondition":true}\n' \
   "$variant" "$(wc -l <"$request_log")" >"$result_dir/case.json"
 cat "$result_dir/case.json"

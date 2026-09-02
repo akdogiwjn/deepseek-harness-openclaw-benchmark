@@ -170,6 +170,11 @@ edit with `FS_SANDBOX_DENIED`. Native mutation schemas are expected to differ by
 the sandbox escalation fields. See `results/W10_REPORT.md` and
 `results/w10-fs-seam-summary.json`.
 
+Run W10 from a checkout outside `/tmp` and the platform `os.tmpdir()`. Its
+runner canonicalizes the sibling target and fails before execution when that
+target falls under any filesystem-sandbox writable root, preventing a temporary
+checkout from silently changing the expected denial into an allowed write.
+
 W9 and W10 complement the cross-runtime workloads as DSH white-box mechanism
 case studies. They must not be interpreted as DSH-versus-OpenClaw rankings.
 

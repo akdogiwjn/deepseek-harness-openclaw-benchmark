@@ -16,7 +16,13 @@ prefix byte-for-byte and cold repair appended a synthetic result with
 `TOOL_OUTCOME_UNKNOWN`, followed by `step/end`, `turn/end { interrupted }`, and
 `session/end-seed`. A new turn then completed with one deterministic model call.
 Sequence numbers remained contiguous, and both external markers appeared
-exactly once, so the old side-effecting call was not automatically re-executed.
+exactly once. The resume runtime also mounted an executable `bash` probe with
+the same public command shape; its invocation count remained zero, directly
+showing that the old side-effecting call was not automatically dispatched.
+
+The resumed model request was checked structurally rather than by marker text
+alone. It contained the original prompt, completed call/result pair, dangling
+call, matching synthetic error result, and final follow-up prompt in order.
 
 The Python SDK carrier was used to create the crash but not to resume it. Its
 stdio server creates a session for a new process-level `session/prompt`; the
@@ -41,6 +47,8 @@ and one final text response. The recording provider was then stopped. The
 without increasing the provider request count beyond two.
 
 The normalized turn, step, assistant message, tool call, and tool result
-projections matched. Recording and replay used fresh workspaces, each producing
-its side effect exactly once. This demonstrates model-stream replay from the
-Session log; it does not claim rollback or automatic replay of external state.
+projections matched. The complete normalized `assistant/chunk` projections also
+matched, including block boundaries, deltas, usage, finish reasons, and tool-call
+IDs. Recording and replay used fresh workspaces, each producing its side effect
+exactly once. This demonstrates model-stream replay from the Session log; it
+does not claim rollback or automatic replay of external state.

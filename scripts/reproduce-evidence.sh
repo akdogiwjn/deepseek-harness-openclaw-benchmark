@@ -47,14 +47,14 @@ fi
   "$evidence/W8/results/w8-openclaw-code-01" \
   "$temp_dir/w8.json"
 "$python" "$BENCH_ROOT/scripts/summarize-w9.py" \
-  "$evidence/W9/results/w9-crash-002" \
+  "$evidence/W9/results/w9-crash-003" \
   "$evidence/W9/w9-fork-001.json" \
-  "$evidence/W9/results/w9-replay-007" \
+  "$evidence/W9/results/w9-replay-008" \
   "$temp_dir/w9.json"
 "$python" "$BENCH_ROOT/scripts/summarize-w10.py" \
-  "$evidence/W10/results/w10-local-a-001" \
-  "$evidence/W10/results/w10-sandbox-b-002" \
-  "$evidence/W10/results/w10-local-aprime-001" \
+  "$evidence/W10/results/w10-local-a-003" \
+  "$evidence/W10/results/w10-sandbox-b-004" \
+  "$evidence/W10/results/w10-local-aprime-003" \
   "$temp_dir/w10.json"
 
 compare_json() {

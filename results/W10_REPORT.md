@@ -5,6 +5,11 @@ with fresh sessions and workspaces while holding the agent loop, deterministic
 provider script, `workspace-write` policy, prompt, and native `tool-fs` consumer
 constant.
 
+Before starting the runtime, every case canonicalizes the sibling target and
+fails closed if it is under the workspace, `/tmp`, or `os.tmpdir()`. This avoids
+the platform-temp write allowance changing the expected sandbox outcome when a
+checkout itself lives below a temporary root.
+
 | Observation | A: fs-local | B: fs-sandbox | A′: fs-local |
 | --- | --- | --- | --- |
 | Provider requests | 4 | 4 | 4 |

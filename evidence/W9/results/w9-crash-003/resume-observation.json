@@ -1,5 +1,5 @@
 {
-  "session_id": "dsh-w9-crash-002",
+  "session_id": "dsh-w9-crash-003",
   "before_followup_event_types": [
     "agent/inbox/spliced",
     "turn/start",
@@ -90,7 +90,7 @@
           "kind": "user"
         },
         "role": "user",
-        "id": "abddb3be-83eb-4447-aae3-c592c618ed2c"
+        "id": "bcb06c5b-e96d-4e09-b108-f11dcb65e90b"
       },
       {
         "role": "assistant",
@@ -107,7 +107,7 @@
           "provider": "deepseek-official",
           "model": "deepseek-v4-flash"
         },
-        "id": "23f02eca-fff7-494a-b737-f4debaef99e6"
+        "id": "8106d148-49bf-4d4e-bdaf-9d794740e203"
       },
       {
         "source": {
@@ -128,7 +128,7 @@
           }
         ],
         "role": "user",
-        "id": "87e8318f-cf84-4aba-8112-1d18a1e63c4a"
+        "id": "7cb6bd92-5c6c-45e5-8fdf-b3cc5ae62f42"
       },
       {
         "role": "assistant",
@@ -145,7 +145,7 @@
           "provider": "deepseek-official",
           "model": "deepseek-v4-flash"
         },
-        "id": "f9f8e776-2266-4c5b-a47c-63ab895942bb"
+        "id": "93e7388f-cd36-49fc-9cab-ee7d11b8ba47"
       },
       {
         "id": "interrupted-tool-result-callw9002-25",
@@ -179,7 +179,7 @@
           "kind": "user"
         },
         "role": "user",
-        "id": "c1d862e9-dfa8-486a-9646-72da606dbd09"
+        "id": "fced3762-6103-4949-b16a-b10d48d5d930"
       }
     ]
   ],
@@ -195,7 +195,7 @@
         "kind": "user"
       },
       "role": "user",
-      "id": "abddb3be-83eb-4447-aae3-c592c618ed2c"
+      "id": "bcb06c5b-e96d-4e09-b108-f11dcb65e90b"
     },
     {
       "role": "assistant",
@@ -212,7 +212,7 @@
         "provider": "deepseek-official",
         "model": "deepseek-v4-flash"
       },
-      "id": "23f02eca-fff7-494a-b737-f4debaef99e6"
+      "id": "8106d148-49bf-4d4e-bdaf-9d794740e203"
     },
     {
       "source": {
@@ -233,7 +233,7 @@
         }
       ],
       "role": "user",
-      "id": "87e8318f-cf84-4aba-8112-1d18a1e63c4a"
+      "id": "7cb6bd92-5c6c-45e5-8fdf-b3cc5ae62f42"
     },
     {
       "role": "assistant",
@@ -250,7 +250,7 @@
         "provider": "deepseek-official",
         "model": "deepseek-v4-flash"
       },
-      "id": "f9f8e776-2266-4c5b-a47c-63ab895942bb"
+      "id": "93e7388f-cd36-49fc-9cab-ee7d11b8ba47"
     },
     {
       "id": "interrupted-tool-result-callw9002-25",
@@ -284,7 +284,7 @@
         "kind": "user"
       },
       "role": "user",
-      "id": "c1d862e9-dfa8-486a-9646-72da606dbd09"
+      "id": "fced3762-6103-4949-b16a-b10d48d5d930"
     },
     {
       "role": "assistant",
@@ -299,7 +299,20 @@
         "provider": "w9-resume",
         "model": "deterministic"
       },
-      "id": "3eccecf9-4bca-48db-8594-9ceccda98363"
+      "id": "76aaa6c7-8c12-4b01-9b7d-3929ff0c4c30"
     }
-  ]
+  ],
+  "bash_probe": {
+    "registered": true,
+    "invocations": 0
+  },
+  "resume_context_checks": {
+    "original_user_prompt_first": true,
+    "completed_call_present": true,
+    "completed_result_present": true,
+    "dangling_call_present": true,
+    "synthetic_unknown_result_present": true,
+    "followup_prompt_last": true,
+    "repaired_context_ordered": true
+  }
 }

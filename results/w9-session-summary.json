@@ -3,10 +3,10 @@
   "scope": "DSH white-box mechanism cases; not a DSH-versus-OpenClaw comparison",
   "crash_resume": {
     "scenario": "W9-A crash/resume",
-    "session_id": "dsh-w9-crash-002",
+    "session_id": "dsh-w9-crash-003",
     "crash_call_id": "callw9002",
-    "crash_prefix_sha256": "7fd9b95097a3ff473da4ba63fb5138d04eac1843f9aa6cf6c62917511cd940d3",
-    "final_session_sha256": "9570b8efc2abde9bed65daeb48b24fb073e9709c9e5feef9f40ff65be10149ac",
+    "crash_prefix_sha256": "c6d83ea5e0236c7b5b5bd57a62c370ae1facb816d702e4c01bfc90fdd3dbc22b",
+    "final_session_sha256": "44c46ece9cc89190e92d49d7de3a47391a4cb5936b7719330a897607e6750076",
     "event_count_before_crash": 25,
     "event_count_after_resume": 44,
     "synthetic_error_code": "TOOL_OUTCOME_UNKNOWN",
@@ -62,6 +62,19 @@
       "turn/end",
       "session/end-seed"
     ],
+    "resume_bash_probe": {
+      "registered": true,
+      "invocations": 0
+    },
+    "resume_context_checks": {
+      "original_user_prompt_first": true,
+      "completed_call_present": true,
+      "completed_result_present": true,
+      "dangling_call_present": true,
+      "synthetic_unknown_result_present": true,
+      "followup_prompt_last": true,
+      "repaired_context_ordered": true
+    },
     "checks": {
       "committed_prefix_byte_identical": true,
       "seq_contiguous": true,
@@ -71,7 +84,9 @@
       "effect_001_once": true,
       "effect_002_started_once": true,
       "resume_completed": true,
-      "crash_history_visible_to_resumed_model": true
+      "resume_bash_probe_registered": true,
+      "dangling_call_not_dispatched": true,
+      "repaired_context_visible_to_resumed_model": true
     }
   },
   "fork": {
@@ -317,13 +332,234 @@
         "turn": 1
       }
     ],
+    "recorded_stream_projection": [
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "block-start",
+          "index": 0,
+          "blockType": "tool-call"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "tool-call-delta",
+          "index": 0,
+          "id": "callw9001",
+          "name": "bash",
+          "argumentsDelta": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "block-end",
+          "index": 0,
+          "block": {
+            "type": "tool-call",
+            "id": "callw9001",
+            "name": "bash",
+            "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "usage",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "finish",
+          "reason": {
+            "kind": "tool-calls"
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "block-start",
+          "index": 0,
+          "blockType": "text"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "text-delta",
+          "index": 0,
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "block-end",
+          "index": 0,
+          "block": {
+            "type": "text",
+            "text": "COMPLETED_W9_RECORDED_SESSION"
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "usage",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "finish",
+          "reason": {
+            "kind": "stop"
+          }
+        }
+      }
+    ],
+    "replayed_stream_projection": [
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "block-start",
+          "index": 0,
+          "blockType": "tool-call"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "tool-call-delta",
+          "index": 0,
+          "id": "callw9001",
+          "name": "bash",
+          "argumentsDelta": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "block-end",
+          "index": 0,
+          "block": {
+            "type": "tool-call",
+            "id": "callw9001",
+            "name": "bash",
+            "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "usage",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 1,
+        "chunk": {
+          "type": "finish",
+          "reason": {
+            "kind": "tool-calls"
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "block-start",
+          "index": 0,
+          "blockType": "text"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "text-delta",
+          "index": 0,
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "block-end",
+          "index": 0,
+          "block": {
+            "type": "text",
+            "text": "COMPLETED_W9_RECORDED_SESSION"
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "usage",
+          "usage": {
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "totalTokens": 0
+          }
+        }
+      },
+      {
+        "turn": 1,
+        "step": 2,
+        "chunk": {
+          "type": "finish",
+          "reason": {
+            "kind": "stop"
+          }
+        }
+      }
+    ],
     "checks": {
       "recording_completed": true,
       "replay_completed": true,
       "provider_not_contacted_during_replay": true,
       "record_effect_once": true,
       "replay_effect_once": true,
-      "normalized_execution_projection_equal": true
+      "normalized_execution_projection_equal": true,
+      "normalized_assistant_chunk_stream_equal": true
     }
   },
   "notes": [

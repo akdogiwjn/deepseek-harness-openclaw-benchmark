@@ -1,0 +1,366 @@
+{
+  "scenario": "W9-C keyless LLM replay",
+  "recorded_model_calls": 2,
+  "provider_requests_after_replay": 2,
+  "recorded_projection": [
+    {
+      "type": "turn/start",
+      "turn": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 1,
+      "content": [
+        {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      ]
+    },
+    {
+      "type": "tool/call",
+      "turn": 1,
+      "step": 1,
+      "name": "bash",
+      "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+    },
+    {
+      "type": "tool/result",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 2,
+      "content": [
+        {
+          "type": "text",
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      ]
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "turn/end",
+      "turn": 1
+    }
+  ],
+  "replayed_projection": [
+    {
+      "type": "turn/start",
+      "turn": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 1,
+      "content": [
+        {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      ]
+    },
+    {
+      "type": "tool/call",
+      "turn": 1,
+      "step": 1,
+      "name": "bash",
+      "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+    },
+    {
+      "type": "tool/result",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 1
+    },
+    {
+      "type": "step/start",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "assistant/message",
+      "turn": 1,
+      "step": 2,
+      "content": [
+        {
+          "type": "text",
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      ]
+    },
+    {
+      "type": "step/end",
+      "turn": 1,
+      "step": 2
+    },
+    {
+      "type": "turn/end",
+      "turn": 1
+    }
+  ],
+  "recorded_stream_projection": [
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "block-start",
+        "index": 0,
+        "blockType": "tool-call"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "tool-call-delta",
+        "index": 0,
+        "id": "callw9001",
+        "name": "bash",
+        "argumentsDelta": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "block-end",
+        "index": 0,
+        "block": {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "usage",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "finish",
+        "reason": {
+          "kind": "tool-calls"
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "block-start",
+        "index": 0,
+        "blockType": "text"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "text-delta",
+        "index": 0,
+        "text": "COMPLETED_W9_RECORDED_SESSION"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "block-end",
+        "index": 0,
+        "block": {
+          "type": "text",
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "usage",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "finish",
+        "reason": {
+          "kind": "stop"
+        }
+      }
+    }
+  ],
+  "replayed_stream_projection": [
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "block-start",
+        "index": 0,
+        "blockType": "tool-call"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "tool-call-delta",
+        "index": 0,
+        "id": "callw9001",
+        "name": "bash",
+        "argumentsDelta": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "block-end",
+        "index": 0,
+        "block": {
+          "type": "tool-call",
+          "id": "callw9001",
+          "name": "bash",
+          "arguments": "{\"command\":\"printf 'W9_REPLAY_EFFECT\\\\n' >> replay.log\"}"
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "usage",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 1,
+      "chunk": {
+        "type": "finish",
+        "reason": {
+          "kind": "tool-calls"
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "block-start",
+        "index": 0,
+        "blockType": "text"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "text-delta",
+        "index": 0,
+        "text": "COMPLETED_W9_RECORDED_SESSION"
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "block-end",
+        "index": 0,
+        "block": {
+          "type": "text",
+          "text": "COMPLETED_W9_RECORDED_SESSION"
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "usage",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "step": 2,
+      "chunk": {
+        "type": "finish",
+        "reason": {
+          "kind": "stop"
+        }
+      }
+    }
+  ],
+  "checks": {
+    "recording_completed": true,
+    "replay_completed": true,
+    "provider_not_contacted_during_replay": true,
+    "record_effect_once": true,
+    "replay_effect_once": true,
+    "normalized_execution_projection_equal": true,
+    "normalized_assistant_chunk_stream_equal": true
+  }
+}
