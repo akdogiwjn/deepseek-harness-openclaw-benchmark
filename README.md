@@ -178,6 +178,17 @@ checkout from silently changing the expected denial into an allowed write.
 W9 and W10 complement the cross-runtime workloads as DSH white-box mechanism
 case studies. They must not be interpreted as DSH-versus-OpenClaw rankings.
 
+## CPU-oriented benchmark
+
+The next phase stops adding Harness feature cases and measures Host CPU work.
+C1 scales a real in-process deterministic Agent Loop. C2 removes that loop and
+scales append-only Session/Event Log primitives: append, message derivation,
+prefix fork, JSONL write, and warm-cache load. Both use exact semantic
+invariants, randomized repetitions, scoped CPU timing, and optional
+whole-process `perf stat`. See `CPU_BENCHMARK.md` for the designs and commands;
+the first ARM64 pilots are documented in `results/C1_REPORT.md` and
+`results/C2_REPORT.md`, with complete samples in the corresponding JSON files.
+
 ## Frozen evidence
 
 The redacted minimal raw inputs for deterministic W4-W10 are committed under

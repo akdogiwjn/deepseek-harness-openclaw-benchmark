@@ -42,6 +42,11 @@ workspaces/*
 # Raw per-trial results
 results/*/
 
+# Selected CPU benchmark aggregates
+!results/c1-agent-loop-pilot.json
+results/c1-agent-loop-smoke.json
+!results/c2-session-count-pilot.json
+
 # Keep selected small result directories
 !results/w1-pilot-001/
 results/w1-pilot-001/*

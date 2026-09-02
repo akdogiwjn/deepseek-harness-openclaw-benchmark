@@ -1,0 +1,2841 @@
+{
+  "benchmark": "C2 append-only Session/Event Log event-count scaling",
+  "created_at": "2026-09-02T01:53:09.569206+00:00",
+  "design": {
+    "turns": [
+      1,
+      10,
+      100,
+      1000,
+      5000
+    ],
+    "events_per_turn": 3,
+    "event_counts": [
+      3,
+      30,
+      300,
+      3000,
+      15000
+    ],
+    "repeats": 5,
+    "payload_bytes": 256,
+    "randomization_seed": 20260902,
+    "cpu_affinity": 0,
+    "persistence": "uncompressed JSONL, packChunks=false",
+    "load_cache_state": "fresh persistence backend, warm host page cache",
+    "perf_enabled": true,
+    "perf_events": [
+      "task-clock",
+      "cycles",
+      "instructions",
+      "branches",
+      "branch-misses",
+      "cache-references",
+      "cache-misses",
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "observed_perf_event_labels": {
+      "task-clock": "task-clock:u",
+      "cycles": "cycles:u",
+      "instructions": "instructions:u",
+      "branches": "branches:u",
+      "branch-misses": "branch-misses:u",
+      "cache-references": "cache-references:u",
+      "cache-misses": "cache-misses:u",
+      "context-switches": "context-switches:u",
+      "cpu-migrations": "cpu-migrations:u",
+      "page-faults": "page-faults:u"
+    }
+  },
+  "host": {
+    "platform": "Linux-6.6.0-28.0.0.34.oe2403.aarch64-aarch64-with-glibc2.38",
+    "machine": "aarch64",
+    "logical_cpus": 256,
+    "node": "v24.15.0",
+    "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64",
+    "perf_event_paranoid": "2"
+  },
+  "aggregates": {
+    "1": {
+      "turns": 1,
+      "events": 3,
+      "samples": 5,
+      "log_bytes": {
+        "median": 783.0,
+        "min": 782.0,
+        "max": 783.0
+      },
+      "max_rss_kb": {
+        "median": 56600.0,
+        "min": 55940.0,
+        "max": 56620.0
+      },
+      "cycles": {
+        "median": 211546098.0,
+        "min": 209623014.0,
+        "max": 213837083.0
+      },
+      "instructions": {
+        "median": 304586376.0,
+        "min": 304251346.0,
+        "max": 307586090.0
+      },
+      "ipc": {
+        "median": 1.4382271707039476,
+        "min": 1.4266468646132813,
+        "max": 1.4673297751553176
+      },
+      "cache_mpki": {
+        "median": 5.897167907304857,
+        "min": 5.874691519360669,
+        "max": 5.96401963000683
+      },
+      "branch_mpki": {
+        "median": 10.471213590984778,
+        "min": 10.365771726117522,
+        "max": 10.631264242150872
+      },
+      "append_wall_ns": {
+        "median": 788091.0,
+        "min": 742590.0,
+        "max": 1256217.0
+      },
+      "append_cpu_us": {
+        "median": 1243.0,
+        "min": 764.0,
+        "max": 1503.0
+      },
+      "derive_messages_wall_ns": {
+        "median": 101732.0,
+        "min": 99541.0,
+        "max": 130622.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 106.0,
+        "min": 105.0,
+        "max": 119.0
+      },
+      "fork_prefix_wall_ns": {
+        "median": 875142.0,
+        "min": 864052.0,
+        "max": 1124636.0
+      },
+      "fork_prefix_cpu_us": {
+        "median": 882.0,
+        "min": 872.0,
+        "max": 1133.0
+      },
+      "jsonl_write_wall_ns": {
+        "median": 4826325.0,
+        "min": 4627733.0,
+        "max": 4950338.0
+      },
+      "jsonl_write_cpu_us": {
+        "median": 4820.0,
+        "min": 4629.0,
+        "max": 4944.0
+      },
+      "jsonl_warm_load_wall_ns": {
+        "median": 5213791.0,
+        "min": 4848646.0,
+        "max": 5403134.0
+      },
+      "jsonl_warm_load_cpu_us": {
+        "median": 5178.0,
+        "min": 4832.0,
+        "max": 5383.0
+      }
+    },
+    "10": {
+      "turns": 10,
+      "events": 30,
+      "samples": 5,
+      "log_bytes": {
+        "median": 6656.0,
+        "min": 6655.0,
+        "max": 6656.0
+      },
+      "max_rss_kb": {
+        "median": 58900.0,
+        "min": 58596.0,
+        "max": 60724.0
+      },
+      "cycles": {
+        "median": 236641971.0,
+        "min": 233631248.0,
+        "max": 240456559.0
+      },
+      "instructions": {
+        "median": 346544588.0,
+        "min": 345027456.0,
+        "max": 350368095.0
+      },
+      "ipc": {
+        "median": 1.4731999184689295,
+        "min": 1.4405818433091693,
+        "max": 1.4832972514019187
+      },
+      "cache_mpki": {
+        "median": 6.0281579446245575,
+        "min": 5.922123775582084,
+        "max": 6.04904108063835
+      },
+      "branch_mpki": {
+        "median": 10.359174906520254,
+        "min": 10.164527312284388,
+        "max": 10.492896049795858
+      },
+      "append_wall_ns": {
+        "median": 3107073.0,
+        "min": 3018671.0,
+        "max": 3634430.0
+      },
+      "append_cpu_us": {
+        "median": 3128.0,
+        "min": 3035.0,
+        "max": 3644.0
+      },
+      "derive_messages_wall_ns": {
+        "median": 132612.0,
+        "min": 130862.0,
+        "max": 163712.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 138.0,
+        "min": 136.0,
+        "max": 171.0
+      },
+      "fork_prefix_wall_ns": {
+        "median": 1613992.0,
+        "min": 1518851.0,
+        "max": 1625042.0
+      },
+      "fork_prefix_cpu_us": {
+        "median": 1611.0,
+        "min": 1527.0,
+        "max": 1633.0
+      },
+      "jsonl_write_wall_ns": {
+        "median": 5550096.0,
+        "min": 5206741.0,
+        "max": 6954385.0
+      },
+      "jsonl_write_cpu_us": {
+        "median": 5544.0,
+        "min": 5341.0,
+        "max": 8803.0
+      },
+      "jsonl_warm_load_wall_ns": {
+        "median": 8174942.0,
+        "min": 7833207.0,
+        "max": 9705192.0
+      },
+      "jsonl_warm_load_cpu_us": {
+        "median": 8145.0,
+        "min": 7840.0,
+        "max": 9649.0
+      }
+    },
+    "100": {
+      "turns": 100,
+      "events": 300,
+      "samples": 5,
+      "log_bytes": {
+        "median": 65899.0,
+        "min": 65899.0,
+        "max": 65899.0
+      },
+      "max_rss_kb": {
+        "median": 68216.0,
+        "min": 66788.0,
+        "max": 69136.0
+      },
+      "cycles": {
+        "median": 320097454.0,
+        "min": 309636924.0,
+        "max": 328485783.0
+      },
+      "instructions": {
+        "median": 493576009.0,
+        "min": 479974089.0,
+        "max": 498840312.0
+      },
+      "ipc": {
+        "median": 1.5441147776201931,
+        "min": 1.5025795165083293,
+        "max": 1.570264346616291
+      },
+      "cache_mpki": {
+        "median": 6.335191981582155,
+        "min": 6.171944940818439,
+        "max": 6.432271711164146
+      },
+      "branch_mpki": {
+        "median": 9.194267151366997,
+        "min": 8.839155324720428,
+        "max": 9.38138503944331
+      },
+      "append_wall_ns": {
+        "median": 13891770.0,
+        "min": 13109259.0,
+        "max": 15521982.0
+      },
+      "append_cpu_us": {
+        "median": 14572.0,
+        "min": 13872.0,
+        "max": 17205.0
+      },
+      "derive_messages_wall_ns": {
+        "median": 175573.0,
+        "min": 172763.0,
+        "max": 184433.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 181.0,
+        "min": 178.0,
+        "max": 193.0
+      },
+      "fork_prefix_wall_ns": {
+        "median": 8471506.0,
+        "min": 8129710.0,
+        "max": 10534694.0
+      },
+      "fork_prefix_cpu_us": {
+        "median": 8305.0,
+        "min": 8105.0,
+        "max": 10515.0
+      },
+      "jsonl_write_wall_ns": {
+        "median": 9472329.0,
+        "min": 8933932.0,
+        "max": 9488770.0
+      },
+      "jsonl_write_cpu_us": {
+        "median": 9456.0,
+        "min": 9056.0,
+        "max": 9804.0
+      },
+      "jsonl_warm_load_wall_ns": {
+        "median": 16324973.0,
+        "min": 15592533.0,
+        "max": 16617396.0
+      },
+      "jsonl_warm_load_cpu_us": {
+        "median": 16268.0,
+        "min": 15566.0,
+        "max": 16553.0
+      }
+    },
+    "1000": {
+      "turns": 1000,
+      "events": 3000,
+      "samples": 5,
+      "log_bytes": {
+        "median": 663702.0,
+        "min": 663701.0,
+        "max": 663702.0
+      },
+      "max_rss_kb": {
+        "median": 89108.0,
+        "min": 86864.0,
+        "max": 111688.0
+      },
+      "cycles": {
+        "median": 1025042885.0,
+        "min": 1002997392.0,
+        "max": 1081553297.0
+      },
+      "instructions": {
+        "median": 1776123099.0,
+        "min": 1730458188.0,
+        "max": 1892325256.0
+      },
+      "ipc": {
+        "median": 1.7336595026809853,
+        "min": 1.7145446231744734,
+        "max": 1.7669452619584052
+      },
+      "cache_mpki": {
+        "median": 6.172087874798163,
+        "min": 5.985494477260891,
+        "max": 6.461268728107067
+      },
+      "branch_mpki": {
+        "median": 6.141513313467011,
+        "min": 6.0682670505984095,
+        "max": 6.206179321347122
+      },
+      "append_wall_ns": {
+        "median": 80449458.0,
+        "min": 78692283.0,
+        "max": 83188804.0
+      },
+      "append_cpu_us": {
+        "median": 79769.0,
+        "min": 78512.0,
+        "max": 82762.0
+      },
+      "derive_messages_wall_ns": {
+        "median": 464966.0,
+        "min": 428626.0,
+        "max": 567368.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 471.0,
+        "min": 434.0,
+        "max": 565.0
+      },
+      "fork_prefix_wall_ns": {
+        "median": 72936775.0,
+        "min": 70584232.0,
+        "max": 74258112.0
+      },
+      "fork_prefix_cpu_us": {
+        "median": 72615.0,
+        "min": 70452.0,
+        "max": 73899.0
+      },
+      "jsonl_write_wall_ns": {
+        "median": 61569730.0,
+        "min": 58017201.0,
+        "max": 86215236.0
+      },
+      "jsonl_write_cpu_us": {
+        "median": 61305.0,
+        "min": 57881.0,
+        "max": 85825.0
+      },
+      "jsonl_warm_load_wall_ns": {
+        "median": 57676166.0,
+        "min": 52073600.0,
+        "max": 60487344.0
+      },
+      "jsonl_warm_load_cpu_us": {
+        "median": 57582.0,
+        "min": 51841.0,
+        "max": 60171.0
+      }
+    },
+    "5000": {
+      "turns": 5000,
+      "events": 15000,
+      "samples": 5,
+      "log_bytes": {
+        "median": 3340702.0,
+        "min": 3340701.0,
+        "max": 3340702.0
+      },
+      "max_rss_kb": {
+        "median": 163616.0,
+        "min": 158816.0,
+        "max": 171940.0
+      },
+      "cycles": {
+        "median": 2983541730.0,
+        "min": 2960240019.0,
+        "max": 3165344628.0
+      },
+      "instructions": {
+        "median": 5844132240.0,
+        "min": 5630556958.0,
+        "max": 6006520569.0
+      },
+      "ipc": {
+        "median": 1.9275421968461806,
+        "min": 1.893210186070908,
+        "max": 1.9587901792142857
+      },
+      "cache_mpki": {
+        "median": 5.336953519605157,
+        "min": 5.270987360536249,
+        "max": 5.515680801911492
+      },
+      "branch_mpki": {
+        "median": 3.989786095420285,
+        "min": 3.917336804250121,
+        "max": 4.073734280114788
+      },
+      "append_wall_ns": {
+        "median": 321122589.0,
+        "min": 301361289.0,
+        "max": 332270781.0
+      },
+      "append_cpu_us": {
+        "median": 320423.0,
+        "min": 301191.0,
+        "max": 331258.0
+      },
+      "derive_messages_wall_ns": {
+        "median": 1882736.0,
+        "min": 1770094.0,
+        "max": 2074378.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 1889.0,
+        "min": 1777.0,
+        "max": 2066.0
+      },
+      "fork_prefix_wall_ns": {
+        "median": 253376555.0,
+        "min": 238959299.0,
+        "max": 259474118.0
+      },
+      "fork_prefix_cpu_us": {
+        "median": 252800.0,
+        "min": 237894.0,
+        "max": 258338.0
+      },
+      "jsonl_write_wall_ns": {
+        "median": 213542202.0,
+        "min": 186907809.0,
+        "max": 227602973.0
+      },
+      "jsonl_write_cpu_us": {
+        "median": 212992.0,
+        "min": 186403.0,
+        "max": 226517.0
+      },
+      "jsonl_warm_load_wall_ns": {
+        "median": 127635751.0,
+        "min": 120625285.0,
+        "max": 136312188.0
+      },
+      "jsonl_warm_load_cpu_us": {
+        "median": 127111.0,
+        "min": 120343.0,
+        "max": 135549.0
+      }
+    }
+  },
+  "linear_fits_over_event_count_medians": {
+    "log_bytes": {
+      "intercept": -1178.2781613684492,
+      "per_event_slope": 222.74768945654517
+    },
+    "max_rss_kb": {
+      "intercept": 62157.563871251565,
+      "per_event_slope": 6.853879923839098
+    },
+    "cycles": {
+      "intercept": 287028906.50408876,
+      "per_event_slope": 182279.25628536282
+    },
+    "instructions": {
+      "intercept": 412394745.7367916,
+      "per_event_slope": 365624.20680281695
+    },
+    "ipc": {
+      "intercept": 1.5164516976743374,
+      "per_event_slope": 2.915426160195002e-05
+    },
+    "cache_mpki": {
+      "intercept": 6.1403146990075514,
+      "per_event_slope": -5.0838066171541516e-05
+    },
+    "branch_mpki": {
+      "intercept": 9.478397788206069,
+      "per_event_slope": -0.000394699933631758
+    },
+    "append_wall_ns": {
+      "intercept": 6421989.674733564,
+      "per_event_slope": 21123.058562501075
+    },
+    "append_cpu_us": {
+      "intercept": 6630.052439457533,
+      "per_event_slope": 21.05409577279836
+    },
+    "derive_messages_wall_ns": {
+      "intercept": 121259.70733135781,
+      "per_event_slope": 117.34688612574108
+    },
+    "derive_messages_cpu_us": {
+      "intercept": 126.43994966937697,
+      "per_event_slope": 0.11742760331932119
+    },
+    "fork_prefix_wall_ns": {
+      "intercept": 6252137.807338588,
+      "per_event_slope": 16691.936996853055
+    },
+    "fork_prefix_cpu_us": {
+      "intercept": 6166.803272810808,
+      "per_event_slope": 16.65733833174854
+    },
+    "jsonl_write_wall_ns": {
+      "intercept": 8249345.34484072,
+      "per_event_slope": 13839.194636764109
+    },
+    "jsonl_write_cpu_us": {
+      "intercept": 8211.54121020664,
+      "per_event_slope": 13.80348518785615
+    },
+    "jsonl_warm_load_wall_ns": {
+      "intercept": 14345980.699671578,
+      "per_event_slope": 7816.272268676274
+    },
+    "jsonl_warm_load_cpu_us": {
+      "intercept": 14317.464703066631,
+      "per_event_slope": 7.783596600920028
+    }
+  },
+  "samples": [
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 10,
+        "event_count": 30,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 2560,
+        "derived_message_count": 10,
+        "log_bytes": 6655,
+        "operations": {
+          "append": {
+            "wall_ns": 3018671,
+            "cpu_user_us": 3035,
+            "cpu_system_us": 0,
+            "cpu_total_us": 3035
+          },
+          "derive_messages": {
+            "wall_ns": 163712,
+            "cpu_user_us": 171,
+            "cpu_system_us": 0,
+            "cpu_total_us": 171
+          },
+          "fork_prefix": {
+            "wall_ns": 1625042,
+            "cpu_user_us": 1573,
+            "cpu_system_us": 60,
+            "cpu_total_us": 1633
+          },
+          "jsonl_write": {
+            "wall_ns": 5560616,
+            "cpu_user_us": 5519,
+            "cpu_system_us": 0,
+            "cpu_total_us": 5519
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 8280403,
+            "cpu_user_us": 4421,
+            "cpu_system_us": 3863,
+            "cpu_total_us": 8284
+          }
+        },
+        "resources": {
+          "max_rss_kb": 60684,
+          "minor_page_faults": 5475,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 194,
+          "involuntary_context_switches": 13
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 97.81,
+        "cycles": 234202739.0,
+        "instructions": 345027456.0,
+        "branches": 67620300.0,
+        "branch-misses": 3507041.0,
+        "cache-references": 138323706.0,
+        "cache-misses": 2079880.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5480.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4731999184689295,
+        "cache_mpki": 6.0281579446245575,
+        "branch_mpki": 10.164527312284388
+      },
+      "sample_index": 1
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1000,
+        "event_count": 3000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256000,
+        "derived_message_count": 1000,
+        "log_bytes": 663701,
+        "operations": {
+          "append": {
+            "wall_ns": 78692283,
+            "cpu_user_us": 74177,
+            "cpu_system_us": 4335,
+            "cpu_total_us": 78512
+          },
+          "derive_messages": {
+            "wall_ns": 567368,
+            "cpu_user_us": 565,
+            "cpu_system_us": 0,
+            "cpu_total_us": 565
+          },
+          "fork_prefix": {
+            "wall_ns": 70584232,
+            "cpu_user_us": 66514,
+            "cpu_system_us": 3938,
+            "cpu_total_us": 70452
+          },
+          "jsonl_write": {
+            "wall_ns": 58017201,
+            "cpu_user_us": 53838,
+            "cpu_system_us": 4043,
+            "cpu_total_us": 57881
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 57676166,
+            "cpu_user_us": 57582,
+            "cpu_system_us": 0,
+            "cpu_total_us": 57582
+          }
+        },
+        "resources": {
+          "max_rss_kb": 89108,
+          "minor_page_faults": 14589,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 316,
+          "involuntary_context_switches": 56
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 382.35,
+        "cycles": 1005194183.0,
+        "instructions": 1776123099.0,
+        "branches": 364574226.0,
+        "branch-misses": 10955864.0,
+        "cache-references": 690838163.0,
+        "cache-misses": 10630975.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 14422.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7669452619584052,
+        "cache_mpki": 5.985494477260891,
+        "branch_mpki": 6.168414794091927
+      },
+      "sample_index": 2
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 5000,
+        "event_count": 15000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 1280000,
+        "derived_message_count": 5000,
+        "log_bytes": 3340701,
+        "operations": {
+          "append": {
+            "wall_ns": 301361289,
+            "cpu_user_us": 293337,
+            "cpu_system_us": 7854,
+            "cpu_total_us": 301191
+          },
+          "derive_messages": {
+            "wall_ns": 1882736,
+            "cpu_user_us": 1776,
+            "cpu_system_us": 113,
+            "cpu_total_us": 1889
+          },
+          "fork_prefix": {
+            "wall_ns": 253376555,
+            "cpu_user_us": 248747,
+            "cpu_system_us": 4053,
+            "cpu_total_us": 252800
+          },
+          "jsonl_write": {
+            "wall_ns": 213542202,
+            "cpu_user_us": 205172,
+            "cpu_system_us": 7820,
+            "cpu_total_us": 212992
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 120625285,
+            "cpu_user_us": 120316,
+            "cpu_system_us": 27,
+            "cpu_total_us": 120343
+          }
+        },
+        "resources": {
+          "max_rss_kb": 163616,
+          "minor_page_faults": 36119,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 529,
+          "involuntary_context_switches": 153
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1101.62,
+        "cycles": 2983541730.0,
+        "instructions": 5844132240.0,
+        "branches": 1198843195.0,
+        "branch-misses": 22935021.0,
+        "cache-references": 2229016221.0,
+        "cache-misses": 32234368.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 35286.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.9587901792142857,
+        "cache_mpki": 5.515680801911492,
+        "branch_mpki": 3.924452777269804
+      },
+      "sample_index": 3
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1,
+        "event_count": 3,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256,
+        "derived_message_count": 1,
+        "log_bytes": 782,
+        "operations": {
+          "append": {
+            "wall_ns": 803421,
+            "cpu_user_us": 1465,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1465
+          },
+          "derive_messages": {
+            "wall_ns": 99541,
+            "cpu_user_us": 105,
+            "cpu_system_us": 0,
+            "cpu_total_us": 105
+          },
+          "fork_prefix": {
+            "wall_ns": 875142,
+            "cpu_user_us": 881,
+            "cpu_system_us": 0,
+            "cpu_total_us": 881
+          },
+          "jsonl_write": {
+            "wall_ns": 4627733,
+            "cpu_user_us": 527,
+            "cpu_system_us": 4102,
+            "cpu_total_us": 4629
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 4848646,
+            "cpu_user_us": 2969,
+            "cpu_system_us": 1863,
+            "cpu_total_us": 4832
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56600,
+          "minor_page_faults": 4680,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 172,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 87.63,
+        "cycles": 209623014.0,
+        "instructions": 307586090.0,
+        "branches": 59868480.0,
+        "branch-misses": 3270029.0,
+        "cache-references": 122031228.0,
+        "cache-misses": 1810698.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4767.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4673297751553176,
+        "cache_mpki": 5.886800667741509,
+        "branch_mpki": 10.631264242150872
+      },
+      "sample_index": 4
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 10,
+        "event_count": 30,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 2560,
+        "derived_message_count": 10,
+        "log_bytes": 6656,
+        "operations": {
+          "append": {
+            "wall_ns": 3059491,
+            "cpu_user_us": 3077,
+            "cpu_system_us": 0,
+            "cpu_total_us": 3077
+          },
+          "derive_messages": {
+            "wall_ns": 136912,
+            "cpu_user_us": 103,
+            "cpu_system_us": 43,
+            "cpu_total_us": 146
+          },
+          "fork_prefix": {
+            "wall_ns": 1518851,
+            "cpu_user_us": 1078,
+            "cpu_system_us": 449,
+            "cpu_total_us": 1527
+          },
+          "jsonl_write": {
+            "wall_ns": 5206741,
+            "cpu_user_us": 7808,
+            "cpu_system_us": 0,
+            "cpu_total_us": 7808
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 9705192,
+            "cpu_user_us": 9649,
+            "cpu_system_us": 0,
+            "cpu_total_us": 9649
+          }
+        },
+        "resources": {
+          "max_rss_kb": 60724,
+          "minor_page_faults": 5557,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 190,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 97.69,
+        "cycles": 233631248.0,
+        "instructions": 346544588.0,
+        "branches": 67967800.0,
+        "branch-misses": 3589916.0,
+        "cache-references": 138257980.0,
+        "cache-misses": 2095783.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5550.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4832972514019187,
+        "cache_mpki": 6.0476575672276836,
+        "branch_mpki": 10.359174906520254
+      },
+      "sample_index": 5
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 10,
+        "event_count": 30,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 2560,
+        "derived_message_count": 10,
+        "log_bytes": 6656,
+        "operations": {
+          "append": {
+            "wall_ns": 3318155,
+            "cpu_user_us": 3251,
+            "cpu_system_us": 0,
+            "cpu_total_us": 3251
+          },
+          "derive_messages": {
+            "wall_ns": 130862,
+            "cpu_user_us": 136,
+            "cpu_system_us": 0,
+            "cpu_total_us": 136
+          },
+          "fork_prefix": {
+            "wall_ns": 1613992,
+            "cpu_user_us": 1412,
+            "cpu_system_us": 210,
+            "cpu_total_us": 1622
+          },
+          "jsonl_write": {
+            "wall_ns": 5550096,
+            "cpu_user_us": 5506,
+            "cpu_system_us": 38,
+            "cpu_total_us": 5544
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 8174942,
+            "cpu_user_us": 4291,
+            "cpu_system_us": 3854,
+            "cpu_total_us": 8145
+          }
+        },
+        "resources": {
+          "max_rss_kb": 58596,
+          "minor_page_faults": 5290,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 194,
+          "involuntary_context_switches": 15
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 99.6,
+        "cycles": 238168040.0,
+        "instructions": 348676789.0,
+        "branches": 68266991.0,
+        "branch-misses": 3599667.0,
+        "cache-references": 138471988.0,
+        "cache-misses": 2101834.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5288.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4639948710162791,
+        "cache_mpki": 6.028029585875302,
+        "branch_mpki": 10.323793018525246
+      },
+      "sample_index": 6
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1000,
+        "event_count": 3000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256000,
+        "derived_message_count": 1000,
+        "log_bytes": 663702,
+        "operations": {
+          "append": {
+            "wall_ns": 83188804,
+            "cpu_user_us": 66990,
+            "cpu_system_us": 15772,
+            "cpu_total_us": 82762
+          },
+          "derive_messages": {
+            "wall_ns": 444246,
+            "cpu_user_us": 361,
+            "cpu_system_us": 90,
+            "cpu_total_us": 451
+          },
+          "fork_prefix": {
+            "wall_ns": 72936775,
+            "cpu_user_us": 72336,
+            "cpu_system_us": 279,
+            "cpu_total_us": 72615
+          },
+          "jsonl_write": {
+            "wall_ns": 84572923,
+            "cpu_user_us": 76299,
+            "cpu_system_us": 7880,
+            "cpu_total_us": 84179
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 60487344,
+            "cpu_user_us": 56596,
+            "cpu_system_us": 3575,
+            "cpu_total_us": 60171
+          }
+        },
+        "resources": {
+          "max_rss_kb": 111108,
+          "minor_page_faults": 20510,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 343,
+          "involuntary_context_switches": 65
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 420.23,
+        "cycles": 1076221437.0,
+        "instructions": 1892325256.0,
+        "branches": 391309540.0,
+        "branch-misses": 11483135.0,
+        "cache-references": 733977328.0,
+        "cache-misses": 12226822.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 20345.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7583047418892845,
+        "cache_mpki": 6.461268728107067,
+        "branch_mpki": 6.0682670505984095
+      },
+      "sample_index": 7
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1,
+        "event_count": 3,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256,
+        "derived_message_count": 1,
+        "log_bytes": 783,
+        "operations": {
+          "append": {
+            "wall_ns": 749550,
+            "cpu_user_us": 528,
+            "cpu_system_us": 241,
+            "cpu_total_us": 769
+          },
+          "derive_messages": {
+            "wall_ns": 101732,
+            "cpu_user_us": 73,
+            "cpu_system_us": 33,
+            "cpu_total_us": 106
+          },
+          "fork_prefix": {
+            "wall_ns": 1044915,
+            "cpu_user_us": 1032,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1032
+          },
+          "jsonl_write": {
+            "wall_ns": 4942468,
+            "cpu_user_us": 4937,
+            "cpu_system_us": 0,
+            "cpu_total_us": 4937
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 5403134,
+            "cpu_user_us": 5383,
+            "cpu_system_us": 0,
+            "cpu_total_us": 5383
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56600,
+          "minor_page_faults": 4699,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 179,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 90.64,
+        "cycles": 210065526.0,
+        "instructions": 304373053.0,
+        "branches": 59122325.0,
+        "branch-misses": 3163275.0,
+        "cache-references": 121480801.0,
+        "cache-misses": 1794939.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4781.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4489433787436403,
+        "cache_mpki": 5.897167907304857,
+        "branch_mpki": 10.392756417894851
+      },
+      "sample_index": 8
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 5000,
+        "event_count": 15000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 1280000,
+        "derived_message_count": 5000,
+        "log_bytes": 3340702,
+        "operations": {
+          "append": {
+            "wall_ns": 325190834,
+            "cpu_user_us": 287658,
+            "cpu_system_us": 35997,
+            "cpu_total_us": 323655
+          },
+          "derive_messages": {
+            "wall_ns": 1896936,
+            "cpu_user_us": 1889,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1889
+          },
+          "fork_prefix": {
+            "wall_ns": 238959299,
+            "cpu_user_us": 237800,
+            "cpu_system_us": 94,
+            "cpu_total_us": 237894
+          },
+          "jsonl_write": {
+            "wall_ns": 192943601,
+            "cpu_user_us": 176103,
+            "cpu_system_us": 15920,
+            "cpu_total_us": 192023
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 128701675,
+            "cpu_user_us": 124209,
+            "cpu_system_us": 3905,
+            "cpu_total_us": 128114
+          }
+        },
+        "resources": {
+          "max_rss_kb": 158836,
+          "minor_page_faults": 35285,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 551,
+          "involuntary_context_switches": 152
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1108.28,
+        "cycles": 2974079159.0,
+        "instructions": 5630556958.0,
+        "branches": 1153139637.0,
+        "branch-misses": 22056788.0,
+        "cache-references": 2153591481.0,
+        "cache-misses": 30009094.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 34469.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.893210186070908,
+        "cache_mpki": 5.329684829377762,
+        "branch_mpki": 3.917336804250121
+      },
+      "sample_index": 9
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1,
+        "event_count": 3,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256,
+        "derived_message_count": 1,
+        "log_bytes": 783,
+        "operations": {
+          "append": {
+            "wall_ns": 788091,
+            "cpu_user_us": 1503,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1503
+          },
+          "derive_messages": {
+            "wall_ns": 101491,
+            "cpu_user_us": 106,
+            "cpu_system_us": 0,
+            "cpu_total_us": 106
+          },
+          "fork_prefix": {
+            "wall_ns": 873402,
+            "cpu_user_us": 882,
+            "cpu_system_us": 0,
+            "cpu_total_us": 882
+          },
+          "jsonl_write": {
+            "wall_ns": 4950338,
+            "cpu_user_us": 4944,
+            "cpu_system_us": 0,
+            "cpu_total_us": 4944
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 5213791,
+            "cpu_user_us": 5178,
+            "cpu_system_us": 0,
+            "cpu_total_us": 5178
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56620,
+          "minor_page_faults": 4726,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 173,
+          "involuntary_context_switches": 14
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 91.39,
+        "cycles": 212426072.0,
+        "instructions": 304586376.0,
+        "branches": 59215222.0,
+        "branch-misses": 3189389.0,
+        "cache-references": 121056685.0,
+        "cache-misses": 1789351.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4815.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4338464818951226,
+        "cache_mpki": 5.874691519360669,
+        "branch_mpki": 10.471213590984778
+      },
+      "sample_index": 10
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 100,
+        "event_count": 300,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 25600,
+        "derived_message_count": 100,
+        "log_bytes": 65899,
+        "operations": {
+          "append": {
+            "wall_ns": 13891770,
+            "cpu_user_us": 13514,
+            "cpu_system_us": 358,
+            "cpu_total_us": 13872
+          },
+          "derive_messages": {
+            "wall_ns": 184433,
+            "cpu_user_us": 165,
+            "cpu_system_us": 28,
+            "cpu_total_us": 193
+          },
+          "fork_prefix": {
+            "wall_ns": 8147531,
+            "cpu_user_us": 8077,
+            "cpu_system_us": 28,
+            "cpu_total_us": 8105
+          },
+          "jsonl_write": {
+            "wall_ns": 9486059,
+            "cpu_user_us": 9497,
+            "cpu_system_us": 307,
+            "cpu_total_us": 9804
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 16617396,
+            "cpu_user_us": 16553,
+            "cpu_system_us": 0,
+            "cpu_total_us": 16553
+          }
+        },
+        "resources": {
+          "max_rss_kb": 66788,
+          "minor_page_faults": 6580,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 213,
+          "involuntary_context_switches": 20
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 136.08,
+        "cycles": 328485783.0,
+        "instructions": 493576009.0,
+        "branches": 98876690.0,
+        "branch-misses": 4547033.0,
+        "cache-references": 195754892.0,
+        "cache-misses": 3174815.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6577.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5025795165083293,
+        "cache_mpki": 6.432271711164146,
+        "branch_mpki": 9.212427097525318
+      },
+      "sample_index": 11
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 5000,
+        "event_count": 15000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 1280000,
+        "derived_message_count": 5000,
+        "log_bytes": 3340702,
+        "operations": {
+          "append": {
+            "wall_ns": 332270781,
+            "cpu_user_us": 319299,
+            "cpu_system_us": 11959,
+            "cpu_total_us": 331258
+          },
+          "derive_messages": {
+            "wall_ns": 2074378,
+            "cpu_user_us": 2066,
+            "cpu_system_us": 0,
+            "cpu_total_us": 2066
+          },
+          "fork_prefix": {
+            "wall_ns": 259472178,
+            "cpu_user_us": 246222,
+            "cpu_system_us": 11754,
+            "cpu_total_us": 257976
+          },
+          "jsonl_write": {
+            "wall_ns": 227602973,
+            "cpu_user_us": 190853,
+            "cpu_system_us": 35664,
+            "cpu_total_us": 226517
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 136312188,
+            "cpu_user_us": 135518,
+            "cpu_system_us": 31,
+            "cpu_total_us": 135549
+          }
+        },
+        "resources": {
+          "max_rss_kb": 170340,
+          "minor_page_faults": 35556,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 570,
+          "involuntary_context_switches": 176
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1174.19,
+        "cycles": 3165344628.0,
+        "instructions": 6006520569.0,
+        "branches": 1234264726.0,
+        "branch-misses": 24229970.0,
+        "cache-references": 2290236445.0,
+        "cache-misses": 31660294.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 34740.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.8975881854593433,
+        "cache_mpki": 5.270987360536249,
+        "branch_mpki": 4.033944397868589
+      },
+      "sample_index": 12
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 100,
+        "event_count": 300,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 25600,
+        "derived_message_count": 100,
+        "log_bytes": 65899,
+        "operations": {
+          "append": {
+            "wall_ns": 14199264,
+            "cpu_user_us": 10555,
+            "cpu_system_us": 3617,
+            "cpu_total_us": 14172
+          },
+          "derive_messages": {
+            "wall_ns": 172763,
+            "cpu_user_us": 144,
+            "cpu_system_us": 34,
+            "cpu_total_us": 178
+          },
+          "fork_prefix": {
+            "wall_ns": 10534694,
+            "cpu_user_us": 10515,
+            "cpu_system_us": 0,
+            "cpu_total_us": 10515
+          },
+          "jsonl_write": {
+            "wall_ns": 9488770,
+            "cpu_user_us": 9440,
+            "cpu_system_us": 0,
+            "cpu_total_us": 9440
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 16059039,
+            "cpu_user_us": 16025,
+            "cpu_system_us": 17,
+            "cpu_total_us": 16042
+          }
+        },
+        "resources": {
+          "max_rss_kb": 68860,
+          "minor_page_faults": 6593,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 215,
+          "involuntary_context_switches": 20
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 129.73,
+        "cycles": 317679194.0,
+        "instructions": 498840312.0,
+        "branches": 99375911.0,
+        "branch-misses": 4409327.0,
+        "cache-references": 198029339.0,
+        "cache-misses": 3113110.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6594.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.570264346616291,
+        "cache_mpki": 6.240694517086261,
+        "branch_mpki": 8.839155324720428
+      },
+      "sample_index": 13
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 10,
+        "event_count": 30,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 2560,
+        "derived_message_count": 10,
+        "log_bytes": 6656,
+        "operations": {
+          "append": {
+            "wall_ns": 3107073,
+            "cpu_user_us": 3128,
+            "cpu_system_us": 0,
+            "cpu_total_us": 3128
+          },
+          "derive_messages": {
+            "wall_ns": 132052,
+            "cpu_user_us": 138,
+            "cpu_system_us": 0,
+            "cpu_total_us": 138
+          },
+          "fork_prefix": {
+            "wall_ns": 1598902,
+            "cpu_user_us": 1434,
+            "cpu_system_us": 172,
+            "cpu_total_us": 1606
+          },
+          "jsonl_write": {
+            "wall_ns": 5362693,
+            "cpu_user_us": 5341,
+            "cpu_system_us": 0,
+            "cpu_total_us": 5341
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 7833207,
+            "cpu_user_us": 7840,
+            "cpu_system_us": 0,
+            "cpu_total_us": 7840
+          }
+        },
+        "resources": {
+          "max_rss_kb": 58900,
+          "minor_page_faults": 5257,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 197,
+          "involuntary_context_switches": 16
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 98.46,
+        "cycles": 236641971.0,
+        "instructions": 350368095.0,
+        "branches": 68684851.0,
+        "branch-misses": 3676376.0,
+        "cache-references": 138818412.0,
+        "cache-misses": 2119391.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5262.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4805830661374944,
+        "cache_mpki": 6.04904108063835,
+        "branch_mpki": 10.492896049795858
+      },
+      "sample_index": 14
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 100,
+        "event_count": 300,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 25600,
+        "derived_message_count": 100,
+        "log_bytes": 65899,
+        "operations": {
+          "append": {
+            "wall_ns": 13109259,
+            "cpu_user_us": 6691,
+            "cpu_system_us": 7881,
+            "cpu_total_us": 14572
+          },
+          "derive_messages": {
+            "wall_ns": 180892,
+            "cpu_user_us": 159,
+            "cpu_system_us": 28,
+            "cpu_total_us": 187
+          },
+          "fork_prefix": {
+            "wall_ns": 8129710,
+            "cpu_user_us": 4098,
+            "cpu_system_us": 4018,
+            "cpu_total_us": 8116
+          },
+          "jsonl_write": {
+            "wall_ns": 9062294,
+            "cpu_user_us": 8819,
+            "cpu_system_us": 237,
+            "cpu_total_us": 9056
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 16521205,
+            "cpu_user_us": 16496,
+            "cpu_system_us": 0,
+            "cpu_total_us": 16496
+          }
+        },
+        "resources": {
+          "max_rss_kb": 69136,
+          "minor_page_faults": 6888,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 206,
+          "involuntary_context_switches": 18
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 130.9,
+        "cycles": 320097454.0,
+        "instructions": 494267209.0,
+        "branches": 99115397.0,
+        "branch-misses": 4636911.0,
+        "cache-references": 195854681.0,
+        "cache-misses": 3050590.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6886.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5441147776201931,
+        "cache_mpki": 6.171944940818439,
+        "branch_mpki": 9.38138503944331
+      },
+      "sample_index": 15
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 100,
+        "event_count": 300,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 25600,
+        "derived_message_count": 100,
+        "log_bytes": 65899,
+        "operations": {
+          "append": {
+            "wall_ns": 13401743,
+            "cpu_user_us": 14705,
+            "cpu_system_us": 0,
+            "cpu_total_us": 14705
+          },
+          "derive_messages": {
+            "wall_ns": 175573,
+            "cpu_user_us": 181,
+            "cpu_system_us": 0,
+            "cpu_total_us": 181
+          },
+          "fork_prefix": {
+            "wall_ns": 8471506,
+            "cpu_user_us": 8305,
+            "cpu_system_us": 0,
+            "cpu_total_us": 8305
+          },
+          "jsonl_write": {
+            "wall_ns": 8933932,
+            "cpu_user_us": 9556,
+            "cpu_system_us": 0,
+            "cpu_total_us": 9556
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 15592533,
+            "cpu_user_us": 15566,
+            "cpu_system_us": 0,
+            "cpu_total_us": 15566
+          }
+        },
+        "resources": {
+          "max_rss_kb": 67088,
+          "minor_page_faults": 6608,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 205,
+          "involuntary_context_switches": 18
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 126.66,
+        "cycles": 309636924.0,
+        "instructions": 479974089.0,
+        "branches": 95733483.0,
+        "branch-misses": 4413010.0,
+        "cache-references": 191770792.0,
+        "cache-misses": 3040728.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6716.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5501190323154095,
+        "cache_mpki": 6.335191981582155,
+        "branch_mpki": 9.194267151366997
+      },
+      "sample_index": 16
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 5000,
+        "event_count": 15000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 1280000,
+        "derived_message_count": 5000,
+        "log_bytes": 3340702,
+        "operations": {
+          "append": {
+            "wall_ns": 318987280,
+            "cpu_user_us": 306247,
+            "cpu_system_us": 11872,
+            "cpu_total_us": 318119
+          },
+          "derive_messages": {
+            "wall_ns": 1869376,
+            "cpu_user_us": 1753,
+            "cpu_system_us": 125,
+            "cpu_total_us": 1878
+          },
+          "fork_prefix": {
+            "wall_ns": 250896771,
+            "cpu_user_us": 246379,
+            "cpu_system_us": 3912,
+            "cpu_total_us": 250291
+          },
+          "jsonl_write": {
+            "wall_ns": 186907809,
+            "cpu_user_us": 170484,
+            "cpu_system_us": 15919,
+            "cpu_total_us": 186403
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 126160570,
+            "cpu_user_us": 121720,
+            "cpu_system_us": 3984,
+            "cpu_total_us": 125704
+          }
+        },
+        "resources": {
+          "max_rss_kb": 158816,
+          "minor_page_faults": 37713,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 549,
+          "involuntary_context_switches": 152
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1095.71,
+        "cycles": 2960240019.0,
+        "instructions": 5769194401.0,
+        "branches": 1183066667.0,
+        "branch-misses": 23502165.0,
+        "cache-references": 2212438967.0,
+        "cache-misses": 30924624.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 36902.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.9488941315471082,
+        "cache_mpki": 5.360301950414376,
+        "branch_mpki": 4.073734280114788
+      },
+      "sample_index": 17
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 5000,
+        "event_count": 15000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 1280000,
+        "derived_message_count": 5000,
+        "log_bytes": 3340702,
+        "operations": {
+          "append": {
+            "wall_ns": 321122589,
+            "cpu_user_us": 308535,
+            "cpu_system_us": 11888,
+            "cpu_total_us": 320423
+          },
+          "derive_messages": {
+            "wall_ns": 1770094,
+            "cpu_user_us": 1676,
+            "cpu_system_us": 101,
+            "cpu_total_us": 1777
+          },
+          "fork_prefix": {
+            "wall_ns": 259474118,
+            "cpu_user_us": 250381,
+            "cpu_system_us": 7957,
+            "cpu_total_us": 258338
+          },
+          "jsonl_write": {
+            "wall_ns": 223085662,
+            "cpu_user_us": 206023,
+            "cpu_system_us": 15791,
+            "cpu_total_us": 221814
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 127635751,
+            "cpu_user_us": 119166,
+            "cpu_system_us": 7945,
+            "cpu_total_us": 127111
+          }
+        },
+        "resources": {
+          "max_rss_kb": 171940,
+          "minor_page_faults": 39966,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 568,
+          "involuntary_context_switches": 163
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1150.36,
+        "cycles": 3081623611.0,
+        "instructions": 5939959545.0,
+        "branches": 1218898076.0,
+        "branch-misses": 23699168.0,
+        "cache-references": 2262562365.0,
+        "cache-misses": 31701288.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 39147.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.9275421968461806,
+        "cache_mpki": 5.336953519605157,
+        "branch_mpki": 3.989786095420285
+      },
+      "sample_index": 18
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1000,
+        "event_count": 3000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256000,
+        "derived_message_count": 1000,
+        "log_bytes": 663702,
+        "operations": {
+          "append": {
+            "wall_ns": 80905743,
+            "cpu_user_us": 76365,
+            "cpu_system_us": 4171,
+            "cpu_total_us": 80536
+          },
+          "derive_messages": {
+            "wall_ns": 543807,
+            "cpu_user_us": 541,
+            "cpu_system_us": 0,
+            "cpu_total_us": 541
+          },
+          "fork_prefix": {
+            "wall_ns": 72944434,
+            "cpu_user_us": 72617,
+            "cpu_system_us": 0,
+            "cpu_total_us": 72617
+          },
+          "jsonl_write": {
+            "wall_ns": 59742645,
+            "cpu_user_us": 51571,
+            "cpu_system_us": 7933,
+            "cpu_total_us": 59504
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 52073600,
+            "cpu_user_us": 44049,
+            "cpu_system_us": 7792,
+            "cpu_total_us": 51841
+          }
+        },
+        "resources": {
+          "max_rss_kb": 86864,
+          "minor_page_faults": 13849,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 320,
+          "involuntary_context_switches": 57
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 386.72,
+        "cycles": 1002997392.0,
+        "instructions": 1730458188.0,
+        "branches": 355636549.0,
+        "branch-misses": 10627632.0,
+        "cache-references": 669313551.0,
+        "cache-misses": 10680540.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 13685.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7252868270668444,
+        "cache_mpki": 6.172087874798163,
+        "branch_mpki": 6.141513313467011
+      },
+      "sample_index": 19
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1,
+        "event_count": 3,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256,
+        "derived_message_count": 1,
+        "log_bytes": 783,
+        "operations": {
+          "append": {
+            "wall_ns": 742590,
+            "cpu_user_us": 525,
+            "cpu_system_us": 239,
+            "cpu_total_us": 764
+          },
+          "derive_messages": {
+            "wall_ns": 130622,
+            "cpu_user_us": 119,
+            "cpu_system_us": 0,
+            "cpu_total_us": 119
+          },
+          "fork_prefix": {
+            "wall_ns": 1124636,
+            "cpu_user_us": 1133,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1133
+          },
+          "jsonl_write": {
+            "wall_ns": 4652994,
+            "cpu_user_us": 4635,
+            "cpu_system_us": 0,
+            "cpu_total_us": 4635
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 5244661,
+            "cpu_user_us": 2176,
+            "cpu_system_us": 3061,
+            "cpu_total_us": 5237
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56600,
+          "minor_page_faults": 4698,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 175,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 90.77,
+        "cycles": 211546098.0,
+        "instructions": 304251346.0,
+        "branches": 59116954.0,
+        "branch-misses": 3153800.0,
+        "cache-references": 121206175.0,
+        "cache-misses": 1814561.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4796.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4382271707039476,
+        "cache_mpki": 5.96401963000683,
+        "branch_mpki": 10.365771726117522
+      },
+      "sample_index": 20
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1000,
+        "event_count": 3000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256000,
+        "derived_message_count": 1000,
+        "log_bytes": 663702,
+        "operations": {
+          "append": {
+            "wall_ns": 80449458,
+            "cpu_user_us": 75608,
+            "cpu_system_us": 4161,
+            "cpu_total_us": 79769
+          },
+          "derive_messages": {
+            "wall_ns": 428626,
+            "cpu_user_us": 357,
+            "cpu_system_us": 77,
+            "cpu_total_us": 434
+          },
+          "fork_prefix": {
+            "wall_ns": 71801569,
+            "cpu_user_us": 67501,
+            "cpu_system_us": 3977,
+            "cpu_total_us": 71478
+          },
+          "jsonl_write": {
+            "wall_ns": 61569730,
+            "cpu_user_us": 52100,
+            "cpu_system_us": 9205,
+            "cpu_total_us": 61305
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 59667784,
+            "cpu_user_us": 59244,
+            "cpu_system_us": 213,
+            "cpu_total_us": 59457
+          }
+        },
+        "resources": {
+          "max_rss_kb": 88732,
+          "minor_page_faults": 14536,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 338,
+          "involuntary_context_switches": 63
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 394.15,
+        "cycles": 1025042885.0,
+        "instructions": 1757481767.0,
+        "branches": 360591747.0,
+        "branch-misses": 10907247.0,
+        "cache-references": 682472426.0,
+        "cache-misses": 10547496.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 14371.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7145446231744734,
+        "cache_mpki": 6.001482460898839,
+        "branch_mpki": 6.206179321347122
+      },
+      "sample_index": 21
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1,
+        "event_count": 3,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256,
+        "derived_message_count": 1,
+        "log_bytes": 783,
+        "operations": {
+          "append": {
+            "wall_ns": 1256217,
+            "cpu_user_us": 1243,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1243
+          },
+          "derive_messages": {
+            "wall_ns": 105671,
+            "cpu_user_us": 111,
+            "cpu_system_us": 0,
+            "cpu_total_us": 111
+          },
+          "fork_prefix": {
+            "wall_ns": 864052,
+            "cpu_user_us": 872,
+            "cpu_system_us": 0,
+            "cpu_total_us": 872
+          },
+          "jsonl_write": {
+            "wall_ns": 4826325,
+            "cpu_user_us": 4820,
+            "cpu_system_us": 0,
+            "cpu_total_us": 4820
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 5108129,
+            "cpu_user_us": 5119,
+            "cpu_system_us": 0,
+            "cpu_total_us": 5119
+          }
+        },
+        "resources": {
+          "max_rss_kb": 55940,
+          "minor_page_faults": 4724,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 179,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 91.55,
+        "cycles": 213837083.0,
+        "instructions": 305070004.0,
+        "branches": 59341095.0,
+        "branch-misses": 3226986.0,
+        "cache-references": 121182465.0,
+        "cache-misses": 1810498.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4803.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4266468646132813,
+        "cache_mpki": 5.934696876983028,
+        "branch_mpki": 10.577854124261918
+      },
+      "sample_index": 22
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 100,
+        "event_count": 300,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 25600,
+        "derived_message_count": 100,
+        "log_bytes": 65899,
+        "operations": {
+          "append": {
+            "wall_ns": 15521982,
+            "cpu_user_us": 13710,
+            "cpu_system_us": 3495,
+            "cpu_total_us": 17205
+          },
+          "derive_messages": {
+            "wall_ns": 173083,
+            "cpu_user_us": 147,
+            "cpu_system_us": 33,
+            "cpu_total_us": 180
+          },
+          "fork_prefix": {
+            "wall_ns": 9102894,
+            "cpu_user_us": 8838,
+            "cpu_system_us": 226,
+            "cpu_total_us": 9064
+          },
+          "jsonl_write": {
+            "wall_ns": 9472329,
+            "cpu_user_us": 5317,
+            "cpu_system_us": 4139,
+            "cpu_total_us": 9456
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 16324973,
+            "cpu_user_us": 16268,
+            "cpu_system_us": 0,
+            "cpu_total_us": 16268
+          }
+        },
+        "resources": {
+          "max_rss_kb": 68216,
+          "minor_page_faults": 6652,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 208,
+          "involuntary_context_switches": 20
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 135.44,
+        "cycles": 327266893.0,
+        "instructions": 492522608.0,
+        "branches": 98379529.0,
+        "branch-misses": 4449870.0,
+        "cache-references": 194949717.0,
+        "cache-misses": 3138629.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6652.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.504957019896296,
+        "cache_mpki": 6.372558231885265,
+        "branch_mpki": 9.034854294444896
+      },
+      "sample_index": 23
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 1000,
+        "event_count": 3000,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 256000,
+        "derived_message_count": 1000,
+        "log_bytes": 663702,
+        "operations": {
+          "append": {
+            "wall_ns": 79260481,
+            "cpu_user_us": 71022,
+            "cpu_system_us": 7911,
+            "cpu_total_us": 78933
+          },
+          "derive_messages": {
+            "wall_ns": 464966,
+            "cpu_user_us": 420,
+            "cpu_system_us": 51,
+            "cpu_total_us": 471
+          },
+          "fork_prefix": {
+            "wall_ns": 74258112,
+            "cpu_user_us": 73646,
+            "cpu_system_us": 253,
+            "cpu_total_us": 73899
+          },
+          "jsonl_write": {
+            "wall_ns": 86215236,
+            "cpu_user_us": 66272,
+            "cpu_system_us": 19553,
+            "cpu_total_us": 85825
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 56692853,
+            "cpu_user_us": 48326,
+            "cpu_system_us": 8040,
+            "cpu_total_us": 56366
+          }
+        },
+        "resources": {
+          "max_rss_kb": 111688,
+          "minor_page_faults": 20495,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 324,
+          "involuntary_context_switches": 61
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 424.67,
+        "cycles": 1081553297.0,
+        "instructions": 1875045151.0,
+        "branches": 386841973.0,
+        "branch-misses": 11462332.0,
+        "cache-references": 723370086.0,
+        "cache-misses": 11874553.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 20329.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7336595026809853,
+        "cache_mpki": 6.3329424327019845,
+        "branch_mpki": 6.1130965267086514
+      },
+      "sample_index": 24
+    },
+    {
+      "fixture": {
+        "benchmark": "C2 append-only Session/Event Log primitives",
+        "shape": "three-event completed user turns: turn/start, user/message, turn/end",
+        "turns": 10,
+        "event_count": 30,
+        "payload_bytes": 256,
+        "logical_payload_bytes": 2560,
+        "derived_message_count": 10,
+        "log_bytes": 6656,
+        "operations": {
+          "append": {
+            "wall_ns": 3634430,
+            "cpu_user_us": 3644,
+            "cpu_system_us": 0,
+            "cpu_total_us": 3644
+          },
+          "derive_messages": {
+            "wall_ns": 132612,
+            "cpu_user_us": 138,
+            "cpu_system_us": 0,
+            "cpu_total_us": 138
+          },
+          "fork_prefix": {
+            "wall_ns": 1624202,
+            "cpu_user_us": 1611,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1611
+          },
+          "jsonl_write": {
+            "wall_ns": 6954385,
+            "cpu_user_us": 8803,
+            "cpu_system_us": 0,
+            "cpu_total_us": 8803
+          },
+          "jsonl_warm_load": {
+            "wall_ns": 8142431,
+            "cpu_user_us": 8135,
+            "cpu_system_us": 0,
+            "cpu_total_us": 8135
+          }
+        },
+        "resources": {
+          "max_rss_kb": 58892,
+          "minor_page_faults": 5299,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 202,
+          "involuntary_context_switches": 13
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payloads_exact": true,
+          "fork_seed_exact": true,
+          "load_event_count_exact": true,
+          "load_prefix_exact": true,
+          "load_header_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 102.98,
+        "cycles": 240456559.0,
+        "instructions": 346397353.0,
+        "branches": 67946433.0,
+        "branch-misses": 3598611.0,
+        "cache-references": 137741351.0,
+        "cache-misses": 2051408.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5312.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4405818433091693,
+        "cache_mpki": 5.922123775582084,
+        "branch_mpki": 10.388679269151343
+      },
+      "sample_index": 25
+    }
+  ],
+  "limitations": [
+    "The event-count sweep fixes payload size at 256 bytes; payload-size scaling is a separate C2 condition.",
+    "deriveMessages sees completed user-only turns, not tool-heavy or chunk-heavy event shapes.",
+    "JSONL load uses a fresh backend but warm host page cache; this is not a cold-storage measurement.",
+    "Whole-process perf includes Node/V8 startup, setup, all five primitives, cleanup, and teardown.",
+    "A :u event label excludes kernel execution and makes zero scheduling counters non-interpretable."
+  ]
+}
