@@ -1,0 +1,5481 @@
+{
+  "benchmark": "C4 shell lifecycle scaling",
+  "created_at": "2026-09-02T02:06:56.129318+00:00",
+  "design": {
+    "conditions": [
+      "dsh-managed",
+      "raw-oneshot",
+      "persistent"
+    ],
+    "operations": [
+      1,
+      10,
+      100,
+      1000
+    ],
+    "repeats": 5,
+    "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+    "randomization_seed": 20260902,
+    "cpu_affinity": 0,
+    "perf_enabled": true,
+    "perf_descendant_inheritance": "perf stat default inheritance; counters cover spawned descendants",
+    "perf_events": [
+      "task-clock",
+      "cycles",
+      "instructions",
+      "branches",
+      "branch-misses",
+      "cache-references",
+      "cache-misses",
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "observed_perf_event_labels": {
+      "task-clock": "task-clock:u",
+      "cycles": "cycles:u",
+      "instructions": "instructions:u",
+      "branches": "branches:u",
+      "branch-misses": "branch-misses:u",
+      "cache-references": "cache-references:u",
+      "cache-misses": "cache-misses:u",
+      "context-switches": "context-switches:u",
+      "cpu-migrations": "cpu-migrations:u",
+      "page-faults": "page-faults:u"
+    }
+  },
+  "host": {
+    "platform": "Linux-6.6.0-28.0.0.34.oe2403.aarch64-aarch64-with-glibc2.38",
+    "machine": "aarch64",
+    "logical_cpus": 256,
+    "node": "v24.15.0",
+    "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64",
+    "perf_event_paranoid": "2"
+  },
+  "aggregates": {
+    "dsh-managed": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 8461115.0,
+          "min": 8315104.0,
+          "max": 8637618.0
+        },
+        "wall_ns_per_operation": {
+          "median": 8461115.0,
+          "min": 8315104.0,
+          "max": 8637618.0
+        },
+        "controller_cpu_us": {
+          "median": 6252.0,
+          "min": 6024.0,
+          "max": 6673.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 6252.0,
+          "min": 6024.0,
+          "max": 6673.0
+        },
+        "max_rss_kb": {
+          "median": 54904.0,
+          "min": 54648.0,
+          "max": 55100.0
+        },
+        "cycles": {
+          "median": 173938591.0,
+          "min": 170676016.0,
+          "max": 176308974.0
+        },
+        "instructions": {
+          "median": 259258047.0,
+          "min": 257509722.0,
+          "max": 263321026.0
+        },
+        "task_clock_ms": {
+          "median": 77.98,
+          "min": 76.31,
+          "max": 80.28
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 5277.0,
+          "min": 5254.0,
+          "max": 5313.0
+        },
+        "cycles_per_operation": {
+          "median": 173938591.0,
+          "min": 170676016.0,
+          "max": 176308974.0
+        },
+        "instructions_per_operation": {
+          "median": 259258047.0,
+          "min": 257509722.0,
+          "max": 263321026.0
+        },
+        "task_clock_per_operation": {
+          "median": 77.98,
+          "min": 76.31,
+          "max": 80.28
+        },
+        "ipc": {
+          "median": 1.493520267436869,
+          "min": 1.4886367332929806,
+          "max": 1.5087633754000913
+        },
+        "cache_mpki": {
+          "median": 5.577292309976659,
+          "min": 5.467291672170713,
+          "max": 5.652580573516393
+        },
+        "branch_mpki": {
+          "median": 10.134948675286441,
+          "min": 10.058951294002084,
+          "max": 10.579914723558764
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 49002290.0,
+          "min": 47304987.0,
+          "max": 50454130.0
+        },
+        "wall_ns_per_operation": {
+          "median": 4900229.0,
+          "min": 4730498.7,
+          "max": 5045413.0
+        },
+        "controller_cpu_us": {
+          "median": 27636.0,
+          "min": 27564.0,
+          "max": 28531.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 2763.6,
+          "min": 2756.4,
+          "max": 2853.1
+        },
+        "max_rss_kb": {
+          "median": 56892.0,
+          "min": 56320.0,
+          "max": 58208.0
+        },
+        "cycles": {
+          "median": 221412426.0,
+          "min": 220694913.0,
+          "max": 224459046.0
+        },
+        "instructions": {
+          "median": 323417601.0,
+          "min": 322713318.0,
+          "max": 326224293.0
+        },
+        "task_clock_ms": {
+          "median": 118.48,
+          "min": 115.65,
+          "max": 119.1
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 8864.0,
+          "min": 8814.0,
+          "max": 8917.0
+        },
+        "cycles_per_operation": {
+          "median": 22141242.6,
+          "min": 22069491.3,
+          "max": 22445904.6
+        },
+        "instructions_per_operation": {
+          "median": 32341760.1,
+          "min": 32271331.8,
+          "max": 32622429.3
+        },
+        "task_clock_per_operation": {
+          "median": 11.848,
+          "min": 11.565000000000001,
+          "max": 11.91
+        },
+        "ipc": {
+          "median": 1.4579976328880475,
+          "min": 1.4533800210484722,
+          "max": 1.4654510908459408
+        },
+        "cache_mpki": {
+          "median": 6.002813927871424,
+          "min": 5.97606015809497,
+          "max": 6.090911545658272
+        },
+        "branch_mpki": {
+          "median": 10.77571270238063,
+          "min": 10.638354218699433,
+          "max": 10.955186589982127
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 401545419.0,
+          "min": 397404333.0,
+          "max": 404450359.0
+        },
+        "wall_ns_per_operation": {
+          "median": 4015454.19,
+          "min": 3974043.33,
+          "max": 4044503.59
+        },
+        "controller_cpu_us": {
+          "median": 168162.0,
+          "min": 166942.0,
+          "max": 168671.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 1681.62,
+          "min": 1669.42,
+          "max": 1686.71
+        },
+        "max_rss_kb": {
+          "median": 60492.0,
+          "min": 58756.0,
+          "max": 60860.0
+        },
+        "cycles": {
+          "median": 491790240.0,
+          "min": 485096756.0,
+          "max": 498830796.0
+        },
+        "instructions": {
+          "median": 659015350.0,
+          "min": 655969337.0,
+          "max": 659927327.0
+        },
+        "task_clock_ms": {
+          "median": 458.55,
+          "min": 453.11,
+          "max": 471.99
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 39128.0,
+          "min": 39053.0,
+          "max": 39283.0
+        },
+        "cycles_per_operation": {
+          "median": 4917902.4,
+          "min": 4850967.56,
+          "max": 4988307.96
+        },
+        "instructions_per_operation": {
+          "median": 6590153.5,
+          "min": 6559693.37,
+          "max": 6599273.27
+        },
+        "task_clock_per_operation": {
+          "median": 4.5855,
+          "min": 4.5311,
+          "max": 4.7199
+        },
+        "ipc": {
+          "median": 1.3380700560466592,
+          "min": 1.3222373343605673,
+          "max": 1.3585235148428823
+        },
+        "cache_mpki": {
+          "median": 7.758074003743249,
+          "min": 7.603029598439406,
+          "max": 7.788807790896112
+        },
+        "branch_mpki": {
+          "median": 12.160130302057285,
+          "min": 12.112900027215753,
+          "max": 12.268656969860562
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 3841822061.0,
+          "min": 3831977686.0,
+          "max": 3875865356.0
+        },
+        "wall_ns_per_operation": {
+          "median": 3841822.061,
+          "min": 3831977.686,
+          "max": 3875865.356
+        },
+        "controller_cpu_us": {
+          "median": 1406860.0,
+          "min": 1376154.0,
+          "max": 1415840.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 1406.86,
+          "min": 1376.154,
+          "max": 1415.84
+        },
+        "max_rss_kb": {
+          "median": 81592.0,
+          "min": 81060.0,
+          "max": 83172.0
+        },
+        "cycles": {
+          "median": 2712390097.0,
+          "min": 2684035722.0,
+          "max": 2748752151.0
+        },
+        "instructions": {
+          "median": 3639770231.0,
+          "min": 3637321344.0,
+          "max": 3641709596.0
+        },
+        "task_clock_ms": {
+          "median": 3765.38,
+          "min": 3741.54,
+          "max": 3882.63
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 313216.0,
+          "min": 310020.0,
+          "max": 314641.0
+        },
+        "cycles_per_operation": {
+          "median": 2712390.097,
+          "min": 2684035.722,
+          "max": 2748752.151
+        },
+        "instructions_per_operation": {
+          "median": 3639770.231,
+          "min": 3637321.344,
+          "max": 3641709.596
+        },
+        "task_clock_per_operation": {
+          "median": 3.76538,
+          "min": 3.74154,
+          "max": 3.8826300000000002
+        },
+        "ipc": {
+          "median": 1.3426201489335403,
+          "min": 1.3234096074400208,
+          "max": 1.3560811434684772
+        },
+        "cache_mpki": {
+          "median": 7.826786087311065,
+          "min": 7.717959824008335,
+          "max": 7.860228393339932
+        },
+        "branch_mpki": {
+          "median": 11.389489263938234,
+          "min": 11.345091964405377,
+          "max": 11.41016155384091
+        }
+      }
+    },
+    "raw-oneshot": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 5492995.0,
+          "min": 5462155.0,
+          "max": 5673727.0
+        },
+        "wall_ns_per_operation": {
+          "median": 5492995.0,
+          "min": 5462155.0,
+          "max": 5673727.0
+        },
+        "controller_cpu_us": {
+          "median": 3869.0,
+          "min": 3824.0,
+          "max": 3998.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 3869.0,
+          "min": 3824.0,
+          "max": 3998.0
+        },
+        "max_rss_kb": {
+          "median": 54392.0,
+          "min": 54292.0,
+          "max": 55072.0
+        },
+        "cycles": {
+          "median": 147064587.0,
+          "min": 146062532.0,
+          "max": 153868670.0
+        },
+        "instructions": {
+          "median": 225170714.0,
+          "min": 224314498.0,
+          "max": 229799449.0
+        },
+        "task_clock_ms": {
+          "median": 66.57,
+          "min": 66.13,
+          "max": 71.41
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 5046.0,
+          "min": 4989.0,
+          "max": 5090.0
+        },
+        "cycles_per_operation": {
+          "median": 147064587.0,
+          "min": 146062532.0,
+          "max": 153868670.0
+        },
+        "instructions_per_operation": {
+          "median": 225170714.0,
+          "min": 224314498.0,
+          "max": 229799449.0
+        },
+        "task_clock_per_operation": {
+          "median": 66.57,
+          "min": 66.13,
+          "max": 71.41
+        },
+        "ipc": {
+          "median": 1.5268916778721175,
+          "min": 1.4934778405506461,
+          "max": 1.5416048928961468
+        },
+        "cache_mpki": {
+          "median": 5.327381915367771,
+          "min": 5.192514626090334,
+          "max": 5.38163386110995
+        },
+        "branch_mpki": {
+          "median": 9.773117097927571,
+          "min": 9.580245678101466,
+          "max": 10.302187452155291
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 34804725.0,
+          "min": 34711714.0,
+          "max": 35653447.0
+        },
+        "wall_ns_per_operation": {
+          "median": 3480472.5,
+          "min": 3471171.4,
+          "max": 3565344.7
+        },
+        "controller_cpu_us": {
+          "median": 18609.0,
+          "min": 18326.0,
+          "max": 19072.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 1860.9,
+          "min": 1832.6,
+          "max": 1907.2
+        },
+        "max_rss_kb": {
+          "median": 56476.0,
+          "min": 54872.0,
+          "max": 56620.0
+        },
+        "cycles": {
+          "median": 178591454.0,
+          "min": 177060985.0,
+          "max": 179547260.0
+        },
+        "instructions": {
+          "median": 268081126.0,
+          "min": 265738373.0,
+          "max": 270367386.0
+        },
+        "task_clock_ms": {
+          "median": 96.5,
+          "min": 96.12,
+          "max": 100.27
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 8136.0,
+          "min": 8112.0,
+          "max": 8183.0
+        },
+        "cycles_per_operation": {
+          "median": 17859145.4,
+          "min": 17706098.5,
+          "max": 17954726.0
+        },
+        "instructions_per_operation": {
+          "median": 26808112.6,
+          "min": 26573837.3,
+          "max": 27036738.6
+        },
+        "task_clock_per_operation": {
+          "median": 9.65,
+          "min": 9.612,
+          "max": 10.027
+        },
+        "ipc": {
+          "median": 1.5008296322309513,
+          "min": 1.491200256424364,
+          "max": 1.5058285267065619
+        },
+        "cache_mpki": {
+          "median": 5.594684941163534,
+          "min": 5.535271920704223,
+          "max": 5.660544930031614
+        },
+        "branch_mpki": {
+          "median": 10.191955848469542,
+          "min": 10.022568515238305,
+          "max": 10.420058579106875
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 284667272.0,
+          "min": 278445737.0,
+          "max": 296980750.0
+        },
+        "wall_ns_per_operation": {
+          "median": 2846672.72,
+          "min": 2784457.37,
+          "max": 2969807.5
+        },
+        "controller_cpu_us": {
+          "median": 120788.0,
+          "min": 119473.0,
+          "max": 127044.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 1207.88,
+          "min": 1194.73,
+          "max": 1270.44
+        },
+        "max_rss_kb": {
+          "median": 58636.0,
+          "min": 58120.0,
+          "max": 59164.0
+        },
+        "cycles": {
+          "median": 370229175.0,
+          "min": 367619387.0,
+          "max": 372986111.0
+        },
+        "instructions": {
+          "median": 512685709.0,
+          "min": 509960627.0,
+          "max": 515786662.0
+        },
+        "task_clock_ms": {
+          "median": 343.95,
+          "min": 334.67,
+          "max": 358.55
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 35785.0,
+          "min": 35752.0,
+          "max": 36089.0
+        },
+        "cycles_per_operation": {
+          "median": 3702291.75,
+          "min": 3676193.87,
+          "max": 3729861.11
+        },
+        "instructions_per_operation": {
+          "median": 5126857.09,
+          "min": 5099606.27,
+          "max": 5157866.62
+        },
+        "task_clock_per_operation": {
+          "median": 3.4395,
+          "min": 3.3467000000000002,
+          "max": 3.5855
+        },
+        "ipc": {
+          "median": 1.3782053053444663,
+          "min": 1.3718025786741366,
+          "max": 1.397779426063159
+        },
+        "cache_mpki": {
+          "median": 7.169417653533662,
+          "min": 7.119412411786184,
+          "max": 7.235289011675671
+        },
+        "branch_mpki": {
+          "median": 11.709179512159954,
+          "min": 11.613458006134659,
+          "max": 11.795250727131055
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 2689982824.0,
+          "min": 2636383021.0,
+          "max": 2897853876.0
+        },
+        "wall_ns_per_operation": {
+          "median": 2689982.824,
+          "min": 2636383.021,
+          "max": 2897853.876
+        },
+        "controller_cpu_us": {
+          "median": 1012089.0,
+          "min": 987709.0,
+          "max": 1098605.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 1012.089,
+          "min": 987.709,
+          "max": 1098.605
+        },
+        "max_rss_kb": {
+          "median": 76864.0,
+          "min": 75184.0,
+          "max": 77572.0
+        },
+        "cycles": {
+          "median": 1876848888.0,
+          "min": 1850954969.0,
+          "max": 1950391545.0
+        },
+        "instructions": {
+          "median": 2627116783.0,
+          "min": 2621296838.0,
+          "max": 2629310831.0
+        },
+        "task_clock_ms": {
+          "median": 2692.13,
+          "min": 2636.55,
+          "max": 2939.39
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 278608.0,
+          "min": 276141.0,
+          "max": 281255.0
+        },
+        "cycles_per_operation": {
+          "median": 1876848.888,
+          "min": 1850954.969,
+          "max": 1950391.545
+        },
+        "instructions_per_operation": {
+          "median": 2627116.783,
+          "min": 2621296.838,
+          "max": 2629310.831
+        },
+        "task_clock_per_operation": {
+          "median": 2.69213,
+          "min": 2.63655,
+          "max": 2.93939
+        },
+        "ipc": {
+          "median": 1.396647782759589,
+          "min": 1.3469689149006232,
+          "max": 1.4205158283350976
+        },
+        "cache_mpki": {
+          "median": 7.261529916989341,
+          "min": 7.229206065215572,
+          "max": 7.3022195678164765
+        },
+        "branch_mpki": {
+          "median": 11.09462514285887,
+          "min": 11.028188635841936,
+          "max": 11.108325290278318
+        }
+      }
+    },
+    "persistent": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 221583.0,
+          "min": 218733.0,
+          "max": 249953.0
+        },
+        "wall_ns_per_operation": {
+          "median": 221583.0,
+          "min": 218733.0,
+          "max": 249953.0
+        },
+        "controller_cpu_us": {
+          "median": 182.0,
+          "min": 179.0,
+          "max": 210.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 182.0,
+          "min": 179.0,
+          "max": 210.0
+        },
+        "max_rss_kb": {
+          "median": 54644.0,
+          "min": 54388.0,
+          "max": 56456.0
+        },
+        "cycles": {
+          "median": 153960658.0,
+          "min": 151740849.0,
+          "max": 155559852.0
+        },
+        "instructions": {
+          "median": 231304953.0,
+          "min": 229264030.0,
+          "max": 234379397.0
+        },
+        "task_clock_ms": {
+          "median": 70.47,
+          "min": 68.86,
+          "max": 74.02
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 5068.0,
+          "min": 5036.0,
+          "max": 5210.0
+        },
+        "cycles_per_operation": {
+          "median": 153960658.0,
+          "min": 151740849.0,
+          "max": 155559852.0
+        },
+        "instructions_per_operation": {
+          "median": 231304953.0,
+          "min": 229264030.0,
+          "max": 234379397.0
+        },
+        "task_clock_per_operation": {
+          "median": 70.47,
+          "min": 68.86,
+          "max": 74.02
+        },
+        "ipc": {
+          "median": 1.508268819678862,
+          "min": 1.4988807725152746,
+          "max": 1.521340226920038
+        },
+        "cache_mpki": {
+          "median": 5.300392335308098,
+          "min": 5.178458582688478,
+          "max": 5.4284838578824415
+        },
+        "branch_mpki": {
+          "median": 10.174427057191082,
+          "min": 9.846149873575895,
+          "max": 10.296864958655046
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 2374493.0,
+          "min": 2174700.0,
+          "max": 2887300.0
+        },
+        "wall_ns_per_operation": {
+          "median": 237449.3,
+          "min": 217470.0,
+          "max": 288730.0
+        },
+        "controller_cpu_us": {
+          "median": 2016.0,
+          "min": 1903.0,
+          "max": 2087.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 201.6,
+          "min": 190.3,
+          "max": 208.7
+        },
+        "max_rss_kb": {
+          "median": 54372.0,
+          "min": 52664.0,
+          "max": 54948.0
+        },
+        "cycles": {
+          "median": 156862700.0,
+          "min": 154282198.0,
+          "max": 157842400.0
+        },
+        "instructions": {
+          "median": 237076659.0,
+          "min": 235195406.0,
+          "max": 237818893.0
+        },
+        "task_clock_ms": {
+          "median": 73.72,
+          "min": 69.27,
+          "max": 76.61
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 5136.0,
+          "min": 5070.0,
+          "max": 5207.0
+        },
+        "cycles_per_operation": {
+          "median": 15686270.0,
+          "min": 15428219.8,
+          "max": 15784240.0
+        },
+        "instructions_per_operation": {
+          "median": 23707665.9,
+          "min": 23519540.6,
+          "max": 23781889.3
+        },
+        "task_clock_per_operation": {
+          "median": 7.372,
+          "min": 6.927,
+          "max": 7.661
+        },
+        "ipc": {
+          "median": 1.5155734601023698,
+          "min": 1.501983364419193,
+          "max": 1.5244494118498364
+        },
+        "cache_mpki": {
+          "median": 5.357404468281668,
+          "min": 5.338286819492865,
+          "max": 5.457755412110388
+        },
+        "branch_mpki": {
+          "median": 9.872456486743387,
+          "min": 9.640175539823256,
+          "max": 10.079947685232897
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 7865867.0,
+          "min": 7643865.0,
+          "max": 8779870.0
+        },
+        "wall_ns_per_operation": {
+          "median": 78658.67,
+          "min": 76438.65,
+          "max": 87798.7
+        },
+        "controller_cpu_us": {
+          "median": 5540.0,
+          "min": 5380.0,
+          "max": 5616.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 55.4,
+          "min": 53.8,
+          "max": 56.16
+        },
+        "max_rss_kb": {
+          "median": 55060.0,
+          "min": 54704.0,
+          "max": 56320.0
+        },
+        "cycles": {
+          "median": 168343891.0,
+          "min": 167309670.0,
+          "max": 178942192.0
+        },
+        "instructions": {
+          "median": 249035200.0,
+          "min": 247444775.0,
+          "max": 257032278.0
+        },
+        "task_clock_ms": {
+          "median": 78.59,
+          "min": 76.12,
+          "max": 84.1
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 5192.0,
+          "min": 5128.0,
+          "max": 5233.0
+        },
+        "cycles_per_operation": {
+          "median": 1683438.91,
+          "min": 1673096.7,
+          "max": 1789421.92
+        },
+        "instructions_per_operation": {
+          "median": 2490352.0,
+          "min": 2474447.75,
+          "max": 2570322.78
+        },
+        "task_clock_per_operation": {
+          "median": 0.7859,
+          "min": 0.7612000000000001,
+          "max": 0.841
+        },
+        "ipc": {
+          "median": 1.4721202208638506,
+          "min": 1.4363983984280242,
+          "max": 1.4827063064779904
+        },
+        "cache_mpki": {
+          "median": 6.193207843726722,
+          "min": 5.869052757646259,
+          "max": 6.25361433160901
+        },
+        "branch_mpki": {
+          "median": 10.703945678915622,
+          "min": 10.487891692196774,
+          "max": 11.688411367540382
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 63942014.0,
+          "min": 62321902.0,
+          "max": 66153194.0
+        },
+        "wall_ns_per_operation": {
+          "median": 63942.014,
+          "min": 62321.902,
+          "max": 66153.194
+        },
+        "controller_cpu_us": {
+          "median": 41700.0,
+          "min": 41138.0,
+          "max": 43089.0
+        },
+        "controller_cpu_us_per_operation": {
+          "median": 41.7,
+          "min": 41.138,
+          "max": 43.089
+        },
+        "max_rss_kb": {
+          "median": 58904.0,
+          "min": 58340.0,
+          "max": 60460.0
+        },
+        "cycles": {
+          "median": 269328550.0,
+          "min": 264960281.0,
+          "max": 273954293.0
+        },
+        "instructions": {
+          "median": 360874641.0,
+          "min": 358121774.0,
+          "max": 366793773.0
+        },
+        "task_clock_ms": {
+          "median": 134.05,
+          "min": 132.36,
+          "max": 140.15
+        },
+        "context_switches": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "page_faults": {
+          "median": 6510.0,
+          "min": 6476.0,
+          "max": 6626.0
+        },
+        "cycles_per_operation": {
+          "median": 269328.55,
+          "min": 264960.281,
+          "max": 273954.293
+        },
+        "instructions_per_operation": {
+          "median": 360874.641,
+          "min": 358121.774,
+          "max": 366793.773
+        },
+        "task_clock_per_operation": {
+          "median": 0.13405,
+          "min": 0.13236,
+          "max": 0.14015
+        },
+        "ipc": {
+          "median": 1.3411212349242279,
+          "min": 1.317280474228597,
+          "max": 1.3516055034678953
+        },
+        "cache_mpki": {
+          "median": 10.156701614015795,
+          "min": 10.136911457327276,
+          "max": 10.315015870414424
+        },
+        "branch_mpki": {
+          "median": 12.075691957529372,
+          "min": 11.921665505879014,
+          "max": 12.473049808291046
+        }
+      }
+    }
+  },
+  "linear_fits_over_operation_count_medians": {
+    "dsh-managed": {
+      "wall_ns": {
+        "intercept": 10991747.644962788,
+        "per_operation_slope": 3831560.6610442386
+      },
+      "controller_cpu_us": {
+        "intercept": 15374.940719144768,
+        "per_operation_slope": 1392.8084942605049
+      },
+      "cycles": {
+        "intercept": 201395963.3226434,
+        "per_operation_slope": 2514804.23106159
+      },
+      "instructions": {
+        "intercept": 288618095.6196954,
+        "per_operation_slope": 3354625.4244115376
+      },
+      "task_clock_ms": {
+        "intercept": 81.73504697116937,
+        "per_operation_slope": 3.684473278231614
+      },
+      "page_faults": {
+        "intercept": 6326.408163265296,
+        "per_operation_slope": 307.09213982622754
+      }
+    },
+    "raw-oneshot": {
+      "wall_ns": {
+        "intercept": 8842065.360868096,
+        "per_operation_slope": 2681889.7880796827
+      },
+      "controller_cpu_us": {
+        "intercept": 10321.7797214124,
+        "per_operation_slope": 1002.7613691398294
+      },
+      "cycles": {
+        "intercept": 167586694.8568189,
+        "per_operation_slope": 1712319.8240978618
+      },
+      "instructions": {
+        "intercept": 246192696.24295425,
+        "per_operation_slope": 2383693.5616815328
+      },
+      "task_clock_ms": {
+        "intercept": 71.68329122125033,
+        "per_operation_slope": 2.621437295333032
+      },
+      "page_faults": {
+        "intercept": 6157.564301911247,
+        "per_operation_slope": 272.6775362667462
+      }
+    },
+    "persistent": {
+      "wall_ns": {
+        "intercept": 1145871.0223517977,
+        "per_operation_slope": 62844.71009054258
+      },
+      "controller_cpu_us": {
+        "intercept": 1058.6213151927423,
+        "per_operation_slope": 40.687231988504976
+      },
+      "cycles": {
+        "intercept": 155453539.6271461,
+        "per_operation_slope": 114024.87893016706
+      },
+      "instructions": {
+        "intercept": 234381105.83738256,
+        "per_operation_slope": 126702.99698512125
+      },
+      "task_clock_ms": {
+        "intercept": 71.94231940395207,
+        "per_operation_slope": 0.06216086623239584
+      },
+      "page_faults": {
+        "intercept": 5080.084872044055,
+        "per_operation_slope": 1.4272371843598355
+      }
+    }
+  },
+  "samples": [
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 64086096,
+          "controller_cpu_user_us": 33437,
+          "controller_cpu_system_us": 8994,
+          "controller_cpu_total_us": 42431,
+          "wall_ns_per_operation": 64086.096,
+          "controller_cpu_us_per_operation": 42.431
+        },
+        "persistent_startup": {
+          "wall_ns": 1909176,
+          "controller_cpu_user_us": 1678,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1678
+        },
+        "resources": {
+          "max_rss_kb": 59040,
+          "minor_page_faults": 6158,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1139,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 140.15,
+        "cycles": 273954293.0,
+        "instructions": 360874641.0,
+        "branches": 72657314.0,
+        "branch-misses": 4357811.0,
+        "cache-references": 141630135.0,
+        "cache-misses": 3674362.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6610.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.317280474228597,
+        "cache_mpki": 10.181823776306853,
+        "branch_mpki": 12.075691957529372,
+        "task-clock_per_operation": 0.14015,
+        "cycles_per_operation": 273954.293,
+        "instructions_per_operation": 360874.641,
+        "branches_per_operation": 72657.314,
+        "branch-misses_per_operation": 4357.811,
+        "cache-references_per_operation": 141630.135,
+        "cache-misses_per_operation": 3674.362,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 6.61
+      },
+      "sample_index": 1
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 50454130,
+          "controller_cpu_user_us": 20388,
+          "controller_cpu_system_us": 8143,
+          "controller_cpu_total_us": 28531,
+          "wall_ns_per_operation": 5045413,
+          "controller_cpu_us_per_operation": 2853.1
+        },
+        "resources": {
+          "max_rss_kb": 56892,
+          "minor_page_faults": 6720,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 94,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 118.48,
+        "cycles": 221368437.0,
+        "instructions": 322713318.0,
+        "branches": 63557876.0,
+        "branch-misses": 3477466.0,
+        "cache-references": 126343898.0,
+        "cache-misses": 1937188.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8897.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4578108892732526,
+        "cache_mpki": 6.002813927871424,
+        "branch_mpki": 10.77571270238063,
+        "task-clock_per_operation": 11.848,
+        "cycles_per_operation": 22136843.7,
+        "instructions_per_operation": 32271331.8,
+        "branches_per_operation": 6355787.6,
+        "branch-misses_per_operation": 347746.6,
+        "cache-references_per_operation": 12634389.8,
+        "cache-misses_per_operation": 193718.8,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 889.7
+      },
+      "sample_index": 2
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 404450359,
+          "controller_cpu_user_us": 80386,
+          "controller_cpu_system_us": 87936,
+          "controller_cpu_total_us": 168322,
+          "wall_ns_per_operation": 4044503.59,
+          "controller_cpu_us_per_operation": 1683.22
+        },
+        "resources": {
+          "max_rss_kb": 60136,
+          "minor_page_faults": 22099,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 312,
+          "involuntary_context_switches": 18
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 456.37,
+        "cycles": 485096756.0,
+        "instructions": 659015350.0,
+        "branches": 134642472.0,
+        "branch-misses": 8007054.0,
+        "cache-references": 259820840.0,
+        "cache-misses": 5020050.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 39053.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3585235148428823,
+        "cache_mpki": 7.617500867013189,
+        "branch_mpki": 12.150026550974875,
+        "task-clock_per_operation": 4.5637,
+        "cycles_per_operation": 4850967.56,
+        "instructions_per_operation": 6590153.5,
+        "branches_per_operation": 1346424.72,
+        "branch-misses_per_operation": 80070.54,
+        "cache-references_per_operation": 2598208.4,
+        "cache-misses_per_operation": 50200.5,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 390.53
+      },
+      "sample_index": 3
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 5633727,
+          "controller_cpu_user_us": 3998,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 3998,
+          "wall_ns_per_operation": 5633727,
+          "controller_cpu_us_per_operation": 3998
+        },
+        "resources": {
+          "max_rss_kb": 55024,
+          "minor_page_faults": 4462,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 56,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 71.41,
+        "cycles": 153868670.0,
+        "instructions": 229799449.0,
+        "branches": 44816623.0,
+        "branch-misses": 2367437.0,
+        "cache-references": 87328089.0,
+        "cache-misses": 1193237.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5054.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4934778405506461,
+        "cache_mpki": 5.192514626090334,
+        "branch_mpki": 10.302187452155291,
+        "task-clock_per_operation": 71.41,
+        "cycles_per_operation": 153868670.0,
+        "instructions_per_operation": 229799449.0,
+        "branches_per_operation": 44816623.0,
+        "branch-misses_per_operation": 2367437.0,
+        "cache-references_per_operation": 87328089.0,
+        "cache-misses_per_operation": 1193237.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5054.0
+      },
+      "sample_index": 4
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 34711714,
+          "controller_cpu_user_us": 11944,
+          "controller_cpu_system_us": 6539,
+          "controller_cpu_total_us": 18483,
+          "wall_ns_per_operation": 3471171.4,
+          "controller_cpu_us_per_operation": 1848.3
+        },
+        "resources": {
+          "max_rss_kb": 56476,
+          "minor_page_faults": 6138,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 83,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 96.5,
+        "cycles": 177060985.0,
+        "instructions": 265738373.0,
+        "branches": 52199084.0,
+        "branch-misses": 2681382.0,
+        "cache-references": 103071418.0,
+        "cache-misses": 1504224.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8183.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5008296322309513,
+        "cache_mpki": 5.660544930031614,
+        "branch_mpki": 10.090307883385739,
+        "task-clock_per_operation": 9.65,
+        "cycles_per_operation": 17706098.5,
+        "instructions_per_operation": 26573837.3,
+        "branches_per_operation": 5219908.4,
+        "branch-misses_per_operation": 268138.2,
+        "cache-references_per_operation": 10307141.8,
+        "cache-misses_per_operation": 150422.4,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 818.3
+      },
+      "sample_index": 5
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 2639007537,
+          "controller_cpu_user_us": 324237,
+          "controller_cpu_system_us": 663472,
+          "controller_cpu_total_us": 987709,
+          "wall_ns_per_operation": 2639007.537,
+          "controller_cpu_us_per_operation": 987.709
+        },
+        "resources": {
+          "max_rss_kb": 76864,
+          "minor_page_faults": 111014,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1375,
+          "involuntary_context_switches": 57
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 2641.52,
+        "cycles": 1850954969.0,
+        "instructions": 2629310831.0,
+        "branches": 545429261.0,
+        "branch-misses": 29207240.0,
+        "cache-references": 999623110.0,
+        "cache-misses": 19199805.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 278608.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4205158283350976,
+        "cache_mpki": 7.3022195678164765,
+        "branch_mpki": 11.108325290278318,
+        "task-clock_per_operation": 2.64152,
+        "cycles_per_operation": 1850954.969,
+        "instructions_per_operation": 2629310.831,
+        "branches_per_operation": 545429.261,
+        "branch-misses_per_operation": 29207.24,
+        "cache-references_per_operation": 999623.11,
+        "cache-misses_per_operation": 19199.805,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 278.608
+      },
+      "sample_index": 6
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 8461115,
+          "controller_cpu_user_us": 1797,
+          "controller_cpu_system_us": 4455,
+          "controller_cpu_total_us": 6252,
+          "wall_ns_per_operation": 8461115,
+          "controller_cpu_us_per_operation": 6252
+        },
+        "resources": {
+          "max_rss_kb": 54648,
+          "minor_page_faults": 4664,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 51,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 76.71,
+        "cycles": 171537343.0,
+        "instructions": 257672885.0,
+        "branches": 50130205.0,
+        "branch-misses": 2591919.0,
+        "cache-references": 101812175.0,
+        "cache-misses": 1437117.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5254.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5021387208964756,
+        "cache_mpki": 5.577292309976659,
+        "branch_mpki": 10.058951294002084,
+        "task-clock_per_operation": 76.71,
+        "cycles_per_operation": 171537343.0,
+        "instructions_per_operation": 257672885.0,
+        "branches_per_operation": 50130205.0,
+        "branch-misses_per_operation": 2591919.0,
+        "cache-references_per_operation": 101812175.0,
+        "cache-misses_per_operation": 1437117.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5254.0
+      },
+      "sample_index": 7
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 284667272,
+          "controller_cpu_user_us": 53666,
+          "controller_cpu_system_us": 68829,
+          "controller_cpu_total_us": 122495,
+          "wall_ns_per_operation": 2846672.72,
+          "controller_cpu_us_per_operation": 1224.95
+        },
+        "resources": {
+          "max_rss_kb": 59164,
+          "minor_page_faults": 18787,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 247,
+          "involuntary_context_switches": 16
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 342.59,
+        "cycles": 369004331.0,
+        "instructions": 515786662.0,
+        "branches": 104830761.0,
+        "branch-misses": 6083833.0,
+        "cache-references": 197995392.0,
+        "cache-misses": 3697890.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 35785.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.397779426063159,
+        "cache_mpki": 7.169417653533662,
+        "branch_mpki": 11.795250727131055,
+        "task-clock_per_operation": 3.4259,
+        "cycles_per_operation": 3690043.31,
+        "instructions_per_operation": 5157866.62,
+        "branches_per_operation": 1048307.61,
+        "branch-misses_per_operation": 60838.33,
+        "cache-references_per_operation": 1979953.92,
+        "cache-misses_per_operation": 36978.9,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 357.85
+      },
+      "sample_index": 8
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 3841822061,
+          "controller_cpu_user_us": 652152,
+          "controller_cpu_system_us": 756577,
+          "controller_cpu_total_us": 1408729,
+          "wall_ns_per_operation": 3841822.061,
+          "controller_cpu_us_per_operation": 1408.729
+        },
+        "resources": {
+          "max_rss_kb": 81564,
+          "minor_page_faults": 147168,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1520,
+          "involuntary_context_switches": 67
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 3748.81,
+        "cycles": 2684035722.0,
+        "instructions": 3639770231.0,
+        "branches": 759704396.0,
+        "branch-misses": 41293528.0,
+        "cache-references": 1416986934.0,
+        "cache-misses": 28511541.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 314641.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3560811434684772,
+        "cache_mpki": 7.833335400450996,
+        "branch_mpki": 11.345091964405377,
+        "task-clock_per_operation": 3.7488099999999998,
+        "cycles_per_operation": 2684035.722,
+        "instructions_per_operation": 3639770.231,
+        "branches_per_operation": 759704.396,
+        "branch-misses_per_operation": 41293.528,
+        "cache-references_per_operation": 1416986.934,
+        "cache-misses_per_operation": 28511.541,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 314.641
+      },
+      "sample_index": 9
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 8315104,
+          "controller_cpu_user_us": 5899,
+          "controller_cpu_system_us": 125,
+          "controller_cpu_total_us": 6024,
+          "wall_ns_per_operation": 8315104,
+          "controller_cpu_us_per_operation": 6024
+        },
+        "resources": {
+          "max_rss_kb": 55100,
+          "minor_page_faults": 4677,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 59,
+          "involuntary_context_switches": 15
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 80.28,
+        "cycles": 175316267.0,
+        "instructions": 260982235.0,
+        "branches": 50895013.0,
+        "branch-misses": 2700736.0,
+        "cache-references": 101876711.0,
+        "cache-misses": 1426866.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5270.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4886367332929806,
+        "cache_mpki": 5.467291672170713,
+        "branch_mpki": 10.34835187153639,
+        "task-clock_per_operation": 80.28,
+        "cycles_per_operation": 175316267.0,
+        "instructions_per_operation": 260982235.0,
+        "branches_per_operation": 50895013.0,
+        "branch-misses_per_operation": 2700736.0,
+        "cache-references_per_operation": 101876711.0,
+        "cache-misses_per_operation": 1426866.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5270.0
+      },
+      "sample_index": 10
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 7865867,
+          "controller_cpu_user_us": 5561,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 5561,
+          "wall_ns_per_operation": 78658.67,
+          "controller_cpu_us_per_operation": 55.61
+        },
+        "persistent_startup": {
+          "wall_ns": 1333218,
+          "controller_cpu_user_us": 948,
+          "controller_cpu_system_us": 357,
+          "controller_cpu_total_us": 1305
+        },
+        "resources": {
+          "max_rss_kb": 55092,
+          "minor_page_faults": 4679,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 165,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 78.59,
+        "cycles": 168343891.0,
+        "instructions": 247822446.0,
+        "branches": 48422103.0,
+        "branch-misses": 2652678.0,
+        "cache-references": 95759240.0,
+        "cache-misses": 1549786.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5192.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4721202208638506,
+        "cache_mpki": 6.25361433160901,
+        "branch_mpki": 10.703945678915622,
+        "task-clock_per_operation": 0.7859,
+        "cycles_per_operation": 1683438.91,
+        "instructions_per_operation": 2478224.46,
+        "branches_per_operation": 484221.03,
+        "branch-misses_per_operation": 26526.78,
+        "cache-references_per_operation": 957592.4,
+        "cache-misses_per_operation": 15497.86,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 51.92
+      },
+      "sample_index": 11
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 2335262,
+          "controller_cpu_user_us": 2026,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 2026,
+          "wall_ns_per_operation": 233526.2,
+          "controller_cpu_us_per_operation": 202.6
+        },
+        "persistent_startup": {
+          "wall_ns": 1322638,
+          "controller_cpu_user_us": 1038,
+          "controller_cpu_system_us": 256,
+          "controller_cpu_total_us": 1294
+        },
+        "resources": {
+          "max_rss_kb": 54372,
+          "minor_page_faults": 4563,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 68,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 70.45,
+        "cycles": 155568075.0,
+        "instructions": 236649135.0,
+        "branches": 46038417.0,
+        "branch-misses": 2321042.0,
+        "cache-references": 92020603.0,
+        "cache-misses": 1273279.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5070.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.521193438949476,
+        "cache_mpki": 5.38045068282206,
+        "branch_mpki": 9.807946266104036,
+        "task-clock_per_operation": 7.045,
+        "cycles_per_operation": 15556807.5,
+        "instructions_per_operation": 23664913.5,
+        "branches_per_operation": 4603841.7,
+        "branch-misses_per_operation": 232104.2,
+        "cache-references_per_operation": 9202060.3,
+        "cache-misses_per_operation": 127327.9,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 507.0
+      },
+      "sample_index": 12
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 401545419,
+          "controller_cpu_user_us": 81703,
+          "controller_cpu_system_us": 86459,
+          "controller_cpu_total_us": 168162,
+          "wall_ns_per_operation": 4015454.19,
+          "controller_cpu_us_per_operation": 1681.62
+        },
+        "resources": {
+          "max_rss_kb": 58756,
+          "minor_page_faults": 22148,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 310,
+          "involuntary_context_switches": 14
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 458.55,
+        "cycles": 491790240.0,
+        "instructions": 658049794.0,
+        "branches": 134405904.0,
+        "branch-misses": 8004542.0,
+        "cache-references": 260110687.0,
+        "cache-misses": 5105199.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 39128.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3380700560466592,
+        "cache_mpki": 7.758074003743249,
+        "branch_mpki": 12.16403693608633,
+        "task-clock_per_operation": 4.5855,
+        "cycles_per_operation": 4917902.4,
+        "instructions_per_operation": 6580497.94,
+        "branches_per_operation": 1344059.04,
+        "branch-misses_per_operation": 80045.42,
+        "cache-references_per_operation": 2601106.87,
+        "cache-misses_per_operation": 51051.99,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 391.28
+      },
+      "sample_index": 13
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 66153194,
+          "controller_cpu_user_us": 32753,
+          "controller_cpu_system_us": 10336,
+          "controller_cpu_total_us": 43089,
+          "wall_ns_per_operation": 66153.194,
+          "controller_cpu_us_per_operation": 43.089
+        },
+        "persistent_startup": {
+          "wall_ns": 1580301,
+          "controller_cpu_user_us": 755,
+          "controller_cpu_system_us": 168,
+          "controller_cpu_total_us": 923
+        },
+        "resources": {
+          "max_rss_kb": 58476,
+          "minor_page_faults": 6059,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1133,
+          "involuntary_context_switches": 14
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 137.88,
+        "cycles": 268889742.0,
+        "instructions": 359652864.0,
+        "branches": 72428162.0,
+        "branch-misses": 4318899.0,
+        "cache-references": 142194372.0,
+        "cache-misses": 3709825.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6510.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.337547729879558,
+        "cache_mpki": 10.315015870414424,
+        "branch_mpki": 12.008521083263222,
+        "task-clock_per_operation": 0.13788,
+        "cycles_per_operation": 268889.742,
+        "instructions_per_operation": 359652.864,
+        "branches_per_operation": 72428.162,
+        "branch-misses_per_operation": 4318.899,
+        "cache-references_per_operation": 142194.372,
+        "cache-misses_per_operation": 3709.825,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 6.51
+      },
+      "sample_index": 14
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 3875865356,
+          "controller_cpu_user_us": 697604,
+          "controller_cpu_system_us": 718236,
+          "controller_cpu_total_us": 1415840,
+          "wall_ns_per_operation": 3875865.356,
+          "controller_cpu_us_per_operation": 1415.84
+        },
+        "resources": {
+          "max_rss_kb": 82868,
+          "minor_page_faults": 146399,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1522,
+          "involuntary_context_switches": 69
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 3782.53,
+        "cycles": 2712390097.0,
+        "instructions": 3641709596.0,
+        "branches": 760096204.0,
+        "branch-misses": 41536685.0,
+        "cache-references": 1418925950.0,
+        "cache-misses": 28502882.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 313216.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3426201489335403,
+        "cache_mpki": 7.826786087311065,
+        "branch_mpki": 11.405820234986141,
+        "task-clock_per_operation": 3.7825300000000004,
+        "cycles_per_operation": 2712390.097,
+        "instructions_per_operation": 3641709.596,
+        "branches_per_operation": 760096.204,
+        "branch-misses_per_operation": 41536.685,
+        "cache-references_per_operation": 1418925.95,
+        "cache-misses_per_operation": 28502.882,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 313.216
+      },
+      "sample_index": 15
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 2887300,
+          "controller_cpu_user_us": 2016,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 2016,
+          "wall_ns_per_operation": 288730,
+          "controller_cpu_us_per_operation": 201.6
+        },
+        "persistent_startup": {
+          "wall_ns": 2126539,
+          "controller_cpu_user_us": 1476,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1476
+        },
+        "resources": {
+          "max_rss_kb": 54948,
+          "minor_page_faults": 4622,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 64,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 73.72,
+        "cycles": 156862700.0,
+        "instructions": 237736945.0,
+        "branches": 46301881.0,
+        "branch-misses": 2384834.0,
+        "cache-references": 92020499.0,
+        "cache-misses": 1269108.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5136.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5155734601023698,
+        "cache_mpki": 5.338286819492865,
+        "branch_mpki": 10.03139835922431,
+        "task-clock_per_operation": 7.372,
+        "cycles_per_operation": 15686270.0,
+        "instructions_per_operation": 23773694.5,
+        "branches_per_operation": 4630188.1,
+        "branch-misses_per_operation": 238483.4,
+        "cache-references_per_operation": 9202049.9,
+        "cache-misses_per_operation": 126910.8,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 513.6
+      },
+      "sample_index": 16
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 62321902,
+          "controller_cpu_user_us": 30639,
+          "controller_cpu_system_us": 10499,
+          "controller_cpu_total_us": 41138,
+          "wall_ns_per_operation": 62321.902,
+          "controller_cpu_us_per_operation": 41.138
+        },
+        "persistent_startup": {
+          "wall_ns": 1326988,
+          "controller_cpu_user_us": 1125,
+          "controller_cpu_system_us": 175,
+          "controller_cpu_total_us": 1300
+        },
+        "resources": {
+          "max_rss_kb": 58340,
+          "minor_page_faults": 6033,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1129,
+          "involuntary_context_switches": 7
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 134.05,
+        "cycles": 273497849.0,
+        "instructions": 366793773.0,
+        "branches": 73911057.0,
+        "branch-misses": 4575037.0,
+        "cache-references": 142584238.0,
+        "cache-misses": 3718156.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6476.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3411212349242279,
+        "cache_mpki": 10.136911457327276,
+        "branch_mpki": 12.473049808291046,
+        "task-clock_per_operation": 0.13405,
+        "cycles_per_operation": 273497.849,
+        "instructions_per_operation": 366793.773,
+        "branches_per_operation": 73911.057,
+        "branch-misses_per_operation": 4575.037,
+        "cache-references_per_operation": 142584.238,
+        "cache-misses_per_operation": 3718.156,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 6.476
+      },
+      "sample_index": 17
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 47304987,
+          "controller_cpu_user_us": 19095,
+          "controller_cpu_system_us": 8541,
+          "controller_cpu_total_us": 27636,
+          "wall_ns_per_operation": 4730498.7,
+          "controller_cpu_us_per_operation": 2763.6
+        },
+        "resources": {
+          "max_rss_kb": 56572,
+          "minor_page_faults": 6641,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 97,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 115.65,
+        "cycles": 220694913.0,
+        "instructions": 323417601.0,
+        "branches": 63776402.0,
+        "branch-misses": 3440631.0,
+        "cache-references": 127185576.0,
+        "cache-misses": 1969908.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8864.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4654510908459408,
+        "cache_mpki": 6.090911545658272,
+        "branch_mpki": 10.638354218699433,
+        "task-clock_per_operation": 11.565000000000001,
+        "cycles_per_operation": 22069491.3,
+        "instructions_per_operation": 32341760.1,
+        "branches_per_operation": 6377640.2,
+        "branch-misses_per_operation": 344063.1,
+        "cache-references_per_operation": 12718557.6,
+        "cache-misses_per_operation": 196990.8,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 886.4
+      },
+      "sample_index": 18
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 397771328,
+          "controller_cpu_user_us": 115650,
+          "controller_cpu_system_us": 53021,
+          "controller_cpu_total_us": 168671,
+          "wall_ns_per_operation": 3977713.28,
+          "controller_cpu_us_per_operation": 1686.71
+        },
+        "resources": {
+          "max_rss_kb": 60492,
+          "minor_page_faults": 21924,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 302,
+          "involuntary_context_switches": 20
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 453.11,
+        "cycles": 490244490.0,
+        "instructions": 655969337.0,
+        "branches": 133903060.0,
+        "branch-misses": 7945691.0,
+        "cache-references": 259901326.0,
+        "cache-misses": 5103621.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 39094.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3380453026611272,
+        "cache_mpki": 7.780273729471596,
+        "branch_mpki": 12.112900027215753,
+        "task-clock_per_operation": 4.5311,
+        "cycles_per_operation": 4902444.9,
+        "instructions_per_operation": 6559693.37,
+        "branches_per_operation": 1339030.6,
+        "branch-misses_per_operation": 79456.91,
+        "cache-references_per_operation": 2599013.26,
+        "cache-misses_per_operation": 51036.21,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 390.94
+      },
+      "sample_index": 19
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 2767448,
+          "controller_cpu_user_us": 2011,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 2011,
+          "wall_ns_per_operation": 276744.8,
+          "controller_cpu_us_per_operation": 201.1
+        },
+        "persistent_startup": {
+          "wall_ns": 2821469,
+          "controller_cpu_user_us": 1500,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1500
+        },
+        "resources": {
+          "max_rss_kb": 54648,
+          "minor_page_faults": 4615,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 68,
+          "involuntary_context_switches": 7
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 74.11,
+        "cycles": 157477281.0,
+        "instructions": 237818893.0,
+        "branches": 46278577.0,
+        "branch-misses": 2397202.0,
+        "cache-references": 92028273.0,
+        "cache-misses": 1274092.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5126.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.510179065131306,
+        "cache_mpki": 5.357404468281668,
+        "branch_mpki": 10.079947685232897,
+        "task-clock_per_operation": 7.411,
+        "cycles_per_operation": 15747728.1,
+        "instructions_per_operation": 23781889.3,
+        "branches_per_operation": 4627857.7,
+        "branch-misses_per_operation": 239720.2,
+        "cache-references_per_operation": 9202827.3,
+        "cache-misses_per_operation": 127409.2,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 512.6
+      },
+      "sample_index": 20
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 48819987,
+          "controller_cpu_user_us": 23098,
+          "controller_cpu_system_us": 4722,
+          "controller_cpu_total_us": 27820,
+          "wall_ns_per_operation": 4881998.7,
+          "controller_cpu_us_per_operation": 2782
+        },
+        "resources": {
+          "max_rss_kb": 56320,
+          "minor_page_faults": 6649,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 96,
+          "involuntary_context_switches": 13
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 118.66,
+        "cycles": 222463110.0,
+        "instructions": 324923286.0,
+        "branches": 64058850.0,
+        "branch-misses": 3529161.0,
+        "cache-references": 126932052.0,
+        "cache-misses": 1947478.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8814.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4605715347591788,
+        "cache_mpki": 5.993654760711733,
+        "branch_mpki": 10.861520709845339,
+        "task-clock_per_operation": 11.866,
+        "cycles_per_operation": 22246311.0,
+        "instructions_per_operation": 32492328.6,
+        "branches_per_operation": 6405885.0,
+        "branch-misses_per_operation": 352916.1,
+        "cache-references_per_operation": 12693205.2,
+        "cache-misses_per_operation": 194747.8,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 881.4
+      },
+      "sample_index": 21
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 5465775,
+          "controller_cpu_user_us": 3003,
+          "controller_cpu_system_us": 821,
+          "controller_cpu_total_us": 3824,
+          "wall_ns_per_operation": 5465775,
+          "controller_cpu_us_per_operation": 3824
+        },
+        "resources": {
+          "max_rss_kb": 54292,
+          "minor_page_faults": 4397,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 53,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 66.91,
+        "cycles": 148326308.0,
+        "instructions": 225345851.0,
+        "branches": 43788706.0,
+        "branch-misses": 2229651.0,
+        "cache-references": 86982111.0,
+        "cache-misses": 1195032.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4989.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.519257467124443,
+        "cache_mpki": 5.303101852982419,
+        "branch_mpki": 9.894351238798713,
+        "task-clock_per_operation": 66.91,
+        "cycles_per_operation": 148326308.0,
+        "instructions_per_operation": 225345851.0,
+        "branches_per_operation": 43788706.0,
+        "branch-misses_per_operation": 2229651.0,
+        "cache-references_per_operation": 86982111.0,
+        "cache-misses_per_operation": 1195032.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 4989.0
+      },
+      "sample_index": 22
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 218733,
+          "controller_cpu_user_us": 137,
+          "controller_cpu_system_us": 45,
+          "controller_cpu_total_us": 182,
+          "wall_ns_per_operation": 218733,
+          "controller_cpu_us_per_operation": 182
+        },
+        "persistent_startup": {
+          "wall_ns": 1315438,
+          "controller_cpu_user_us": 970,
+          "controller_cpu_system_us": 320,
+          "controller_cpu_total_us": 1290
+        },
+        "resources": {
+          "max_rss_kb": 54644,
+          "minor_page_faults": 4556,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 53,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 69.03,
+        "cycles": 152040253.0,
+        "instructions": 231304953.0,
+        "branches": 45046385.0,
+        "branch-misses": 2287692.0,
+        "cache-references": 89786786.0,
+        "cache-misses": 1226007.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5068.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.521340226920038,
+        "cache_mpki": 5.300392335308098,
+        "branch_mpki": 9.890371867653004,
+        "task-clock_per_operation": 69.03,
+        "cycles_per_operation": 152040253.0,
+        "instructions_per_operation": 231304953.0,
+        "branches_per_operation": 45046385.0,
+        "branch-misses_per_operation": 2287692.0,
+        "cache-references_per_operation": 89786786.0,
+        "cache-misses_per_operation": 1226007.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5068.0
+      },
+      "sample_index": 23
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 5462155,
+          "controller_cpu_user_us": 0,
+          "controller_cpu_system_us": 3854,
+          "controller_cpu_total_us": 3854,
+          "wall_ns_per_operation": 5462155,
+          "controller_cpu_us_per_operation": 3854
+        },
+        "resources": {
+          "max_rss_kb": 54392,
+          "minor_page_faults": 4506,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 49,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 66.15,
+        "cycles": 146280162.0,
+        "instructions": 224314498.0,
+        "branches": 43629989.0,
+        "branch-misses": 2148988.0,
+        "cache-references": 87155162.0,
+        "cache-misses": 1195009.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5090.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5334580911935276,
+        "cache_mpki": 5.327381915367771,
+        "branch_mpki": 9.580245678101466,
+        "task-clock_per_operation": 66.15,
+        "cycles_per_operation": 146280162.0,
+        "instructions_per_operation": 224314498.0,
+        "branches_per_operation": 43629989.0,
+        "branch-misses_per_operation": 2148988.0,
+        "cache-references_per_operation": 87155162.0,
+        "cache-misses_per_operation": 1195009.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5090.0
+      },
+      "sample_index": 24
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 3831977686,
+          "controller_cpu_user_us": 727264,
+          "controller_cpu_system_us": 679596,
+          "controller_cpu_total_us": 1406860,
+          "wall_ns_per_operation": 3831977.686,
+          "controller_cpu_us_per_operation": 1406.86
+        },
+        "resources": {
+          "max_rss_kb": 81060,
+          "minor_page_faults": 144862,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1532,
+          "involuntary_context_switches": 71
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 3741.54,
+        "cycles": 2703768925.0,
+        "instructions": 3640019802.0,
+        "branches": 759749956.0,
+        "branch-misses": 41533214.0,
+        "cache-references": 1417768074.0,
+        "cache-misses": 28611387.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 314154.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.346276217742979,
+        "cache_mpki": 7.860228393339932,
+        "branch_mpki": 11.41016155384091,
+        "task-clock_per_operation": 3.74154,
+        "cycles_per_operation": 2703768.925,
+        "instructions_per_operation": 3640019.802,
+        "branches_per_operation": 759749.956,
+        "branch-misses_per_operation": 41533.214,
+        "cache-references_per_operation": 1417768.074,
+        "cache-misses_per_operation": 28611.387,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 314.154
+      },
+      "sample_index": 25
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 34804725,
+          "controller_cpu_user_us": 12609,
+          "controller_cpu_system_us": 5717,
+          "controller_cpu_total_us": 18326,
+          "wall_ns_per_operation": 3480472.5,
+          "controller_cpu_us_per_operation": 1832.6
+        },
+        "resources": {
+          "max_rss_kb": 56588,
+          "minor_page_faults": 6106,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 78,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 100.27,
+        "cycles": 179547260.0,
+        "instructions": 270367386.0,
+        "branches": 53263215.0,
+        "branch-misses": 2817244.0,
+        "cache-references": 103506644.0,
+        "cache-misses": 1496557.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8136.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5058285267065619,
+        "cache_mpki": 5.535271920704223,
+        "branch_mpki": 10.420058579106875,
+        "task-clock_per_operation": 10.027,
+        "cycles_per_operation": 17954726.0,
+        "instructions_per_operation": 27036738.6,
+        "branches_per_operation": 5326321.5,
+        "branch-misses_per_operation": 281724.4,
+        "cache-references_per_operation": 10350664.4,
+        "cache-misses_per_operation": 149655.7,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 813.6
+      },
+      "sample_index": 26
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 34895737,
+          "controller_cpu_user_us": 5166,
+          "controller_cpu_system_us": 13906,
+          "controller_cpu_total_us": 19072,
+          "wall_ns_per_operation": 3489573.7,
+          "controller_cpu_us_per_operation": 1907.2
+        },
+        "resources": {
+          "max_rss_kb": 56620,
+          "minor_page_faults": 6091,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 79,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 96.25,
+        "cycles": 179163886.0,
+        "instructions": 268081126.0,
+        "branches": 52705317.0,
+        "branch-misses": 2732271.0,
+        "cache-references": 103512257.0,
+        "cache-misses": 1490457.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8129.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4962899721878102,
+        "cache_mpki": 5.559723738253771,
+        "branch_mpki": 10.191955848469542,
+        "task-clock_per_operation": 9.625,
+        "cycles_per_operation": 17916388.6,
+        "instructions_per_operation": 26808112.6,
+        "branches_per_operation": 5270531.7,
+        "branch-misses_per_operation": 273227.1,
+        "cache-references_per_operation": 10351225.7,
+        "cache-misses_per_operation": 149045.7,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 812.9
+      },
+      "sample_index": 27
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 2698245417,
+          "controller_cpu_user_us": 322354,
+          "controller_cpu_system_us": 689735,
+          "controller_cpu_total_us": 1012089,
+          "wall_ns_per_operation": 2698245.417,
+          "controller_cpu_us_per_operation": 1012.089
+        },
+        "resources": {
+          "max_rss_kb": 77572,
+          "minor_page_faults": 110494,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1366,
+          "involuntary_context_switches": 33
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 2714.74,
+        "cycles": 1876848888.0,
+        "instructions": 2621296838.0,
+        "branches": 543564838.0,
+        "branch-misses": 28908156.0,
+        "cache-references": 998726013.0,
+        "cache-misses": 18949895.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 279046.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.396647782759589,
+        "cache_mpki": 7.229206065215572,
+        "branch_mpki": 11.028188635841936,
+        "task-clock_per_operation": 2.71474,
+        "cycles_per_operation": 1876848.888,
+        "instructions_per_operation": 2621296.838,
+        "branches_per_operation": 543564.838,
+        "branch-misses_per_operation": 28908.156,
+        "cache-references_per_operation": 998726.013,
+        "cache-misses_per_operation": 18949.895,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 279.046
+      },
+      "sample_index": 28
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 7925178,
+          "controller_cpu_user_us": 0,
+          "controller_cpu_system_us": 5540,
+          "controller_cpu_total_us": 5540,
+          "wall_ns_per_operation": 79251.78,
+          "controller_cpu_us_per_operation": 55.4
+        },
+        "persistent_startup": {
+          "wall_ns": 1543651,
+          "controller_cpu_user_us": 1493,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1493
+        },
+        "resources": {
+          "max_rss_kb": 55060,
+          "minor_page_faults": 4662,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 167,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 81.38,
+        "cycles": 173267938.0,
+        "instructions": 250461964.0,
+        "branches": 49119619.0,
+        "branch-misses": 2682165.0,
+        "cache-references": 96658032.0,
+        "cache-misses": 1551163.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5233.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4455182354625817,
+        "cache_mpki": 6.193207843726722,
+        "branch_mpki": 10.708871547457802,
+        "task-clock_per_operation": 0.8138,
+        "cycles_per_operation": 1732679.38,
+        "instructions_per_operation": 2504619.64,
+        "branches_per_operation": 491196.19,
+        "branch-misses_per_operation": 26821.65,
+        "cache-references_per_operation": 966580.32,
+        "cache-misses_per_operation": 15511.63,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 52.33
+      },
+      "sample_index": 29
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 296980750,
+          "controller_cpu_user_us": 63482,
+          "controller_cpu_system_us": 63562,
+          "controller_cpu_total_us": 127044,
+          "wall_ns_per_operation": 2969807.5,
+          "controller_cpu_us_per_operation": 1270.44
+        },
+        "resources": {
+          "max_rss_kb": 58376,
+          "minor_page_faults": 18691,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 244,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 358.55,
+        "cycles": 372986111.0,
+        "instructions": 514051437.0,
+        "branches": 104456582.0,
+        "branch-misses": 6059490.0,
+        "cache-references": 197168717.0,
+        "cache-misses": 3674656.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 35783.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3782053053444663,
+        "cache_mpki": 7.148420830112376,
+        "branch_mpki": 11.787711430908809,
+        "task-clock_per_operation": 3.5855,
+        "cycles_per_operation": 3729861.11,
+        "instructions_per_operation": 5140514.37,
+        "branches_per_operation": 1044565.82,
+        "branch-misses_per_operation": 60594.9,
+        "cache-references_per_operation": 1971687.17,
+        "cache-misses_per_operation": 36746.56,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 357.83
+      },
+      "sample_index": 30
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 219203,
+          "controller_cpu_user_us": 182,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 182,
+          "wall_ns_per_operation": 219203,
+          "controller_cpu_us_per_operation": 182
+        },
+        "persistent_startup": {
+          "wall_ns": 1494410,
+          "controller_cpu_user_us": 1454,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1454
+        },
+        "resources": {
+          "max_rss_kb": 56456,
+          "minor_page_faults": 4655,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 56,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 70.47,
+        "cycles": 153960658.0,
+        "instructions": 230768670.0,
+        "branches": 44809945.0,
+        "branch-misses": 2347939.0,
+        "cache-references": 88860913.0,
+        "cache-misses": 1252724.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5174.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4988807725152746,
+        "cache_mpki": 5.4284838578824415,
+        "branch_mpki": 10.174427057191082,
+        "task-clock_per_operation": 70.47,
+        "cycles_per_operation": 153960658.0,
+        "instructions_per_operation": 230768670.0,
+        "branches_per_operation": 44809945.0,
+        "branch-misses_per_operation": 2347939.0,
+        "cache-references_per_operation": 88860913.0,
+        "cache-misses_per_operation": 1252724.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5174.0
+      },
+      "sample_index": 31
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 2897853876,
+          "controller_cpu_user_us": 328797,
+          "controller_cpu_system_us": 769808,
+          "controller_cpu_total_us": 1098605,
+          "wall_ns_per_operation": 2897853.876,
+          "controller_cpu_us_per_operation": 1098.605
+        },
+        "resources": {
+          "max_rss_kb": 77192,
+          "minor_page_faults": 111621,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1357,
+          "involuntary_context_switches": 14
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 2939.39,
+        "cycles": 1950391545.0,
+        "instructions": 2627116783.0,
+        "branches": 544945796.0,
+        "branch-misses": 29126526.0,
+        "cache-references": 998074486.0,
+        "cache-misses": 18996402.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 281255.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3469689149006232,
+        "cache_mpki": 7.230893625637502,
+        "branch_mpki": 11.086879041113416,
+        "task-clock_per_operation": 2.93939,
+        "cycles_per_operation": 1950391.545,
+        "instructions_per_operation": 2627116.783,
+        "branches_per_operation": 544945.796,
+        "branch-misses_per_operation": 29126.526,
+        "cache-references_per_operation": 998074.486,
+        "cache-misses_per_operation": 18996.402,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 281.255
+      },
+      "sample_index": 32
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 8637618,
+          "controller_cpu_user_us": 2869,
+          "controller_cpu_system_us": 3804,
+          "controller_cpu_total_us": 6673,
+          "wall_ns_per_operation": 8637618,
+          "controller_cpu_us_per_operation": 6673
+        },
+        "resources": {
+          "max_rss_kb": 54904,
+          "minor_page_faults": 4690,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 57,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 78.62,
+        "cycles": 173938591.0,
+        "instructions": 259258047.0,
+        "branches": 50476497.0,
+        "branch-misses": 2627567.0,
+        "cache-references": 101892779.0,
+        "cache-misses": 1465477.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5277.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4905148162318964,
+        "cache_mpki": 5.652580573516393,
+        "branch_mpki": 10.134948675286441,
+        "task-clock_per_operation": 78.62,
+        "cycles_per_operation": 173938591.0,
+        "instructions_per_operation": 259258047.0,
+        "branches_per_operation": 50476497.0,
+        "branch-misses_per_operation": 2627567.0,
+        "cache-references_per_operation": 101892779.0,
+        "cache-misses_per_operation": 1465477.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5277.0
+      },
+      "sample_index": 33
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 8415845,
+          "controller_cpu_user_us": 2590,
+          "controller_cpu_system_us": 3536,
+          "controller_cpu_total_us": 6126,
+          "wall_ns_per_operation": 8415845,
+          "controller_cpu_us_per_operation": 6126
+        },
+        "resources": {
+          "max_rss_kb": 54836,
+          "minor_page_faults": 4710,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 54,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 76.31,
+        "cycles": 170676016.0,
+        "instructions": 257509722.0,
+        "branches": 50003493.0,
+        "branch-misses": 2597467.0,
+        "cache-references": 101262860.0,
+        "cache-misses": 1436985.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5296.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5087633754000913,
+        "cache_mpki": 5.580313585209028,
+        "branch_mpki": 10.086869652245596,
+        "task-clock_per_operation": 76.31,
+        "cycles_per_operation": 170676016.0,
+        "instructions_per_operation": 257509722.0,
+        "branches_per_operation": 50003493.0,
+        "branch-misses_per_operation": 2597467.0,
+        "cache-references_per_operation": 101262860.0,
+        "cache-misses_per_operation": 1436985.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5296.0
+      },
+      "sample_index": 34
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 49002290,
+          "controller_cpu_user_us": 14417,
+          "controller_cpu_system_us": 13147,
+          "controller_cpu_total_us": 27564,
+          "wall_ns_per_operation": 4900229,
+          "controller_cpu_us_per_operation": 2756.4
+        },
+        "resources": {
+          "max_rss_kb": 57096,
+          "minor_page_faults": 6648,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 89,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 117.98,
+        "cycles": 221412426.0,
+        "instructions": 322818793.0,
+        "branches": 63601042.0,
+        "branch-misses": 3470127.0,
+        "cache-references": 126749510.0,
+        "cache-misses": 1943809.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8848.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4579976328880475,
+        "cache_mpki": 6.02136257909867,
+        "branch_mpki": 10.74945782354127,
+        "task-clock_per_operation": 11.798,
+        "cycles_per_operation": 22141242.6,
+        "instructions_per_operation": 32281879.3,
+        "branches_per_operation": 6360104.2,
+        "branch-misses_per_operation": 347012.7,
+        "cache-references_per_operation": 12674951.0,
+        "cache-misses_per_operation": 194380.9,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 884.8
+      },
+      "sample_index": 35
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 285784547,
+          "controller_cpu_user_us": 58924,
+          "controller_cpu_system_us": 61532,
+          "controller_cpu_total_us": 120456,
+          "wall_ns_per_operation": 2857845.47,
+          "controller_cpu_us_per_operation": 1204.56
+        },
+        "resources": {
+          "max_rss_kb": 58120,
+          "minor_page_faults": 18929,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 249,
+          "involuntary_context_switches": 6
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 345.66,
+        "cycles": 370229175.0,
+        "instructions": 509960627.0,
+        "branches": 103518120.0,
+        "branch-misses": 5930698.0,
+        "cache-references": 197915971.0,
+        "cache-misses": 3658220.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 36089.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3774188028266545,
+        "cache_mpki": 7.173534203063093,
+        "branch_mpki": 11.629717444833247,
+        "task-clock_per_operation": 3.4566000000000003,
+        "cycles_per_operation": 3702291.75,
+        "instructions_per_operation": 5099606.27,
+        "branches_per_operation": 1035181.2,
+        "branch-misses_per_operation": 59306.98,
+        "cache-references_per_operation": 1979159.71,
+        "cache-misses_per_operation": 36582.2,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 360.89
+      },
+      "sample_index": 36
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 403364275,
+          "controller_cpu_user_us": 95068,
+          "controller_cpu_system_us": 72479,
+          "controller_cpu_total_us": 167547,
+          "wall_ns_per_operation": 4033642.75,
+          "controller_cpu_us_per_operation": 1675.47
+        },
+        "resources": {
+          "max_rss_kb": 60656,
+          "minor_page_faults": 22237,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 304,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 471.99,
+        "cycles": 498830796.0,
+        "instructions": 659572702.0,
+        "branches": 134763817.0,
+        "branch-misses": 8020490.0,
+        "cache-references": 260445059.0,
+        "cache-misses": 5137285.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 39206.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3222373343605673,
+        "cache_mpki": 7.788807790896112,
+        "branch_mpki": 12.160130302057285,
+        "task-clock_per_operation": 4.7199,
+        "cycles_per_operation": 4988307.96,
+        "instructions_per_operation": 6595727.02,
+        "branches_per_operation": 1347638.17,
+        "branch-misses_per_operation": 80204.9,
+        "cache-references_per_operation": 2604450.59,
+        "cache-misses_per_operation": 51372.85,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 392.06
+      },
+      "sample_index": 37
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 223053,
+          "controller_cpu_user_us": 145,
+          "controller_cpu_system_us": 34,
+          "controller_cpu_total_us": 179,
+          "wall_ns_per_operation": 223053,
+          "controller_cpu_us_per_operation": 179
+        },
+        "persistent_startup": {
+          "wall_ns": 1312368,
+          "controller_cpu_user_us": 1042,
+          "controller_cpu_system_us": 246,
+          "controller_cpu_total_us": 1288
+        },
+        "resources": {
+          "max_rss_kb": 54680,
+          "minor_page_faults": 4538,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 55,
+          "involuntary_context_switches": 7
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 74.02,
+        "cycles": 155559852.0,
+        "instructions": 234177746.0,
+        "branches": 45639743.0,
+        "branch-misses": 2404559.0,
+        "cache-references": 89786880.0,
+        "cache-misses": 1232109.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5047.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5053867883597627,
+        "cache_mpki": 5.26142650634275,
+        "branch_mpki": 10.268093536095442,
+        "task-clock_per_operation": 74.02,
+        "cycles_per_operation": 155559852.0,
+        "instructions_per_operation": 234177746.0,
+        "branches_per_operation": 45639743.0,
+        "branch-misses_per_operation": 2404559.0,
+        "cache-references_per_operation": 89786880.0,
+        "cache-misses_per_operation": 1232109.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5047.0
+      },
+      "sample_index": 38
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 397404333,
+          "controller_cpu_user_us": 85171,
+          "controller_cpu_system_us": 81771,
+          "controller_cpu_total_us": 166942,
+          "wall_ns_per_operation": 3974043.33,
+          "controller_cpu_us_per_operation": 1669.42
+        },
+        "resources": {
+          "max_rss_kb": 60860,
+          "minor_page_faults": 22298,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 298,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 465.44,
+        "cycles": 492229610.0,
+        "instructions": 659927327.0,
+        "branches": 134831275.0,
+        "branch-misses": 8096422.0,
+        "cache-references": 260159843.0,
+        "cache-misses": 5017447.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 39283.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3406900226908331,
+        "cache_mpki": 7.603029598439406,
+        "branch_mpki": 12.268656969860562,
+        "task-clock_per_operation": 4.6544,
+        "cycles_per_operation": 4922296.1,
+        "instructions_per_operation": 6599273.27,
+        "branches_per_operation": 1348312.75,
+        "branch-misses_per_operation": 80964.22,
+        "cache-references_per_operation": 2601598.43,
+        "cache-misses_per_operation": 50174.47,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 392.83
+      },
+      "sample_index": 39
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 7840578,
+          "controller_cpu_user_us": 5218,
+          "controller_cpu_system_us": 264,
+          "controller_cpu_total_us": 5482,
+          "wall_ns_per_operation": 78405.78,
+          "controller_cpu_us_per_operation": 54.82
+        },
+        "persistent_startup": {
+          "wall_ns": 1337618,
+          "controller_cpu_user_us": 1065,
+          "controller_cpu_system_us": 246,
+          "controller_cpu_total_us": 1311
+        },
+        "resources": {
+          "max_rss_kb": 54704,
+          "minor_page_faults": 4634,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 162,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 84.1,
+        "cycles": 178942192.0,
+        "instructions": 257032278.0,
+        "branches": 50551734.0,
+        "branch-misses": 3004299.0,
+        "cache-references": 95975459.0,
+        "cache-misses": 1508536.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5142.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4363983984280242,
+        "cache_mpki": 5.869052757646259,
+        "branch_mpki": 11.688411367540382,
+        "task-clock_per_operation": 0.841,
+        "cycles_per_operation": 1789421.92,
+        "instructions_per_operation": 2570322.78,
+        "branches_per_operation": 505517.34,
+        "branch-misses_per_operation": 30042.99,
+        "cache-references_per_operation": 959754.59,
+        "cache-misses_per_operation": 15085.36,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 51.42
+      },
+      "sample_index": 40
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 3832963430,
+          "controller_cpu_user_us": 647442,
+          "controller_cpu_system_us": 728712,
+          "controller_cpu_total_us": 1376154,
+          "wall_ns_per_operation": 3832963.43,
+          "controller_cpu_us_per_operation": 1376.154
+        },
+        "resources": {
+          "max_rss_kb": 83172,
+          "minor_page_faults": 143369,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1477,
+          "involuntary_context_switches": 20
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 3882.63,
+        "cycles": 2748447135.0,
+        "instructions": 3637321344.0,
+        "branches": 759067266.0,
+        "branch-misses": 41357242.0,
+        "cache-references": 1417910195.0,
+        "cache-misses": 28072700.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 311452.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3234096074400208,
+        "cache_mpki": 7.717959824008335,
+        "branch_mpki": 11.370246972602924,
+        "task-clock_per_operation": 3.8826300000000002,
+        "cycles_per_operation": 2748447.135,
+        "instructions_per_operation": 3637321.344,
+        "branches_per_operation": 759067.266,
+        "branch-misses_per_operation": 41357.242,
+        "cache-references_per_operation": 1417910.195,
+        "cache-misses_per_operation": 28072.7,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 311.452
+      },
+      "sample_index": 41
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 2174700,
+          "controller_cpu_user_us": 1903,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1903,
+          "wall_ns_per_operation": 217470,
+          "controller_cpu_us_per_operation": 190.3
+        },
+        "persistent_startup": {
+          "wall_ns": 1450100,
+          "controller_cpu_user_us": 1410,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1410
+        },
+        "resources": {
+          "max_rss_kb": 52664,
+          "minor_page_faults": 4699,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 71,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 76.61,
+        "cycles": 157842400.0,
+        "instructions": 237076659.0,
+        "branches": 46166469.0,
+        "branch-misses": 2340529.0,
+        "cache-references": 92174752.0,
+        "cache-misses": 1266269.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5207.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.501983364419193,
+        "cache_mpki": 5.341179538049758,
+        "branch_mpki": 9.872456486743387,
+        "task-clock_per_operation": 7.661,
+        "cycles_per_operation": 15784240.0,
+        "instructions_per_operation": 23707665.9,
+        "branches_per_operation": 4616646.9,
+        "branch-misses_per_operation": 234052.9,
+        "cache-references_per_operation": 9217475.2,
+        "cache-misses_per_operation": 126626.9,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 520.7
+      },
+      "sample_index": 42
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 35653447,
+          "controller_cpu_user_us": 4464,
+          "controller_cpu_system_us": 14508,
+          "controller_cpu_total_us": 18972,
+          "wall_ns_per_operation": 3565344.7,
+          "controller_cpu_us_per_operation": 1897.2
+        },
+        "resources": {
+          "max_rss_kb": 55288,
+          "minor_page_faults": 6079,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 79,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 98.93,
+        "cycles": 178441673.0,
+        "instructions": 268280830.0,
+        "branches": 52747441.0,
+        "branch-misses": 2688863.0,
+        "cache-references": 103713484.0,
+        "cache-misses": 1504040.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8112.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5034651126589695,
+        "cache_mpki": 5.606214950207214,
+        "branch_mpki": 10.022568515238305,
+        "task-clock_per_operation": 9.893,
+        "cycles_per_operation": 17844167.3,
+        "instructions_per_operation": 26828083.0,
+        "branches_per_operation": 5274744.1,
+        "branch-misses_per_operation": 268886.3,
+        "cache-references_per_operation": 10371348.4,
+        "cache-misses_per_operation": 150404.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 811.2
+      },
+      "sample_index": 43
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 283925761,
+          "controller_cpu_user_us": 74365,
+          "controller_cpu_system_us": 46423,
+          "controller_cpu_total_us": 120788,
+          "wall_ns_per_operation": 2839257.61,
+          "controller_cpu_us_per_operation": 1207.88
+        },
+        "resources": {
+          "max_rss_kb": 58636,
+          "minor_page_faults": 18743,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 255,
+          "involuntary_context_switches": 7
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 343.95,
+        "cycles": 372145044.0,
+        "instructions": 510509531.0,
+        "branches": 103690978.0,
+        "branch-misses": 5928781.0,
+        "cache-references": 197947639.0,
+        "cache-misses": 3693684.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 35752.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3718025786741366,
+        "cache_mpki": 7.235289011675671,
+        "branch_mpki": 11.613458006134659,
+        "task-clock_per_operation": 3.4395,
+        "cycles_per_operation": 3721450.44,
+        "instructions_per_operation": 5105095.31,
+        "branches_per_operation": 1036909.78,
+        "branch-misses_per_operation": 59287.81,
+        "cache-references_per_operation": 1979476.39,
+        "cache-misses_per_operation": 36936.84,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 357.52
+      },
+      "sample_index": 44
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 249953,
+          "controller_cpu_user_us": 210,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 210,
+          "wall_ns_per_operation": 249953,
+          "controller_cpu_us_per_operation": 210
+        },
+        "persistent_startup": {
+          "wall_ns": 1415869,
+          "controller_cpu_user_us": 1381,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1381
+        },
+        "resources": {
+          "max_rss_kb": 54476,
+          "minor_page_faults": 4696,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 57,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 71.33,
+        "cycles": 155396302.0,
+        "instructions": 234379397.0,
+        "branches": 45671527.0,
+        "branch-misses": 2413373.0,
+        "cache-references": 89546502.0,
+        "cache-misses": 1213724.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5210.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.508268819678862,
+        "cache_mpki": 5.178458582688478,
+        "branch_mpki": 10.296864958655046,
+        "task-clock_per_operation": 71.33,
+        "cycles_per_operation": 155396302.0,
+        "instructions_per_operation": 234379397.0,
+        "branches_per_operation": 45671527.0,
+        "branch-misses_per_operation": 2413373.0,
+        "cache-references_per_operation": 89546502.0,
+        "cache-misses_per_operation": 1213724.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5210.0
+      },
+      "sample_index": 45
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 34786885,
+          "controller_cpu_user_us": 13848,
+          "controller_cpu_system_us": 4761,
+          "controller_cpu_total_us": 18609,
+          "wall_ns_per_operation": 3478688.5,
+          "controller_cpu_us_per_operation": 1860.9
+        },
+        "resources": {
+          "max_rss_kb": 54872,
+          "minor_page_faults": 6129,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 81,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 96.12,
+        "cycles": 178591454.0,
+        "instructions": 266315622.0,
+        "branches": 52285775.0,
+        "branch-misses": 2736196.0,
+        "cache-references": 102749949.0,
+        "cache-misses": 1489952.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8180.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.491200256424364,
+        "cache_mpki": 5.594684941163534,
+        "branch_mpki": 10.274260215947828,
+        "task-clock_per_operation": 9.612,
+        "cycles_per_operation": 17859145.4,
+        "instructions_per_operation": 26631562.2,
+        "branches_per_operation": 5228577.5,
+        "branch-misses_per_operation": 273619.6,
+        "cache-references_per_operation": 10274994.9,
+        "cache-misses_per_operation": 148995.2,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 818.0
+      },
+      "sample_index": 46
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 221583,
+          "controller_cpu_user_us": 135,
+          "controller_cpu_system_us": 49,
+          "controller_cpu_total_us": 184,
+          "wall_ns_per_operation": 221583,
+          "controller_cpu_us_per_operation": 184
+        },
+        "persistent_startup": {
+          "wall_ns": 1366869,
+          "controller_cpu_user_us": 978,
+          "controller_cpu_system_us": 357,
+          "controller_cpu_total_us": 1335
+        },
+        "resources": {
+          "max_rss_kb": 54388,
+          "minor_page_faults": 4497,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 53,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 68.86,
+        "cycles": 151740849.0,
+        "instructions": 229264030.0,
+        "branches": 44529263.0,
+        "branch-misses": 2257368.0,
+        "cache-references": 89284237.0,
+        "cache-misses": 1233525.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5036.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5108919681871558,
+        "cache_mpki": 5.380368651811626,
+        "branch_mpki": 9.846149873575895,
+        "task-clock_per_operation": 68.86,
+        "cycles_per_operation": 151740849.0,
+        "instructions_per_operation": 229264030.0,
+        "branches_per_operation": 44529263.0,
+        "branch-misses_per_operation": 2257368.0,
+        "cache-references_per_operation": 89284237.0,
+        "cache-misses_per_operation": 1233525.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5036.0
+      },
+      "sample_index": 47
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 63899814,
+          "controller_cpu_user_us": 31500,
+          "controller_cpu_system_us": 10200,
+          "controller_cpu_total_us": 41700,
+          "wall_ns_per_operation": 63899.814,
+          "controller_cpu_us_per_operation": 41.7
+        },
+        "persistent_startup": {
+          "wall_ns": 1433770,
+          "controller_cpu_user_us": 0,
+          "controller_cpu_system_us": 1397,
+          "controller_cpu_total_us": 1397
+        },
+        "resources": {
+          "max_rss_kb": 58904,
+          "minor_page_faults": 6176,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1130,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 132.36,
+        "cycles": 264960281.0,
+        "instructions": 358121774.0,
+        "branches": 72042679.0,
+        "branch-misses": 4269408.0,
+        "cache-references": 142109998.0,
+        "cache-misses": 3637336.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6626.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3516055034678953,
+        "cache_mpki": 10.156701614015795,
+        "branch_mpki": 11.921665505879014,
+        "task-clock_per_operation": 0.13236,
+        "cycles_per_operation": 264960.281,
+        "instructions_per_operation": 358121.774,
+        "branches_per_operation": 72042.679,
+        "branch-misses_per_operation": 4269.408,
+        "cache-references_per_operation": 142109.998,
+        "cache-misses_per_operation": 3637.336,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 6.626
+      },
+      "sample_index": 48
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 7643865,
+          "controller_cpu_user_us": 5380,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 5380,
+          "wall_ns_per_operation": 76438.65,
+          "controller_cpu_us_per_operation": 53.8
+        },
+        "persistent_startup": {
+          "wall_ns": 1362889,
+          "controller_cpu_user_us": 1327,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 1327
+        },
+        "resources": {
+          "max_rss_kb": 54856,
+          "minor_page_faults": 4727,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 162,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 76.12,
+        "cycles": 167309670.0,
+        "instructions": 247444775.0,
+        "branches": 48336457.0,
+        "branch-misses": 2595174.0,
+        "cache-references": 96114244.0,
+        "cache-misses": 1540977.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5233.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4789627820077584,
+        "cache_mpki": 6.227559260445083,
+        "branch_mpki": 10.487891692196774,
+        "task-clock_per_operation": 0.7612000000000001,
+        "cycles_per_operation": 1673096.7,
+        "instructions_per_operation": 2474447.75,
+        "branches_per_operation": 483364.57,
+        "branch-misses_per_operation": 25951.74,
+        "cache-references_per_operation": 961142.44,
+        "cache-misses_per_operation": 15409.77,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 52.33
+      },
+      "sample_index": 49
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 5673727,
+          "controller_cpu_user_us": 3977,
+          "controller_cpu_system_us": 7,
+          "controller_cpu_total_us": 3984,
+          "wall_ns_per_operation": 5673727,
+          "controller_cpu_us_per_operation": 3984
+        },
+        "resources": {
+          "max_rss_kb": 54376,
+          "minor_page_faults": 4410,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 53,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 66.13,
+        "cycles": 146062532.0,
+        "instructions": 225170714.0,
+        "branches": 43754393.0,
+        "branch-misses": 2173581.0,
+        "cache-references": 87349992.0,
+        "cache-misses": 1199579.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4991.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5416048928961468,
+        "cache_mpki": 5.327420154647642,
+        "branch_mpki": 9.653035962749579,
+        "task-clock_per_operation": 66.13,
+        "cycles_per_operation": 146062532.0,
+        "instructions_per_operation": 225170714.0,
+        "branches_per_operation": 43754393.0,
+        "branch-misses_per_operation": 2173581.0,
+        "cache-references_per_operation": 87349992.0,
+        "cache-misses_per_operation": 1199579.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 4991.0
+      },
+      "sample_index": 50
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 278445737,
+          "controller_cpu_user_us": 75446,
+          "controller_cpu_system_us": 44027,
+          "controller_cpu_total_us": 119473,
+          "wall_ns_per_operation": 2784457.37,
+          "controller_cpu_us_per_operation": 1194.73
+        },
+        "resources": {
+          "max_rss_kb": 58712,
+          "minor_page_faults": 18851,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 257,
+          "involuntary_context_switches": 18
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 334.67,
+        "cycles": 367619387.0,
+        "instructions": 512685709.0,
+        "branches": 104149957.0,
+        "branch-misses": 6003129.0,
+        "cache-references": 198146484.0,
+        "cache-misses": 3650021.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 35860.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.394610097100238,
+        "cache_mpki": 7.119412411786184,
+        "branch_mpki": 11.709179512159954,
+        "task-clock_per_operation": 3.3467000000000002,
+        "cycles_per_operation": 3676193.87,
+        "instructions_per_operation": 5126857.09,
+        "branches_per_operation": 1041499.57,
+        "branch-misses_per_operation": 60031.29,
+        "cache-references_per_operation": 1981464.84,
+        "cache-misses_per_operation": 36500.21,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 358.6
+      },
+      "sample_index": 51
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 49559778,
+          "controller_cpu_user_us": 23108,
+          "controller_cpu_system_us": 4460,
+          "controller_cpu_total_us": 27568,
+          "wall_ns_per_operation": 4955977.8,
+          "controller_cpu_us_per_operation": 2756.8
+        },
+        "resources": {
+          "max_rss_kb": 58208,
+          "minor_page_faults": 6754,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 91,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 119.1,
+        "cycles": 224459046.0,
+        "instructions": 326224293.0,
+        "branches": 64373060.0,
+        "branch-misses": 3573848.0,
+        "cache-references": 127127690.0,
+        "cache-misses": 1949536.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8917.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4533800210484722,
+        "cache_mpki": 5.97606015809497,
+        "branch_mpki": 10.955186589982127,
+        "task-clock_per_operation": 11.91,
+        "cycles_per_operation": 22445904.6,
+        "instructions_per_operation": 32622429.3,
+        "branches_per_operation": 6437306.0,
+        "branch-misses_per_operation": 357384.8,
+        "cache-references_per_operation": 12712769.0,
+        "cache-misses_per_operation": 194953.6,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 891.7
+      },
+      "sample_index": 52
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 2636383021,
+          "controller_cpu_user_us": 354789,
+          "controller_cpu_system_us": 635231,
+          "controller_cpu_total_us": 990020,
+          "wall_ns_per_operation": 2636383.021,
+          "controller_cpu_us_per_operation": 990.02
+        },
+        "resources": {
+          "max_rss_kb": 75184,
+          "minor_page_faults": 109527,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1368,
+          "involuntary_context_switches": 49
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 2636.55,
+        "cycles": 1881844596.0,
+        "instructions": 2626062857.0,
+        "branches": 544721520.0,
+        "branch-misses": 29135183.0,
+        "cache-references": 998267757.0,
+        "cache-misses": 19069234.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 276141.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3954727518849808,
+        "cache_mpki": 7.261529916989341,
+        "branch_mpki": 11.09462514285887,
+        "task-clock_per_operation": 2.63655,
+        "cycles_per_operation": 1881844.596,
+        "instructions_per_operation": 2626062.857,
+        "branches_per_operation": 544721.52,
+        "branch-misses_per_operation": 29135.183,
+        "cache-references_per_operation": 998267.757,
+        "cache-misses_per_operation": 19069.234,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 276.141
+      },
+      "sample_index": 53
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 8508846,
+          "controller_cpu_user_us": 6665,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 6665,
+          "wall_ns_per_operation": 8508846,
+          "controller_cpu_us_per_operation": 6665
+        },
+        "resources": {
+          "max_rss_kb": 55080,
+          "minor_page_faults": 4727,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 56,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 77.98,
+        "cycles": 176308974.0,
+        "instructions": 263321026.0,
+        "branches": 51439601.0,
+        "branch-misses": 2785914.0,
+        "cache-references": 101902665.0,
+        "cache-misses": 1440951.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5313.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.493520267436869,
+        "cache_mpki": 5.472221576411449,
+        "branch_mpki": 10.579914723558764,
+        "task-clock_per_operation": 77.98,
+        "cycles_per_operation": 176308974.0,
+        "instructions_per_operation": 263321026.0,
+        "branches_per_operation": 51439601.0,
+        "branch-misses_per_operation": 2785914.0,
+        "cache-references_per_operation": 101902665.0,
+        "cache-misses_per_operation": 1440951.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5313.0
+      },
+      "sample_index": 54
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 63942014,
+          "controller_cpu_user_us": 27397,
+          "controller_cpu_system_us": 14102,
+          "controller_cpu_total_us": 41499,
+          "wall_ns_per_operation": 63942.014,
+          "controller_cpu_us_per_operation": 41.499
+        },
+        "persistent_startup": {
+          "wall_ns": 1336098,
+          "controller_cpu_user_us": 1220,
+          "controller_cpu_system_us": 87,
+          "controller_cpu_total_us": 1307
+        },
+        "resources": {
+          "max_rss_kb": 60460,
+          "minor_page_faults": 6040,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1131,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 133.45,
+        "cycles": 269328550.0,
+        "instructions": 361580597.0,
+        "branches": 72854471.0,
+        "branch-misses": 4406942.0,
+        "cache-references": 142496831.0,
+        "cache-misses": 3668476.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6490.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3425260597140556,
+        "cache_mpki": 10.14566608506374,
+        "branch_mpki": 12.187993594136358,
+        "task-clock_per_operation": 0.13344999999999999,
+        "cycles_per_operation": 269328.55,
+        "instructions_per_operation": 361580.597,
+        "branches_per_operation": 72854.471,
+        "branch-misses_per_operation": 4406.942,
+        "cache-references_per_operation": 142496.831,
+        "cache-misses_per_operation": 3668.476,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 6.49
+      },
+      "sample_index": 55
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 5492995,
+          "controller_cpu_user_us": 3314,
+          "controller_cpu_system_us": 555,
+          "controller_cpu_total_us": 3869,
+          "wall_ns_per_operation": 5492995,
+          "controller_cpu_us_per_operation": 3869
+        },
+        "resources": {
+          "max_rss_kb": 55072,
+          "minor_page_faults": 4455,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 55,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 66.57,
+        "cycles": 147064587.0,
+        "instructions": 224551694.0,
+        "branches": 43629575.0,
+        "branch-misses": 2194570.0,
+        "cache-references": 86908514.0,
+        "cache-misses": 1208455.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5046.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5268916778721175,
+        "cache_mpki": 5.38163386110995,
+        "branch_mpki": 9.773117097927571,
+        "task-clock_per_operation": 66.57,
+        "cycles_per_operation": 147064587.0,
+        "instructions_per_operation": 224551694.0,
+        "branches_per_operation": 43629575.0,
+        "branch-misses_per_operation": 2194570.0,
+        "cache-references_per_operation": 86908514.0,
+        "cache-misses_per_operation": 1208455.0,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 5046.0
+      },
+      "sample_index": 56
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 10,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 2374493,
+          "controller_cpu_user_us": 2087,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 2087,
+          "wall_ns_per_operation": 237449.3,
+          "controller_cpu_us_per_operation": 208.7
+        },
+        "persistent_startup": {
+          "wall_ns": 1610412,
+          "controller_cpu_user_us": 1051,
+          "controller_cpu_system_us": 263,
+          "controller_cpu_total_us": 1314
+        },
+        "resources": {
+          "max_rss_kb": 52668,
+          "minor_page_faults": 4700,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 68,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 69.27,
+        "cycles": 154282198.0,
+        "instructions": 235195406.0,
+        "branches": 45710425.0,
+        "branch-misses": 2267325.0,
+        "cache-references": 92083978.0,
+        "cache-misses": 1283639.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5206.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5244494118498364,
+        "cache_mpki": 5.457755412110388,
+        "branch_mpki": 9.640175539823256,
+        "task-clock_per_operation": 6.927,
+        "cycles_per_operation": 15428219.8,
+        "instructions_per_operation": 23519540.6,
+        "branches_per_operation": 4571042.5,
+        "branch-misses_per_operation": 226732.5,
+        "cache-references_per_operation": 9208397.8,
+        "cache-misses_per_operation": 128363.9,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 520.6
+      },
+      "sample_index": 57
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "raw-oneshot",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "node:child_process spawn per command",
+        "measurement": {
+          "wall_ns": 2689982824,
+          "controller_cpu_user_us": 299293,
+          "controller_cpu_system_us": 717935,
+          "controller_cpu_total_us": 1017228,
+          "wall_ns_per_operation": 2689982.824,
+          "controller_cpu_us_per_operation": 1017.228
+        },
+        "resources": {
+          "max_rss_kb": 76752,
+          "minor_page_faults": 109621,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1370,
+          "involuntary_context_switches": 38
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 2692.13,
+        "cycles": 1862201924.0,
+        "instructions": 2628585537.0,
+        "branches": 545386844.0,
+        "branch-misses": 29194633.0,
+        "cache-references": 998270421.0,
+        "cache-misses": 19130951.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 276934.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.411546998809781,
+        "cache_mpki": 7.278040121088895,
+        "branch_mpki": 11.106594245861896,
+        "task-clock_per_operation": 2.69213,
+        "cycles_per_operation": 1862201.924,
+        "instructions_per_operation": 2628585.537,
+        "branches_per_operation": 545386.844,
+        "branch-misses_per_operation": 29194.633,
+        "cache-references_per_operation": 998270.421,
+        "cache-misses_per_operation": 19130.951,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 276.934
+      },
+      "sample_index": 58
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "dsh-managed",
+        "operations": 1000,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "DSH LocalBashExecutor + LocalSubprocessRuntime",
+        "measurement": {
+          "wall_ns": 3861379268,
+          "controller_cpu_user_us": 702717,
+          "controller_cpu_system_us": 697194,
+          "controller_cpu_total_us": 1399911,
+          "wall_ns_per_operation": 3861379.268,
+          "controller_cpu_us_per_operation": 1399.911
+        },
+        "resources": {
+          "max_rss_kb": 81592,
+          "minor_page_faults": 142233,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 1499,
+          "involuntary_context_switches": 64
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 3765.38,
+        "cycles": 2748752151.0,
+        "instructions": 3638466400.0,
+        "branches": 759270840.0,
+        "branch-misses": 41440274.0,
+        "cache-references": 1417268353.0,
+        "cache-misses": 28345089.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 310020.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3236793279729935,
+        "cache_mpki": 7.790394601417784,
+        "branch_mpki": 11.389489263938234,
+        "task-clock_per_operation": 3.76538,
+        "cycles_per_operation": 2748752.151,
+        "instructions_per_operation": 3638466.4,
+        "branches_per_operation": 759270.84,
+        "branch-misses_per_operation": 41440.274,
+        "cache-references_per_operation": 1417268.353,
+        "cache-misses_per_operation": 28345.089,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 310.02
+      },
+      "sample_index": 59
+    },
+    {
+      "fixture": {
+        "benchmark": "C4 shell lifecycle scaling",
+        "condition": "persistent",
+        "operations": 100,
+        "command_shape": "bash no-op builtin followed by one fixed-width acknowledgement",
+        "setup": "one node:child_process bash with line-framed acknowledgements",
+        "measurement": {
+          "wall_ns": 8779870,
+          "controller_cpu_user_us": 5466,
+          "controller_cpu_system_us": 150,
+          "controller_cpu_total_us": 5616,
+          "wall_ns_per_operation": 87798.7,
+          "controller_cpu_us_per_operation": 56.16
+        },
+        "persistent_startup": {
+          "wall_ns": 1418350,
+          "controller_cpu_user_us": 704,
+          "controller_cpu_system_us": 48,
+          "controller_cpu_total_us": 752
+        },
+        "resources": {
+          "max_rss_kb": 56320,
+          "minor_page_faults": 4617,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 161,
+          "involuntary_context_switches": 6
+        },
+        "checks": {
+          "output_count_exact": true,
+          "markers_exact": true,
+          "stderr_empty": true,
+          "exits_successful": true
+        }
+      },
+      "perf": {
+        "task-clock": 77.84,
+        "cycles": 167959898.0,
+        "instructions": 249035200.0,
+        "branches": 48776045.0,
+        "branch-misses": 2611980.0,
+        "cache-references": 96453462.0,
+        "cache-misses": 1520360.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5128.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4827063064779904,
+        "cache_mpki": 6.105000417611647,
+        "branch_mpki": 10.488396821011648,
+        "task-clock_per_operation": 0.7784,
+        "cycles_per_operation": 1679598.98,
+        "instructions_per_operation": 2490352.0,
+        "branches_per_operation": 487760.45,
+        "branch-misses_per_operation": 26119.8,
+        "cache-references_per_operation": 964534.62,
+        "cache-misses_per_operation": 15203.6,
+        "context-switches_per_operation": 0.0,
+        "cpu-migrations_per_operation": 0.0,
+        "page-faults_per_operation": 51.28
+      },
+      "sample_index": 60
+    }
+  ],
+  "limitations": [
+    "Pinned DSH bash-local is managed one-shot bash -c, not a persistent shell.",
+    "Raw and persistent conditions are benchmark controls, not OpenClaw implementations.",
+    "The persistent condition excludes shell startup from scoped loop timing but whole-process perf includes it.",
+    "process.cpuUsage reports the Node controller only; inherited perf counters cover descendant shell processes.",
+    "The pilot uses a no-op builtin plus acknowledgement; filesystem and external-command workloads are separate conditions.",
+    "A :u event label excludes kernel execution and makes scheduling counters non-interpretable."
+  ]
+}

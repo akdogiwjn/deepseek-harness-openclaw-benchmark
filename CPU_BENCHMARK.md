@@ -157,3 +157,46 @@ Growing response content with request context supplies a common byte axis for
 the pilot; it does not claim those sizes are coupled in production. The SSE
 condition includes framing and JSON decode, not the complete adapter translation
 state machine. See `results/C3_REPORT.md` for results and interpretation limits.
+
+## C4 shell lifecycle scaling
+
+The pinned DSH source does not implement a persistent local shell. Its
+`LocalBashExecutor.run()` launches `bash -c` through the subprocess capability
+for every command, and the source retains an explicit stateful-shell TODO.
+Accordingly C4 compares three mechanisms:
+
+- the real DSH managed one-shot shell capability;
+- a benchmark-control raw one-shot Node spawn;
+- a benchmark-control persistent bash with line-framed acknowledgements.
+
+The controls are not OpenClaw implementations. All conditions execute the same
+sequential no-op builtin plus a unique marker, and every sample verifies the
+complete marker sequence, stderr, and termination status.
+
+Run a functional smoke test:
+
+```bash
+scripts/cpu/run-c4.py \
+  --counts 1,10 \
+  --repeats 1 \
+  --cpu 0 \
+  --perf off \
+  --output /tmp/c4-shell-smoke.json
+```
+
+Run the initial scaling design:
+
+```bash
+scripts/cpu/run-c4.py \
+  --counts 1,10,100,1000 \
+  --repeats 5 \
+  --cpu 0 \
+  --output results/c4-shell-lifecycle-pilot.json
+```
+
+Persistent shell startup/readiness is outside its scoped command-loop timing,
+but whole-process perf includes it. Node `process.cpuUsage()` measures only the
+controller, while perf's default inheritance covers descendants. On a host that
+only permits `:u` events, perf omits exactly the kernel work that process-launch
+research needs; treat that run as a user-space pilot and rerun with user+kernel
+PMU access for total CPU attribution. See `results/C4_REPORT.md`.

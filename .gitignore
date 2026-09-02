@@ -47,6 +47,7 @@ results/*/
 results/c1-agent-loop-smoke.json
 !results/c2-session-count-pilot.json
 !results/c3-context-json-pilot.json
+!results/c4-shell-lifecycle-pilot.json
 
 # Keep selected small result directories
 !results/w1-pilot-001/
