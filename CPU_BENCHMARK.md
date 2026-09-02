@@ -62,16 +62,18 @@ Generic perf events are a portable first layer, not proof that PMU semantics are
 identical across processors or ISAs. Record the CPU, kernel, Node, perf, affinity,
 and event mapping before making hardware comparisons. Later CPU cases should add
 PMU-specific LLC, DTLB, stall, and memory-bandwidth events per target platform.
-The result preserves the exact event labels returned by perf. A `:u` suffix
-means kernel execution was excluded; under such permissions, zero-valued
-context-switch/migration software events are not evidence that scheduling did
-not occur. The fixture's prompt-window `resourceUsage()` deltas remain separate.
-
-All runners also collect `cycles:k` and `instructions:k`; when the host permits
-user+kernel access (`perf_event_paranoid <= 1`) the plain `cycles`/`instructions`
-counters are user+kernel totals and each runner derives the `*_u` component and
-`*_kernel_ratio`. These fields let the process/scheduler/filesystem cases (C4,
-C6, C7) attribute kernel-side work instead of silently dropping it under `:u`.
+Runners probe perf capability in two levels: they first ask for
+`cycles:u`/`cycles:k` and `instructions:u`/`instructions:k`, falling back to
+`cycles:u`/`instructions:u` (user-only) only when the `:k` request fails, and
+disabling perf if neither works. The probe runs the exact events the benchmark
+will use, so a host whose `perf_event_paranoid` or `CAP_PERFMON` restriction
+rejects `:k` degrades the mode instead of failing every sample. The parsed
+`cycles`/`instructions` totals are the sum of the sampled `:u` and `:k`
+components, and each runner records `*_kernel_ratio` when the kernel component
+is available. The result also preserves the exact event labels returned by perf;
+a `:u` suffix on a plain counter still means kernel execution was excluded and
+zero-valued scheduling counters under it must not be read as an absence of
+scheduling. The fixture's prompt-window `resourceUsage()` deltas remain separate.
 
 ### C1-warm steady-state variant
 
@@ -340,11 +342,13 @@ cross-host interpretation. See `results/C7_REPORT.md`.
 
 ### C7-B hard-pin placement
 
-`run-c7.py --hard-pin` translates the shared-cpuset placement into one hard-pinned
-core per Agent: agent `i` runs under `taskset -c <core_i>` where `core_i` is the
-`i`-th selected physical core. The controller itself is left unpinned. This
-separates core scaling from Linux scheduler migration; the default shared cpuset
-remains the scheduler-managed baseline.
+C7 keeps the controller process unbound in both modes and varies only the child
+cpuset. The default (`shared`) launches every Agent under `taskset -c <pool>`
+for the full selected physical-core pool, so the Linux scheduler may migrate an
+Agent between pool cores. `--hard-pin` launches Agent `i` under
+`taskset -c <core_i>` instead. The controller placement is identical across the
+two conditions, so the sole variable is whether children share the pool or are
+pinned one-per-core.
 
 ```bash
 scripts/cpu/run-c7.py \

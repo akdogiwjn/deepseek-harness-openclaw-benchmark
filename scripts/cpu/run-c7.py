@@ -8,8 +8,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-PERF_EVENTS = ["task-clock", "cycles", "cycles:k", "instructions", "instructions:k", "branches", "branch-misses", "cache-references",
+_PERF_SPLIT_NAMES = frozenset(("cycles", "instructions"))
+PERF_EVENTS = ["task-clock", "cycles:u", "cycles:k", "instructions:u", "instructions:k", "branches", "branch-misses", "cache-references",
                "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
+PERF_EVENTS_USER_ONLY = ["task-clock", "cycles:u", "instructions:u", "branches", "branch-misses", "cache-references",
+                         "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
 
 
 def parse_counts(raw: str) -> list[int]:
@@ -38,44 +41,55 @@ def physical_cpu_candidates() -> tuple[list[int], str]:
     return selected, raw
 
 
-def perf_works() -> bool:
-    if shutil.which("perf") is None: return False
-    run = subprocess.run(["perf", "stat", "-x,", "-e", "cycles,instructions", "--", "true"],
-                         text=True, capture_output=True, check=False)
-    return run.returncode == 0 and "cycles" in run.stderr
+def perf_mode() -> str:
+    perf = shutil.which("perf")
+    if perf is None: return "off"
+    for mode, events, marker in (
+        ("full", PERF_EVENTS, "cycles:k"),
+        ("user-only", PERF_EVENTS_USER_ONLY, "cycles:u"),
+    ):
+        completed = subprocess.run([perf, "stat", "-x,", "-e", ",".join(events), "--", "true"],
+                                   text=True, capture_output=True, check=False)
+        if completed.returncode == 0 and marker in completed.stderr:
+            return mode
+    return "off"
 
 
 def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
     metrics, labels = {}, {}
+    base_names = {
+        "task-clock", "branches", "branch-misses", "cache-references", "cache-misses",
+        "context-switches", "cpu-migrations", "page-faults",
+    } | set(_PERF_SPLIT_NAMES)
     for line in stderr.splitlines():
         fields = line.split(",")
         if len(fields) < 3: continue
         label = fields[2].strip()
-        if label not in PERF_EVENTS: continue
-        key = label.replace(":", "_")
+        base = label.split(":", 1)[0]
+        if base not in base_names: continue
+        key = label.replace(":", "_") if base in _PERF_SPLIT_NAMES else base
         try: metrics[key] = float(fields[0].strip())
         except ValueError: metrics[key] = None
         labels[key] = label
-    for base in ("cycles", "instructions"):
-        total = metrics.get(base)
+    for base in _PERF_SPLIT_NAMES:
+        user = metrics.get(f"{base}_u")
         kernel = metrics.get(f"{base}_k")
-        if total is not None and kernel is not None:
-            metrics[f"{base}_u"] = total - kernel
-            if total:
+        if user is not None:
+            total = user + (kernel or 0.0)
+            metrics[base] = total
+            if kernel is not None and total:
                 metrics[f"{base}_kernel_ratio"] = kernel / total
     return metrics, labels
 
 
 def run_sample(node: Path, controller: Path, agents: int, steps: int, payload: int,
-               cpus: list[int], use_perf: bool, hard_pin: bool) -> dict[str, Any]:
+               cpus: list[int], use_perf: bool, hard_pin: bool, perf_events: list[str]) -> dict[str, Any]:
     bound_cpus = cpus[:agents]
     cpu_list = ",".join(str(cpu) for cpu in bound_cpus)
     command = [str(node), str(controller), str(agents), str(steps), str(payload)]
-    if use_perf: command = ["perf", "stat", "-x,", "--no-big-num", "-e", ",".join(PERF_EVENTS), "--", *command]
-    if hard_pin:
-        command.append(cpu_list)
-    else:
-        command = ["taskset", "-c", cpu_list, *command]
+    if use_perf: command = ["perf", "stat", "-x,", "--no-big-num", "-e", ",".join(perf_events), "--", *command]
+    command.append(cpu_list)
+    command.append("pin" if hard_pin else "shared")
     result = subprocess.run(command, text=True, capture_output=True, check=False, timeout=600)
     if result.returncode != 0: raise RuntimeError(f"C7 failed for agents={agents}:\n{result.stdout}\n{result.stderr}")
     fixture = json.loads([line for line in result.stdout.splitlines() if line.strip()][-1])
@@ -87,8 +101,8 @@ def run_sample(node: Path, controller: Path, agents: int, steps: int, payload: i
     if instructions and perf.get("cache-misses") is not None: derived["cache_mpki"] = perf["cache-misses"] / instructions * 1000
     if instructions and perf.get("branch-misses") is not None: derived["branch_mpki"] = perf["branch-misses"] / instructions * 1000
     if task_clock is not None:
-        derived["average_user_cpu_cores"] = task_clock / wall_ms
-        derived["user_cpu_affinity_utilization"] = task_clock / wall_ms / agents
+        derived["average_cpu_cores"] = task_clock / wall_ms
+        derived["cpu_affinity_utilization"] = task_clock / wall_ms / agents
     for name, value in (("instructions_per_agent", instructions), ("cycles_per_agent", cycles),
                         ("task_clock_ms_per_agent", task_clock)):
         if value is not None: derived[name] = value / agents
@@ -110,8 +124,8 @@ def summarize(samples: list[dict[str, Any]], counts: list[int]) -> tuple[dict[st
              "max_child_max_rss_kb": ("fixture", "memory", "max_child_max_rss_kb"),
              "cycles": ("perf", "cycles"), "instructions": ("perf", "instructions"), "task_clock_ms": ("perf", "task-clock"),
              "page_faults": ("perf", "page-faults"), "ipc": ("derived", "ipc"), "cache_mpki": ("derived", "cache_mpki"),
-             "branch_mpki": ("derived", "branch_mpki"), "average_user_cpu_cores": ("derived", "average_user_cpu_cores"),
-             "user_cpu_affinity_utilization": ("derived", "user_cpu_affinity_utilization"),
+             "branch_mpki": ("derived", "branch_mpki"), "average_cpu_cores": ("derived", "average_cpu_cores"),
+             "cpu_affinity_utilization": ("derived", "cpu_affinity_utilization"),
              "instructions_per_agent": ("derived", "instructions_per_agent"), "cycles_per_agent": ("derived", "cycles_per_agent"),
              "task_clock_ms_per_agent": ("derived", "task_clock_ms_per_agent")}
     aggregates = {}
@@ -147,13 +161,14 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]; node = (args.node or default_node(root)).resolve()
     controller = root / "scripts/cpu/c7-scaleout-controller.mjs"; cpus, topology = physical_cpu_candidates()
     if max(args.agents) > len(cpus): parser.error(f"need {max(args.agents)} physical cores, found {len(cpus)}")
-    available = perf_works()
-    if args.perf == "on" and not available: parser.error("perf requested but unavailable")
-    use_perf = args.perf == "on" or (args.perf == "auto" and available)
+    mode = perf_mode()
+    if args.perf == "on" and mode == "off": parser.error("perf requested but unavailable")
+    use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
+    perf_events = PERF_EVENTS if mode == "full" else (PERF_EVENTS_USER_ONLY if mode == "user-only" else [])
     schedule = [count for count in args.agents for _ in range(args.repeats)]; random.Random(args.seed).shuffle(schedule)
     samples = []
     for index, count in enumerate(schedule, 1):
-        sample = run_sample(node, controller, count, args.tool_steps, args.payload_bytes, cpus, use_perf, args.hard_pin)
+        sample = run_sample(node, controller, count, args.tool_steps, args.payload_bytes, cpus, use_perf, args.hard_pin, perf_events)
         sample["sample_index"] = index; samples.append(sample)
         print(f"[C7 {index}/{len(schedule)}] agents={count} wall_ms={sample['fixture']['timing']['wall_ns']/1e6:.1f} "
               f"agents/s={sample['fixture']['timing']['agents_per_second']:.2f}", flush=True)
@@ -162,10 +177,10 @@ def main() -> None:
               "design": {"agents": args.agents, "repeats": args.repeats, "tool_steps_per_agent": args.tool_steps,
                          "payload_bytes": args.payload_bytes, "topology": "one independent Node/DSH process per Agent",
 "cpu_selection": "first logical CPU for each distinct (socket, core), nested prefixes",
-                          "placement": "hard_pin (one core per Agent)" if args.hard_pin else "shared cpuset (scheduler may migrate)",
+                          "placement": "per-Agent hard-pin to one core" if args.hard_pin else "shared CPU pool (scheduler may migrate within it)",
                           "selected_physical_cpu_ids": cpus[:max(args.agents)], "randomization_seed": args.seed,
-                         "perf_enabled": use_perf, "perf_descendant_inheritance": True,
-                         "perf_events": PERF_EVENTS if use_perf else [], "observed_perf_event_labels": samples[0]["perf_event_labels"]},
+"perf_enabled": use_perf, "perf_mode": mode, "perf_descendant_inheritance": True,
+                          "perf_events": perf_events if use_perf else [], "observed_perf_event_labels": samples[0]["perf_event_labels"]},
               "host": {"platform": platform.platform(), "machine": platform.machine(), "logical_cpus": os.cpu_count(),
                        "lscpu_parse": topology, "node": subprocess.run([str(node), "--version"], text=True, capture_output=True, check=True).stdout.strip(),
                        "perf": subprocess.run(["perf", "--version"], text=True, capture_output=True).stdout.strip(),
@@ -176,8 +191,8 @@ def main() -> None:
                  "Process startup, DSH composition, the measured turn, and teardown are all inside batch wall/perf scope.",
                  "sum_child_max_rss_kb sums per-process maxima and is not a synchronized aggregate peak.",
 "CPU sets use one thread per physical core and nested prefixes but do not spread across NUMA nodes.",
-                  "In hard_pin mode each Agent is pinned to one core and the controller itself is unpinned.",
-                  "Default cycles/instructions are user+kernel totals; cycles:k/instructions:k are sampled separately and derived *_u / *_kernel_ratio split user from kernel. A perf restriction to user space will omit the kernel fields."],}
+                   "Controller placement is identical across modes; only child cpusets differ (shared pool vs per-Agent pin).",
+                  "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields."],}
     args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(json.dumps(result, indent=2)+"\n")
     print(f"[done] wrote {args.output}")
 

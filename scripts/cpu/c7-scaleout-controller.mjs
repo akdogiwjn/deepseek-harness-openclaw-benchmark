@@ -16,26 +16,23 @@ const toolSteps = positiveInteger(process.argv[3] ?? '64', 'tool-steps')
 const payloadBytes = positiveInteger(process.argv[4] ?? '64', 'payload-bytes')
 const fixture = join(dirname(fileURLToPath(import.meta.url)), 'c1-agent-loop.mjs')
 const cpuList = (process.argv[5] ?? '').split(',').filter(Boolean).map(Number)
+const placement = process.argv[6] === 'pin' ? 'pin' : 'shared'
 
-function runAgent(index, cpu) {
+function runAgent(index) {
   return new Promise((resolve, reject) => {
-    const hardPin = cpu !== undefined
-    const binary = hardPin ? 'taskset' : process.execPath
-    const args = hardPin
-      ? ['-c', String(cpu), process.execPath, fixture, String(toolSteps), String(payloadBytes)]
-      : [fixture, String(toolSteps), String(payloadBytes)]
-    execFile(binary, args, {
+    const cpuset = placement === 'pin' ? String(cpuList[index]) : cpuList.join(',')
+    execFile('taskset', ['-c', cpuset, process.execPath, fixture, String(toolSteps), String(payloadBytes)], {
       cwd: process.cwd(), env: process.env, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024,
     }, (error, output, errorText) => {
       if (error !== null) {
-        reject(new Error(`C7 agent ${index} failed: ${error.message}\n${output}\n${errorText}`))
+        reject(new Error(`C7 agent ${index + 1} failed: ${error.message}\n${output}\n${errorText}`))
         return
       }
       try {
         const lines = output.split(/\r?\n/).filter(Boolean)
-        resolve({ index, result: JSON.parse(lines.at(-1)), stderr: errorText })
+        resolve({ index: index + 1, result: JSON.parse(lines.at(-1)), stderr: errorText })
       } catch (error) {
-        reject(new Error(`C7 agent ${index} emitted invalid JSON: ${error.message}\n${output}`))
+        reject(new Error(`C7 agent ${index + 1} emitted invalid JSON: ${error.message}\n${output}`))
       }
     })
   })
@@ -43,10 +40,7 @@ function runAgent(index, cpu) {
 
 const beforeCpu = process.cpuUsage()
 const started = process.hrtime.bigint()
-const children = await Promise.all(Array.from({ length: agents }, (_, index) => {
-  const cpu = cpuList.length ? cpuList[index] : undefined
-  return runAgent(index + 1, cpu)
-}))
+const children = await Promise.all(Array.from({ length: agents }, (_, index) => runAgent(index)))
 const ended = process.hrtime.bigint()
 const cpu = process.cpuUsage(beforeCpu)
 const wallNs = Number(ended - started)
@@ -67,8 +61,9 @@ console.log(JSON.stringify({
   agents, tool_steps_per_agent: toolSteps, payload_bytes: payloadBytes,
   total_tool_steps: totalToolSteps,
   total_provider_requests: agents * (toolSteps + 1),
+  placement,
   cpu_binding: cpuList.slice(0, agents),
-  hard_pin: cpuList.length > 0,
+  hard_pin: placement === 'pin',
   timing: {
     wall_ns: wallNs,
     controller_cpu_user_us: cpu.user,

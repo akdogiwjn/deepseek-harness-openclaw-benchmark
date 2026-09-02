@@ -103,10 +103,11 @@ ctx.llm.registerAdapter(['c1-in-process'], adapter)
 const expectedRequests = toolSteps + 1
 
 async function runTurn(turnIndex) {
-  const agent = ctx.agentLoop.create(SessionId(`c1-${process.pid}-${turnIndex}`), {
-    provider: 'c1-in-process',
-    model: 'deterministic',
+  const handle = await ctx.agents.create({
+    sessionId: SessionId(`c1-${process.pid}-${turnIndex}`),
+    agentOptions: { provider: 'c1-in-process', model: 'deterministic' },
   })
+  const agent = handle.agent
   const beforeCpu = process.cpuUsage()
   const beforeResource = process.resourceUsage()
   const requestsBefore = adapter.requests
@@ -127,8 +128,9 @@ async function runTurn(turnIndex) {
   for (const event of agent.session.events) {
     eventCounts[event.type] = (eventCounts[event.type] ?? 0) + 1
   }
+  const sessionEventCount = agent.session.events.length
+  await handle.dispose()
   return {
-    agent,
     wallNs: Number(ended - started),
     cpuUserUs: cpu.user,
     cpuSystemUs: cpu.system,
@@ -138,7 +140,7 @@ async function runTurn(turnIndex) {
     requestsDelta,
     invocationsDelta,
     eventCounts,
-    sessionEventCount: agent.session.events.length,
+    sessionEventCount,
   }
 }
 

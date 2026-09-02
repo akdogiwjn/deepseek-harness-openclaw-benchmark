@@ -17,8 +17,13 @@ from pathlib import Path
 from typing import Any
 
 
+_PERF_SPLIT_NAMES = frozenset(("cycles", "instructions"))
 PERF_EVENTS = [
-    "task-clock", "cycles", "cycles:k", "instructions", "instructions:k", "branches", "branch-misses",
+    "task-clock", "cycles:u", "cycles:k", "instructions:u", "instructions:k", "branches", "branch-misses",
+    "cache-references", "cache-misses", "context-switches", "cpu-migrations", "page-faults",
+]
+PERF_EVENTS_USER_ONLY = [
+    "task-clock", "cycles:u", "instructions:u", "branches", "branch-misses",
     "cache-references", "cache-misses", "context-switches", "cpu-migrations", "page-faults",
 ]
 OPERATIONS = ["append", "derive_messages", "fork_prefix", "jsonl_write", "jsonl_warm_load"]
@@ -45,39 +50,51 @@ def default_node(root: Path) -> Path:
     return root / f"node-v{revisions['NODE_VERSION']}-linux-{arch}" / "bin" / "node"
 
 
-def perf_works() -> bool:
+def perf_mode() -> str:
     perf = shutil.which("perf")
     if perf is None:
-        return False
-    result = subprocess.run(
-        [perf, "stat", "-x,", "-e", "cycles,instructions", "--", "true"],
-        text=True, capture_output=True, check=False,
-    )
-    return result.returncode == 0 and "cycles" in result.stderr
+        return "off"
+    for mode, events, marker in (
+        ("full", PERF_EVENTS, "cycles:k"),
+        ("user-only", PERF_EVENTS_USER_ONLY, "cycles:u"),
+    ):
+        completed = subprocess.run(
+            [perf, "stat", "-x,", "-e", ",".join(events), "--", "true"],
+            text=True, capture_output=True, check=False,
+        )
+        if completed.returncode == 0 and marker in completed.stderr:
+            return mode
+    return "off"
 
 
 def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
     metrics: dict[str, float | None] = {}
     labels: dict[str, str] = {}
+    base_names = {
+        "task-clock", "branches", "branch-misses", "cache-references", "cache-misses",
+        "context-switches", "cpu-migrations", "page-faults",
+    } | set(_PERF_SPLIT_NAMES)
     for line in stderr.splitlines():
         fields = line.split(",")
         if len(fields) < 3:
             continue
         label = fields[2].strip()
-        if label not in PERF_EVENTS:
+        base = label.split(":", 1)[0]
+        if base not in base_names:
             continue
-        key = label.replace(":", "_")
+        key = label.replace(":", "_") if base in _PERF_SPLIT_NAMES else base
         try:
             metrics[key] = float(fields[0].strip())
         except ValueError:
             metrics[key] = None
         labels[key] = label
-    for base in ("cycles", "instructions"):
-        total = metrics.get(base)
+    for base in _PERF_SPLIT_NAMES:
+        user = metrics.get(f"{base}_u")
         kernel = metrics.get(f"{base}_k")
-        if total is not None and kernel is not None:
-            metrics[f"{base}_u"] = total - kernel
-            if total:
+        if user is not None:
+            total = user + (kernel or 0.0)
+            metrics[base] = total
+            if kernel is not None and total:
                 metrics[f"{base}_kernel_ratio"] = kernel / total
     return metrics, labels
 
@@ -89,10 +106,11 @@ def run_sample(
     payload_bytes: int,
     cpu: int | None,
     use_perf: bool,
+    perf_events: list[str],
 ) -> dict[str, Any]:
     command = [str(node), str(fixture), str(turns), str(payload_bytes)]
     if use_perf:
-        command = ["perf", "stat", "-x,", "--no-big-num", "-e", ",".join(PERF_EVENTS), "--", *command]
+        command = ["perf", "stat", "-x,", "--no-big-num", "-e", ",".join(perf_events), "--", *command]
     if cpu is not None:
         command = ["taskset", "-c", str(cpu), *command]
     result = subprocess.run(command, text=True, capture_output=True, check=False, timeout=300)
@@ -194,17 +212,18 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]
     node = (args.node or default_node(root)).resolve()
     fixture = root / "scripts" / "cpu" / "c2-session-primitives.mjs"
-    available = perf_works()
-    if args.perf == "on" and not available:
+    mode = perf_mode()
+    if args.perf == "on" and mode == "off":
         parser.error("perf was requested but unavailable")
-    use_perf = args.perf == "on" or (args.perf == "auto" and available)
+    use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
+    perf_events = PERF_EVENTS if mode == "full" else (PERF_EVENTS_USER_ONLY if mode == "user-only" else [])
     schedule = [count for count in args.turns for _ in range(args.repeats)]
     random.Random(args.seed).shuffle(schedule)
     samples = []
     for index, count in enumerate(schedule, start=1):
         sample = run_sample(
             node, fixture, count, args.payload_bytes,
-            None if args.cpu < 0 else args.cpu, use_perf,
+            None if args.cpu < 0 else args.cpu, use_perf, perf_events,
         )
         sample["sample_index"] = index
         samples.append(sample)
@@ -231,7 +250,8 @@ def main() -> None:
             "persistence": "uncompressed JSONL, packChunks=false",
             "load_cache_state": "fresh persistence backend, warm host page cache",
             "perf_enabled": use_perf,
-            "perf_events": PERF_EVENTS if use_perf else [],
+            "perf_mode": mode,
+            "perf_events": perf_events if use_perf else [],
             "observed_perf_event_labels": samples[0]["perf_event_labels"] if samples else {},
         },
         "host": {
@@ -252,7 +272,7 @@ def main() -> None:
             "deriveMessages sees completed user-only turns, not tool-heavy or chunk-heavy event shapes.",
             "JSONL load uses a fresh backend but warm host page cache; this is not a cold-storage measurement.",
             "Whole-process perf includes Node/V8 startup, setup, all five primitives, cleanup, and teardown.",
-            "Default cycles/instructions are user+kernel totals; cycles:k/instructions:k are sampled separately and derived *_u / *_kernel_ratio split user from kernel. A perf restriction to user space will omit the kernel fields.",
+            "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields.",
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
