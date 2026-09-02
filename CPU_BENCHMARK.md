@@ -235,3 +235,39 @@ The adapter removes real network/model latency, so the experiment measures
 local runtime work rather than the end-to-end value of fewer remote calls. PTC
 uses a fresh worker for each program. The no-op tool excludes shell, filesystem,
 payload, and useful program-compute costs. See `results/C5_REPORT.md`.
+
+## C6 local-vs-sandbox filesystem scaling
+
+C6 reuses W10's DSH filesystem capability swap without an Agent Loop. The
+sandbox backend inherits local reads verbatim and adds a canonicalize-and-
+contain policy fence before writes. Four conditions run local/sandbox backends
+over read and write workloads; reads are the negative control.
+
+Run a smoke test:
+
+```bash
+scripts/cpu/run-c6.py \
+  --counts 1,10 \
+  --repeats 1 \
+  --payload-bytes 256 \
+  --cpu 0 \
+  --perf off \
+  --output /tmp/c6-fs-smoke.json
+```
+
+Run the initial scaling design:
+
+```bash
+scripts/cpu/run-c6.py \
+  --counts 1,10,100,1000 \
+  --repeats 5 \
+  --payload-bytes 256 \
+  --cpu 0 \
+  --output results/c6-fs-sandbox-cpu-pilot.json
+```
+
+Each read resolves, stats, and reads the same hot file. Each write resolves and
+performs DSH's atomic whole-file replacement. The workspace lies outside
+platform temp roots, so sandbox writes exercise the configured workspace-root
+containment path. This is trusted capability enforcement, not a kernel boundary;
+W10 remains the denial-semantics case. See `results/C6_REPORT.md`.

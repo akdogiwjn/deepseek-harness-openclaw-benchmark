@@ -1,0 +1,6147 @@
+{
+  "benchmark": "C6 DSH local-vs-sandbox filesystem scaling",
+  "created_at": "2026-09-02T02:20:49.444196+00:00",
+  "design": {
+    "conditions": [
+      "local-read",
+      "local-write",
+      "sandbox-read",
+      "sandbox-write"
+    ],
+    "operations": [
+      1,
+      10,
+      100,
+      1000
+    ],
+    "repeats": 5,
+    "payload_bytes": 256,
+    "randomization_seed": 20260902,
+    "cpu_affinity": 0,
+    "perf_enabled": true,
+    "perf_events": [
+      "task-clock",
+      "cycles",
+      "instructions",
+      "branches",
+      "branch-misses",
+      "cache-references",
+      "cache-misses",
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "observed_perf_event_labels": {
+      "task-clock": "task-clock:u",
+      "cycles": "cycles:u",
+      "instructions": "instructions:u",
+      "branches": "branches:u",
+      "branch-misses": "branch-misses:u",
+      "cache-references": "cache-references:u",
+      "cache-misses": "cache-misses:u",
+      "context-switches": "context-switches:u",
+      "cpu-migrations": "cpu-migrations:u",
+      "page-faults": "page-faults:u"
+    }
+  },
+  "host": {
+    "platform": "Linux-6.6.0-28.0.0.34.oe2403.aarch64-aarch64-with-glibc2.38",
+    "machine": "aarch64",
+    "logical_cpus": 256,
+    "node": "v24.15.0",
+    "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64",
+    "perf_event_paranoid": "2"
+  },
+  "aggregates": {
+    "local-read": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 2141039.0,
+          "min": 1829215.0,
+          "max": 2229650.0
+        },
+        "wall_ns_per_operation": {
+          "median": 2141039.0,
+          "min": 1829215.0,
+          "max": 2229650.0
+        },
+        "cpu_us": {
+          "median": 2241.0,
+          "min": 1930.0,
+          "max": 2325.0
+        },
+        "cpu_us_per_operation": {
+          "median": 2241.0,
+          "min": 1930.0,
+          "max": 2325.0
+        },
+        "max_rss_kb": {
+          "median": 64784.0,
+          "min": 64716.0,
+          "max": 64784.0
+        },
+        "cycles": {
+          "median": 286216799.0,
+          "min": 283811449.0,
+          "max": 289529801.0
+        },
+        "instructions": {
+          "median": 415185412.0,
+          "min": 413130664.0,
+          "max": 416637646.0
+        },
+        "task_clock_ms": {
+          "median": 118.79,
+          "min": 117.95,
+          "max": 120.68
+        },
+        "page_faults": {
+          "median": 6113.0,
+          "min": 5968.0,
+          "max": 6169.0
+        },
+        "ipc": {
+          "median": 1.4475491822553328,
+          "min": 1.4371044440316274,
+          "max": 1.456077316317144
+        },
+        "cache_mpki": {
+          "median": 6.5408487786586225,
+          "min": 6.515899773539927,
+          "max": 6.616938309376179
+        },
+        "branch_mpki": {
+          "median": 10.586552111325144,
+          "min": 10.511305862129017,
+          "max": 10.806588374201333
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 5942771.0,
+          "min": 5870000.0,
+          "max": 6185454.0
+        },
+        "wall_ns_per_operation": {
+          "median": 594277.1,
+          "min": 587000.0,
+          "max": 618545.4
+        },
+        "cpu_us": {
+          "median": 6063.0,
+          "min": 5954.0,
+          "max": 6279.0
+        },
+        "cpu_us_per_operation": {
+          "median": 606.3,
+          "min": 595.4,
+          "max": 627.9
+        },
+        "max_rss_kb": {
+          "median": 64780.0,
+          "min": 64596.0,
+          "max": 65232.0
+        },
+        "cycles": {
+          "median": 295754832.0,
+          "min": 294611309.0,
+          "max": 298960121.0
+        },
+        "instructions": {
+          "median": 425791271.0,
+          "min": 424607532.0,
+          "max": 427206535.0
+        },
+        "task_clock_ms": {
+          "median": 122.62,
+          "min": 122.38,
+          "max": 124.31
+        },
+        "page_faults": {
+          "median": 6010.0,
+          "min": 5953.0,
+          "max": 6268.0
+        },
+        "ipc": {
+          "median": 1.4374531247014,
+          "min": 1.4242410311307039,
+          "max": 1.4463436296669794
+        },
+        "cache_mpki": {
+          "median": 6.657263130138076,
+          "min": 6.609009386993577,
+          "max": 6.731528322007334
+        },
+        "branch_mpki": {
+          "median": 10.724263365163292,
+          "min": 10.692102181602795,
+          "max": 10.888482962817713
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 32927940.0,
+          "min": 32075309.0,
+          "max": 35293022.0
+        },
+        "wall_ns_per_operation": {
+          "median": 329279.4,
+          "min": 320753.09,
+          "max": 352930.22
+        },
+        "cpu_us": {
+          "median": 32931.0,
+          "min": 32110.0,
+          "max": 35200.0
+        },
+        "cpu_us_per_operation": {
+          "median": 329.31,
+          "min": 321.1,
+          "max": 352.0
+        },
+        "max_rss_kb": {
+          "median": 66820.0,
+          "min": 66604.0,
+          "max": 66856.0
+        },
+        "cycles": {
+          "median": 357756585.0,
+          "min": 351317610.0,
+          "max": 362279509.0
+        },
+        "instructions": {
+          "median": 482849132.0,
+          "min": 480584020.0,
+          "max": 485658047.0
+        },
+        "task_clock_ms": {
+          "median": 151.86,
+          "min": 149.56,
+          "max": 156.5
+        },
+        "page_faults": {
+          "median": 6495.0,
+          "min": 6472.0,
+          "max": 6603.0
+        },
+        "ipc": {
+          "median": 1.356379296274868,
+          "min": 1.3310925763676025,
+          "max": 1.3679474251233805
+        },
+        "cache_mpki": {
+          "median": 7.990322992008969,
+          "min": 7.963438522001881,
+          "max": 8.001988082687491
+        },
+        "branch_mpki": {
+          "median": 11.376491404772786,
+          "min": 11.200863482726705,
+          "max": 11.532439407927694
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 256337004.0,
+          "min": 252422391.0,
+          "max": 258213360.0
+        },
+        "wall_ns_per_operation": {
+          "median": 256337.004,
+          "min": 252422.391,
+          "max": 258213.36
+        },
+        "cpu_us": {
+          "median": 255776.0,
+          "min": 251924.0,
+          "max": 257566.0
+        },
+        "cpu_us_per_operation": {
+          "median": 255.776,
+          "min": 251.924,
+          "max": 257.566
+        },
+        "max_rss_kb": {
+          "median": 68876.0,
+          "min": 68644.0,
+          "max": 70104.0
+        },
+        "cycles": {
+          "median": 805093102.0,
+          "min": 792269391.0,
+          "max": 808843159.0
+        },
+        "instructions": {
+          "median": 964490539.0,
+          "min": 960104899.0,
+          "max": 967458145.0
+        },
+        "task_clock_ms": {
+          "median": 376.27,
+          "min": 369.93,
+          "max": 377.82
+        },
+        "page_faults": {
+          "median": 7244.0,
+          "min": 7131.0,
+          "max": 7398.0
+        },
+        "ipc": {
+          "median": 1.199583688645242,
+          "min": 1.1924320905333885,
+          "max": 1.2118414644142173
+        },
+        "cache_mpki": {
+          "median": 12.380776869647448,
+          "min": 12.265512874963468,
+          "max": 12.531638878998548
+        },
+        "branch_mpki": {
+          "median": 12.467910792020739,
+          "min": 12.3617836054808,
+          "max": 12.540069110690055
+        }
+      }
+    },
+    "local-write": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 4642734.0,
+          "min": 4356649.0,
+          "max": 4785056.0
+        },
+        "wall_ns_per_operation": {
+          "median": 4642734.0,
+          "min": 4356649.0,
+          "max": 4785056.0
+        },
+        "cpu_us": {
+          "median": 4313.0,
+          "min": 4030.0,
+          "max": 4500.0
+        },
+        "cpu_us_per_operation": {
+          "median": 4313.0,
+          "min": 4030.0,
+          "max": 4500.0
+        },
+        "max_rss_kb": {
+          "median": 64780.0,
+          "min": 64540.0,
+          "max": 64784.0
+        },
+        "cycles": {
+          "median": 293675123.0,
+          "min": 289832100.0,
+          "max": 297786917.0
+        },
+        "instructions": {
+          "median": 421174461.0,
+          "min": 418820716.0,
+          "max": 424869731.0
+        },
+        "task_clock_ms": {
+          "median": 121.84,
+          "min": 120.21,
+          "max": 123.52
+        },
+        "page_faults": {
+          "median": 6080.0,
+          "min": 5846.0,
+          "max": 6229.0
+        },
+        "ipc": {
+          "median": 1.4347065141094706,
+          "min": 1.4267575462356528,
+          "max": 1.4499250497098148
+        },
+        "cache_mpki": {
+          "median": 6.59714423975992,
+          "min": 6.496661914472791,
+          "max": 6.6139314178406465
+        },
+        "branch_mpki": {
+          "median": 10.767609197462711,
+          "min": 10.568036648804892,
+          "max": 11.142325881530025
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 18473032.0,
+          "min": 18441032.0,
+          "max": 23117716.0
+        },
+        "wall_ns_per_operation": {
+          "median": 1847303.2,
+          "min": 1844103.2,
+          "max": 2311771.6
+        },
+        "cpu_us": {
+          "median": 15593.0,
+          "min": 15399.0,
+          "max": 17044.0
+        },
+        "cpu_us_per_operation": {
+          "median": 1559.3,
+          "min": 1539.9,
+          "max": 1704.4
+        },
+        "max_rss_kb": {
+          "median": 65032.0,
+          "min": 64644.0,
+          "max": 66504.0
+        },
+        "cycles": {
+          "median": 316899408.0,
+          "min": 314803527.0,
+          "max": 322340152.0
+        },
+        "instructions": {
+          "median": 442710251.0,
+          "min": 441178656.0,
+          "max": 447150281.0
+        },
+        "task_clock_ms": {
+          "median": 134.68,
+          "min": 133.63,
+          "max": 140.34
+        },
+        "page_faults": {
+          "median": 6180.0,
+          "min": 6143.0,
+          "max": 6244.0
+        },
+        "ipc": {
+          "median": 1.4021974347193384,
+          "min": 1.3686742196485655,
+          "max": 1.4094710142216484
+        },
+        "cache_mpki": {
+          "median": 6.937237150173873,
+          "min": 6.83173449688607,
+          "max": 6.95210673702244
+        },
+        "branch_mpki": {
+          "median": 11.086560662913572,
+          "min": 10.868334029287219,
+          "max": 11.395868942772731
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 139753140.0,
+          "min": 139232603.0,
+          "max": 183949465.0
+        },
+        "wall_ns_per_operation": {
+          "median": 1397531.4,
+          "min": 1392326.03,
+          "max": 1839494.65
+        },
+        "cpu_us": {
+          "median": 103250.0,
+          "min": 102894.0,
+          "max": 115557.0
+        },
+        "cpu_us_per_operation": {
+          "median": 1032.5,
+          "min": 1028.94,
+          "max": 1155.57
+        },
+        "max_rss_kb": {
+          "median": 68520.0,
+          "min": 66828.0,
+          "max": 68876.0
+        },
+        "cycles": {
+          "median": 467223398.0,
+          "min": 456249033.0,
+          "max": 476094103.0
+        },
+        "instructions": {
+          "median": 575735702.0,
+          "min": 571376262.0,
+          "max": 582211640.0
+        },
+        "task_clock_ms": {
+          "median": 227.58,
+          "min": 223.81,
+          "max": 244.02
+        },
+        "page_faults": {
+          "median": 7048.0,
+          "min": 6956.0,
+          "max": 7332.0
+        },
+        "ipc": {
+          "median": 1.2438217693448221,
+          "min": 1.2092897147268384,
+          "max": 1.2523341874129517
+        },
+        "cache_mpki": {
+          "median": 9.601042893868069,
+          "min": 9.564697796003625,
+          "max": 9.700171478013004
+        },
+        "branch_mpki": {
+          "median": 12.532990903925898,
+          "min": 12.342325835020427,
+          "max": 12.911856245265039
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 1210719111.0,
+          "min": 1203362551.0,
+          "max": 1258446414.0
+        },
+        "wall_ns_per_operation": {
+          "median": 1210719.111,
+          "min": 1203362.551,
+          "max": 1258446.414
+        },
+        "cpu_us": {
+          "median": 848355.0,
+          "min": 839119.0,
+          "max": 853781.0
+        },
+        "cpu_us_per_operation": {
+          "median": 848.355,
+          "min": 839.119,
+          "max": 853.781
+        },
+        "max_rss_kb": {
+          "median": 70216.0,
+          "min": 68876.0,
+          "max": 70924.0
+        },
+        "cycles": {
+          "median": 1609302486.0,
+          "min": 1586545281.0,
+          "max": 1614016835.0
+        },
+        "instructions": {
+          "median": 1576780966.0,
+          "min": 1575590626.0,
+          "max": 1579471107.0
+        },
+        "task_clock_ms": {
+          "median": 1001.1,
+          "min": 991.16,
+          "max": 1015.63
+        },
+        "page_faults": {
+          "median": 7814.0,
+          "min": 7594.0,
+          "max": 7942.0
+        },
+        "ipc": {
+          "median": 0.979154572746144,
+          "min": 0.9785964264740771,
+          "max": 0.9932308783565063
+        },
+        "cache_mpki": {
+          "median": 15.882591362245197,
+          "min": 15.575500531886528,
+          "max": 15.925520618069479
+        },
+        "branch_mpki": {
+          "median": 14.519774460544825,
+          "min": 14.479599920082283,
+          "max": 14.533148405354147
+        }
+      }
+    },
+    "sandbox-read": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 2116649.0,
+          "min": 1807585.0,
+          "max": 2330242.0
+        },
+        "wall_ns_per_operation": {
+          "median": 2116649.0,
+          "min": 1807585.0,
+          "max": 2330242.0
+        },
+        "cpu_us": {
+          "median": 2221.0,
+          "min": 1908.0,
+          "max": 2422.0
+        },
+        "cpu_us_per_operation": {
+          "median": 2221.0,
+          "min": 1908.0,
+          "max": 2422.0
+        },
+        "max_rss_kb": {
+          "median": 64784.0,
+          "min": 64548.0,
+          "max": 65096.0
+        },
+        "cycles": {
+          "median": 294126853.0,
+          "min": 287354217.0,
+          "max": 307307803.0
+        },
+        "instructions": {
+          "median": 419710887.0,
+          "min": 415202354.0,
+          "max": 431910864.0
+        },
+        "task_clock_ms": {
+          "median": 121.27,
+          "min": 118.8,
+          "max": 125.93
+        },
+        "page_faults": {
+          "median": 6049.0,
+          "min": 5927.0,
+          "max": 6207.0
+        },
+        "ipc": {
+          "median": 1.4319524610015801,
+          "min": 1.4054666356779753,
+          "max": 1.4449147756895455
+        },
+        "cache_mpki": {
+          "median": 6.492488024076776,
+          "min": 6.36114816505287,
+          "max": 6.613427399115721
+        },
+        "branch_mpki": {
+          "median": 10.996405246928942,
+          "min": 10.6778970718456,
+          "max": 11.718371594376011
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 5994792.0,
+          "min": 5629267.0,
+          "max": 6144044.0
+        },
+        "wall_ns_per_operation": {
+          "median": 599479.2,
+          "min": 562926.7,
+          "max": 614404.4
+        },
+        "cpu_us": {
+          "median": 6077.0,
+          "min": 5725.0,
+          "max": 6234.0
+        },
+        "cpu_us_per_operation": {
+          "median": 607.7,
+          "min": 572.5,
+          "max": 623.4
+        },
+        "max_rss_kb": {
+          "median": 64784.0,
+          "min": 64784.0,
+          "max": 64824.0
+        },
+        "cycles": {
+          "median": 298445129.0,
+          "min": 297079996.0,
+          "max": 299621443.0
+        },
+        "instructions": {
+          "median": 425749060.0,
+          "min": 425375810.0,
+          "max": 426390231.0
+        },
+        "task_clock_ms": {
+          "median": 124.07,
+          "min": 123.56,
+          "max": 124.23
+        },
+        "page_faults": {
+          "median": 6146.0,
+          "min": 5840.0,
+          "max": 6183.0
+        },
+        "ipc": {
+          "median": 1.4257468212858653,
+          "min": 1.4230540736031365,
+          "max": 1.4331125142468362
+        },
+        "cache_mpki": {
+          "median": 6.722312206704937,
+          "min": 6.615601847594862,
+          "max": 6.736541003754653
+        },
+        "branch_mpki": {
+          "median": 10.851571288884688,
+          "min": 10.81383949503024,
+          "max": 10.866145308932191
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 32996651.0,
+          "min": 32519144.0,
+          "max": 33328516.0
+        },
+        "wall_ns_per_operation": {
+          "median": 329966.51,
+          "min": 325191.44,
+          "max": 333285.16
+        },
+        "cpu_us": {
+          "median": 32994.0,
+          "min": 32536.0,
+          "max": 33318.0
+        },
+        "cpu_us_per_operation": {
+          "median": 329.94,
+          "min": 325.36,
+          "max": 333.18
+        },
+        "max_rss_kb": {
+          "median": 66832.0,
+          "min": 66688.0,
+          "max": 67988.0
+        },
+        "cycles": {
+          "median": 355451672.0,
+          "min": 353046960.0,
+          "max": 359352692.0
+        },
+        "instructions": {
+          "median": 484219784.0,
+          "min": 482517652.0,
+          "max": 484993117.0
+        },
+        "task_clock_ms": {
+          "median": 151.79,
+          "min": 150.61,
+          "max": 153.39
+        },
+        "page_faults": {
+          "median": 6679.0,
+          "min": 6511.0,
+          "max": 6764.0
+        },
+        "ipc": {
+          "median": 1.362602208088251,
+          "min": 1.3482690787801306,
+          "max": 1.3675926907853844
+        },
+        "cache_mpki": {
+          "median": 7.991541830681046,
+          "min": 7.952939545986071,
+          "max": 8.053301908025608
+        },
+        "branch_mpki": {
+          "median": 11.442975242002918,
+          "min": 11.248483977950727,
+          "max": 11.474439131060905
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 258119449.0,
+          "min": 255759527.0,
+          "max": 262236095.0
+        },
+        "wall_ns_per_operation": {
+          "median": 258119.449,
+          "min": 255759.527,
+          "max": 262236.095
+        },
+        "cpu_us": {
+          "median": 257380.0,
+          "min": 255045.0,
+          "max": 261131.0
+        },
+        "cpu_us_per_operation": {
+          "median": 257.38,
+          "min": 255.045,
+          "max": 261.131
+        },
+        "max_rss_kb": {
+          "median": 68868.0,
+          "min": 68632.0,
+          "max": 70540.0
+        },
+        "cycles": {
+          "median": 808508820.0,
+          "min": 804219588.0,
+          "max": 826006004.0
+        },
+        "instructions": {
+          "median": 969457171.0,
+          "min": 967292374.0,
+          "max": 971763167.0
+        },
+        "task_clock_ms": {
+          "median": 376.31,
+          "min": 375.07,
+          "max": 386.77
+        },
+        "page_faults": {
+          "median": 7323.0,
+          "min": 7197.0,
+          "max": 7450.0
+        },
+        "ipc": {
+          "median": 1.200130521182496,
+          "min": 1.173668431349562,
+          "max": 1.2027714674365777
+        },
+        "cache_mpki": {
+          "median": 12.437106039436857,
+          "min": 12.40763115951124,
+          "max": 12.481893333687044
+        },
+        "branch_mpki": {
+          "median": 12.433071140551538,
+          "min": 12.370401043740385,
+          "max": 12.493411370468213
+        }
+      }
+    },
+    "sandbox-write": {
+      "1": {
+        "operations": 1,
+        "samples": 5,
+        "wall_ns": {
+          "median": 5032129.0,
+          "min": 4728845.0,
+          "max": 5121390.0
+        },
+        "wall_ns_per_operation": {
+          "median": 5032129.0,
+          "min": 4728845.0,
+          "max": 5121390.0
+        },
+        "cpu_us": {
+          "median": 4644.0,
+          "min": 4409.0,
+          "max": 4800.0
+        },
+        "cpu_us_per_operation": {
+          "median": 4644.0,
+          "min": 4409.0,
+          "max": 4800.0
+        },
+        "max_rss_kb": {
+          "median": 64636.0,
+          "min": 62908.0,
+          "max": 64776.0
+        },
+        "cycles": {
+          "median": 295058676.0,
+          "min": 289788994.0,
+          "max": 300476072.0
+        },
+        "instructions": {
+          "median": 423820645.0,
+          "min": 419397300.0,
+          "max": 424122977.0
+        },
+        "task_clock_ms": {
+          "median": 122.43,
+          "min": 120.28,
+          "max": 124.09
+        },
+        "page_faults": {
+          "median": 6063.0,
+          "min": 6002.0,
+          "max": 6158.0
+        },
+        "ipc": {
+          "median": 1.4325855510889172,
+          "min": 1.411097756229987,
+          "max": 1.4472506157359448
+        },
+        "cache_mpki": {
+          "median": 6.610786975702894,
+          "min": 6.4756029475856485,
+          "max": 6.638197241613144
+        },
+        "branch_mpki": {
+          "median": 10.883989433093129,
+          "min": 10.557626384337714,
+          "max": 10.98684149438467
+        }
+      },
+      "10": {
+        "operations": 10,
+        "samples": 5,
+        "wall_ns": {
+          "median": 20953536.0,
+          "min": 20833835.0,
+          "max": 21089068.0
+        },
+        "wall_ns_per_operation": {
+          "median": 2095353.6,
+          "min": 2083383.5,
+          "max": 2108906.8
+        },
+        "cpu_us": {
+          "median": 18097.0,
+          "min": 17885.0,
+          "max": 18162.0
+        },
+        "cpu_us_per_operation": {
+          "median": 1809.7,
+          "min": 1788.5,
+          "max": 1816.2
+        },
+        "max_rss_kb": {
+          "median": 66832.0,
+          "min": 64716.0,
+          "max": 67072.0
+        },
+        "cycles": {
+          "median": 323834665.0,
+          "min": 321235724.0,
+          "max": 326659850.0
+        },
+        "instructions": {
+          "median": 451398011.0,
+          "min": 449099636.0,
+          "max": 452136295.0
+        },
+        "task_clock_ms": {
+          "median": 137.04,
+          "min": 136.51,
+          "max": 138.63
+        },
+        "page_faults": {
+          "median": 6318.0,
+          "min": 6225.0,
+          "max": 6368.0
+        },
+        "ipc": {
+          "median": 1.393915043035927,
+          "min": 1.3832664497947942,
+          "max": 1.3980376478924865
+        },
+        "cache_mpki": {
+          "median": 6.97143950508781,
+          "min": 6.875022055019937,
+          "max": 6.99535637120846
+        },
+        "branch_mpki": {
+          "median": 11.157391956128938,
+          "min": 11.033578303768655,
+          "max": 11.288558464433827
+        }
+      },
+      "100": {
+        "operations": 100,
+        "samples": 5,
+        "wall_ns": {
+          "median": 152576506.0,
+          "min": 151943147.0,
+          "max": 194578511.0
+        },
+        "wall_ns_per_operation": {
+          "median": 1525765.06,
+          "min": 1519431.47,
+          "max": 1945785.11
+        },
+        "cpu_us": {
+          "median": 116495.0,
+          "min": 115419.0,
+          "max": 129036.0
+        },
+        "cpu_us_per_operation": {
+          "median": 1164.95,
+          "min": 1154.19,
+          "max": 1290.36
+        },
+        "max_rss_kb": {
+          "median": 68880.0,
+          "min": 68628.0,
+          "max": 69112.0
+        },
+        "cycles": {
+          "median": 493990774.0,
+          "min": 488002487.0,
+          "max": 506094625.0
+        },
+        "instructions": {
+          "median": 606063745.0,
+          "min": 604297375.0,
+          "max": 608230238.0
+        },
+        "task_clock_ms": {
+          "median": 240.15,
+          "min": 236.71,
+          "max": 258.94
+        },
+        "page_faults": {
+          "median": 7154.0,
+          "min": 6856.0,
+          "max": 7225.0
+        },
+        "ipc": {
+          "median": 1.2292990421802255,
+          "min": 1.1940402943421895,
+          "max": 1.2396171292463105
+        },
+        "cache_mpki": {
+          "median": 9.744372492049632,
+          "min": 9.694019758778056,
+          "max": 9.983549638277417
+        },
+        "branch_mpki": {
+          "median": 12.640156499601302,
+          "min": 12.430312145572369,
+          "max": 12.852315639065612
+        }
+      },
+      "1000": {
+        "operations": 1000,
+        "samples": 5,
+        "wall_ns": {
+          "median": 1306591192.0,
+          "min": 1292685092.0,
+          "max": 1313641598.0
+        },
+        "wall_ns_per_operation": {
+          "median": 1306591.192,
+          "min": 1292685.092,
+          "max": 1313641.598
+        },
+        "cpu_us": {
+          "median": 947743.0,
+          "min": 930681.0,
+          "max": 954463.0
+        },
+        "cpu_us_per_operation": {
+          "median": 947.743,
+          "min": 930.681,
+          "max": 954.463
+        },
+        "max_rss_kb": {
+          "median": 70956.0,
+          "min": 70044.0,
+          "max": 71176.0
+        },
+        "cycles": {
+          "median": 1825432732.0,
+          "min": 1782647079.0,
+          "max": 1832436170.0
+        },
+        "instructions": {
+          "median": 1830383465.0,
+          "min": 1823935767.0,
+          "max": 1833088515.0
+        },
+        "task_clock_ms": {
+          "median": 1106.93,
+          "min": 1085.94,
+          "max": 1108.95
+        },
+        "page_faults": {
+          "median": 7807.0,
+          "min": 7692.0,
+          "max": 7867.0
+        },
+        "ipc": {
+          "median": 1.0019185078357629,
+          "min": 1.0003559987576538,
+          "max": 1.027413832258606
+        },
+        "cache_mpki": {
+          "median": 15.385942352864765,
+          "min": 15.134353158327695,
+          "max": 15.63030262128743
+        },
+        "branch_mpki": {
+          "median": 14.014123448021621,
+          "min": 13.971387684055593,
+          "max": 14.202571663594762
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "read": {
+      "1": {
+        "operations": 1,
+        "sandbox_over_local_wall_ns_per_operation": 0.9886083345515893,
+        "sandbox_over_local_cpu_us_per_operation": 0.9910754127621597,
+        "sandbox_over_local_instructions": 1.0108998892282852,
+        "sandbox_over_local_cycles": 1.0276365818765236
+      },
+      "10": {
+        "operations": 10,
+        "sandbox_over_local_wall_ns_per_operation": 1.008753660539839,
+        "sandbox_over_local_cpu_us_per_operation": 1.0023090879102756,
+        "sandbox_over_local_instructions": 0.9999008645717399,
+        "sandbox_over_local_cycles": 1.0090963754735882
+      },
+      "100": {
+        "operations": 100,
+        "sandbox_over_local_wall_ns_per_operation": 1.0020867081268976,
+        "sandbox_over_local_cpu_us_per_operation": 1.0019130910084721,
+        "sandbox_over_local_instructions": 1.0028386754975052,
+        "sandbox_over_local_cycles": 0.9935573149548037
+      },
+      "1000": {
+        "operations": 1000,
+        "sandbox_over_local_wall_ns_per_operation": 1.0069535220127641,
+        "sandbox_over_local_cpu_us_per_operation": 1.0062711122231953,
+        "sandbox_over_local_instructions": 1.005149487526492,
+        "sandbox_over_local_cycles": 1.0042426372695465
+      }
+    },
+    "write": {
+      "1": {
+        "operations": 1,
+        "sandbox_over_local_wall_ns_per_operation": 1.0838719168489945,
+        "sandbox_over_local_cpu_us_per_operation": 1.0767447252492464,
+        "sandbox_over_local_instructions": 1.0062828690840302,
+        "sandbox_over_local_cycles": 1.0047111685384396
+      },
+      "10": {
+        "operations": 10,
+        "sandbox_over_local_wall_ns_per_operation": 1.1342770369260444,
+        "sandbox_over_local_cpu_us_per_operation": 1.1605848778297956,
+        "sandbox_over_local_instructions": 1.0196240317010414,
+        "sandbox_over_local_cycles": 1.0218847269036235
+      },
+      "100": {
+        "operations": 100,
+        "sandbox_over_local_wall_ns_per_operation": 1.09175726570437,
+        "sandbox_over_local_cpu_us_per_operation": 1.1282808716707022,
+        "sandbox_over_local_instructions": 1.0526770233192868,
+        "sandbox_over_local_cycles": 1.0572903157559759
+      },
+      "1000": {
+        "operations": 1000,
+        "sandbox_over_local_wall_ns_per_operation": 1.0791860639920137,
+        "sandbox_over_local_cpu_us_per_operation": 1.1171537858561569,
+        "sandbox_over_local_instructions": 1.1608355912890946,
+        "sandbox_over_local_cycles": 1.1343005729999227
+      }
+    }
+  },
+  "linear_fits_over_operation_count_medians": {
+    "local-read": {
+      "wall_ns": {
+        "intercept": 4217681.838354394,
+        "per_operation_slope": 252455.4695288771
+      },
+      "cpu_us": {
+        "intercept": 4317.5801749271195,
+        "per_operation_slope": 251.7917905493173
+      },
+      "cycles": {
+        "intercept": 293874679.46258503,
+        "per_operation_slope": 512441.5842931232
+      },
+      "instructions": {
+        "intercept": 420887514.0485909,
+        "per_operation_slope": 544344.1024353164
+      },
+      "task_clock_ms": {
+        "intercept": 121.49007126660186,
+        "per_operation_slope": 0.25524726816704996
+      },
+      "page_faults": {
+        "intercept": 6158.04697116942,
+        "per_operation_slope": 1.1069415979498824
+      }
+    },
+    "local-write": {
+      "wall_ns": {
+        "intercept": 9485368.010042131,
+        "per_operation_slope": 1202202.1106749158
+      },
+      "cpu_us": {
+        "intercept": 9676.379008746357,
+        "per_operation_slope": 839.6088964581589
+      },
+      "cycles": {
+        "intercept": 310237512.3414318,
+        "per_operation_slope": 1301665.4956204076
+      },
+      "instructions": {
+        "intercept": 436806653.58309036,
+        "per_operation_slope": 1142371.5262535
+      },
+      "task_clock_ms": {
+        "intercept": 128.67192743764176,
+        "per_operation_slope": 0.8735484160660963
+      },
+      "page_faults": {
+        "intercept": 6363.374797538063,
+        "per_operation_slope": 1.501800908953869
+      }
+    },
+    "sandbox-read": {
+      "wall_ns": {
+        "intercept": 4185353.3521218,
+        "per_operation_slope": 254262.94112647415
+      },
+      "cpu_us": {
+        "intercept": 4277.881114350501,
+        "per_operation_slope": 253.42977096543473
+      },
+      "cycles": {
+        "intercept": 296815428.63265306,
+        "per_operation_slope": 512394.9230147505
+      },
+      "instructions": {
+        "intercept": 422760259.76838356,
+        "per_operation_slope": 547341.0107348927
+      },
+      "task_clock_ms": {
+        "intercept": 122.87415937803692,
+        "per_operation_slope": 0.253774403679435
+      },
+      "page_faults": {
+        "intercept": 6239.5600907029475,
+        "per_operation_slope": 1.1149951729866865
+      }
+    },
+    "sandbox-write": {
+      "wall_ns": {
+        "intercept": 11169465.94622612,
+        "per_operation_slope": 1296557.6050540914
+      },
+      "cpu_us": {
+        "intercept": 11356.503077421454,
+        "per_operation_slope": 937.4914380650893
+      },
+      "cycles": {
+        "intercept": 314008185.75607383,
+        "per_operation_slope": 1514207.1142895631
+      },
+      "instructions": {
+        "intercept": 441448593.8545513,
+        "per_operation_slope": 1391423.4838720025
+      },
+      "task_clock_ms": {
+        "intercept": 129.9460252672498,
+        "per_operation_slope": 0.978187127750676
+      },
+      "page_faults": {
+        "intercept": 6440.602850664075,
+        "per_operation_slope": 1.4217719148008094
+      }
+    }
+  },
+  "samples": [
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1258446414,
+          "wall_ns_per_operation": 1258446.414,
+          "cpu_user_us": 468143,
+          "cpu_system_us": 385381,
+          "cpu_total_us": 853524,
+          "cpu_us_per_operation": 853.524
+        },
+        "resources": {
+          "max_rss_kb": 70216,
+          "minor_page_faults_delta": 1768,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 46452,
+          "involuntary_context_switches_delta": 24
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1015.63,
+        "cycles": 1614016835.0,
+        "instructions": 1579471107.0,
+        "branches": 327628329.0,
+        "branch-misses": 22954688.0,
+        "cache-references": 656192370.0,
+        "cache-misses": 25097356.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7908.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 0.9785964264740771,
+        "cache_mpki": 15.889721495234673,
+        "branch_mpki": 14.533148405354147
+      },
+      "sample_index": 1
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 18459863,
+          "wall_ns_per_operation": 1845986.3,
+          "cpu_user_us": 11569,
+          "cpu_system_us": 3991,
+          "cpu_total_us": 15560,
+          "cpu_us_per_operation": 1556
+        },
+        "resources": {
+          "max_rss_kb": 66504,
+          "minor_page_faults_delta": 97,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 485,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 134.68,
+        "cycles": 316899408.0,
+        "instructions": 446660530.0,
+        "branches": 88478660.0,
+        "branch-misses": 5043555.0,
+        "cache-references": 177629665.0,
+        "cache-misses": 3058270.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6244.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4094710142216484,
+        "cache_mpki": 6.846967203482251,
+        "branch_mpki": 11.291696179199
+      },
+      "sample_index": 2
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 6185454,
+          "wall_ns_per_operation": 618545.4,
+          "cpu_user_us": 6277,
+          "cpu_system_us": 2,
+          "cpu_total_us": 6279,
+          "cpu_us_per_operation": 627.9
+        },
+        "resources": {
+          "max_rss_kb": 64780,
+          "minor_page_faults_delta": 26,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 150,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 123.43,
+        "cycles": 296565243.0,
+        "instructions": 424917172.0,
+        "branches": 84090714.0,
+        "branch-misses": 4551011.0,
+        "cache-references": 170998150.0,
+        "cache-misses": 2837108.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5973.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4327949145409464,
+        "cache_mpki": 6.676849482562216,
+        "branch_mpki": 10.710348509991494
+      },
+      "sample_index": 3
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4717154,
+          "wall_ns_per_operation": 4717154,
+          "cpu_user_us": 4433,
+          "cpu_system_us": 4,
+          "cpu_total_us": 4437,
+          "cpu_us_per_operation": 4437
+        },
+        "resources": {
+          "max_rss_kb": 64780,
+          "minor_page_faults_delta": 20,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 50,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 123.52,
+        "cycles": 297786917.0,
+        "instructions": 424869731.0,
+        "branches": 84224705.0,
+        "branch-misses": 4734037.0,
+        "cache-references": 168313044.0,
+        "cache-misses": 2760235.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6217.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4267575462356528,
+        "cache_mpki": 6.496661914472791,
+        "branch_mpki": 11.142325881530025
+      },
+      "sample_index": 4
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 5629267,
+          "wall_ns_per_operation": 562926.7,
+          "cpu_user_us": 5287,
+          "cpu_system_us": 438,
+          "cpu_total_us": 5725,
+          "cpu_us_per_operation": 572.5
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 32,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 123.56,
+        "cycles": 298445129.0,
+        "instructions": 425507194.0,
+        "branches": 84213093.0,
+        "branch-misses": 4623623.0,
+        "cache-references": 170857656.0,
+        "cache-misses": 2859774.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5840.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4257468212858653,
+        "cache_mpki": 6.720859342274716,
+        "branch_mpki": 10.866145308932191
+      },
+      "sample_index": 5
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 20953536,
+          "wall_ns_per_operation": 2095353.6,
+          "cpu_user_us": 10346,
+          "cpu_system_us": 7539,
+          "cpu_total_us": 17885,
+          "cpu_us_per_operation": 1788.5
+        },
+        "resources": {
+          "max_rss_kb": 67072,
+          "minor_page_faults_delta": 154,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 512,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 138.63,
+        "cycles": 324857414.0,
+        "instructions": 452136295.0,
+        "branches": 89746095.0,
+        "branch-misses": 5103967.0,
+        "cache-references": 181140278.0,
+        "cache-misses": 3108447.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6328.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3917992187181543,
+        "cache_mpki": 6.875022055019937,
+        "branch_mpki": 11.288558464433827
+      },
+      "sample_index": 6
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 2225691,
+          "wall_ns_per_operation": 2225691,
+          "cpu_user_us": 2322,
+          "cpu_system_us": 2,
+          "cpu_total_us": 2324,
+          "cpu_us_per_operation": 2324
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 19,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 117.95,
+        "cycles": 283811449.0,
+        "instructions": 413251413.0,
+        "branches": 81694695.0,
+        "branch-misses": 4343812.0,
+        "cache-references": 166726662.0,
+        "cache-misses": 2703015.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6038.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.456077316317144,
+        "cache_mpki": 6.5408487786586225,
+        "branch_mpki": 10.511305862129017
+      },
+      "sample_index": 7
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 5032129,
+          "wall_ns_per_operation": 5032129,
+          "cpu_user_us": 4642,
+          "cpu_system_us": 2,
+          "cpu_total_us": 4644,
+          "cpu_us_per_operation": 4644
+        },
+        "resources": {
+          "max_rss_kb": 64776,
+          "minor_page_faults_delta": 31,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 52,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.8,
+        "cycles": 295843166.0,
+        "instructions": 423820645.0,
+        "branches": 83890156.0,
+        "branch-misses": 4617957.0,
+        "cache-references": 169695970.0,
+        "cache-misses": 2801788.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6063.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4325855510889172,
+        "cache_mpki": 6.610786975702894,
+        "branch_mpki": 10.896017111200424
+      },
+      "sample_index": 8
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4753885,
+          "wall_ns_per_operation": 4753885,
+          "cpu_user_us": 4270,
+          "cpu_system_us": 154,
+          "cpu_total_us": 4424,
+          "cpu_us_per_operation": 4424
+        },
+        "resources": {
+          "max_rss_kb": 62908,
+          "minor_page_faults_delta": 31,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 52,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.3,
+        "cycles": 294440050.0,
+        "instructions": 424122977.0,
+        "branches": 84031109.0,
+        "branch-misses": 4616150.0,
+        "cache-references": 169771460.0,
+        "cache-misses": 2746452.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6158.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.440439155610794,
+        "cache_mpki": 6.4756029475856485,
+        "branch_mpki": 10.883989433093129
+      },
+      "sample_index": 9
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 139533838,
+          "wall_ns_per_operation": 1395338.38,
+          "cpu_user_us": 44722,
+          "cpu_system_us": 58172,
+          "cpu_total_us": 102894,
+          "cpu_us_per_operation": 1028.94
+        },
+        "resources": {
+          "max_rss_kb": 68836,
+          "minor_page_faults_delta": 1051,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4690,
+          "involuntary_context_switches_delta": 3
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 227.58,
+        "cycles": 467223398.0,
+        "instructions": 581289695.0,
+        "branches": 117501185.0,
+        "branch-misses": 7367318.0,
+        "cache-references": 235935758.0,
+        "cache-misses": 5573166.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7293.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2441365254571433,
+        "cache_mpki": 9.587587820561657,
+        "branch_mpki": 12.674090153963592
+      },
+      "sample_index": 10
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 33294035,
+          "wall_ns_per_operation": 332940.35,
+          "cpu_user_us": 17887,
+          "cpu_system_us": 15397,
+          "cpu_total_us": 33284,
+          "cpu_us_per_operation": 332.84
+        },
+        "resources": {
+          "max_rss_kb": 66832,
+          "minor_page_faults_delta": 528,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1442,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 150.61,
+        "cycles": 353046960.0,
+        "instructions": 482824442.0,
+        "branches": 96581356.0,
+        "branch-misses": 5431043.0,
+        "cache-references": 194965990.0,
+        "cache-misses": 3888331.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6511.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3675926907853844,
+        "cache_mpki": 8.053301908025608,
+        "branch_mpki": 11.248483977950727
+      },
+      "sample_index": 11
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 256604428,
+          "wall_ns_per_operation": 256604.428,
+          "cpu_user_us": 192124,
+          "cpu_system_us": 63962,
+          "cpu_total_us": 256086,
+          "cpu_us_per_operation": 256.086
+        },
+        "resources": {
+          "max_rss_kb": 68644,
+          "minor_page_faults_delta": 1412,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14214,
+          "involuntary_context_switches_delta": 5
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 376.27,
+        "cycles": 805093102.0,
+        "instructions": 965776553.0,
+        "branches": 198207616.0,
+        "branch-misses": 12074903.0,
+        "cache-references": 392037783.0,
+        "cache-misses": 12102763.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7398.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.199583688645242,
+        "cache_mpki": 12.531638878998548,
+        "branch_mpki": 12.502791626584457
+      },
+      "sample_index": 12
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 139753140,
+          "wall_ns_per_operation": 1397531.4,
+          "cpu_user_us": 62645,
+          "cpu_system_us": 40779,
+          "cpu_total_us": 103424,
+          "cpu_us_per_operation": 1034.24
+        },
+        "resources": {
+          "max_rss_kb": 68876,
+          "minor_page_faults_delta": 938,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4693,
+          "involuntary_context_switches_delta": 4
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 230.29,
+        "cycles": 474042623.0,
+        "instructions": 582211640.0,
+        "branches": 117755983.0,
+        "branch-misses": 7517433.0,
+        "cache-references": 235023329.0,
+        "cache-misses": 5593873.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6956.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2281841584527726,
+        "cache_mpki": 9.607971767792206,
+        "branch_mpki": 12.911856245265039
+      },
+      "sample_index": 13
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 5924151,
+          "wall_ns_per_operation": 592415.1,
+          "cpu_user_us": 5989,
+          "cpu_system_us": 74,
+          "cpu_total_us": 6063,
+          "cpu_us_per_operation": 606.3
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 28,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 153,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 124.31,
+        "cycles": 298960121.0,
+        "instructions": 425791271.0,
+        "branches": 84306130.0,
+        "branch-misses": 4636221.0,
+        "cache-references": 170867978.0,
+        "cache-misses": 2866226.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6268.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4242410311307039,
+        "cache_mpki": 6.731528322007334,
+        "branch_mpki": 10.888482962817713
+      },
+      "sample_index": 14
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 5994792,
+          "wall_ns_per_operation": 599479.2,
+          "cpu_user_us": 5826,
+          "cpu_system_us": 306,
+          "cpu_total_us": 6132,
+          "cpu_us_per_operation": 613.2
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 26,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 124.07,
+        "cycles": 299621443.0,
+        "instructions": 426377515.0,
+        "branches": 84425547.0,
+        "branch-misses": 4626866.0,
+        "cache-references": 171047157.0,
+        "cache-misses": 2871606.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6146.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4230540736031365,
+        "cache_mpki": 6.734890792728598,
+        "branch_mpki": 10.851571288884688
+      },
+      "sample_index": 15
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 5870000,
+          "wall_ns_per_operation": 587000,
+          "cpu_user_us": 5951,
+          "cpu_system_us": 3,
+          "cpu_total_us": 5954,
+          "cpu_us_per_operation": 595.4
+        },
+        "resources": {
+          "max_rss_kb": 65232,
+          "minor_page_faults_delta": 29,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.62,
+        "cycles": 295754832.0,
+        "instructions": 427206535.0,
+        "branches": 84704469.0,
+        "branch-misses": 4611548.0,
+        "cache-references": 171497076.0,
+        "cache-misses": 2823412.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6010.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.444461725649845,
+        "cache_mpki": 6.609009386993577,
+        "branch_mpki": 10.794656968437994
+      },
+      "sample_index": 16
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 2233050,
+          "wall_ns_per_operation": 2233050,
+          "cpu_user_us": 2321,
+          "cpu_system_us": 2,
+          "cpu_total_us": 2323,
+          "cpu_us_per_operation": 2323
+        },
+        "resources": {
+          "max_rss_kb": 64548,
+          "minor_page_faults_delta": 19,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 121.27,
+        "cycles": 294126853.0,
+        "instructions": 421175671.0,
+        "branches": 83534652.0,
+        "branch-misses": 4646610.0,
+        "cache-references": 167331695.0,
+        "cache-misses": 2734478.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5980.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4319524610015801,
+        "cache_mpki": 6.492488024076776,
+        "branch_mpki": 11.032474855367418
+      },
+      "sample_index": 17
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 258213360,
+          "wall_ns_per_operation": 258213.36,
+          "cpu_user_us": 202239,
+          "cpu_system_us": 55327,
+          "cpu_total_us": 257566,
+          "cpu_us_per_operation": 257.566
+        },
+        "resources": {
+          "max_rss_kb": 70104,
+          "minor_page_faults_delta": 1295,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14214,
+          "involuntary_context_switches_delta": 3
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 377.82,
+        "cycles": 808843159.0,
+        "instructions": 964490539.0,
+        "branches": 197937764.0,
+        "branch-misses": 12025182.0,
+        "cache-references": 391843634.0,
+        "cache-misses": 12032199.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7244.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.1924320905333885,
+        "cache_mpki": 12.475186135547983,
+        "branch_mpki": 12.467910792020739
+      },
+      "sample_index": 18
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 256074101,
+          "wall_ns_per_operation": 256074.101,
+          "cpu_user_us": 179789,
+          "cpu_system_us": 75775,
+          "cpu_total_us": 255564,
+          "cpu_us_per_operation": 255.564
+        },
+        "resources": {
+          "max_rss_kb": 68876,
+          "minor_page_faults_delta": 1217,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14216,
+          "involuntary_context_switches_delta": 7
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 376.4,
+        "cycles": 806646103.0,
+        "instructions": 967458145.0,
+        "branches": 198564366.0,
+        "branch-misses": 12131992.0,
+        "cache-references": 391961534.0,
+        "cache-misses": 11912892.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7237.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.1993588531599215,
+        "cache_mpki": 12.313599365066073,
+        "branch_mpki": 12.540069110690055
+      },
+      "sample_index": 19
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 32996651,
+          "wall_ns_per_operation": 329966.51,
+          "cpu_user_us": 21632,
+          "cpu_system_us": 11362,
+          "cpu_total_us": 32994,
+          "cpu_us_per_operation": 329.94
+        },
+        "resources": {
+          "max_rss_kb": 67988,
+          "minor_page_faults_delta": 540,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1446,
+          "involuntary_context_switches_delta": 2
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 152.75,
+        "cycles": 357895818.0,
+        "instructions": 484219784.0,
+        "branches": 96974394.0,
+        "branch-misses": 5540915.0,
+        "cache-references": 195109384.0,
+        "cache-misses": 3873440.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6750.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3529629563874925,
+        "cache_mpki": 7.999342711697216,
+        "branch_mpki": 11.442975242002918
+      },
+      "sample_index": 20
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 32536465,
+          "wall_ns_per_operation": 325364.65,
+          "cpu_user_us": 24442,
+          "cpu_system_us": 8123,
+          "cpu_total_us": 32565,
+          "cpu_us_per_operation": 325.65
+        },
+        "resources": {
+          "max_rss_kb": 66796,
+          "minor_page_faults_delta": 533,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1446,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 151.79,
+        "cycles": 355451672.0,
+        "instructions": 484993117.0,
+        "branches": 97129288.0,
+        "branch-misses": 5565024.0,
+        "cache-references": 195364305.0,
+        "cache-misses": 3873481.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6764.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3644417939325377,
+        "cache_mpki": 7.986672107761068,
+        "branch_mpki": 11.474439131060905
+      },
+      "sample_index": 21
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1206442643,
+          "wall_ns_per_operation": 1206442.643,
+          "cpu_user_us": 422930,
+          "cpu_system_us": 425425,
+          "cpu_total_us": 848355,
+          "cpu_us_per_operation": 848.355
+        },
+        "resources": {
+          "max_rss_kb": 70028,
+          "minor_page_faults_delta": 1669,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 46460,
+          "involuntary_context_switches_delta": 30
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1000.46,
+        "cycles": 1609302486.0,
+        "instructions": 1575590626.0,
+        "branches": 326769769.0,
+        "branch-misses": 22842941.0,
+        "cache-references": 660498104.0,
+        "cache-misses": 25092101.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7942.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 0.9790518809898862,
+        "cache_mpki": 15.925520618069479,
+        "branch_mpki": 14.498017837280532
+      },
+      "sample_index": 22
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1307922630,
+          "wall_ns_per_operation": 1307922.63,
+          "cpu_user_us": 500084,
+          "cpu_system_us": 449788,
+          "cpu_total_us": 949872,
+          "cpu_us_per_operation": 949.872
+        },
+        "resources": {
+          "max_rss_kb": 70044,
+          "minor_page_faults_delta": 1757,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 48502,
+          "involuntary_context_switches_delta": 29
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1106.93,
+        "cycles": 1825432732.0,
+        "instructions": 1828934839.0,
+        "branches": 380067316.0,
+        "branch-misses": 25693652.0,
+        "cache-references": 759937000.0,
+        "cache-misses": 28139886.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7796.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.0019185078357629,
+        "cache_mpki": 15.385942352864765,
+        "branch_mpki": 14.048423952626122
+      },
+      "sample_index": 23
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 1807585,
+          "wall_ns_per_operation": 1807585,
+          "cpu_user_us": 1431,
+          "cpu_system_us": 477,
+          "cpu_total_us": 1908,
+          "cpu_us_per_operation": 1908
+        },
+        "resources": {
+          "max_rss_kb": 65032,
+          "minor_page_faults_delta": 21,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.5,
+        "cycles": 296619358.0,
+        "instructions": 419710887.0,
+        "branches": 83178100.0,
+        "branch-misses": 4615311.0,
+        "cache-references": 166990363.0,
+        "cache-misses": 2704053.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6175.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4149814423103162,
+        "cache_mpki": 6.442656323089374,
+        "branch_mpki": 10.996405246928942
+      },
+      "sample_index": 24
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 18441032,
+          "wall_ns_per_operation": 1844103.2,
+          "cpu_user_us": 7531,
+          "cpu_system_us": 7868,
+          "cpu_total_us": 15399,
+          "cpu_us_per_operation": 1539.9
+        },
+        "resources": {
+          "max_rss_kb": 64644,
+          "minor_page_faults_delta": 83,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 487,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 135.79,
+        "cycles": 320342533.0,
+        "instructions": 447150281.0,
+        "branches": 88725969.0,
+        "branch-misses": 5095666.0,
+        "cache-references": 177979390.0,
+        "cache-misses": 3054812.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6178.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3958504879525317,
+        "cache_mpki": 6.83173449688607,
+        "branch_mpki": 11.395868942772731
+      },
+      "sample_index": 25
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 20833835,
+          "wall_ns_per_operation": 2083383.5,
+          "cpu_user_us": 13500,
+          "cpu_system_us": 4446,
+          "cpu_total_us": 17946,
+          "cpu_us_per_operation": 1794.6
+        },
+        "resources": {
+          "max_rss_kb": 66836,
+          "minor_page_faults_delta": 149,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 512,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 136.91,
+        "cycles": 321856379.0,
+        "instructions": 449830930.0,
+        "branches": 89235770.0,
+        "branch-misses": 5018940.0,
+        "cache-references": 181076452.0,
+        "cache-misses": 3122730.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6368.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3976138406751912,
+        "cache_mpki": 6.942008189610261,
+        "branch_mpki": 11.157391956128938
+      },
+      "sample_index": 26
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 1829215,
+          "wall_ns_per_operation": 1829215,
+          "cpu_user_us": 1654,
+          "cpu_system_us": 276,
+          "cpu_total_us": 1930,
+          "cpu_us_per_operation": 1930
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 24,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 120.04,
+        "cycles": 289529801.0,
+        "instructions": 416637646.0,
+        "branches": 82524883.0,
+        "branch-misses": 4478401.0,
+        "cache-references": 166943841.0,
+        "cache-misses": 2734218.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6169.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4390147216659055,
+        "cache_mpki": 6.562580281091546,
+        "branch_mpki": 10.74891105735558
+      },
+      "sample_index": 27
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 5942771,
+          "wall_ns_per_operation": 594277.1,
+          "cpu_user_us": 6014,
+          "cpu_system_us": 2,
+          "cpu_total_us": 6016,
+          "cpu_us_per_operation": 601.6
+        },
+        "resources": {
+          "max_rss_kb": 64596,
+          "minor_page_faults_delta": 42,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.58,
+        "cycles": 295388785.0,
+        "instructions": 424607532.0,
+        "branches": 84100652.0,
+        "branch-misses": 4553603.0,
+        "cache-references": 171039293.0,
+        "cache-misses": 2812257.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6069.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4374531247014,
+        "cache_mpki": 6.623191507587294,
+        "branch_mpki": 10.724263365163292
+      },
+      "sample_index": 28
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 32519144,
+          "wall_ns_per_operation": 325191.44,
+          "cpu_user_us": 24465,
+          "cpu_system_us": 8071,
+          "cpu_total_us": 32536,
+          "cpu_us_per_operation": 325.36
+        },
+        "resources": {
+          "max_rss_kb": 66856,
+          "minor_page_faults_delta": 552,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1444,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 151.18,
+        "cycles": 354114832.0,
+        "instructions": 482517652.0,
+        "branches": 96571125.0,
+        "branch-misses": 5491275.0,
+        "cache-references": 194954822.0,
+        "cache-misses": 3856060.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6679.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.362602208088251,
+        "cache_mpki": 7.991541830681046,
+        "branch_mpki": 11.380464480913954
+      },
+      "sample_index": 29
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 2229650,
+          "wall_ns_per_operation": 2229650,
+          "cpu_user_us": 2323,
+          "cpu_system_us": 2,
+          "cpu_total_us": 2325,
+          "cpu_us_per_operation": 2325
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 13,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 118.79,
+        "cycles": 286216799.0,
+        "instructions": 415185412.0,
+        "branches": 82128426.0,
+        "branch-misses": 4395382.0,
+        "cache-references": 167033859.0,
+        "cache-misses": 2707293.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5968.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4505976359549742,
+        "cache_mpki": 6.520684305738565,
+        "branch_mpki": 10.586552111325144
+      },
+      "sample_index": 30
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 258230000,
+          "wall_ns_per_operation": 258230,
+          "cpu_user_us": 177450,
+          "cpu_system_us": 80132,
+          "cpu_total_us": 257582,
+          "cpu_us_per_operation": 257.582
+        },
+        "resources": {
+          "max_rss_kb": 70540,
+          "minor_page_faults_delta": 1356,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14214,
+          "involuntary_context_switches_delta": 4
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 377.07,
+        "cycles": 808382195.0,
+        "instructions": 970164145.0,
+        "branches": 199177034.0,
+        "branch-misses": 12092944.0,
+        "cache-references": 393520862.0,
+        "cache-misses": 12044082.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7450.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.200130521182496,
+        "cache_mpki": 12.414478582900012,
+        "branch_mpki": 12.464843255983245
+      },
+      "sample_index": 31
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 6009222,
+          "wall_ns_per_operation": 600922.2,
+          "cpu_user_us": 1710,
+          "cpu_system_us": 4367,
+          "cpu_total_us": 6077,
+          "cpu_us_per_operation": 607.7
+        },
+        "resources": {
+          "max_rss_kb": 64824,
+          "minor_page_faults_delta": 27,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 124.09,
+        "cycles": 298303696.0,
+        "instructions": 426390231.0,
+        "branches": 84473165.0,
+        "branch-misses": 4633060.0,
+        "cache-references": 170748795.0,
+        "cache-misses": 2820828.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6183.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4293829969843888,
+        "cache_mpki": 6.615601847594862,
+        "branch_mpki": 10.865774267703614
+      },
+      "sample_index": 32
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 21061728,
+          "wall_ns_per_operation": 2106172.8,
+          "cpu_user_us": 8373,
+          "cpu_system_us": 9724,
+          "cpu_total_us": 18097,
+          "cpu_us_per_operation": 1809.7
+        },
+        "resources": {
+          "max_rss_kb": 64804,
+          "minor_page_faults_delta": 145,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 512,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 138.27,
+        "cycles": 326659850.0,
+        "instructions": 451857611.0,
+        "branches": 89732436.0,
+        "branch-misses": 5068343.0,
+        "cache-references": 181514620.0,
+        "cache-misses": 3150098.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6318.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3832664497947942,
+        "cache_mpki": 6.97143950508781,
+        "branch_mpki": 11.216681708167576
+      },
+      "sample_index": 33
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 33217474,
+          "wall_ns_per_operation": 332174.74,
+          "cpu_user_us": 25565,
+          "cpu_system_us": 7650,
+          "cpu_total_us": 33215,
+          "cpu_us_per_operation": 332.15
+        },
+        "resources": {
+          "max_rss_kb": 66604,
+          "minor_page_faults_delta": 538,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1442,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 153.29,
+        "cycles": 358545486.0,
+        "instructions": 485658047.0,
+        "branches": 97260185.0,
+        "branch-misses": 5600822.0,
+        "cache-references": 194839056.0,
+        "cache-misses": 3867508.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6573.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3545228317279665,
+        "cache_mpki": 7.963438522001881,
+        "branch_mpki": 11.532439407927694
+      },
+      "sample_index": 34
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 35293022,
+          "wall_ns_per_operation": 352930.22,
+          "cpu_user_us": 23463,
+          "cpu_system_us": 11737,
+          "cpu_total_us": 35200,
+          "cpu_us_per_operation": 352
+        },
+        "resources": {
+          "max_rss_kb": 66856,
+          "minor_page_faults_delta": 549,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1443,
+          "involuntary_context_switches_delta": 2
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 156.5,
+        "cycles": 362279509.0,
+        "instructions": 482227565.0,
+        "branches": 96515391.0,
+        "branch-misses": 5484610.0,
+        "cache-references": 193977527.0,
+        "cache-misses": 3853154.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6603.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3310925763676025,
+        "cache_mpki": 7.990322992008969,
+        "branch_mpki": 11.373489194878355
+      },
+      "sample_index": 35
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 23117716,
+          "wall_ns_per_operation": 2311771.6,
+          "cpu_user_us": 12985,
+          "cpu_system_us": 4059,
+          "cpu_total_us": 17044,
+          "cpu_us_per_operation": 1704.4
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 98,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 485,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 140.34,
+        "cycles": 322340152.0,
+        "instructions": 441178656.0,
+        "branches": 87404482.0,
+        "branch-misses": 4794877.0,
+        "cache-references": 177700936.0,
+        "cache-misses": 3061169.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6143.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3686742196485655,
+        "cache_mpki": 6.938615362208275,
+        "branch_mpki": 10.868334029287219
+      },
+      "sample_index": 36
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 194578511,
+          "wall_ns_per_operation": 1945785.11,
+          "cpu_user_us": 67725,
+          "cpu_system_us": 61311,
+          "cpu_total_us": 129036,
+          "cpu_us_per_operation": 1290.36
+        },
+        "resources": {
+          "max_rss_kb": 69032,
+          "minor_page_faults_delta": 1079,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4910,
+          "involuntary_context_switches_delta": 3
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 258.94,
+        "cycles": 506094625.0,
+        "instructions": 604297375.0,
+        "branches": 122231020.0,
+        "branch-misses": 7511605.0,
+        "cache-references": 245908849.0,
+        "cache-misses": 5894001.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7171.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.1940402943421895,
+        "cache_mpki": 9.753477747607294,
+        "branch_mpki": 12.430312145572369
+      },
+      "sample_index": 37
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 183949465,
+          "wall_ns_per_operation": 1839494.65,
+          "cpu_user_us": 78199,
+          "cpu_system_us": 37358,
+          "cpu_total_us": 115557,
+          "cpu_us_per_operation": 1155.57
+        },
+        "resources": {
+          "max_rss_kb": 66828,
+          "minor_page_faults_delta": 1095,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4691,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 244.02,
+        "cycles": 476094103.0,
+        "instructions": 575735702.0,
+        "branches": 116239181.0,
+        "branch-misses": 7163835.0,
+        "cache-references": 233383723.0,
+        "cache-misses": 5506738.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7040.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2092897147268384,
+        "cache_mpki": 9.564697796003625,
+        "branch_mpki": 12.442922985519491
+      },
+      "sample_index": 38
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 262236095,
+          "wall_ns_per_operation": 262236.095,
+          "cpu_user_us": 197808,
+          "cpu_system_us": 63323,
+          "cpu_total_us": 261131,
+          "cpu_us_per_operation": 261.131
+        },
+        "resources": {
+          "max_rss_kb": 68812,
+          "minor_page_faults_delta": 1289,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14217,
+          "involuntary_context_switches_delta": 4
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 386.77,
+        "cycles": 826006004.0,
+        "instructions": 969457171.0,
+        "branches": 198967204.0,
+        "branch-misses": 11992574.0,
+        "cache-references": 391994804.0,
+        "cache-misses": 12100661.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7323.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.173668431349562,
+        "cache_mpki": 12.481893333687044,
+        "branch_mpki": 12.370401043740385
+      },
+      "sample_index": 39
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4356649,
+          "wall_ns_per_operation": 4356649,
+          "cpu_user_us": 4028,
+          "cpu_system_us": 2,
+          "cpu_total_us": 4030,
+          "cpu_us_per_operation": 4030
+        },
+        "resources": {
+          "max_rss_kb": 64744,
+          "minor_page_faults_delta": 21,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 50,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 120.74,
+        "cycles": 289832100.0,
+        "instructions": 420234822.0,
+        "branches": 83176080.0,
+        "branch-misses": 4441057.0,
+        "cache-references": 169642726.0,
+        "cache-misses": 2777692.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6229.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4499250497098148,
+        "cache_mpki": 6.609856810009904,
+        "branch_mpki": 10.568036648804892
+      },
+      "sample_index": 40
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4728845,
+          "wall_ns_per_operation": 4728845,
+          "cpu_user_us": 376,
+          "cpu_system_us": 4033,
+          "cpu_total_us": 4409,
+          "cpu_us_per_operation": 4409
+        },
+        "resources": {
+          "max_rss_kb": 64636,
+          "minor_page_faults_delta": 20,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 52,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 120.28,
+        "cycles": 289788994.0,
+        "instructions": 419397300.0,
+        "branches": 82990155.0,
+        "branch-misses": 4427840.0,
+        "cache-references": 169683689.0,
+        "cache-misses": 2784042.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6033.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4472506157359448,
+        "cache_mpki": 6.638197241613144,
+        "branch_mpki": 10.557626384337714
+      },
+      "sample_index": 41
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1293318290,
+          "wall_ns_per_operation": 1293318.29,
+          "cpu_user_us": 544045,
+          "cpu_system_us": 386636,
+          "cpu_total_us": 930681,
+          "cpu_us_per_operation": 930.681
+        },
+        "resources": {
+          "max_rss_kb": 70968,
+          "minor_page_faults_delta": 1717,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 48509,
+          "involuntary_context_switches_delta": 34
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1085.94,
+        "cycles": 1782647079.0,
+        "instructions": 1831516267.0,
+        "branches": 380547383.0,
+        "branch-misses": 25601062.0,
+        "cache-references": 757967056.0,
+        "cache-misses": 27718814.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7807.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.027413832258606,
+        "cache_mpki": 15.134353158327695,
+        "branch_mpki": 13.978069679902003
+      },
+      "sample_index": 42
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1292685092,
+          "wall_ns_per_operation": 1292685.092,
+          "cpu_user_us": 520606,
+          "cpu_system_us": 418815,
+          "cpu_total_us": 939421,
+          "cpu_us_per_operation": 939.421
+        },
+        "resources": {
+          "max_rss_kb": 70956,
+          "minor_page_faults_delta": 1670,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 48490,
+          "involuntary_context_switches_delta": 33
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1093.57,
+        "cycles": 1801471720.0,
+        "instructions": 1823935767.0,
+        "branches": 378973865.0,
+        "branch-misses": 25560861.0,
+        "cache-references": 758644275.0,
+        "cache-misses": 28508668.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7692.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.0124698305005866,
+        "cache_mpki": 15.63030262128743,
+        "branch_mpki": 14.014123448021621
+      },
+      "sample_index": 43
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 256337004,
+          "wall_ns_per_operation": 256337.004,
+          "cpu_user_us": 171891,
+          "cpu_system_us": 83885,
+          "cpu_total_us": 255776,
+          "cpu_us_per_operation": 255.776
+        },
+        "resources": {
+          "max_rss_kb": 68880,
+          "minor_page_faults_delta": 1212,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14214,
+          "involuntary_context_switches_delta": 4
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 373.32,
+        "cycles": 798407713.0,
+        "instructions": 960795524.0,
+        "branches": 197140928.0,
+        "branch-misses": 11907238.0,
+        "cache-references": 391681574.0,
+        "cache-misses": 11895395.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7262.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2033895819841611,
+        "cache_mpki": 12.380776869647448,
+        "branch_mpki": 12.39310311358195
+      },
+      "sample_index": 44
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 252422391,
+          "wall_ns_per_operation": 252422.391,
+          "cpu_user_us": 187887,
+          "cpu_system_us": 64037,
+          "cpu_total_us": 251924,
+          "cpu_us_per_operation": 251.924
+        },
+        "resources": {
+          "max_rss_kb": 68832,
+          "minor_page_faults_delta": 1180,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14217,
+          "involuntary_context_switches_delta": 5
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 369.93,
+        "cycles": 792269391.0,
+        "instructions": 960104899.0,
+        "branches": 196957232.0,
+        "branch-misses": 11868609.0,
+        "cache-references": 391578764.0,
+        "cache-misses": 11776179.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7131.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2118414644142173,
+        "cache_mpki": 12.265512874963468,
+        "branch_mpki": 12.3617836054808
+      },
+      "sample_index": 45
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 18473032,
+          "wall_ns_per_operation": 1847303.2,
+          "cpu_user_us": 14808,
+          "cpu_system_us": 785,
+          "cpu_total_us": 15593,
+          "cpu_us_per_operation": 1559.3
+        },
+        "resources": {
+          "max_rss_kb": 65032,
+          "minor_page_faults_delta": 88,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 485,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 133.63,
+        "cycles": 315175970.0,
+        "instructions": 442710251.0,
+        "branches": 87749369.0,
+        "branch-misses": 4868583.0,
+        "cache-references": 178444278.0,
+        "cache-misses": 3071186.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6180.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4046446846820206,
+        "cache_mpki": 6.937237150173873,
+        "branch_mpki": 10.997222198950166
+      },
+      "sample_index": 46
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4785056,
+          "wall_ns_per_operation": 4785056,
+          "cpu_user_us": 4499,
+          "cpu_system_us": 1,
+          "cpu_total_us": 4500,
+          "cpu_us_per_operation": 4500
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 26,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 50,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.14,
+        "cycles": 294852503.0,
+        "instructions": 421174461.0,
+        "branches": 83329971.0,
+        "branch-misses": 4535042.0,
+        "cache-references": 169307798.0,
+        "cache-misses": 2785619.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6011.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.428424234879227,
+        "cache_mpki": 6.6139314178406465,
+        "branch_mpki": 10.767609197462711
+      },
+      "sample_index": 47
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 32927940,
+          "wall_ns_per_operation": 329279.4,
+          "cpu_user_us": 24712,
+          "cpu_system_us": 8219,
+          "cpu_total_us": 32931,
+          "cpu_us_per_operation": 329.31
+        },
+        "resources": {
+          "max_rss_kb": 66816,
+          "minor_page_faults_delta": 527,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1441,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 149.56,
+        "cycles": 351317610.0,
+        "instructions": 480584020.0,
+        "branches": 96093930.0,
+        "branch-misses": 5382956.0,
+        "cache-references": 194836635.0,
+        "cache-misses": 3833359.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6472.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3679474251233805,
+        "cache_mpki": 7.9764595585179885,
+        "branch_mpki": 11.200863482726705
+      },
+      "sample_index": 48
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 2330242,
+          "wall_ns_per_operation": 2330242,
+          "cpu_user_us": 2420,
+          "cpu_system_us": 2,
+          "cpu_total_us": 2422,
+          "cpu_us_per_operation": 2422
+        },
+        "resources": {
+          "max_rss_kb": 65096,
+          "minor_page_faults_delta": 19,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 118.8,
+        "cycles": 287354217.0,
+        "instructions": 415202354.0,
+        "branches": 82124382.0,
+        "branch-misses": 4433488.0,
+        "cache-references": 166940477.0,
+        "cache-misses": 2714684.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6049.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4449147756895455,
+        "cache_mpki": 6.53821919323704,
+        "branch_mpki": 10.6778970718456
+      },
+      "sample_index": 49
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 2116649,
+          "wall_ns_per_operation": 2116649,
+          "cpu_user_us": 2144,
+          "cpu_system_us": 77,
+          "cpu_total_us": 2221,
+          "cpu_us_per_operation": 2221
+        },
+        "resources": {
+          "max_rss_kb": 64780,
+          "minor_page_faults_delta": 13,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 125.93,
+        "cycles": 307307803.0,
+        "instructions": 431910864.0,
+        "branches": 85907022.0,
+        "branch-misses": 5061292.0,
+        "cache-references": 167144033.0,
+        "cache-misses": 2747449.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6207.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4054666356779753,
+        "cache_mpki": 6.36114816505287,
+        "branch_mpki": 11.718371594376011
+      },
+      "sample_index": 50
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1216190566,
+          "wall_ns_per_operation": 1216190.566,
+          "cpu_user_us": 447422,
+          "cpu_system_us": 400405,
+          "cpu_total_us": 847827,
+          "cpu_us_per_operation": 847.827
+        },
+        "resources": {
+          "max_rss_kb": 70924,
+          "minor_page_faults_delta": 1531,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 46460,
+          "involuntary_context_switches_delta": 26
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1001.1,
+        "cycles": 1603842154.0,
+        "instructions": 1576828812.0,
+        "branches": 327004364.0,
+        "branch-misses": 22912722.0,
+        "cache-references": 659527528.0,
+        "cache-misses": 24559898.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7652.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 0.9831571068682611,
+        "cache_mpki": 15.575500531886528,
+        "branch_mpki": 14.530887453114346
+      },
+      "sample_index": 51
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 1980677,
+          "wall_ns_per_operation": 1980677,
+          "cpu_user_us": 2094,
+          "cpu_system_us": 0,
+          "cpu_total_us": 2094,
+          "cpu_us_per_operation": 2094
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 11,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 120.6,
+        "cycles": 291478593.0,
+        "instructions": 418030294.0,
+        "branches": 82766882.0,
+        "branch-misses": 4514423.0,
+        "cache-references": 166983161.0,
+        "cache-misses": 2764613.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5927.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4341715104957982,
+        "cache_mpki": 6.613427399115721,
+        "branch_mpki": 10.79927236086866
+      },
+      "sample_index": 52
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 139232603,
+          "wall_ns_per_operation": 1392326.03,
+          "cpu_user_us": 49774,
+          "cpu_system_us": 53434,
+          "cpu_total_us": 103208,
+          "cpu_us_per_operation": 1032.08
+        },
+        "resources": {
+          "max_rss_kb": 68520,
+          "minor_page_faults_delta": 1109,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4689,
+          "involuntary_context_switches_delta": 2
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 223.81,
+        "cycles": 456249033.0,
+        "instructions": 571376262.0,
+        "branches": 115322099.0,
+        "branch-misses": 7052112.0,
+        "cache-references": 234487659.0,
+        "cache-misses": 5485808.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7332.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2523341874129517,
+        "cache_mpki": 9.601042893868069,
+        "branch_mpki": 12.342325835020427
+      },
+      "sample_index": 53
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 33328516,
+          "wall_ns_per_operation": 333285.16,
+          "cpu_user_us": 17992,
+          "cpu_system_us": 15326,
+          "cpu_total_us": 33318,
+          "cpu_us_per_operation": 333.18
+        },
+        "resources": {
+          "max_rss_kb": 66688,
+          "minor_page_faults_delta": 541,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1446,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 153.39,
+        "cycles": 359352692.0,
+        "instructions": 484504123.0,
+        "branches": 97048562.0,
+        "branch-misses": 5548800.0,
+        "cache-references": 194738509.0,
+        "cache-misses": 3853232.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6549.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3482690787801306,
+        "cache_mpki": 7.952939545986071,
+        "branch_mpki": 11.4525341201276
+      },
+      "sample_index": 54
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 255759527,
+          "wall_ns_per_operation": 255759.527,
+          "cpu_user_us": 171460,
+          "cpu_system_us": 83585,
+          "cpu_total_us": 255045,
+          "cpu_us_per_operation": 255.045
+        },
+        "resources": {
+          "max_rss_kb": 68632,
+          "minor_page_faults_delta": 1338,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14217,
+          "involuntary_context_switches_delta": 7
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 375.73,
+        "cycles": 808508820.0,
+        "instructions": 971763167.0,
+        "branches": 199474531.0,
+        "branch-misses": 12140637.0,
+        "cache-references": 393996108.0,
+        "cache-misses": 12121029.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7239.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.201920304344979,
+        "cache_mpki": 12.473233614543862,
+        "branch_mpki": 12.493411370468213
+      },
+      "sample_index": 55
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 152128010,
+          "wall_ns_per_operation": 1521280.1,
+          "cpu_user_us": 73651,
+          "cpu_system_us": 42844,
+          "cpu_total_us": 116495,
+          "cpu_us_per_operation": 1164.95
+        },
+        "resources": {
+          "max_rss_kb": 69112,
+          "minor_page_faults_delta": 1188,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4906,
+          "involuntary_context_switches_delta": 2
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 241.41,
+        "cycles": 498321909.0,
+        "instructions": 608230238.0,
+        "branches": 123141757.0,
+        "branch-misses": 7817167.0,
+        "cache-references": 247497984.0,
+        "cache-misses": 5926822.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7154.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2205568870543078,
+        "cache_mpki": 9.744372492049632,
+        "branch_mpki": 12.852315639065612
+      },
+      "sample_index": 56
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 5115090,
+          "wall_ns_per_operation": 5115090,
+          "cpu_user_us": 1305,
+          "cpu_system_us": 3439,
+          "cpu_total_us": 4744,
+          "cpu_us_per_operation": 4744
+        },
+        "resources": {
+          "max_rss_kb": 64616,
+          "minor_page_faults_delta": 26,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 52,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 124.09,
+        "cycles": 300476072.0,
+        "instructions": 424001111.0,
+        "branches": 83940302.0,
+        "branch-misses": 4658433.0,
+        "cache-references": 169178524.0,
+        "cache-misses": 2762486.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6002.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.411097756229987,
+        "cache_mpki": 6.515280097933517,
+        "branch_mpki": 10.98684149438467
+      },
+      "sample_index": 57
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4372500,
+          "wall_ns_per_operation": 4372500,
+          "cpu_user_us": 4031,
+          "cpu_system_us": 1,
+          "cpu_total_us": 4032,
+          "cpu_us_per_operation": 4032
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 22,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 50,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 120.21,
+        "cycles": 290649931.0,
+        "instructions": 418820716.0,
+        "branches": 82797390.0,
+        "branch-misses": 4450793.0,
+        "cache-references": 168820413.0,
+        "cache-misses": 2744994.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5846.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.440979925778823,
+        "cache_mpki": 6.554102734497976,
+        "branch_mpki": 10.626964784616815
+      },
+      "sample_index": 58
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 32075309,
+          "wall_ns_per_operation": 320753.09,
+          "cpu_user_us": 24136,
+          "cpu_system_us": 7974,
+          "cpu_total_us": 32110,
+          "cpu_us_per_operation": 321.1
+        },
+        "resources": {
+          "max_rss_kb": 66820,
+          "minor_page_faults_delta": 535,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1443,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 151.86,
+        "cycles": 357756585.0,
+        "instructions": 485253625.0,
+        "branches": 97168046.0,
+        "branch-misses": 5584206.0,
+        "cache-references": 194759319.0,
+        "cache-misses": 3881078.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6495.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.356379296274868,
+        "cache_mpki": 7.9980402001118485,
+        "branch_mpki": 11.507808931875573
+      },
+      "sample_index": 59
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 152576506,
+          "wall_ns_per_operation": 1525765.06,
+          "cpu_user_us": 61562,
+          "cpu_system_us": 54962,
+          "cpu_total_us": 116524,
+          "cpu_us_per_operation": 1165.24
+        },
+        "resources": {
+          "max_rss_kb": 68644,
+          "minor_page_faults_delta": 1039,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4908,
+          "involuntary_context_switches_delta": 4
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 240.15,
+        "cycles": 493990774.0,
+        "instructions": 608196821.0,
+        "branches": 123268907.0,
+        "branch-misses": 7687703.0,
+        "cache-references": 247940913.0,
+        "cache-misses": 5895872.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7225.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2311906477022585,
+        "cache_mpki": 9.694019758778056,
+        "branch_mpki": 12.640156499601302
+      },
+      "sample_index": 60
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 2141039,
+          "wall_ns_per_operation": 2141039,
+          "cpu_user_us": 1841,
+          "cpu_system_us": 400,
+          "cpu_total_us": 2241,
+          "cpu_us_per_operation": 2241
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 17,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 118.64,
+        "cycles": 285400088.0,
+        "instructions": 413130664.0,
+        "branches": 81675995.0,
+        "branch-misses": 4358804.0,
+        "cache-references": 166413433.0,
+        "cache-misses": 2691918.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6113.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4475491822553328,
+        "cache_mpki": 6.515899773539927,
+        "branch_mpki": 10.550666846651694
+      },
+      "sample_index": 61
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 6179484,
+          "wall_ns_per_operation": 617948.4,
+          "cpu_user_us": 2617,
+          "cpu_system_us": 3620,
+          "cpu_total_us": 6237,
+          "cpu_us_per_operation": 623.7
+        },
+        "resources": {
+          "max_rss_kb": 64780,
+          "minor_page_faults_delta": 29,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 2
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.38,
+        "cycles": 294611309.0,
+        "instructions": 426109190.0,
+        "branches": 84435779.0,
+        "branch-misses": 4556003.0,
+        "cache-references": 171013918.0,
+        "cache-misses": 2836721.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5953.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4463436296669794,
+        "cache_mpki": 6.657263130138076,
+        "branch_mpki": 10.692102181602795
+      },
+      "sample_index": 62
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 139788271,
+          "wall_ns_per_operation": 1397882.71,
+          "cpu_user_us": 42681,
+          "cpu_system_us": 60569,
+          "cpu_total_us": 103250,
+          "cpu_us_per_operation": 1032.5
+        },
+        "resources": {
+          "max_rss_kb": 68460,
+          "minor_page_faults_delta": 937,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4692,
+          "involuntary_context_switches_delta": 3
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 225.88,
+        "cycles": 462174433.0,
+        "instructions": 574862621.0,
+        "branches": 116122786.0,
+        "branch-misses": 7204748.0,
+        "cache-references": 234767534.0,
+        "cache-misses": 5576266.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7048.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2438217693448221,
+        "cache_mpki": 9.700171478013004,
+        "branch_mpki": 12.532990903925898
+      },
+      "sample_index": 63
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 4642734,
+          "wall_ns_per_operation": 4642734,
+          "cpu_user_us": 4305,
+          "cpu_system_us": 8,
+          "cpu_total_us": 4313,
+          "cpu_us_per_operation": 4313
+        },
+        "resources": {
+          "max_rss_kb": 64540,
+          "minor_page_faults_delta": 30,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 50,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 121.84,
+        "cycles": 293675123.0,
+        "instructions": 421337612.0,
+        "branches": 83412348.0,
+        "branch-misses": 4577593.0,
+        "cache-references": 168880508.0,
+        "cache-misses": 2779625.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6080.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4347065141094706,
+        "cache_mpki": 6.59714423975992,
+        "branch_mpki": 10.864430019126798
+      },
+      "sample_index": 64
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 21089068,
+          "wall_ns_per_operation": 2108906.8,
+          "cpu_user_us": 14445,
+          "cpu_system_us": 3717,
+          "cpu_total_us": 18162,
+          "cpu_us_per_operation": 1816.2
+        },
+        "resources": {
+          "max_rss_kb": 64716,
+          "minor_page_faults_delta": 146,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 514,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 136.51,
+        "cycles": 321235724.0,
+        "instructions": 449099636.0,
+        "branches": 89100406.0,
+        "branch-misses": 4955176.0,
+        "cache-references": 181684495.0,
+        "cache-misses": 3141612.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6225.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3980376478924865,
+        "cache_mpki": 6.99535637120846,
+        "branch_mpki": 11.033578303768655
+      },
+      "sample_index": 65
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 18654305,
+          "wall_ns_per_operation": 1865430.5,
+          "cpu_user_us": 15491,
+          "cpu_system_us": 387,
+          "cpu_total_us": 15878,
+          "cpu_us_per_operation": 1587.8
+        },
+        "resources": {
+          "max_rss_kb": 66476,
+          "minor_page_faults_delta": 93,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 483,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 133.76,
+        "cycles": 314803527.0,
+        "instructions": 441416698.0,
+        "branches": 87442804.0,
+        "branch-misses": 4893793.0,
+        "cache-references": 177782566.0,
+        "cache-misses": 3068776.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6243.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4021974347193384,
+        "cache_mpki": 6.95210673702244,
+        "branch_mpki": 11.086560662913572
+      },
+      "sample_index": 66
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1203362551,
+          "wall_ns_per_operation": 1203362.551,
+          "cpu_user_us": 471321,
+          "cpu_system_us": 367798,
+          "cpu_total_us": 839119,
+          "cpu_us_per_operation": 839.119
+        },
+        "resources": {
+          "max_rss_kb": 68876,
+          "minor_page_faults_delta": 1581,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 46449,
+          "involuntary_context_switches_delta": 32
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 991.16,
+        "cycles": 1586545281.0,
+        "instructions": 1575805763.0,
+        "branches": 326695253.0,
+        "branch-misses": 22817037.0,
+        "cache-references": 658885026.0,
+        "cache-misses": 25027879.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7594.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 0.9932308783565063,
+        "cache_mpki": 15.882591362245197,
+        "branch_mpki": 14.479599920082283
+      },
+      "sample_index": 67
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 151943147,
+          "wall_ns_per_operation": 1519431.47,
+          "cpu_user_us": 75828,
+          "cpu_system_us": 39591,
+          "cpu_total_us": 115419,
+          "cpu_us_per_operation": 1154.19
+        },
+        "resources": {
+          "max_rss_kb": 68628,
+          "minor_page_faults_delta": 1064,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4908,
+          "involuntary_context_switches_delta": 3
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 238.44,
+        "cycles": 493015714.0,
+        "instructions": 606063745.0,
+        "branches": 122547663.0,
+        "branch-misses": 7695045.0,
+        "cache-references": 247061817.0,
+        "cache-misses": 5902333.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7132.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2292990421802255,
+        "cache_mpki": 9.738799010325225,
+        "branch_mpki": 12.69675849031359
+      },
+      "sample_index": 68
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 258119449,
+          "wall_ns_per_operation": 258119.449,
+          "cpu_user_us": 193463,
+          "cpu_system_us": 63917,
+          "cpu_total_us": 257380,
+          "cpu_us_per_operation": 257.38
+        },
+        "resources": {
+          "max_rss_kb": 68868,
+          "minor_page_faults_delta": 1214,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14212,
+          "involuntary_context_switches_delta": 5
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 376.31,
+        "cycles": 808979128.0,
+        "instructions": 968549674.0,
+        "branches": 198713721.0,
+        "branch-misses": 12042047.0,
+        "cache-references": 393951986.0,
+        "cache-misses": 12045955.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7197.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.1972492743966072,
+        "cache_mpki": 12.437106039436857,
+        "branch_mpki": 12.433071140551538
+      },
+      "sample_index": 69
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 256,
+        "timing": {
+          "wall_ns": 5121390,
+          "wall_ns_per_operation": 5121390,
+          "cpu_user_us": 733,
+          "cpu_system_us": 4067,
+          "cpu_total_us": 4800,
+          "cpu_us_per_operation": 4800
+        },
+        "resources": {
+          "max_rss_kb": 64776,
+          "minor_page_faults_delta": 23,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 52,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 122.43,
+        "cycles": 295058676.0,
+        "instructions": 421646005.0,
+        "branches": 83381408.0,
+        "branch-misses": 4557634.0,
+        "cache-references": 169314801.0,
+        "cache-misses": 2791608.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6099.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4290242561787947,
+        "cache_mpki": 6.620738645442639,
+        "branch_mpki": 10.809147830061853
+      },
+      "sample_index": 70
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 512000,
+        "timing": {
+          "wall_ns": 256791541,
+          "wall_ns_per_operation": 256791.541,
+          "cpu_user_us": 192145,
+          "cpu_system_us": 64068,
+          "cpu_total_us": 256213,
+          "cpu_us_per_operation": 256.213
+        },
+        "resources": {
+          "max_rss_kb": 68904,
+          "minor_page_faults_delta": 1284,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 14219,
+          "involuntary_context_switches_delta": 4
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 375.07,
+        "cycles": 804219588.0,
+        "instructions": 967292374.0,
+        "branches": 198526824.0,
+        "branch-misses": 11975662.0,
+        "cache-references": 393372204.0,
+        "cache-misses": 12001807.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7411.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2027714674365777,
+        "cache_mpki": 12.40763115951124,
+        "branch_mpki": 12.380602103247844
+      },
+      "sample_index": 71
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1306591192,
+          "wall_ns_per_operation": 1306591.192,
+          "cpu_user_us": 549270,
+          "cpu_system_us": 398473,
+          "cpu_total_us": 947743,
+          "cpu_us_per_operation": 947.743
+        },
+        "resources": {
+          "max_rss_kb": 71176,
+          "minor_page_faults_delta": 1805,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 48496,
+          "involuntary_context_switches_delta": 40
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1107.75,
+        "cycles": 1832436170.0,
+        "instructions": 1833088515.0,
+        "branches": 381023006.0,
+        "branch-misses": 26034571.0,
+        "cache-references": 760229058.0,
+        "cache-misses": 28329700.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7867.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.0003559987576538,
+        "cache_mpki": 15.454627405158337,
+        "branch_mpki": 14.202571663594762
+      },
+      "sample_index": 72
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 6144044,
+          "wall_ns_per_operation": 614404.4,
+          "cpu_user_us": 5993,
+          "cpu_system_us": 241,
+          "cpu_total_us": 6234,
+          "cpu_us_per_operation": 623.4
+        },
+        "resources": {
+          "max_rss_kb": 64784,
+          "minor_page_faults_delta": 49,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 152,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 123.74,
+        "cycles": 297079996.0,
+        "instructions": 425749060.0,
+        "branches": 84273985.0,
+        "branch-misses": 4603982.0,
+        "cache-references": 170958395.0,
+        "cache-misses": 2868076.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6172.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4331125142468362,
+        "cache_mpki": 6.736541003754653,
+        "branch_mpki": 10.81383949503024
+      },
+      "sample_index": 73
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 2560,
+        "timing": {
+          "wall_ns": 20939546,
+          "wall_ns_per_operation": 2093954.6,
+          "cpu_user_us": 10582,
+          "cpu_system_us": 7561,
+          "cpu_total_us": 18143,
+          "cpu_us_per_operation": 1814.3
+        },
+        "resources": {
+          "max_rss_kb": 66832,
+          "minor_page_faults_delta": 150,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 512,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 137.04,
+        "cycles": 323834665.0,
+        "instructions": 451398011.0,
+        "branches": 89564025.0,
+        "branch-misses": 5034134.0,
+        "cache-references": 181616879.0,
+        "cache-misses": 3150419.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6292.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.393915043035927,
+        "cache_mpki": 6.979248741084949,
+        "branch_mpki": 11.152317638369034
+      },
+      "sample_index": 74
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 51200,
+        "timing": {
+          "wall_ns": 32268801,
+          "wall_ns_per_operation": 322688.01,
+          "cpu_user_us": 28332,
+          "cpu_system_us": 3963,
+          "cpu_total_us": 32295,
+          "cpu_us_per_operation": 322.95
+        },
+        "resources": {
+          "max_rss_kb": 66828,
+          "minor_page_faults_delta": 528,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 1445,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 151.25,
+        "cycles": 355131348.0,
+        "instructions": 482849132.0,
+        "branches": 96685970.0,
+        "branch-misses": 5493129.0,
+        "cache-references": 194776921.0,
+        "cache-misses": 3863753.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6486.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.3596353425831615,
+        "cache_mpki": 8.001988082687491,
+        "branch_mpki": 11.376491404772786
+      },
+      "sample_index": 75
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 100,
+        "payload_bytes": 256,
+        "checksum": 25600,
+        "timing": {
+          "wall_ns": 152869890,
+          "wall_ns_per_operation": 1528698.9,
+          "cpu_user_us": 77853,
+          "cpu_system_us": 38003,
+          "cpu_total_us": 115856,
+          "cpu_us_per_operation": 1158.56
+        },
+        "resources": {
+          "max_rss_kb": 68880,
+          "minor_page_faults_delta": 1082,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 4907,
+          "involuntary_context_switches_delta": 3
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 236.71,
+        "cycles": 488002487.0,
+        "instructions": 604936242.0,
+        "branches": 122409556.0,
+        "branch-misses": 7558328.0,
+        "cache-references": 248285447.0,
+        "cache-misses": 6039411.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6856.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.2396171292463105,
+        "cache_mpki": 9.983549638277417,
+        "branch_mpki": 12.494420858322455
+      },
+      "sample_index": 76
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "read",
+        "operations": 1,
+        "payload_bytes": 256,
+        "checksum": 512,
+        "timing": {
+          "wall_ns": 1978377,
+          "wall_ns_per_operation": 1978377,
+          "cpu_user_us": 2046,
+          "cpu_system_us": 3,
+          "cpu_total_us": 2049,
+          "cpu_us_per_operation": 2049
+        },
+        "resources": {
+          "max_rss_kb": 64716,
+          "minor_page_faults_delta": 24,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 17,
+          "involuntary_context_switches_delta": 1
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 120.68,
+        "cycles": 289522872.0,
+        "instructions": 416074606.0,
+        "branches": 82402983.0,
+        "branch-misses": 4496347.0,
+        "cache-references": 166743404.0,
+        "cache-misses": 2753140.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6160.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4371044440316274,
+        "cache_mpki": 6.616938309376179,
+        "branch_mpki": 10.806588374201333
+      },
+      "sample_index": 77
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "read",
+        "operations": 10,
+        "payload_bytes": 256,
+        "checksum": 5120,
+        "timing": {
+          "wall_ns": 5797339,
+          "wall_ns_per_operation": 579733.9,
+          "cpu_user_us": 5604,
+          "cpu_system_us": 268,
+          "cpu_total_us": 5872,
+          "cpu_us_per_operation": 587.2
+        },
+        "resources": {
+          "max_rss_kb": 64820,
+          "minor_page_faults_delta": 30,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 154,
+          "involuntary_context_switches_delta": 0
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 124.23,
+        "cycles": 298531648.0,
+        "instructions": 425375810.0,
+        "branches": 84252259.0,
+        "branch-misses": 4604626.0,
+        "cache-references": 170909014.0,
+        "cache-misses": 2859509.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6099.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.4248935174872983,
+        "cache_mpki": 6.722312206704937,
+        "branch_mpki": 10.824842155457782
+      },
+      "sample_index": 78
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "sandbox",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1313641598,
+          "wall_ns_per_operation": 1313641.598,
+          "cpu_user_us": 561382,
+          "cpu_system_us": 393081,
+          "cpu_total_us": 954463,
+          "cpu_us_per_operation": 954.463
+        },
+        "resources": {
+          "max_rss_kb": 70924,
+          "minor_page_faults_delta": 1681,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 48498,
+          "involuntary_context_switches_delta": 36
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1108.95,
+        "cycles": 1828749674.0,
+        "instructions": 1830383465.0,
+        "branches": 380299273.0,
+        "branch-misses": 25572997.0,
+        "cache-references": 759341770.0,
+        "cache-misses": 27816157.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7807.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.0008933923670518,
+        "cache_mpki": 15.196901377165796,
+        "branch_mpki": 13.971387684055593
+      },
+      "sample_index": 79
+    },
+    {
+      "fixture": {
+        "benchmark": "C6 DSH filesystem sandbox capability scaling",
+        "backend": "local",
+        "workload": "write",
+        "operations": 1000,
+        "payload_bytes": 256,
+        "checksum": 256000,
+        "timing": {
+          "wall_ns": 1210719111,
+          "wall_ns_per_operation": 1210719.111,
+          "cpu_user_us": 489275,
+          "cpu_system_us": 364506,
+          "cpu_total_us": 853781,
+          "cpu_us_per_operation": 853.781
+        },
+        "resources": {
+          "max_rss_kb": 70748,
+          "minor_page_faults_delta": 1892,
+          "major_page_faults_delta": 0,
+          "voluntary_context_switches_delta": 46447,
+          "involuntary_context_switches_delta": 41
+        },
+        "checks": {
+          "backend_identity_exact": true,
+          "checksum_exact": true,
+          "final_content_exact": true,
+          "workspace_outside_platform_tmp": true
+        }
+      },
+      "perf": {
+        "task-clock": 1008.31,
+        "cycles": 1610349387.0,
+        "instructions": 1576780966.0,
+        "branches": 326928782.0,
+        "branch-misses": 22894504.0,
+        "cache-references": 659044046.0,
+        "cache-misses": 24901193.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7814.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 0.979154572746144,
+        "cache_mpki": 15.79242363837616,
+        "branch_mpki": 14.519774460544825
+      },
+      "sample_index": 80
+    }
+  ],
+  "limitations": [
+    "fs-sandbox is a trusted canonicalize-and-contain policy fence, not a kernel security boundary.",
+    "Reads are an inherited-path negative control; only mutations add sandbox checks.",
+    "Writes use DSH atomic whole-file replacement with a fixed 256-byte payload.",
+    "W10 covers denial semantics; C6 measures allowed workspace operations only.",
+    "Whole-process perf includes Node/V8 startup, composition, workspace setup/cleanup, and teardown.",
+    "A :u event label excludes kernel execution; process.cpuUsage still includes this Node process's system CPU."
+  ]
+}
