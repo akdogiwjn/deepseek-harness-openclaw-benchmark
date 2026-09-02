@@ -359,3 +359,37 @@ scripts/cpu/run-c7.py \
   --hard-pin \
   --output results/c7-agent-scaleout-hardpin-pilot.json
 ```
+
+## C8 token-meter / context-pressure CPU scaling
+
+C8 does not measure a tokenizer. The pinned DSH `token-meter` uses a fixed
+`char/4` density heuristic until exact tokenization is needed, so C8 measures
+the context-pressure accounting path instead: how `TokenMeter.measure(session)`
+scales with the session surface. `measure()` is O(surface) — it replays the
+durable tail, reprices every node, and deep-clones the result — so the four
+subtests isolate replay, incremental sync, repeated measure, and surface shape.
+
+- `cold`: a fresh `TokenMeter` faces the complete history; the first measure
+  replays the whole tail.
+- `incremental`: an already-synced meter appends one new text turn and re-measures
+  each iteration.
+- `repeat`: the session is fixed; each measure only reprices + clones, O(surface).
+- `shape`: identical surface-node count with different content
+  (`text`, `tool-call`, `tool-result`); a large tool-schema condition is separate.
+
+Surface events use a fixed payload (default 256 B, or about 64 heuristic tokens).
+Run one subtest with `--subtest`; the internal prompt-window timing is
+construction-free, while whole-process perf still includes construction and
+teardown.
+
+```bash
+scripts/cpu/run-c8.py --subtest repeat \
+  --sizes 10,100,1000,10000 \
+  --repeats 5 --iterations 1000 \
+  --cpu 0 --output results/c8-token-meter-pilot.json
+```
+
+The value of C8 is `cycles/measure`, `instructions/measure`, IPC, and cache MPKI
+across surface sizes, which is the mechanism W5 establishes (compaction /
+context pressure) measured on the CPU and the natural basis for ARM/x86
+comparison rather than a tokenizer microbenchmark.
