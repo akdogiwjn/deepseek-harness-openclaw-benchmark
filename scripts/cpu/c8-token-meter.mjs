@@ -85,13 +85,6 @@ function timeMeasure(fn) {
   }
 }
 
-function median(values) {
-  if (values.length === 0) return 0
-  const sorted = [...values].sort((a, b) => a - b)
-  const mid = Math.floor(sorted.length / 2)
-  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid]
-}
-
 const ctx = new Context()
 await ctx.plugin(SessionStore)
 await ctx.plugin(SessionProjectionRegistry)
@@ -131,32 +124,33 @@ if (subtest === 'cold') {
   await ctx.fiber.dispose()
   writeSync(1, `${JSON.stringify(output)}\n`)
 } else if (subtest === 'incremental') {
-  // Sync once, then append one new text turn and re-measure each iteration.
+  // Sync once, then append one text turn and re-measure each iteration. Batch
+  // timing amortizes the timer over K increments; the effective surface is the
+  // midpoint of the growing N..N+K range.
   const first = meter.measure(session)
-  const wallNs = []
-  const cpuTotalUs = []
+  const beforeCpu = process.cpuUsage()
+  const started = process.hrtime.bigint()
   for (let it = 0; it < iterations; it += 1) {
     const turn = surfaceEvents + it + 1
-    const run = timeMeasure(() => {
-      appendTextTurn(session, turn)
-      return meter.measure(session)
-    })
-    wallNs.push(run.wallNs)
-    cpuTotalUs.push(run.cpuTotalUs)
+    appendTextTurn(session, turn)
+    meter.measure(session)
   }
+  const ended = process.hrtime.bigint()
+  const cpu = process.cpuUsage(beforeCpu)
   const finalMeasurement = meter.measure(session)
   const output = {
     benchmark: 'C8 token-meter context-pressure',
     subtest: 'incremental',
     surface_events: surfaceEvents,
     surface_events_final: surfaceEvents + iterations,
+    effective_surface_nodes: surfaceEvents + (iterations + 1) / 2,
     surface_nodes: finalMeasurement.nodes.length,
     surface_tokens: finalMeasurement.surfaceTokens,
     payload_bytes: payloadBytes,
     iterations,
     measure: {
-      wall_ns: median(wallNs),
-      cpu_total_us: median(cpuTotalUs),
+      wall_ns: Number(ended - started) / iterations,
+      cpu_total_us: (cpu.user + cpu.system) / iterations,
     },
     checks: {
       surface_nodes_exact: finalMeasurement.nodes.length === surfaceEvents + iterations,
@@ -167,18 +161,16 @@ if (subtest === 'cold') {
   writeSync(1, `${JSON.stringify(output)}\n`)
 } else if (subtest === 'repeat') {
   // Session fixed; measure() only reprices + clones, O(surface) per call.
+  // Batch timing so cpuUsage/hrtime are read once and amortized over iterations.
   const first = meter.measure(session)
-  const wallNs = []
-  const cpuTotalUs = []
-  const cpuUserUs = []
   let stableTokens = true
+  const beforeCpu = process.cpuUsage()
+  const started = process.hrtime.bigint()
   for (let it = 0; it < iterations; it += 1) {
-    const run = timeMeasure(() => meter.measure(session))
-    wallNs.push(run.wallNs)
-    cpuTotalUs.push(run.cpuTotalUs)
-    cpuUserUs.push(run.cpuUserUs)
-    if (run.value.surfaceTokens !== first.surfaceTokens) stableTokens = false
+    if (meter.measure(session).surfaceTokens !== first.surfaceTokens) stableTokens = false
   }
+  const ended = process.hrtime.bigint()
+  const cpu = process.cpuUsage(beforeCpu)
   const output = {
     benchmark: 'C8 token-meter context-pressure',
     subtest: 'repeat',
@@ -188,9 +180,9 @@ if (subtest === 'cold') {
     payload_bytes: payloadBytes,
     iterations,
     measure: {
-      wall_ns: median(wallNs),
-      cpu_total_us: median(cpuTotalUs),
-      cpu_user_us: median(cpuUserUs),
+      wall_ns: Number(ended - started) / iterations,
+      cpu_total_us: (cpu.user + cpu.system) / iterations,
+      cpu_user_us: cpu.user / iterations,
     },
     checks: {
       surface_nodes_exact: first.nodes.length === surfaceEvents,
@@ -218,15 +210,14 @@ if (subtest === 'cold') {
   }
   const measureFn = () => (header === undefined ? meter.measure(session) : meter.measure(session, header))
   const first = measureFn()
-  const wallNs = []
-  const cpuTotalUs = []
+  const beforeCpu = process.cpuUsage()
+  const started = process.hrtime.bigint()
   let stableTokens = true
   for (let it = 0; it < iterations; it += 1) {
-    const run = timeMeasure(measureFn)
-    wallNs.push(run.wallNs)
-    cpuTotalUs.push(run.cpuTotalUs)
-    if (run.value.surfaceTokens !== first.surfaceTokens) stableTokens = false
+    if (measureFn().surfaceTokens !== first.surfaceTokens) stableTokens = false
   }
+  const ended = process.hrtime.bigint()
+  const cpu = process.cpuUsage(beforeCpu)
   const output = {
     benchmark: 'C8 token-meter context-pressure',
     subtest: 'shape',
@@ -238,8 +229,8 @@ if (subtest === 'cold') {
     iterations,
     ...(schemaBytes !== null ? { schema_bytes: schemaBytes } : {}),
     measure: {
-      wall_ns: median(wallNs),
-      cpu_total_us: median(cpuTotalUs),
+      wall_ns: Number(ended - started) / iterations,
+      cpu_total_us: (cpu.user + cpu.system) / iterations,
     },
     checks: {
       surface_nodes_exact: first.nodes.length === (shape === 'schema' ? 32 : surfaceEvents),

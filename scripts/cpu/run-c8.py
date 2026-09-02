@@ -108,6 +108,12 @@ def numeric_path(sample: dict[str, Any], path: tuple[str, ...]) -> float | None:
     return float(value) if isinstance(value, (int, float)) and math.isfinite(value) else None
 
 
+def x_axis_of(fixture: dict[str, Any]) -> float:
+    if fixture.get("schema_bytes") is not None:
+        return float(fixture["schema_bytes"])
+    return float(fixture.get("effective_surface_nodes", fixture["surface_events"]))
+
+
 def aggregate(samples: list[dict[str, Any]], sizes: list[int]) -> tuple[dict[str, Any], dict[str, Any]]:
     paths = {
         "internal_wall_ns_per_measure": ("derived", "internal_wall_ns_per_measure"),
@@ -126,9 +132,11 @@ def aggregate(samples: list[dict[str, Any]], sizes: list[int]) -> tuple[dict[str
     }
     by_size: dict[str, Any] = {}
     medians: dict[str, list[tuple[float, float]]] = {name: [] for name in paths}
+    is_schema = bool(samples) and samples[0]["fixture"].get("schema_bytes") is not None
     for size in sizes:
         group = [sample for sample in samples if sample["fixture"]["surface_events"] == size]
         row: dict[str, Any] = {"samples": len(group)}
+        x = x_axis_of(group[0]["fixture"]) if group else float(size)
         for name, path in paths.items():
             values = [value for sample in group if (value := numeric_path(sample, path)) is not None]
             if not values:
@@ -136,9 +144,10 @@ def aggregate(samples: list[dict[str, Any]], sizes: list[int]) -> tuple[dict[str
                 continue
             median = statistics.median(values)
             row[name] = {"median": median, "min": min(values), "max": max(values)}
-            medians[name].append((float(size), median))
+            medians[name].append((x, median))
         by_size[str(size)] = row
 
+    slope_key = "per_schema_byte_slope" if is_schema else "per_surface_node_slope"
     fits: dict[str, Any] = {}
     for name, points in medians.items():
         if len(points) < 2:
@@ -151,14 +160,14 @@ def aggregate(samples: list[dict[str, Any]], sizes: list[int]) -> tuple[dict[str
         if denominator == 0:
             continue
         slope = sum((x - x_mean) * (y - y_mean) for x, y in points) / denominator
-        fits[name] = {"intercept": y_mean - slope * x_mean, "per_surface_node_slope": slope}
+        fits[name] = {"intercept": y_mean - slope * x_mean, slope_key: slope}
     return by_size, fits
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--subtest", choices=SUBTESTS, required=True)
-    parser.add_argument("--sizes", type=parse_counts, default=parse_counts("10,100,1000,5000,10000,25000,50000"))
+    parser.add_argument("--sizes", type=parse_counts, default=parse_counts("10,100,1000,5000,10000"))
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--iterations", type=int, default=1000)
     parser.add_argument("--payload-bytes", type=int, default=256)
@@ -218,6 +227,8 @@ def main() -> None:
             "subtest": args.subtest,
             "shape": args.shape if args.subtest == "shape" else None,
             "surface_events": args.sizes,
+            "x_axis": "schema_bytes" if (args.subtest == "shape" and args.shape == "schema")
+            else ("effective_surface_nodes" if args.subtest == "incremental" else "surface_events"),
             "repeats": args.repeats,
             "base_iterations": args.iterations,
             "iterations_scaling": "max(20, base // max(1, size // 1000)); cold uses 1",
