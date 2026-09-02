@@ -200,7 +200,8 @@ the corresponding JSON files. `run-c1.py --warm-turns` provides a warm
 steady-state fixed-context variant, and `run-c7.py --hard-pin` separates core
 scaling from scheduler migration. C8 measures the token-meter / context-pressure
 path (`TokenMeter.measure`) rather than a tokenizer, with cold, incremental,
-repeat, and surface-shape subtests under `run-c8.py`.
+repeat, and surface-shape subtests under `run-c8.py`; see
+`results/C8_REPORT.md` for the pilot.
 
 ## Frozen evidence
 

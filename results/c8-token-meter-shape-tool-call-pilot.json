@@ -1,0 +1,430 @@
+{
+  "benchmark": "C8 token-meter / context-pressure CPU scaling",
+  "created_at": "2026-09-02T09:25:39.655668+00:00",
+  "design": {
+    "subtest": "shape",
+    "shape": "tool-call",
+    "surface_events": [
+      1000
+    ],
+    "repeats": 5,
+    "base_iterations": 500,
+    "iterations_scaling": "max(20, base // max(1, size // 1000)); cold uses 1",
+    "payload_bytes": 256,
+    "randomization_seed": 20260902,
+    "cpu_affinity": 0,
+    "perf_enabled": true,
+    "perf_mode": "user-kernel",
+    "perf_events": [
+      "task-clock",
+      "cycles:u",
+      "instructions:u",
+      "cycles:k",
+      "instructions:k",
+      "branches",
+      "branch-misses",
+      "cache-references",
+      "cache-misses",
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "observed_perf_event_labels": {
+      "task-clock": "task-clock",
+      "cycles_u": "cycles:u",
+      "instructions_u": "instructions:u",
+      "cycles_k": "cycles:k",
+      "instructions_k": "instructions:k",
+      "branches": "branches",
+      "branch-misses": "branch-misses",
+      "cache-references": "cache-references",
+      "cache-misses": "cache-misses",
+      "context-switches": "context-switches",
+      "cpu-migrations": "cpu-migrations",
+      "page-faults": "page-faults"
+    },
+    "internal_scope": "TokenMeter.measure() prompt-window timing; construction excluded",
+    "perf_scope": "whole Node fixture process; construction, measured calls, and teardown included"
+  },
+  "host": {
+    "platform": "Linux-6.6.0-28.0.0.34.oe2403.aarch64-aarch64-with-glibc2.38",
+    "kernel_release": "6.6.0-28.0.0.34.oe2403.aarch64",
+    "machine": "aarch64",
+    "logical_cpus": 256,
+    "perf_event_paranoid": "0",
+    "node": "v24.15.0",
+    "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64"
+  },
+  "aggregates": {
+    "1000": {
+      "samples": 5,
+      "internal_wall_ns_per_measure": {
+        "median": 1011239.0,
+        "min": 998249.0,
+        "max": 1015099.0
+      },
+      "internal_cpu_us_per_measure": {
+        "median": 1012.0,
+        "min": 1000.0,
+        "max": 1016.0
+      },
+      "cycles": {
+        "median": 2607145732.0,
+        "min": 2597284326.0,
+        "max": 2619427736.0
+      },
+      "instructions": {
+        "median": 6217870422.0,
+        "min": 6208117360.0,
+        "max": 6228809707.0
+      },
+      "cycles_kernel_ratio": {
+        "median": 0.04700207451623671,
+        "min": 0.045751696399608854,
+        "max": 0.04721695761969635
+      },
+      "instructions_kernel_ratio": {
+        "median": 0.017272661471259502,
+        "min": 0.016758419666693718,
+        "max": 0.017491666004430723
+      },
+      "ipc": {
+        "median": 2.3816866682157527,
+        "min": 2.3700281075438685,
+        "max": 2.393989121543715
+      },
+      "process_cycles_per_measure": null,
+      "process_instructions_per_measure": null,
+      "process_cycles_per_event": {
+        "median": 2607145.732,
+        "min": 2597284.326,
+        "max": 2619427.736
+      },
+      "process_instructions_per_event": {
+        "median": 6217870.422,
+        "min": 6208117.36,
+        "max": 6228809.707
+      },
+      "surface_nodes": {
+        "median": 1000.0,
+        "min": 1000.0,
+        "max": 1000.0
+      },
+      "surface_tokens": {
+        "median": 79000.0,
+        "min": 79000.0,
+        "max": 79000.0
+      }
+    }
+  },
+  "linear_fits_over_surface_nodes": {},
+  "samples": [
+    {
+      "fixture": {
+        "benchmark": "C8 token-meter context-pressure",
+        "subtest": "shape",
+        "shape": "tool-call",
+        "surface_events": 1000,
+        "surface_nodes": 1000,
+        "surface_tokens": 79000,
+        "payload_bytes": 256,
+        "iterations": 500,
+        "measure": {
+          "wall_ns": 998249,
+          "cpu_total_us": 1000
+        },
+        "checks": {
+          "surface_nodes_exact": true,
+          "stable_surface_tokens": true
+        }
+      },
+      "perf": {
+        "task-clock": 896.91,
+        "cycles_u": 2477338483.0,
+        "instructions_u": 6112704670.0,
+        "cycles_k": 122769173.0,
+        "instructions_k": 107438426.0,
+        "branches": 1279807999.0,
+        "branch-misses": 18374335.0,
+        "cache-references": 2301766677.0,
+        "cache-misses": 24528221.0,
+        "context-switches": 579.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 16400.0,
+        "cycles": 2600107656.0,
+        "cycles_kernel_ratio": 0.04721695761969635,
+        "instructions": 6220143096.0,
+        "instructions_kernel_ratio": 0.017272661471259502
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
+      },
+      "derived": {
+        "internal_wall_ns_per_measure": 998249,
+        "internal_cpu_us_per_measure": 1000,
+        "ipc": 2.39226367479301,
+        "process_instructions_per_event": 6220143.096,
+        "process_cycles_per_event": 2600107.656
+      },
+      "sample_index": 1
+    },
+    {
+      "fixture": {
+        "benchmark": "C8 token-meter context-pressure",
+        "subtest": "shape",
+        "shape": "tool-call",
+        "surface_events": 1000,
+        "surface_nodes": 1000,
+        "surface_tokens": 79000,
+        "payload_bytes": 256,
+        "iterations": 500,
+        "measure": {
+          "wall_ns": 1004378.5,
+          "cpu_total_us": 1005.5
+        },
+        "checks": {
+          "surface_nodes_exact": true,
+          "stable_surface_tokens": true
+        }
+      },
+      "perf": {
+        "task-clock": 895.93,
+        "cycles_u": 2477227114.0,
+        "instructions_u": 6112359748.0,
+        "cycles_k": 120057212.0,
+        "instructions_k": 105510674.0,
+        "branches": 1277484017.0,
+        "branch-misses": 18294552.0,
+        "cache-references": 2301877973.0,
+        "cache-misses": 24511338.0,
+        "context-switches": 587.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 16058.0,
+        "cycles": 2597284326.0,
+        "cycles_kernel_ratio": 0.04622413141224955,
+        "instructions": 6217870422.0,
+        "instructions_kernel_ratio": 0.01696894062421811
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
+      },
+      "derived": {
+        "internal_wall_ns_per_measure": 1004378.5,
+        "internal_cpu_us_per_measure": 1005.5,
+        "ipc": 2.393989121543715,
+        "process_instructions_per_event": 6217870.422,
+        "process_cycles_per_event": 2597284.326
+      },
+      "sample_index": 2
+    },
+    {
+      "fixture": {
+        "benchmark": "C8 token-meter context-pressure",
+        "subtest": "shape",
+        "shape": "tool-call",
+        "surface_events": 1000,
+        "surface_nodes": 1000,
+        "surface_tokens": 79000,
+        "payload_bytes": 256,
+        "iterations": 500,
+        "measure": {
+          "wall_ns": 1011239,
+          "cpu_total_us": 1012
+        },
+        "checks": {
+          "surface_nodes_exact": true,
+          "stable_surface_tokens": true
+        }
+      },
+      "perf": {
+        "task-clock": 903.61,
+        "cycles_u": 2495975609.0,
+        "instructions_u": 6100019245.0,
+        "cycles_k": 123452127.0,
+        "instructions_k": 108098115.0,
+        "branches": 1277090447.0,
+        "branch-misses": 18441569.0,
+        "cache-references": 2299871469.0,
+        "cache-misses": 25281252.0,
+        "context-switches": 605.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 16514.0,
+        "cycles": 2619427736.0,
+        "cycles_kernel_ratio": 0.047129426516845895,
+        "instructions": 6208117360.0,
+        "instructions_kernel_ratio": 0.017412382648642453
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
+      },
+      "derived": {
+        "internal_wall_ns_per_measure": 1011239,
+        "internal_cpu_us_per_measure": 1012,
+        "ipc": 2.3700281075438685,
+        "process_instructions_per_event": 6208117.36,
+        "process_cycles_per_event": 2619427.736
+      },
+      "sample_index": 3
+    },
+    {
+      "fixture": {
+        "benchmark": "C8 token-meter context-pressure",
+        "subtest": "shape",
+        "shape": "tool-call",
+        "surface_events": 1000,
+        "surface_nodes": 1000,
+        "surface_tokens": 79000,
+        "payload_bytes": 256,
+        "iterations": 500,
+        "measure": {
+          "wall_ns": 1013609,
+          "cpu_total_us": 1015
+        },
+        "checks": {
+          "surface_nodes_exact": true,
+          "stable_surface_tokens": true
+        }
+      },
+      "perf": {
+        "task-clock": 902.49,
+        "cycles_u": 2493238052.0,
+        "instructions_u": 6119857448.0,
+        "cycles_k": 122967068.0,
+        "instructions_k": 108952259.0,
+        "branches": 1279785386.0,
+        "branch-misses": 18421285.0,
+        "cache-references": 2306067907.0,
+        "cache-misses": 25624066.0,
+        "context-switches": 607.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 16684.0,
+        "cycles": 2616205120.0,
+        "cycles_kernel_ratio": 0.04700207451623671,
+        "instructions": 6228809707.0,
+        "instructions_kernel_ratio": 0.017491666004430723
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
+      },
+      "derived": {
+        "internal_wall_ns_per_measure": 1013609,
+        "internal_cpu_us_per_measure": 1015,
+        "ipc": 2.380856783507862,
+        "process_instructions_per_event": 6228809.707,
+        "process_cycles_per_event": 2616205.12
+      },
+      "sample_index": 4
+    },
+    {
+      "fixture": {
+        "benchmark": "C8 token-meter context-pressure",
+        "subtest": "shape",
+        "shape": "tool-call",
+        "surface_events": 1000,
+        "surface_nodes": 1000,
+        "surface_tokens": 79000,
+        "payload_bytes": 256,
+        "iterations": 500,
+        "measure": {
+          "wall_ns": 1015099,
+          "cpu_total_us": 1016
+        },
+        "checks": {
+          "surface_nodes_exact": true,
+          "stable_surface_tokens": true
+        }
+      },
+      "perf": {
+        "task-clock": 899.37,
+        "cycles_u": 2487864392.0,
+        "instructions_u": 6105344430.0,
+        "cycles_k": 119281340.0,
+        "instructions_k": 104059802.0,
+        "branches": 1277322054.0,
+        "branch-misses": 18395765.0,
+        "cache-references": 2297242700.0,
+        "cache-misses": 26310020.0,
+        "context-switches": 606.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 15725.0,
+        "cycles": 2607145732.0,
+        "cycles_kernel_ratio": 0.045751696399608854,
+        "instructions": 6209404232.0,
+        "instructions_kernel_ratio": 0.016758419666693718
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
+      },
+      "derived": {
+        "internal_wall_ns_per_measure": 1015099,
+        "internal_cpu_us_per_measure": 1016,
+        "ipc": 2.3816866682157527,
+        "process_instructions_per_event": 6209404.232,
+        "process_cycles_per_event": 2607145.732
+      },
+      "sample_index": 5
+    }
+  ],
+  "limitations": [
+    "TokenMeter uses the fixed char/4 heuristic, not a real BPE tokenizer; this measures the context-pressure accounting path, not tokenization.",
+    "measure() is O(surface): it reprices every node and deep-clones the result; the repeat subtest isolates that path.",
+    "Whole-process perf includes session construction and teardown; only the internal prompt-window timing is construction-free.",
+    "cycles/instructions per measure divide whole-process perf by iterations and therefore absorb a fixed construction intercept.",
+    "Surface here is text user/message nodes; tool/result and tool-schema shape costs are the C8-D condition."
+  ]
+}

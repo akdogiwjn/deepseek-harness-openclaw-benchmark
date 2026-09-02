@@ -162,7 +162,7 @@ def main() -> None:
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--iterations", type=int, default=1000)
     parser.add_argument("--payload-bytes", type=int, default=256)
-    parser.add_argument("--shape", choices=("text", "tool-call", "tool-result"), default="text")
+    parser.add_argument("--shape", choices=("text", "tool-call", "tool-result", "schema"), default="text")
     parser.add_argument("--cpu", type=int, default=0, help="logical CPU to pin, or -1 to disable")
     parser.add_argument("--seed", type=int, default=20260902)
     parser.add_argument("--perf", choices=("auto", "on", "off"), default="auto")
@@ -179,10 +179,15 @@ def main() -> None:
     if args.perf == "on" and mode == "off":
         parser.error("perf was requested but the selected events are unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
-    iterations = 1 if args.subtest == "cold" else args.iterations
     schedule = [size for size in args.sizes for _ in range(args.repeats)]
     random.Random(args.seed).shuffle(schedule)
     samples = []
+
+    def iterations_for(size: int) -> int:
+        if args.subtest == "cold":
+            return 1
+        return max(20, args.iterations // max(1, size // 1000))
+
     for index, size in enumerate(schedule, start=1):
         sample = run_sample(
             node=node,
@@ -190,7 +195,7 @@ def main() -> None:
             subtest=args.subtest,
             n=size,
             payload_bytes=args.payload_bytes,
-            iterations=iterations,
+            iterations=iterations_for(size),
             cpu=None if args.cpu < 0 else args.cpu,
             use_perf=use_perf,
             perf_events=perf_events,
@@ -214,7 +219,8 @@ def main() -> None:
             "shape": args.shape if args.subtest == "shape" else None,
             "surface_events": args.sizes,
             "repeats": args.repeats,
-            "iterations_per_sample": iterations,
+            "base_iterations": args.iterations,
+            "iterations_scaling": "max(20, base // max(1, size // 1000)); cold uses 1",
             "payload_bytes": args.payload_bytes,
             "randomization_seed": args.seed,
             "cpu_affinity": None if args.cpu < 0 else args.cpu,

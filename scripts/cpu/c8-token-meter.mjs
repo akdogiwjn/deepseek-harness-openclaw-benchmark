@@ -200,15 +200,29 @@ if (subtest === 'cold') {
   await ctx.fiber.dispose()
   writeSync(1, `${JSON.stringify(output)}\n`)
 } else if (subtest === 'shape') {
-  for (let turn = 1; turn <= surfaceEvents; turn += 1) {
-    appendShapeTurn(session, turn, shape)
+  let header
+  let schemaBytes = null
+  if (shape === 'schema') {
+    for (let turn = 1; turn <= 32; turn += 1) appendTextTurn(session, turn)
+    const tools = Array.from({ length: surfaceEvents }, (_, index) => ({
+      name: `tool_${index}`,
+      description: 's'.repeat(payloadBytes),
+      parameters: { type: 'object', properties: {}, required: [] },
+    }))
+    schemaBytes = JSON.stringify(tools).length
+    header = { config: { provider: 'bench', model: 'deterministic' }, tools }
+  } else {
+    for (let turn = 1; turn <= surfaceEvents; turn += 1) {
+      appendShapeTurn(session, turn, shape)
+    }
   }
-  const first = meter.measure(session)
+  const measureFn = () => (header === undefined ? meter.measure(session) : meter.measure(session, header))
+  const first = measureFn()
   const wallNs = []
   const cpuTotalUs = []
   let stableTokens = true
   for (let it = 0; it < iterations; it += 1) {
-    const run = timeMeasure(() => meter.measure(session))
+    const run = timeMeasure(measureFn)
     wallNs.push(run.wallNs)
     cpuTotalUs.push(run.cpuTotalUs)
     if (run.value.surfaceTokens !== first.surfaceTokens) stableTokens = false
@@ -222,12 +236,13 @@ if (subtest === 'cold') {
     surface_tokens: first.surfaceTokens,
     payload_bytes: payloadBytes,
     iterations,
+    ...(schemaBytes !== null ? { schema_bytes: schemaBytes } : {}),
     measure: {
       wall_ns: median(wallNs),
       cpu_total_us: median(cpuTotalUs),
     },
     checks: {
-      surface_nodes_exact: first.nodes.length === surfaceEvents,
+      surface_nodes_exact: first.nodes.length === (shape === 'schema' ? 32 : surfaceEvents),
       stable_surface_tokens: stableTokens,
     },
   }
