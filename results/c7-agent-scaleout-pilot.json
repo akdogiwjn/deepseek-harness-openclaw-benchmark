@@ -1,0 +1,3433 @@
+{
+  "benchmark": "C7 multi-process DSH Agent scale-out",
+  "created_at": "2026-09-02T02:26:21.215945+00:00",
+  "design": {
+    "agents": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "repeats": 5,
+    "tool_steps_per_agent": 64,
+    "payload_bytes": 64,
+    "topology": "one independent Node/DSH process per Agent",
+    "cpu_selection": "first logical CPU for each distinct (socket, core), nested prefixes",
+    "selected_physical_cpu_ids": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20,
+      22,
+      24,
+      26,
+      28,
+      30,
+      32,
+      34,
+      36,
+      38,
+      40,
+      42,
+      44,
+      46,
+      48,
+      50,
+      52,
+      54,
+      56,
+      58,
+      60,
+      62
+    ],
+    "randomization_seed": 20260902,
+    "perf_enabled": true,
+    "perf_descendant_inheritance": true,
+    "perf_events": [
+      "task-clock",
+      "cycles",
+      "instructions",
+      "branches",
+      "branch-misses",
+      "cache-references",
+      "cache-misses",
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "observed_perf_event_labels": {
+      "task-clock": "task-clock:u",
+      "cycles": "cycles:u",
+      "instructions": "instructions:u",
+      "branches": "branches:u",
+      "branch-misses": "branch-misses:u",
+      "cache-references": "cache-references:u",
+      "cache-misses": "cache-misses:u",
+      "context-switches": "context-switches:u",
+      "cpu-migrations": "cpu-migrations:u",
+      "page-faults": "page-faults:u"
+    }
+  },
+  "host": {
+    "platform": "Linux-6.6.0-28.0.0.34.oe2403.aarch64-aarch64-with-glibc2.38",
+    "machine": "aarch64",
+    "logical_cpus": 256,
+    "lscpu_parse": "# The following is the parsable format, which can be fed to other\n# programs. Each different item in every column has an unique ID\n# starting usually from zero.\n# CPU,Core,Socket,Node\n0,0,0,0\n1,0,0,0\n2,1,0,0\n3,1,0,0\n4,2,0,0\n5,2,0,0\n6,3,0,0\n7,3,0,0\n8,4,0,0\n9,4,0,0\n10,5,0,0\n11,5,0,0\n12,6,0,0\n13,6,0,0\n14,7,0,0\n15,7,0,0\n16,8,0,0\n17,8,0,0\n18,9,0,0\n19,9,0,0\n20,10,0,0\n21,10,0,0\n22,11,0,0\n23,11,0,0\n24,12,0,0\n25,12,0,0\n26,13,0,0\n27,13,0,0\n28,14,0,0\n29,14,0,0\n30,15,0,0\n31,15,0,0\n32,16,0,0\n33,16,0,0\n34,17,0,0\n35,17,0,0\n36,18,0,0\n37,18,0,0\n38,19,0,0\n39,19,0,0\n40,20,0,0\n41,20,0,0\n42,21,0,0\n43,21,0,0\n44,22,0,0\n45,22,0,0\n46,23,0,0\n47,23,0,0\n48,24,0,0\n49,24,0,0\n50,25,0,0\n51,25,0,0\n52,26,0,0\n53,26,0,0\n54,27,0,0\n55,27,0,0\n56,28,0,0\n57,28,0,0\n58,29,0,0\n59,29,0,0\n60,30,0,0\n61,30,0,0\n62,31,0,0\n63,31,0,0\n64,32,0,1\n65,32,0,1\n66,33,0,1\n67,33,0,1\n68,34,0,1\n69,34,0,1\n70,35,0,1\n71,35,0,1\n72,36,0,1\n73,36,0,1\n74,37,0,1\n75,37,0,1\n76,38,0,1\n77,38,0,1\n78,39,0,1\n79,39,0,1\n80,40,0,1\n81,40,0,1\n82,41,0,1\n83,41,0,1\n84,42,0,1\n85,42,0,1\n86,43,0,1\n87,43,0,1\n88,44,0,1\n89,44,0,1\n90,45,0,1\n91,45,0,1\n92,46,0,1\n93,46,0,1\n94,47,0,1\n95,47,0,1\n96,48,0,1\n97,48,0,1\n98,49,0,1\n99,49,0,1\n100,50,0,1\n101,50,0,1\n102,51,0,1\n103,51,0,1\n104,52,0,1\n105,52,0,1\n106,53,0,1\n107,53,0,1\n108,54,0,1\n109,54,0,1\n110,55,0,1\n111,55,0,1\n112,56,0,1\n113,56,0,1\n114,57,0,1\n115,57,0,1\n116,58,0,1\n117,58,0,1\n118,59,0,1\n119,59,0,1\n120,60,0,1\n121,60,0,1\n122,61,0,1\n123,61,0,1\n124,62,0,1\n125,62,0,1\n126,63,0,1\n127,63,0,1\n128,64,1,2\n129,64,1,2\n130,65,1,2\n131,65,1,2\n132,66,1,2\n133,66,1,2\n134,67,1,2\n135,67,1,2\n136,68,1,2\n137,68,1,2\n138,69,1,2\n139,69,1,2\n140,70,1,2\n141,70,1,2\n142,71,1,2\n143,71,1,2\n144,72,1,2\n145,72,1,2\n146,73,1,2\n147,73,1,2\n148,74,1,2\n149,74,1,2\n150,75,1,2\n151,75,1,2\n152,76,1,2\n153,76,1,2\n154,77,1,2\n155,77,1,2\n156,78,1,2\n157,78,1,2\n158,79,1,2\n159,79,1,2\n160,80,1,2\n161,80,1,2\n162,81,1,2\n163,81,1,2\n164,82,1,2\n165,82,1,2\n166,83,1,2\n167,83,1,2\n168,84,1,2\n169,84,1,2\n170,85,1,2\n171,85,1,2\n172,86,1,2\n173,86,1,2\n174,87,1,2\n175,87,1,2\n176,88,1,2\n177,88,1,2\n178,89,1,2\n179,89,1,2\n180,90,1,2\n181,90,1,2\n182,91,1,2\n183,91,1,2\n184,92,1,2\n185,92,1,2\n186,93,1,2\n187,93,1,2\n188,94,1,2\n189,94,1,2\n190,95,1,2\n191,95,1,2\n192,96,1,3\n193,96,1,3\n194,97,1,3\n195,97,1,3\n196,98,1,3\n197,98,1,3\n198,99,1,3\n199,99,1,3\n200,100,1,3\n201,100,1,3\n202,101,1,3\n203,101,1,3\n204,102,1,3\n205,102,1,3\n206,103,1,3\n207,103,1,3\n208,104,1,3\n209,104,1,3\n210,105,1,3\n211,105,1,3\n212,106,1,3\n213,106,1,3\n214,107,1,3\n215,107,1,3\n216,108,1,3\n217,108,1,3\n218,109,1,3\n219,109,1,3\n220,110,1,3\n221,110,1,3\n222,111,1,3\n223,111,1,3\n224,112,1,3\n225,112,1,3\n226,113,1,3\n227,113,1,3\n228,114,1,3\n229,114,1,3\n230,115,1,3\n231,115,1,3\n232,116,1,3\n233,116,1,3\n234,117,1,3\n235,117,1,3\n236,118,1,3\n237,118,1,3\n238,119,1,3\n239,119,1,3\n240,120,1,3\n241,120,1,3\n242,121,1,3\n243,121,1,3\n244,122,1,3\n245,122,1,3\n246,123,1,3\n247,123,1,3\n248,124,1,3\n249,124,1,3\n250,125,1,3\n251,125,1,3\n252,126,1,3\n253,126,1,3\n254,127,1,3\n255,127,1,3\n",
+    "node": "v24.15.0",
+    "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64",
+    "perf_event_paranoid": "2"
+  },
+  "aggregates": {
+    "1": {
+      "agents": 1,
+      "samples": 5,
+      "cpu_binding": "0",
+      "wall_ns": {
+        "median": 282019372.0,
+        "min": 274308757.0,
+        "max": 287586909.0
+      },
+      "agents_per_second": {
+        "median": 3.5458557080965347,
+        "min": 3.477209736274887,
+        "max": 3.645527072983674
+      },
+      "tool_steps_per_second": {
+        "median": 226.93476531817822,
+        "min": 222.54142312159277,
+        "max": 233.31373267095515
+      },
+      "sum_child_max_rss_kb": {
+        "median": 76784.0,
+        "min": 76684.0,
+        "max": 76788.0
+      },
+      "max_child_max_rss_kb": {
+        "median": 76784.0,
+        "min": 76684.0,
+        "max": 76788.0
+      },
+      "cycles": {
+        "median": 796533286.0,
+        "min": 769785412.0,
+        "max": 817968874.0
+      },
+      "instructions": {
+        "median": 1150745784.0,
+        "min": 1139640515.0,
+        "max": 1152673868.0
+      },
+      "task_clock_ms": {
+        "median": 311.09,
+        "min": 301.8,
+        "max": 318.7
+      },
+      "page_faults": {
+        "median": 12570.0,
+        "min": 12288.0,
+        "max": 12814.0
+      },
+      "ipc": {
+        "median": 1.4446926502955961,
+        "min": 1.4029528561254276,
+        "max": 1.4804652013852402
+      },
+      "cache_mpki": {
+        "median": 7.542988733739559,
+        "min": 7.474440587667019,
+        "max": 7.592783764799727
+      },
+      "branch_mpki": {
+        "median": 10.46221254319266,
+        "min": 10.279377440350126,
+        "max": 10.533661881310877
+      },
+      "average_user_cpu_cores": {
+        "median": 1.1047004070671125,
+        "min": 1.1002200706264729,
+        "max": 1.1081867429508065
+      },
+      "user_cpu_affinity_utilization": {
+        "median": 1.1047004070671125,
+        "min": 1.1002200706264729,
+        "max": 1.1081867429508065
+      },
+      "instructions_per_agent": {
+        "median": 1150745784.0,
+        "min": 1139640515.0,
+        "max": 1152673868.0
+      },
+      "cycles_per_agent": {
+        "median": 796533286.0,
+        "min": 769785412.0,
+        "max": 817968874.0
+      },
+      "task_clock_ms_per_agent": {
+        "median": 311.09,
+        "min": 301.8,
+        "max": 318.7
+      }
+    },
+    "2": {
+      "agents": 2,
+      "samples": 5,
+      "cpu_binding": "0,2",
+      "wall_ns": {
+        "median": 279068282.0,
+        "min": 274390888.0,
+        "max": 280792826.0
+      },
+      "agents_per_second": {
+        "median": 7.16670481384194,
+        "min": 7.122689096052618,
+        "max": 7.28887177915325
+      },
+      "tool_steps_per_second": {
+        "median": 458.66910808588415,
+        "min": 455.85210214736753,
+        "max": 466.487793865808
+      },
+      "sum_child_max_rss_kb": {
+        "median": 151536.0,
+        "min": 147924.0,
+        "max": 154032.0
+      },
+      "max_child_max_rss_kb": {
+        "median": 76776.0,
+        "min": 74740.0,
+        "max": 78828.0
+      },
+      "cycles": {
+        "median": 1508846084.0,
+        "min": 1478252912.0,
+        "max": 1510208498.0
+      },
+      "instructions": {
+        "median": 2179862119.0,
+        "min": 2178610469.0,
+        "max": 2187498719.0
+      },
+      "task_clock_ms": {
+        "median": 583.08,
+        "min": 573.97,
+        "max": 584.88
+      },
+      "page_faults": {
+        "median": 22061.0,
+        "min": 21160.0,
+        "max": 22127.0
+      },
+      "ipc": {
+        "median": 1.4457382226639628,
+        "min": 1.4434179928710744,
+        "max": 1.4797865109837172
+      },
+      "cache_mpki": {
+        "median": 7.7431860725866395,
+        "min": 7.686092535670703,
+        "max": 7.848576517957123
+      },
+      "branch_mpki": {
+        "median": 10.473239477400176,
+        "min": 10.442945830943346,
+        "max": 10.504499865720836
+      },
+      "average_user_cpu_cores": {
+        "median": 2.0905771502748376,
+        "min": 2.0765487790631805,
+        "max": 2.091796867540295
+      },
+      "user_cpu_affinity_utilization": {
+        "median": 1.0452885751374188,
+        "min": 1.0382743895315902,
+        "max": 1.0458984337701476
+      },
+      "instructions_per_agent": {
+        "median": 1089931059.5,
+        "min": 1089305234.5,
+        "max": 1093749359.5
+      },
+      "cycles_per_agent": {
+        "median": 754423042.0,
+        "min": 739126456.0,
+        "max": 755104249.0
+      },
+      "task_clock_ms_per_agent": {
+        "median": 291.54,
+        "min": 286.985,
+        "max": 292.44
+      }
+    },
+    "4": {
+      "agents": 4,
+      "samples": 5,
+      "cpu_binding": "0,2,4,6",
+      "wall_ns": {
+        "median": 281257902.0,
+        "min": 278817079.0,
+        "max": 286534494.0
+      },
+      "agents_per_second": {
+        "median": 14.221822645893162,
+        "min": 13.959924838927071,
+        "max": 14.34632345459727
+      },
+      "tool_steps_per_second": {
+        "median": 910.1966493371624,
+        "min": 893.4351896913325,
+        "max": 918.1647010942253
+      },
+      "sum_child_max_rss_kb": {
+        "median": 301160.0,
+        "min": 292808.0,
+        "max": 309156.0
+      },
+      "max_child_max_rss_kb": {
+        "median": 76892.0,
+        "min": 74740.0,
+        "max": 78884.0
+      },
+      "cycles": {
+        "median": 2913979620.0,
+        "min": 2896387969.0,
+        "max": 2930850347.0
+      },
+      "instructions": {
+        "median": 4251335391.0,
+        "min": 4234174418.0,
+        "max": 4260761361.0
+      },
+      "task_clock_ms": {
+        "median": 1125.54,
+        "min": 1118.91,
+        "max": 1131.13
+      },
+      "page_faults": {
+        "median": 40993.0,
+        "min": 40138.0,
+        "max": 41650.0
+      },
+      "ipc": {
+        "median": 1.4561621276703742,
+        "min": 1.453762852600539,
+        "max": 1.469806296864921
+      },
+      "cache_mpki": {
+        "median": 7.807565815581205,
+        "min": 7.780783630439477,
+        "max": 7.875156138204575
+      },
+      "branch_mpki": {
+        "median": 10.506663554397228,
+        "min": 10.473449846902469,
+        "max": 10.59857175136451
+      },
+      "average_user_cpu_cores": {
+        "median": 3.995899570145544,
+        "min": 3.928113450801494,
+        "max": 4.021682562362284
+      },
+      "user_cpu_affinity_utilization": {
+        "median": 0.998974892536386,
+        "min": 0.9820283627003735,
+        "max": 1.005420640590571
+      },
+      "instructions_per_agent": {
+        "median": 1062833847.75,
+        "min": 1058543604.5,
+        "max": 1065190340.25
+      },
+      "cycles_per_agent": {
+        "median": 728494905.0,
+        "min": 724096992.25,
+        "max": 732712586.75
+      },
+      "task_clock_ms_per_agent": {
+        "median": 281.385,
+        "min": 279.7275,
+        "max": 282.7825
+      }
+    },
+    "8": {
+      "agents": 8,
+      "samples": 5,
+      "cpu_binding": "0,2,4,6,8,10,12,14",
+      "wall_ns": {
+        "median": 290348246.0,
+        "min": 289055768.0,
+        "max": 300879130.0
+      },
+      "agents_per_second": {
+        "median": 27.553119780169087,
+        "min": 26.588750107061266,
+        "max": 27.676320231741578
+      },
+      "tool_steps_per_second": {
+        "median": 1763.3996659308216,
+        "min": 1701.680006851921,
+        "max": 1771.284494831461
+      },
+      "sum_child_max_rss_kb": {
+        "median": 604760.0,
+        "min": 550776.0,
+        "max": 610352.0
+      },
+      "max_child_max_rss_kb": {
+        "median": 76820.0,
+        "min": 72740.0,
+        "max": 78852.0
+      },
+      "cycles": {
+        "median": 5813120312.0,
+        "min": 5806054034.0,
+        "max": 5860049532.0
+      },
+      "instructions": {
+        "median": 8381305971.0,
+        "min": 8369103163.0,
+        "max": 8402929896.0
+      },
+      "task_clock_ms": {
+        "median": 2240.27,
+        "min": 2237.75,
+        "max": 2264.16
+      },
+      "page_faults": {
+        "median": 78515.0,
+        "min": 76240.0,
+        "max": 79249.0
+      },
+      "ipc": {
+        "median": 1.4432907208536485,
+        "min": 1.429998264390097,
+        "max": 1.4455110930103867
+      },
+      "cache_mpki": {
+        "median": 7.819826435972505,
+        "min": 7.770122525887696,
+        "max": 7.827944252095485
+      },
+      "branch_mpki": {
+        "median": 10.575064860326687,
+        "min": 10.520054572781707,
+        "max": 10.617945458615349
+      },
+      "average_user_cpu_cores": {
+        "median": 7.742633306625864,
+        "min": 7.5251480553004795,
+        "max": 7.749819405091408
+      },
+      "user_cpu_affinity_utilization": {
+        "median": 0.967829163328233,
+        "min": 0.9406435069125599,
+        "max": 0.968727425636426
+      },
+      "instructions_per_agent": {
+        "median": 1047663246.375,
+        "min": 1046137895.375,
+        "max": 1050366237.0
+      },
+      "cycles_per_agent": {
+        "median": 726640039.0,
+        "min": 725756754.25,
+        "max": 732506191.5
+      },
+      "task_clock_ms_per_agent": {
+        "median": 280.03375,
+        "min": 279.71875,
+        "max": 283.02
+      }
+    },
+    "16": {
+      "agents": 16,
+      "samples": 5,
+      "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
+      "wall_ns": {
+        "median": 332909447.0,
+        "min": 318816295.0,
+        "max": 352171960.0
+      },
+      "agents_per_second": {
+        "median": 48.061117352431275,
+        "min": 45.43235071866596,
+        "max": 50.18564060535237
+      },
+      "tool_steps_per_second": {
+        "median": 3075.9115105556016,
+        "min": 2907.6704459946213,
+        "max": 3211.8809987425516
+      },
+      "sum_child_max_rss_kb": {
+        "median": 1095576.0,
+        "min": 1057376.0,
+        "max": 1136964.0
+      },
+      "max_child_max_rss_kb": {
+        "median": 73184.0,
+        "min": 71136.0,
+        "max": 74768.0
+      },
+      "cycles": {
+        "median": 11721253300.0,
+        "min": 11648969949.0,
+        "max": 11890317003.0
+      },
+      "instructions": {
+        "median": 16629584326.0,
+        "min": 16604840161.0,
+        "max": 16750969542.0
+      },
+      "task_clock_ms": {
+        "median": 4540.82,
+        "min": 4503.68,
+        "max": 4612.55
+      },
+      "page_faults": {
+        "median": 150525.0,
+        "min": 148415.0,
+        "max": 152221.0
+      },
+      "ipc": {
+        "median": 1.4166437441463704,
+        "min": 1.40437053262983,
+        "max": 1.428768866506413
+      },
+      "cache_mpki": {
+        "median": 7.78736193649342,
+        "min": 7.766842103630486,
+        "max": 7.819559402020792
+      },
+      "branch_mpki": {
+        "median": 10.560960909011719,
+        "min": 10.540681452514749,
+        "max": 10.644391028045206
+      },
+      "average_user_cpu_cores": {
+        "median": 13.639805181016685,
+        "min": 13.015772181294615,
+        "max": 14.213796694425547
+      },
+      "user_cpu_affinity_utilization": {
+        "median": 0.8524878238135428,
+        "min": 0.8134857613309134,
+        "max": 0.8883622934015967
+      },
+      "instructions_per_agent": {
+        "median": 1039349020.375,
+        "min": 1037802510.0625,
+        "max": 1046935596.375
+      },
+      "cycles_per_agent": {
+        "median": 732578331.25,
+        "min": 728060621.8125,
+        "max": 743144812.6875
+      },
+      "task_clock_ms_per_agent": {
+        "median": 283.80125,
+        "min": 281.48,
+        "max": 288.284375
+      }
+    },
+    "32": {
+      "agents": 32,
+      "samples": 5,
+      "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
+      "wall_ns": {
+        "median": 365909408.0,
+        "min": 354863037.0,
+        "max": 376244779.0
+      },
+      "agents_per_second": {
+        "median": 87.45334036341585,
+        "min": 85.05101408995233,
+        "max": 90.17563584679573
+      },
+      "tool_steps_per_second": {
+        "median": 5597.013783258614,
+        "min": 5443.264901756949,
+        "max": 5771.240694194927
+      },
+      "sum_child_max_rss_kb": {
+        "median": 2139672.0,
+        "min": 2090808.0,
+        "max": 2212280.0
+      },
+      "max_child_max_rss_kb": {
+        "median": 72692.0,
+        "min": 70656.0,
+        "max": 74736.0
+      },
+      "cycles": {
+        "median": 23975296565.0,
+        "min": 23812456677.0,
+        "max": 24023694136.0
+      },
+      "instructions": {
+        "median": 33232473459.0,
+        "min": 33182342545.0,
+        "max": 33384110981.0
+      },
+      "task_clock_ms": {
+        "median": 9322.3,
+        "min": 9255.02,
+        "max": 9325.43
+      },
+      "page_faults": {
+        "median": 295149.0,
+        "min": 294324.0,
+        "max": 296423.0
+      },
+      "ipc": {
+        "median": 1.388358230810809,
+        "min": 1.3861131339461286,
+        "max": 1.3934867365890138
+      },
+      "cache_mpki": {
+        "median": 7.765387749327638,
+        "min": 7.745673926951891,
+        "max": 7.778426613923743
+      },
+      "branch_mpki": {
+        "median": 10.542680539373595,
+        "min": 10.506348849595565,
+        "max": 10.565215479165998
+      },
+      "average_user_cpu_cores": {
+        "median": 25.477071089683488,
+        "min": 24.785539947652005,
+        "max": 26.080541039837858
+      },
+      "user_cpu_affinity_utilization": {
+        "median": 0.796158471552609,
+        "min": 0.7745481233641252,
+        "max": 0.815016907494933
+      },
+      "instructions_per_agent": {
+        "median": 1038514795.59375,
+        "min": 1036948204.53125,
+        "max": 1043253468.15625
+      },
+      "cycles_per_agent": {
+        "median": 749228017.65625,
+        "min": 744139271.15625,
+        "max": 750740441.75
+      },
+      "task_clock_ms_per_agent": {
+        "median": 291.321875,
+        "min": 289.219375,
+        "max": 291.4196875
+      }
+    }
+  },
+  "scaling": {
+    "1": {
+      "agents": 1,
+      "throughput_speedup": 1.0,
+      "parallel_efficiency": 1.0
+    },
+    "2": {
+      "agents": 2,
+      "throughput_speedup": 2.0211495909090806,
+      "parallel_efficiency": 1.0105747954545403
+    },
+    "4": {
+      "agents": 4,
+      "throughput_speedup": 4.010829491290168,
+      "parallel_efficiency": 1.002707372822542
+    },
+    "8": {
+      "agents": 8,
+      "throughput_speedup": 7.770513537044064,
+      "parallel_efficiency": 0.971314192130508
+    },
+    "16": {
+      "agents": 16,
+      "throughput_speedup": 13.55416613335097,
+      "parallel_efficiency": 0.8471353833344356
+    },
+    "32": {
+      "agents": 32,
+      "throughput_speedup": 24.66353612859279,
+      "parallel_efficiency": 0.7707355040185246
+    }
+  },
+  "samples": [
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 2,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 128,
+        "total_provider_requests": 130,
+        "timing": {
+          "wall_ns": 274390888,
+          "controller_cpu_user_us": 6952,
+          "controller_cpu_system_us": 1032,
+          "controller_cpu_total_us": 7984,
+          "agents_per_second": 7.28887177915325,
+          "tool_steps_per_second": 466.487793865808
+        },
+        "memory": {
+          "controller_max_rss_kb": 46512,
+          "sum_child_max_rss_kb": 152972,
+          "max_child_max_rss_kb": 76836
+        },
+        "child_internal_wall_ns": [
+          136608236,
+          132271927
+        ],
+        "child_internal_cpu_us": [
+          136347,
+          133265
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 573.97,
+        "cycles": 1478252912.0,
+        "instructions": 2187498719.0,
+        "branches": 446830144.0,
+        "branch-misses": 22978580.0,
+        "cache-references": 881152965.0,
+        "cache-misses": 16834015.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 22061.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2",
+        "ipc": 1.4797865109837172,
+        "cache_mpki": 7.695554220802266,
+        "branch_mpki": 10.504499865720836,
+        "average_user_cpu_cores": 2.091796867540295,
+        "user_cpu_affinity_utilization": 1.0458984337701476,
+        "instructions_per_agent": 1093749359.5,
+        "cycles_per_agent": 739126456.0,
+        "task_clock_ms_per_agent": 286.985
+      },
+      "sample_index": 1
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 4,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 256,
+        "total_provider_requests": 260,
+        "timing": {
+          "wall_ns": 280014545,
+          "controller_cpu_user_us": 4268,
+          "controller_cpu_system_us": 7226,
+          "controller_cpu_total_us": 11494,
+          "agents_per_second": 14.28497223242457,
+          "tool_steps_per_second": 914.2382228751725
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 309156,
+          "max_child_max_rss_kb": 78884
+        },
+        "child_internal_wall_ns": [
+          134919323,
+          137302036,
+          134689199,
+          134017540
+        ],
+        "child_internal_cpu_us": [
+          135587,
+          136951,
+          134334,
+          134621
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1118.91,
+        "cycles": 2896387969.0,
+        "instructions": 4257129275.0,
+        "branches": 871647321.0,
+        "branch-misses": 44728225.0,
+        "cache-references": 1728238092.0,
+        "cache-misses": 33237817.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 41101.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6",
+        "ipc": 1.469806296864921,
+        "cache_mpki": 7.807565815581205,
+        "branch_mpki": 10.506663554397228,
+        "average_user_cpu_cores": 3.995899570145544,
+        "user_cpu_affinity_utilization": 0.998974892536386,
+        "instructions_per_agent": 1064282318.75,
+        "cycles_per_agent": 724096992.25,
+        "task_clock_ms_per_agent": 279.7275
+      },
+      "sample_index": 2
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 16,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 1024,
+        "total_provider_requests": 1040,
+        "timing": {
+          "wall_ns": 328775821,
+          "controller_cpu_user_us": 18930,
+          "controller_cpu_system_us": 9652,
+          "controller_cpu_total_us": 28582,
+          "agents_per_second": 48.66537919769958,
+          "tool_steps_per_second": 3114.584268652773
+        },
+        "memory": {
+          "controller_max_rss_kb": 44464,
+          "sum_child_max_rss_kb": 1057376,
+          "max_child_max_rss_kb": 71136
+        },
+        "child_internal_wall_ns": [
+          166018727,
+          144717617,
+          139332503,
+          140621541,
+          135201786,
+          112994373,
+          136808189,
+          130242039,
+          135794145,
+          138437201,
+          138984388,
+          133151768,
+          139130780,
+          120809120,
+          113858095,
+          114613786
+        ],
+        "child_internal_cpu_us": [
+          142512,
+          141000,
+          139547,
+          145152,
+          138610,
+          139206,
+          138741,
+          137626,
+          137985,
+          140520,
+          138973,
+          139517,
+          140399,
+          140797,
+          142419,
+          142416
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 4612.55,
+        "cycles": 11890317003.0,
+        "instructions": 16750969542.0,
+        "branches": 3435374649.0,
+        "branch-misses": 177174776.0,
+        "cache-references": 6803679467.0,
+        "cache-misses": 130291272.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 150640.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
+        "ipc": 1.4087908285181654,
+        "cache_mpki": 7.778133180489547,
+        "branch_mpki": 10.576986338358898,
+        "average_user_cpu_cores": 14.029468426146824,
+        "user_cpu_affinity_utilization": 0.8768417766341765,
+        "instructions_per_agent": 1046935596.375,
+        "cycles_per_agent": 743144812.6875,
+        "task_clock_ms_per_agent": 288.284375
+      },
+      "sample_index": 3
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 16,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 1024,
+        "total_provider_requests": 1040,
+        "timing": {
+          "wall_ns": 332909447,
+          "controller_cpu_user_us": 27576,
+          "controller_cpu_system_us": 819,
+          "controller_cpu_total_us": 28395,
+          "agents_per_second": 48.061117352431275,
+          "tool_steps_per_second": 3075.9115105556016
+        },
+        "memory": {
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 1095576,
+          "max_child_max_rss_kb": 73188
+        },
+        "child_internal_wall_ns": [
+          112823381,
+          151070594,
+          116064566,
+          147829900,
+          137509238,
+          136835559,
+          135340159,
+          155280791,
+          125536975,
+          147028258,
+          135512941,
+          128789189,
+          138677404,
+          111022077,
+          111789607,
+          110936185
+        ],
+        "child_internal_cpu_us": [
+          140200,
+          144261,
+          140840,
+          144831,
+          140901,
+          138502,
+          136925,
+          140492,
+          141649,
+          141885,
+          137760,
+          142842,
+          137072,
+          139304,
+          141651,
+          137734
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 4540.82,
+        "cycles": 11721253300.0,
+        "instructions": 16604840161.0,
+        "branches": 3404811034.0,
+        "branch-misses": 175129661.0,
+        "cache-references": 6755596628.0,
+        "cache-misses": 129842534.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 150525.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
+        "ipc": 1.4166437441463704,
+        "cache_mpki": 7.819559402020792,
+        "branch_mpki": 10.546904354510396,
+        "average_user_cpu_cores": 13.639805181016685,
+        "user_cpu_affinity_utilization": 0.8524878238135428,
+        "instructions_per_agent": 1037802510.0625,
+        "cycles_per_agent": 732578331.25,
+        "task_clock_ms_per_agent": 283.80125
+      },
+      "sample_index": 4
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 4,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 256,
+        "total_provider_requests": 260,
+        "timing": {
+          "wall_ns": 284415705,
+          "controller_cpu_user_us": 6720,
+          "controller_cpu_system_us": 5116,
+          "controller_cpu_total_us": 11836,
+          "agents_per_second": 14.063920977922088,
+          "tool_steps_per_second": 900.0909425870136
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 299776,
+          "max_child_max_rss_kb": 76892
+        },
+        "child_internal_wall_ns": [
+          140004472,
+          136385123,
+          133981330,
+          135588762
+        ],
+        "child_internal_cpu_us": [
+          139858,
+          136757,
+          134850,
+          136027
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1125.62,
+        "cycles": 2918851423.0,
+        "instructions": 4251335391.0,
+        "branches": 870011890.0,
+        "branch-misses": 44526148.0,
+        "cache-references": 1727202183.0,
+        "cache-misses": 33479930.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 40138.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6",
+        "ipc": 1.4565096933335753,
+        "cache_mpki": 7.875156138204575,
+        "branch_mpki": 10.473449846902469,
+        "average_user_cpu_cores": 3.957657682792165,
+        "user_cpu_affinity_utilization": 0.9894144206980412,
+        "instructions_per_agent": 1062833847.75,
+        "cycles_per_agent": 729712855.75,
+        "task_clock_ms_per_agent": 281.405
+      },
+      "sample_index": 5
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 2,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 128,
+        "total_provider_requests": 130,
+        "timing": {
+          "wall_ns": 279068282,
+          "controller_cpu_user_us": 7120,
+          "controller_cpu_system_us": 1214,
+          "controller_cpu_total_us": 8334,
+          "agents_per_second": 7.16670481384194,
+          "tool_steps_per_second": 458.66910808588415
+        },
+        "memory": {
+          "controller_max_rss_kb": 47052,
+          "sum_child_max_rss_kb": 154032,
+          "max_child_max_rss_kb": 78828
+        },
+        "child_internal_wall_ns": [
+          137950865,
+          135042215
+        ],
+        "child_internal_cpu_us": [
+          138401,
+          134769
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 583.59,
+        "cycles": 1508846084.0,
+        "instructions": 2178610469.0,
+        "branches": 444986479.0,
+        "branch-misses": 22779923.0,
+        "cache-references": 880209842.0,
+        "cache-misses": 16980251.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 22127.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2",
+        "ipc": 1.4438917873083734,
+        "cache_mpki": 7.7940739024329,
+        "branch_mpki": 10.456170721724371,
+        "average_user_cpu_cores": 2.091208631155009,
+        "user_cpu_affinity_utilization": 1.0456043155775046,
+        "instructions_per_agent": 1089305234.5,
+        "cycles_per_agent": 754423042.0,
+        "task_clock_ms_per_agent": 291.795
+      },
+      "sample_index": 6
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 32,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 2048,
+        "total_provider_requests": 2080,
+        "timing": {
+          "wall_ns": 373686914,
+          "controller_cpu_user_us": 38106,
+          "controller_cpu_system_us": 11507,
+          "controller_cpu_total_us": 49613,
+          "agents_per_second": 85.63318329097282,
+          "tool_steps_per_second": 5480.523730622261
+        },
+        "memory": {
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 2139672,
+          "max_child_max_rss_kb": 70656
+        },
+        "child_internal_wall_ns": [
+          122022026,
+          135410450,
+          148458647,
+          143413599,
+          136192761,
+          142664538,
+          135956807,
+          112026970,
+          140026613,
+          124960027,
+          138482232,
+          150700569,
+          136118619,
+          112410155,
+          104940843,
+          125878800,
+          107404837,
+          116467310,
+          105274288,
+          110732942,
+          112412385,
+          106447794,
+          119066017,
+          110817314,
+          108672374,
+          122127208,
+          110723702,
+          107850393,
+          110528570,
+          104650739,
+          102175986,
+          106568255
+        ],
+        "child_internal_cpu_us": [
+          145990,
+          143823,
+          145681,
+          146199,
+          142984,
+          148078,
+          148482,
+          139225,
+          147888,
+          142472,
+          140091,
+          144425,
+          141047,
+          145282,
+          141195,
+          147386,
+          142542,
+          142212,
+          145534,
+          145575,
+          143962,
+          146807,
+          148241,
+          147464,
+          147399,
+          148240,
+          146094,
+          145180,
+          145947,
+          146230,
+          146076,
+          146441
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 9303.05,
+        "cycles": 23926524951.0,
+        "instructions": 33217068992.0,
+        "branches": 6813756485.0,
+        "branch-misses": 350498575.0,
+        "cache-references": 13501982220.0,
+        "cache-misses": 258233098.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 294479.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
+        "ipc": 1.3882947507014263,
+        "cache_mpki": 7.7741084880846305,
+        "branch_mpki": 10.551761056474131,
+        "average_user_cpu_cores": 24.895305806721396,
+        "user_cpu_affinity_utilization": 0.7779783064600436,
+        "instructions_per_agent": 1038033406.0,
+        "cycles_per_agent": 747703904.71875,
+        "task_clock_ms_per_agent": 290.7203125
+      },
+      "sample_index": 7
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 1,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 64,
+        "total_provider_requests": 65,
+        "timing": {
+          "wall_ns": 283905028,
+          "controller_cpu_user_us": 6409,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 6409,
+          "agents_per_second": 3.522304649003962,
+          "tool_steps_per_second": 225.42749753625355
+        },
+        "memory": {
+          "controller_max_rss_kb": 46048,
+          "sum_child_max_rss_kb": 76788,
+          "max_child_max_rss_kb": 76788
+        },
+        "child_internal_wall_ns": [
+          136829769
+        ],
+        "child_internal_cpu_us": [
+          137527
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 313.63,
+        "cycles": 799611327.0,
+        "instructions": 1151955664.0,
+        "branches": 234469017.0,
+        "branch-misses": 12012575.0,
+        "cache-references": 460509791.0,
+        "cache-misses": 8699813.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12570.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0",
+        "ipc": 1.440644504526885,
+        "cache_mpki": 7.552211662201611,
+        "branch_mpki": 10.427983797820886,
+        "average_user_cpu_cores": 1.1047004070671125,
+        "user_cpu_affinity_utilization": 1.1047004070671125,
+        "instructions_per_agent": 1151955664.0,
+        "cycles_per_agent": 799611327.0,
+        "task_clock_ms_per_agent": 313.63
+      },
+      "sample_index": 8
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 16,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 1024,
+        "total_provider_requests": 1040,
+        "timing": {
+          "wall_ns": 318816295,
+          "controller_cpu_user_us": 11925,
+          "controller_cpu_system_us": 15911,
+          "controller_cpu_total_us": 27836,
+          "agents_per_second": 50.18564060535237,
+          "tool_steps_per_second": 3211.8809987425516
+        },
+        "memory": {
+          "controller_max_rss_kb": 44444,
+          "sum_child_max_rss_kb": 1116564,
+          "max_child_max_rss_kb": 73184
+        },
+        "child_internal_wall_ns": [
+          135774415,
+          131908722,
+          129791393,
+          139153700,
+          136462874,
+          138505312,
+          138797666,
+          134913303,
+          149094177,
+          140667232,
+          133261190,
+          146039015,
+          138798996,
+          115312585,
+          112746110,
+          115150253
+        ],
+        "child_internal_cpu_us": [
+          138877,
+          137215,
+          140782,
+          139043,
+          137841,
+          138839,
+          138033,
+          139723,
+          139846,
+          140329,
+          139032,
+          143472,
+          139745,
+          140184,
+          139094,
+          138715
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 4531.59,
+        "cycles": 11719932593.0,
+        "instructions": 16629584326.0,
+        "branches": 3410107625.0,
+        "branch-misses": 175624390.0,
+        "cache-references": 6756233038.0,
+        "cache-misses": 129500592.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 150456.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
+        "ipc": 1.4189146732748619,
+        "cache_mpki": 7.78736193649342,
+        "branch_mpki": 10.560960909011719,
+        "average_user_cpu_cores": 14.213796694425547,
+        "user_cpu_affinity_utilization": 0.8883622934015967,
+        "instructions_per_agent": 1039349020.375,
+        "cycles_per_agent": 732495787.0625,
+        "task_clock_ms_per_agent": 283.224375
+      },
+      "sample_index": 9
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 2,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 128,
+        "total_provider_requests": 130,
+        "timing": {
+          "wall_ns": 279769632,
+          "controller_cpu_user_us": 6684,
+          "controller_cpu_system_us": 1721,
+          "controller_cpu_total_us": 8405,
+          "agents_per_second": 7.148738716573784,
+          "tool_steps_per_second": 457.5192778607222
+        },
+        "memory": {
+          "controller_max_rss_kb": 46500,
+          "sum_child_max_rss_kb": 147924,
+          "max_child_max_rss_kb": 74740
+        },
+        "child_internal_wall_ns": [
+          135505371,
+          138451881
+        ],
+        "child_internal_cpu_us": [
+          136482,
+          138805
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 584.88,
+        "cycles": 1509301271.0,
+        "instructions": 2182054537.0,
+        "branches": 445675249.0,
+        "branch-misses": 22875914.0,
+        "cache-references": 879639858.0,
+        "cache-misses": 17126022.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 22120.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2",
+        "ipc": 1.4457382226639628,
+        "cache_mpki": 7.848576517957123,
+        "branch_mpki": 10.483658227649514,
+        "average_user_cpu_cores": 2.0905771502748376,
+        "user_cpu_affinity_utilization": 1.0452885751374188,
+        "instructions_per_agent": 1091027268.5,
+        "cycles_per_agent": 754650635.5,
+        "task_clock_ms_per_agent": 292.44
+      },
+      "sample_index": 10
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 2,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 128,
+        "total_provider_requests": 130,
+        "timing": {
+          "wall_ns": 280792826,
+          "controller_cpu_user_us": 8394,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 8394,
+          "agents_per_second": 7.122689096052618,
+          "tool_steps_per_second": 455.85210214736753
+        },
+        "memory": {
+          "controller_max_rss_kb": 46936,
+          "sum_child_max_rss_kb": 151536,
+          "max_child_max_rss_kb": 76776
+        },
+        "child_internal_wall_ns": [
+          134831872,
+          138558143
+        ],
+        "child_internal_cpu_us": [
+          135265,
+          138401
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 583.08,
+        "cycles": 1510208498.0,
+        "instructions": 2179862119.0,
+        "branches": 445040602.0,
+        "branch-misses": 22830218.0,
+        "cache-references": 880599108.0,
+        "cache-misses": 16879078.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 21160.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2",
+        "ipc": 1.4434179928710744,
+        "cache_mpki": 7.7431860725866395,
+        "branch_mpki": 10.473239477400176,
+        "average_user_cpu_cores": 2.0765487790631805,
+        "user_cpu_affinity_utilization": 1.0382743895315902,
+        "instructions_per_agent": 1089931059.5,
+        "cycles_per_agent": 755104249.0,
+        "task_clock_ms_per_agent": 291.54
+      },
+      "sample_index": 11
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 1,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 64,
+        "total_provider_requests": 65,
+        "timing": {
+          "wall_ns": 274308757,
+          "controller_cpu_user_us": 6044,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 6044,
+          "agents_per_second": 3.645527072983674,
+          "tool_steps_per_second": 233.31373267095515
+        },
+        "memory": {
+          "controller_max_rss_kb": 46184,
+          "sum_child_max_rss_kb": 76684,
+          "max_child_max_rss_kb": 76684
+        },
+        "child_internal_wall_ns": [
+          135961128
+        ],
+        "child_internal_cpu_us": [
+          136284
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 301.8,
+        "cycles": 769785412.0,
+        "instructions": 1139640515.0,
+        "branches": 231922891.0,
+        "branch-misses": 11714795.0,
+        "cache-references": 458737710.0,
+        "cache-misses": 8653044.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12814.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0",
+        "ipc": 1.4804652013852402,
+        "cache_mpki": 7.592783764799727,
+        "branch_mpki": 10.279377440350126,
+        "average_user_cpu_cores": 1.1002200706264729,
+        "user_cpu_affinity_utilization": 1.1002200706264729,
+        "instructions_per_agent": 1139640515.0,
+        "cycles_per_agent": 769785412.0,
+        "task_clock_ms_per_agent": 301.8
+      },
+      "sample_index": 12
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 32,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 2048,
+        "total_provider_requests": 2080,
+        "timing": {
+          "wall_ns": 354863037,
+          "controller_cpu_user_us": 35062,
+          "controller_cpu_system_us": 15171,
+          "controller_cpu_total_us": 50233,
+          "agents_per_second": 90.17563584679573,
+          "tool_steps_per_second": 5771.240694194927
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 2178712,
+          "max_child_max_rss_kb": 73188
+        },
+        "child_internal_wall_ns": [
+          139034380,
+          136353682,
+          125880130,
+          133951609,
+          123593268,
+          135387959,
+          145075842,
+          121413449,
+          140555060,
+          127908247,
+          137089253,
+          166871969,
+          145046941,
+          127432201,
+          117336212,
+          119130137,
+          116743554,
+          134482947,
+          118994536,
+          118222275,
+          122753927,
+          120920592,
+          139381413,
+          120856041,
+          117038238,
+          111209739,
+          112439655,
+          112339694,
+          116728064,
+          113776604,
+          108449151,
+          109021289
+        ],
+        "child_internal_cpu_us": [
+          142374,
+          140754,
+          137814,
+          141410,
+          144450,
+          141935,
+          142410,
+          140294,
+          141965,
+          141947,
+          139865,
+          146746,
+          139503,
+          141647,
+          143984,
+          143973,
+          140987,
+          146175,
+          142829,
+          144986,
+          141283,
+          148230,
+          147169,
+          145503,
+          143484,
+          144235,
+          144001,
+          144329,
+          148888,
+          145336,
+          148256,
+          145779
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 9255.02,
+        "cycles": 23812456677.0,
+        "instructions": 33182342545.0,
+        "branches": 6805864369.0,
+        "branch-misses": 349830837.0,
+        "cache-references": 13490230300.0,
+        "cache-misses": 257221964.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 296423.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
+        "ipc": 1.3934867365890138,
+        "cache_mpki": 7.751772306345468,
+        "branch_mpki": 10.542680539373595,
+        "average_user_cpu_cores": 26.080541039837858,
+        "user_cpu_affinity_utilization": 0.815016907494933,
+        "instructions_per_agent": 1036948204.53125,
+        "cycles_per_agent": 744139271.15625,
+        "task_clock_ms_per_agent": 289.219375
+      },
+      "sample_index": 13
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 1,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 64,
+        "total_provider_requests": 65,
+        "timing": {
+          "wall_ns": 287586909,
+          "controller_cpu_user_us": 1999,
+          "controller_cpu_system_us": 4954,
+          "controller_cpu_total_us": 6953,
+          "agents_per_second": 3.477209736274887,
+          "tool_steps_per_second": 222.54142312159277
+        },
+        "memory": {
+          "controller_max_rss_kb": 45956,
+          "sum_child_max_rss_kb": 76788,
+          "max_child_max_rss_kb": 76788
+        },
+        "child_internal_wall_ns": [
+          141740107
+        ],
+        "child_internal_cpu_us": [
+          142042
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 318.7,
+        "cycles": 817968874.0,
+        "instructions": 1147571768.0,
+        "branches": 233602302.0,
+        "branch-misses": 12046667.0,
+        "cache-references": 458937932.0,
+        "cache-misses": 8577457.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12740.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0",
+        "ipc": 1.4029528561254276,
+        "cache_mpki": 7.474440587667019,
+        "branch_mpki": 10.497528203395118,
+        "average_user_cpu_cores": 1.1081867429508065,
+        "user_cpu_affinity_utilization": 1.1081867429508065,
+        "instructions_per_agent": 1147571768.0,
+        "cycles_per_agent": 817968874.0,
+        "task_clock_ms_per_agent": 318.7
+      },
+      "sample_index": 14
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 4,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 256,
+        "total_provider_requests": 260,
+        "timing": {
+          "wall_ns": 278817079,
+          "controller_cpu_user_us": 8534,
+          "controller_cpu_system_us": 3371,
+          "controller_cpu_total_us": 11905,
+          "agents_per_second": 14.34632345459727,
+          "tool_steps_per_second": 918.1647010942253
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 301160,
+          "max_child_max_rss_kb": 76804
+        },
+        "child_internal_wall_ns": [
+          134434686,
+          135457240,
+          140321846,
+          134162183
+        ],
+        "child_internal_cpu_us": [
+          135523,
+          135928,
+          137985,
+          133871
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1120.38,
+        "cycles": 2907763042.0,
+        "instructions": 4234174418.0,
+        "branches": 866098273.0,
+        "branch-misses": 44455514.0,
+        "cache-references": 1717086895.0,
+        "cache-misses": 32945195.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 40993.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6",
+        "ipc": 1.4561621276703742,
+        "cache_mpki": 7.780783630439477,
+        "branch_mpki": 10.499216520465975,
+        "average_user_cpu_cores": 4.018333468015423,
+        "user_cpu_affinity_utilization": 1.0045833670038558,
+        "instructions_per_agent": 1058543604.5,
+        "cycles_per_agent": 726940760.5,
+        "task_clock_ms_per_agent": 280.095
+      },
+      "sample_index": 15
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 8,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 512,
+        "total_provider_requests": 520,
+        "timing": {
+          "wall_ns": 291729054,
+          "controller_cpu_user_us": 9147,
+          "controller_cpu_system_us": 8226,
+          "controller_cpu_total_us": 17373,
+          "agents_per_second": 27.422705727486438,
+          "tool_steps_per_second": 1755.053166559132
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 604760,
+          "max_child_max_rss_kb": 76820
+        },
+        "child_internal_wall_ns": [
+          139946361,
+          136097739,
+          135855116,
+          136652497,
+          135559112,
+          136823959,
+          139192381,
+          137244785
+        ],
+        "child_internal_cpu_us": [
+          140238,
+          136977,
+          135525,
+          136711,
+          136405,
+          136475,
+          138325,
+          136248
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 2237.75,
+        "cycles": 5813120312.0,
+        "instructions": 8402929896.0,
+        "branches": 1721942726.0,
+        "branch-misses": 88911342.0,
+        "cache-references": 3405473307.0,
+        "cache-misses": 65305722.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 78515.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14",
+        "ipc": 1.4455110930103867,
+        "cache_mpki": 7.771779939647851,
+        "branch_mpki": 10.58099295131856,
+        "average_user_cpu_cores": 7.670644967710346,
+        "user_cpu_affinity_utilization": 0.9588306209637932,
+        "instructions_per_agent": 1050366237.0,
+        "cycles_per_agent": 726640039.0,
+        "task_clock_ms_per_agent": 279.71875
+      },
+      "sample_index": 16
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 32,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 2048,
+        "total_provider_requests": 2080,
+        "timing": {
+          "wall_ns": 376244779,
+          "controller_cpu_user_us": 23429,
+          "controller_cpu_system_us": 26129,
+          "controller_cpu_total_us": 49558,
+          "agents_per_second": 85.05101408995233,
+          "tool_steps_per_second": 5443.264901756949
+        },
+        "memory": {
+          "controller_max_rss_kb": 44464,
+          "sum_child_max_rss_kb": 2136148,
+          "max_child_max_rss_kb": 72692
+        },
+        "child_internal_wall_ns": [
+          125400583,
+          137085282,
+          116028025,
+          172978993,
+          146251918,
+          150552496,
+          140541850,
+          139366974,
+          135933757,
+          157656054,
+          142267783,
+          133669886,
+          140763803,
+          112502647,
+          114207340,
+          111349311,
+          119347660,
+          111092977,
+          106015979,
+          118049503,
+          119081926,
+          107543589,
+          106028218,
+          108147477,
+          107112063,
+          107643011,
+          110708462,
+          112569967,
+          118946775,
+          110649051,
+          100430262,
+          106562596
+        ],
+        "child_internal_cpu_us": [
+          140474,
+          146201,
+          147018,
+          149181,
+          142586,
+          141258,
+          144752,
+          142138,
+          143260,
+          146835,
+          147699,
+          144802,
+          149407,
+          146199,
+          148263,
+          143815,
+          146434,
+          142736,
+          143741,
+          145020,
+          144393,
+          148024,
+          147787,
+          144435,
+          142915,
+          144453,
+          144007,
+          147098,
+          148627,
+          146793,
+          144447,
+          143914
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 9325.43,
+        "cycles": 23976698667.0,
+        "instructions": 33288246942.0,
+        "branches": 6829146930.0,
+        "branch-misses": 350378125.0,
+        "cache-references": 13527713210.0,
+        "cache-misses": 258496145.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 294324.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
+        "ipc": 1.388358230810809,
+        "cache_mpki": 7.765387749327638,
+        "branch_mpki": 10.525580563328663,
+        "average_user_cpu_cores": 24.785539947652005,
+        "user_cpu_affinity_utilization": 0.7745481233641252,
+        "instructions_per_agent": 1040257716.9375,
+        "cycles_per_agent": 749271833.34375,
+        "task_clock_ms_per_agent": 291.4196875
+      },
+      "sample_index": 17
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 8,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 512,
+        "total_provider_requests": 520,
+        "timing": {
+          "wall_ns": 289055768,
+          "controller_cpu_user_us": 10632,
+          "controller_cpu_system_us": 7472,
+          "controller_cpu_total_us": 18104,
+          "agents_per_second": 27.676320231741578,
+          "tool_steps_per_second": 1771.284494831461
+        },
+        "memory": {
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 610352,
+          "max_child_max_rss_kb": 76828
+        },
+        "child_internal_wall_ns": [
+          136581026,
+          134857482,
+          140335467,
+          134101261,
+          136615336,
+          135741694,
+          136273502,
+          138287479
+        ],
+        "child_internal_cpu_us": [
+          136219,
+          134526,
+          140444,
+          133775,
+          137296,
+          135606,
+          135954,
+          137823
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 2240.13,
+        "cycles": 5806054034.0,
+        "instructions": 8388124741.0,
+        "branches": 1718721002.0,
+        "branch-misses": 89064651.0,
+        "cache-references": 3399146786.0,
+        "cache-misses": 65176757.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 79249.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14",
+        "ipc": 1.4447204059554917,
+        "cache_mpki": 7.770122525887696,
+        "branch_mpki": 10.617945458615349,
+        "average_user_cpu_cores": 7.749819405091408,
+        "user_cpu_affinity_utilization": 0.968727425636426,
+        "instructions_per_agent": 1048515592.625,
+        "cycles_per_agent": 725756754.25,
+        "task_clock_ms_per_agent": 280.01625
+      },
+      "sample_index": 18
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 4,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 256,
+        "total_provider_requests": 260,
+        "timing": {
+          "wall_ns": 281257902,
+          "controller_cpu_user_us": 8991,
+          "controller_cpu_system_us": 3171,
+          "controller_cpu_total_us": 12162,
+          "agents_per_second": 14.221822645893162,
+          "tool_steps_per_second": 910.1966493371624
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 303576,
+          "max_child_max_rss_kb": 77280
+        },
+        "child_internal_wall_ns": [
+          138749105,
+          135087575,
+          136076949,
+          134291765
+        ],
+        "child_internal_cpu_us": [
+          138388,
+          134787,
+          135689,
+          135644
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1131.13,
+        "cycles": 2930850347.0,
+        "instructions": 4260761361.0,
+        "branches": 872538176.0,
+        "branch-misses": 45157985.0,
+        "cache-references": 1722262680.0,
+        "cache-misses": 33228168.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 41650.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6",
+        "ipc": 1.453762852600539,
+        "cache_mpki": 7.798645637408183,
+        "branch_mpki": 10.59857175136451,
+        "average_user_cpu_cores": 4.021682562362284,
+        "user_cpu_affinity_utilization": 1.005420640590571,
+        "instructions_per_agent": 1065190340.25,
+        "cycles_per_agent": 732712586.75,
+        "task_clock_ms_per_agent": 282.7825
+      },
+      "sample_index": 19
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 16,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 1024,
+        "total_provider_requests": 1040,
+        "timing": {
+          "wall_ns": 335985650,
+          "controller_cpu_user_us": 18355,
+          "controller_cpu_system_us": 8838,
+          "controller_cpu_total_us": 27193,
+          "agents_per_second": 47.621081436067286,
+          "tool_steps_per_second": 3047.7492119083063
+        },
+        "memory": {
+          "controller_max_rss_kb": 42368,
+          "sum_child_max_rss_kb": 1136964,
+          "max_child_max_rss_kb": 74768
+        },
+        "child_internal_wall_ns": [
+          135643203,
+          130402461,
+          135956007,
+          132919865,
+          132240337,
+          134662370,
+          158393534,
+          137670730,
+          136989691,
+          143487579,
+          137993795,
+          134728540,
+          136972361,
+          109192541,
+          109139651,
+          109119210
+        ],
+        "child_internal_cpu_us": [
+          137081,
+          136212,
+          136684,
+          135848,
+          139216,
+          138383,
+          139990,
+          137826,
+          137135,
+          145390,
+          138284,
+          138992,
+          138211,
+          138298,
+          139508,
+          137151
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 4503.68,
+        "cycles": 11648969949.0,
+        "instructions": 16643685590.0,
+        "branches": 3413090657.0,
+        "branch-misses": 175435788.0,
+        "cache-references": 6754681199.0,
+        "cache-misses": 129268878.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 152221.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
+        "ipc": 1.428768866506413,
+        "cache_mpki": 7.766842103630486,
+        "branch_mpki": 10.540681452514749,
+        "average_user_cpu_cores": 13.404382002624219,
+        "user_cpu_affinity_utilization": 0.8377738751640137,
+        "instructions_per_agent": 1040230349.375,
+        "cycles_per_agent": 728060621.8125,
+        "task_clock_ms_per_agent": 281.48
+      },
+      "sample_index": 20
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 32,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 2048,
+        "total_provider_requests": 2080,
+        "timing": {
+          "wall_ns": 365909408,
+          "controller_cpu_user_us": 32038,
+          "controller_cpu_system_us": 18416,
+          "controller_cpu_total_us": 50454,
+          "agents_per_second": 87.45334036341585,
+          "tool_steps_per_second": 5597.013783258614
+        },
+        "memory": {
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 2212280,
+          "max_child_max_rss_kb": 74736
+        },
+        "child_internal_wall_ns": [
+          120364504,
+          132410579,
+          134917283,
+          135903537,
+          140885755,
+          131727760,
+          139107040,
+          134624849,
+          139777309,
+          139561476,
+          138709455,
+          141569954,
+          156392017,
+          110755483,
+          118021472,
+          114978080,
+          121740373,
+          122566015,
+          114041278,
+          115342785,
+          120966702,
+          123625918,
+          116000094,
+          119862478,
+          118551969,
+          113175555,
+          119175788,
+          126172093,
+          112845502,
+          113381409,
+          119016705,
+          113643222
+        ],
+        "child_internal_cpu_us": [
+          143041,
+          142470,
+          142543,
+          140989,
+          142154,
+          141403,
+          139299,
+          140143,
+          141638,
+          139880,
+          144214,
+          140565,
+          145119,
+          144503,
+          145536,
+          146241,
+          150916,
+          144907,
+          149556,
+          148129,
+          146488,
+          148728,
+          145791,
+          149962,
+          148060,
+          149443,
+          145714,
+          148910,
+          144495,
+          147274,
+          146358,
+          147241
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 9322.3,
+        "cycles": 24023694136.0,
+        "instructions": 33384110981.0,
+        "branches": 6849840999.0,
+        "branch-misses": 350745116.0,
+        "cache-references": 13550067181.0,
+        "cache-misses": 258582438.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 295149.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
+        "ipc": 1.3896327014492422,
+        "cache_mpki": 7.745673926951891,
+        "branch_mpki": 10.506348849595565,
+        "average_user_cpu_cores": 25.477071089683488,
+        "user_cpu_affinity_utilization": 0.796158471552609,
+        "instructions_per_agent": 1043253468.15625,
+        "cycles_per_agent": 750740441.75,
+        "task_clock_ms_per_agent": 291.321875
+      },
+      "sample_index": 21
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 8,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 512,
+        "total_provider_requests": 520,
+        "timing": {
+          "wall_ns": 290348246,
+          "controller_cpu_user_us": 10408,
+          "controller_cpu_system_us": 6986,
+          "controller_cpu_total_us": 17394,
+          "agents_per_second": 27.553119780169087,
+          "tool_steps_per_second": 1763.3996659308216
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 596436,
+          "max_child_max_rss_kb": 76780
+        },
+        "child_internal_wall_ns": [
+          137104543,
+          135683513,
+          136152520,
+          136502445,
+          141936999,
+          134909573,
+          136010148,
+          136599916
+        ],
+        "child_internal_cpu_us": [
+          136716,
+          136302,
+          135825,
+          137204,
+          142092,
+          135789,
+          135632,
+          136590
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 2248.06,
+        "cycles": 5824079123.0,
+        "instructions": 8369103163.0,
+        "branches": 1715078454.0,
+        "branch-misses": 88043422.0,
+        "cache-references": 3397576073.0,
+        "cache-misses": 65512873.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 78136.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14",
+        "ipc": 1.436983081144861,
+        "cache_mpki": 7.827944252095485,
+        "branch_mpki": 10.520054572781707,
+        "average_user_cpu_cores": 7.742633306625864,
+        "user_cpu_affinity_utilization": 0.967829163328233,
+        "instructions_per_agent": 1046137895.375,
+        "cycles_per_agent": 728009890.375,
+        "task_clock_ms_per_agent": 281.0075
+      },
+      "sample_index": 22
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 1,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 64,
+        "total_provider_requests": 65,
+        "timing": {
+          "wall_ns": 282019372,
+          "controller_cpu_user_us": 5213,
+          "controller_cpu_system_us": 930,
+          "controller_cpu_total_us": 6143,
+          "agents_per_second": 3.5458557080965347,
+          "tool_steps_per_second": 226.93476531817822
+        },
+        "memory": {
+          "controller_max_rss_kb": 46180,
+          "sum_child_max_rss_kb": 76784,
+          "max_child_max_rss_kb": 76784
+        },
+        "child_internal_wall_ns": [
+          134879002
+        ],
+        "child_internal_cpu_us": [
+          135410
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 311.09,
+        "cycles": 796533286.0,
+        "instructions": 1150745784.0,
+        "branches": 234265876.0,
+        "branch-misses": 12121567.0,
+        "cache-references": 458812375.0,
+        "cache-misses": 8635273.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12557.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0",
+        "ipc": 1.4446926502955961,
+        "cache_mpki": 7.504066597562264,
+        "branch_mpki": 10.533661881310877,
+        "average_user_cpu_cores": 1.1030802522317509,
+        "user_cpu_affinity_utilization": 1.1030802522317509,
+        "instructions_per_agent": 1150745784.0,
+        "cycles_per_agent": 796533286.0,
+        "task_clock_ms_per_agent": 311.09
+      },
+      "sample_index": 23
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 8,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 512,
+        "total_provider_requests": 520,
+        "timing": {
+          "wall_ns": 289203460,
+          "controller_cpu_user_us": 12072,
+          "controller_cpu_system_us": 5595,
+          "controller_cpu_total_us": 17667,
+          "agents_per_second": 27.662186337604673,
+          "tool_steps_per_second": 1770.379925606699
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 605268,
+          "max_child_max_rss_kb": 78852
+        },
+        "child_internal_wall_ns": [
+          136090519,
+          136213651,
+          135464860,
+          136021768,
+          138157947,
+          136343832,
+          141720026,
+          139567476
+        ],
+        "child_internal_cpu_us": [
+          136686,
+          136850,
+          135757,
+          135687,
+          138234,
+          136703,
+          143626,
+          139591
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 2240.27,
+        "cycles": 5807080895.0,
+        "instructions": 8381305971.0,
+        "branches": 1716960216.0,
+        "branch-misses": 88437524.0,
+        "cache-references": 3405801630.0,
+        "cache-misses": 65540358.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 79096.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14",
+        "ipc": 1.4432907208536485,
+        "cache_mpki": 7.819826435972505,
+        "branch_mpki": 10.55175939239076,
+        "average_user_cpu_cores": 7.746345773318203,
+        "user_cpu_affinity_utilization": 0.9682932216647754,
+        "instructions_per_agent": 1047663246.375,
+        "cycles_per_agent": 725885111.875,
+        "task_clock_ms_per_agent": 280.03375
+      },
+      "sample_index": 24
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 1,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 64,
+        "total_provider_requests": 65,
+        "timing": {
+          "wall_ns": 278499444,
+          "controller_cpu_user_us": 6020,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 6020,
+          "agents_per_second": 3.5906714413404717,
+          "tool_steps_per_second": 229.8029722457902
+        },
+        "memory": {
+          "controller_max_rss_kb": 46484,
+          "sum_child_max_rss_kb": 76776,
+          "max_child_max_rss_kb": 76776
+        },
+        "child_internal_wall_ns": [
+          135770835
+        ],
+        "child_internal_cpu_us": [
+          135516
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 307.95,
+        "cycles": 790773262.0,
+        "instructions": 1152673868.0,
+        "branches": 234808200.0,
+        "branch-misses": 12059519.0,
+        "cache-references": 461028590.0,
+        "cache-misses": 8694606.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12288.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0",
+        "ipc": 1.45765407530939,
+        "cache_mpki": 7.542988733739559,
+        "branch_mpki": 10.46221254319266,
+        "average_user_cpu_cores": 1.1057472703607982,
+        "user_cpu_affinity_utilization": 1.1057472703607982,
+        "instructions_per_agent": 1152673868.0,
+        "cycles_per_agent": 790773262.0,
+        "task_clock_ms_per_agent": 307.95
+      },
+      "sample_index": 25
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 4,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 256,
+        "total_provider_requests": 260,
+        "timing": {
+          "wall_ns": 286534494,
+          "controller_cpu_user_us": 11944,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 11944,
+          "agents_per_second": 13.959924838927071,
+          "tool_steps_per_second": 893.4351896913325
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 292808,
+          "max_child_max_rss_kb": 74740
+        },
+        "child_internal_wall_ns": [
+          131696319,
+          133774207,
+          136364463,
+          136596796
+        ],
+        "child_internal_cpu_us": [
+          135573,
+          133627,
+          139237,
+          134823
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 1125.54,
+        "cycles": 2913979620.0,
+        "instructions": 4242833800.0,
+        "branches": 868235700.0,
+        "branch-misses": 44862740.0,
+        "cache-references": 1719760057.0,
+        "cache-misses": 33341174.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 40532.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6",
+        "ipc": 1.456027273107696,
+        "cache_mpki": 7.85823239175666,
+        "branch_mpki": 10.57376793783438,
+        "average_user_cpu_cores": 3.928113450801494,
+        "user_cpu_affinity_utilization": 0.9820283627003735,
+        "instructions_per_agent": 1060708450.0,
+        "cycles_per_agent": 728494905.0,
+        "task_clock_ms_per_agent": 281.385
+      },
+      "sample_index": 26
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 16,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 1024,
+        "total_provider_requests": 1040,
+        "timing": {
+          "wall_ns": 352171960,
+          "controller_cpu_user_us": 26489,
+          "controller_cpu_system_us": 1521,
+          "controller_cpu_total_us": 28010,
+          "agents_per_second": 45.43235071866596,
+          "tool_steps_per_second": 2907.6704459946213
+        },
+        "memory": {
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 1063660,
+          "max_child_max_rss_kb": 71148
+        },
+        "child_internal_wall_ns": [
+          144053508,
+          151906275,
+          129664101,
+          112909792,
+          120357174,
+          143270157,
+          120507906,
+          142784120,
+          143962566,
+          137627640,
+          135185626,
+          157211917,
+          128482255,
+          109331613,
+          99974566,
+          118247905
+        ],
+        "child_internal_cpu_us": [
+          142592,
+          142008,
+          140770,
+          141760,
+          135615,
+          144181,
+          140795,
+          140856,
+          142630,
+          140235,
+          141151,
+          140857,
+          139234,
+          140630,
+          141358,
+          139542
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 4583.79,
+        "cycles": 11836632736.0,
+        "instructions": 16623018220.0,
+        "branches": 3408260302.0,
+        "branch-misses": 176941906.0,
+        "cache-references": 6757243504.0,
+        "cache-misses": 129751583.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 148415.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
+        "ipc": 1.40437053262983,
+        "cache_mpki": 7.805536953805974,
+        "branch_mpki": 10.644391028045206,
+        "average_user_cpu_cores": 13.015772181294615,
+        "user_cpu_affinity_utilization": 0.8134857613309134,
+        "instructions_per_agent": 1038938638.75,
+        "cycles_per_agent": 739789546.0,
+        "task_clock_ms_per_agent": 286.486875
+      },
+      "sample_index": 27
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 8,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 512,
+        "total_provider_requests": 520,
+        "timing": {
+          "wall_ns": 300879130,
+          "controller_cpu_user_us": 18200,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 18200,
+          "agents_per_second": 26.588750107061266,
+          "tool_steps_per_second": 1701.680006851921
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 550776,
+          "max_child_max_rss_kb": 72740
+        },
+        "child_internal_wall_ns": [
+          120084841,
+          139987063,
+          141390421,
+          130913729,
+          127450031,
+          151803134,
+          141087137,
+          137268185
+        ],
+        "child_internal_cpu_us": [
+          137509,
+          142432,
+          140040,
+          138167,
+          137660,
+          138755,
+          139055,
+          137274
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 2264.16,
+        "cycles": 5860049532.0,
+        "instructions": 8379860660.0,
+        "branches": 1716977284.0,
+        "branch-misses": 88617570.0,
+        "cache-references": 3406413700.0,
+        "cache-misses": 65596671.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 76240.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14",
+        "ipc": 1.429998264390097,
+        "cache_mpki": 7.827895195574768,
+        "branch_mpki": 10.575064860326687,
+        "average_user_cpu_cores": 7.5251480553004795,
+        "user_cpu_affinity_utilization": 0.9406435069125599,
+        "instructions_per_agent": 1047482582.5,
+        "cycles_per_agent": 732506191.5,
+        "task_clock_ms_per_agent": 283.02
+      },
+      "sample_index": 28
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 2,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 128,
+        "total_provider_requests": 130,
+        "timing": {
+          "wall_ns": 276989764,
+          "controller_cpu_user_us": 2307,
+          "controller_cpu_system_us": 5752,
+          "controller_cpu_total_us": 8059,
+          "agents_per_second": 7.220483425517486,
+          "tool_steps_per_second": 462.1109392331191
+        },
+        "memory": {
+          "controller_max_rss_kb": 46512,
+          "sum_child_max_rss_kb": 149516,
+          "max_child_max_rss_kb": 74772
+        },
+        "child_internal_wall_ns": [
+          136237561,
+          135517091
+        ],
+        "child_internal_cpu_us": [
+          136700,
+          135960
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 578.51,
+        "cycles": 1494511360.0,
+        "instructions": 2179420287.0,
+        "branches": 445110791.0,
+        "branch-misses": 22759568.0,
+        "cache-references": 879998345.0,
+        "cache-misses": 16751226.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 21800.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2",
+        "ipc": 1.4582828510584223,
+        "cache_mpki": 7.686092535670703,
+        "branch_mpki": 10.442945830943346,
+        "average_user_cpu_cores": 2.0885609332480604,
+        "user_cpu_affinity_utilization": 1.0442804666240302,
+        "instructions_per_agent": 1089710143.5,
+        "cycles_per_agent": 747255680.0,
+        "task_clock_ms_per_agent": 289.255
+      },
+      "sample_index": 29
+    },
+    {
+      "fixture": {
+        "benchmark": "C7 multi-process DSH Agent scale-out",
+        "agents": 32,
+        "tool_steps_per_agent": 64,
+        "payload_bytes": 64,
+        "total_tool_steps": 2048,
+        "total_provider_requests": 2080,
+        "timing": {
+          "wall_ns": 362458331,
+          "controller_cpu_user_us": 24425,
+          "controller_cpu_system_us": 23932,
+          "controller_cpu_total_us": 48357,
+          "agents_per_second": 88.2860104545369,
+          "tool_steps_per_second": 5650.304669090362
+        },
+        "memory": {
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 2090808,
+          "max_child_max_rss_kb": 71136
+        },
+        "child_internal_wall_ns": [
+          172373385,
+          135304958,
+          127181597,
+          126592139,
+          110520150,
+          136441053,
+          124178866,
+          135703034,
+          137679841,
+          145782811,
+          134883872,
+          129707172,
+          154117275,
+          109963282,
+          115402127,
+          107330586,
+          117892210,
+          123975714,
+          115382246,
+          108248299,
+          109971452,
+          109337294,
+          114740997,
+          118992816,
+          118227725,
+          112937522,
+          105754045,
+          109319933,
+          111217779,
+          114691187,
+          107269695,
+          111891928
+        ],
+        "child_internal_cpu_us": [
+          147075,
+          143153,
+          140463,
+          146389,
+          139543,
+          140162,
+          144206,
+          146116,
+          141438,
+          147165,
+          144049,
+          141654,
+          146323,
+          143891,
+          142585,
+          145846,
+          144591,
+          144092,
+          144688,
+          145422,
+          145470,
+          146120,
+          144934,
+          148168,
+          146619,
+          141883,
+          148250,
+          145707,
+          146840,
+          147404,
+          148359,
+          147965
+        ],
+        "checks": {
+          "agent_count_exact": true,
+          "child_stderr_empty": true,
+          "child_checks_all": true,
+          "child_tool_steps_exact": true,
+          "child_provider_requests_exact": true,
+          "total_tool_steps_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 9325.37,
+        "cycles": 23975296565.0,
+        "instructions": 33232473459.0,
+        "branches": 6817543389.0,
+        "branch-misses": 351108243.0,
+        "cache-references": 13503352295.0,
+        "cache-misses": 258496356.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 295864.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
+        "ipc": 1.3861131339461286,
+        "cache_mpki": 7.778426613923743,
+        "branch_mpki": 10.565215479165998,
+        "average_user_cpu_cores": 25.72811604101328,
+        "user_cpu_affinity_utilization": 0.804003626281665,
+        "instructions_per_agent": 1038514795.59375,
+        "cycles_per_agent": 749228017.65625,
+        "task_clock_ms_per_agent": 291.4178125
+      },
+      "sample_index": 30
+    }
+  ],
+  "limitations": [
+    "Every Agent is an independent process; shared-process concurrency is a separate topology.",
+    "The deterministic adapter removes network/model contention; every Agent performs 64 no-op tool steps.",
+    "Process startup, DSH composition, the measured turn, and teardown are all inside batch wall/perf scope.",
+    "sum_child_max_rss_kb sums per-process maxima and is not a synchronized aggregate peak.",
+    "CPU sets use one thread per physical core and nested prefixes but do not spread across NUMA nodes.",
+    "A :u event label excludes kernel execution and makes scheduling counters non-interpretable."
+  ]
+}

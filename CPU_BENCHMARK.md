@@ -271,3 +271,43 @@ performs DSH's atomic whole-file replacement. The workspace lies outside
 platform temp roots, so sandbox writes exercise the configured workspace-root
 containment path. This is trusted capability enforcement, not a kernel boundary;
 W10 remains the denial-semantics case. See `results/C6_REPORT.md`.
+
+## C7 multi-process Agent scale-out
+
+C7 runs one independent Node/DSH process per Agent. Every Agent reuses the C1
+fixture with 64 deterministic tool steps. The controller starts a batch
+concurrently, validates all child results, and reports throughput and summed
+per-child maximum RSS. Perf's default inheritance covers the controller and all
+Agent descendants.
+
+The runner parses `lscpu -p` and chooses the first logical CPU for each distinct
+physical `(socket, core)` pair. Each larger condition uses a nested prefix of
+that list, avoiding accidental SMT-sibling placement.
+
+Run a smoke test:
+
+```bash
+scripts/cpu/run-c7.py \
+  --agents 1,2 \
+  --repeats 1 \
+  --tool-steps 4 \
+  --payload-bytes 16 \
+  --perf off \
+  --output /tmp/c7-scaleout-smoke.json
+```
+
+Run the initial scale-out design:
+
+```bash
+scripts/cpu/run-c7.py \
+  --agents 1,2,4,8,16,32 \
+  --repeats 5 \
+  --tool-steps 64 \
+  --payload-bytes 64 \
+  --output results/c7-agent-scaleout-pilot.json
+```
+
+The batch scope includes process startup, Harness composition, execution, and
+exit. This is a multi-process topology; multiple Agents in one shared runtime
+are a separate condition. Selected-core NUMA placement must be inspected before
+cross-host interpretation. See `results/C7_REPORT.md`.

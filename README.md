@@ -191,10 +191,11 @@ real worker-thread code runtime and a deterministic Agent Loop. C6 measures the
 allowed-operation overhead of swapping DSH's local filesystem capability for
 its canonicalize-and-contain sandbox provider. All use exact semantic invariants,
 randomized repetitions, scoped CPU timing, and optional whole-process
-`perf stat`. See
+`perf stat`. C7 then scales independent deterministic DSH Agent processes from
+1 to 32 physical cores. See
 `CPU_BENCHMARK.md` for the designs and commands; the first ARM64 pilots are
 documented in `results/C1_REPORT.md`, `results/C2_REPORT.md`, and
-`results/C3_REPORT.md` through `results/C6_REPORT.md`, with complete samples in
+`results/C3_REPORT.md` through `results/C7_REPORT.md`, with complete samples in
 the corresponding JSON files.
 
 ## Frozen evidence

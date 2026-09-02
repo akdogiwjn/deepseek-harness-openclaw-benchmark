@@ -2,6 +2,7 @@
 /** C1 in-process deterministic Agent Loop CPU fixture. */
 
 import { Context } from '../../sources/deepseek-harness/vendor/cordis/lib/index.js'
+import { writeSync } from 'node:fs'
 import LlmRuntime, { createUserMessage, LlmAdapter } from '../../sources/deepseek-harness/packages/llm/llm/lib/index.js'
 import SessionStore, { SessionId } from '../../sources/deepseek-harness/packages/core/session/lib/index.js'
 import SessionProjectionRegistry from '../../sources/deepseek-harness/packages/session/session-projection/lib/index.js'
@@ -157,4 +158,4 @@ const output = {
 }
 
 await ctx.fiber.dispose()
-console.log(JSON.stringify(output))
+writeSync(1, `${JSON.stringify(output)}\n`)
