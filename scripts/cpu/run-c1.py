@@ -20,7 +20,9 @@ from typing import Any
 PERF_EVENTS = [
     "task-clock",
     "cycles",
+    "cycles:k",
     "instructions",
+    "instructions:k",
     "branches",
     "branch-misses",
     "cache-references",
@@ -55,21 +57,26 @@ def default_node(root: Path) -> Path:
 def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
     metrics: dict[str, float | None] = {}
     labels: dict[str, str] = {}
-    wanted = set(PERF_EVENTS)
     for line in stderr.splitlines():
         fields = line.split(",")
         if len(fields) < 3:
             continue
         label = fields[2].strip()
-        event = label.split(":", 1)[0]
-        if event not in wanted:
+        if label not in PERF_EVENTS:
             continue
-        raw = fields[0].strip()
+        key = label.replace(":", "_")
         try:
-            metrics[event] = float(raw)
+            metrics[key] = float(fields[0].strip())
         except ValueError:
-            metrics[event] = None
-        labels[event] = label
+            metrics[key] = None
+        labels[key] = label
+    for base in ("cycles", "instructions"):
+        total = metrics.get(base)
+        kernel = metrics.get(f"{base}_k")
+        if total is not None and kernel is not None:
+            metrics[f"{base}_u"] = total - kernel
+            if total:
+                metrics[f"{base}_kernel_ratio"] = kernel / total
     return metrics, labels
 
 
@@ -80,8 +87,13 @@ def run_sample(
     payload_bytes: int,
     cpu: int | None,
     use_perf: bool,
+    warm_turns: int = 0,
+    warmup_turns: int = 1,
 ) -> dict[str, Any]:
+    warm = warm_turns > 0
     command = [str(node), str(fixture), str(steps), str(payload_bytes)]
+    if warm:
+        command += [str(warm_turns), str(warmup_turns)]
     if use_perf:
         command = [
             "perf", "stat", "-x,", "--no-big-num", "-e", ",".join(PERF_EVENTS), "--", *command
@@ -98,6 +110,25 @@ def run_sample(
     if not stdout_lines:
         raise RuntimeError(f"C1 sample produced no JSON for steps={steps}")
     fixture_result = json.loads(stdout_lines[-1])
+    warm_data: dict[str, Any] | None = None
+    if warm:
+        turns = fixture_result["turns"]
+        wall = [t["wall_ns"] for t in turns]
+        cpu_total = [t["cpu_total_us"] for t in turns]
+        cpu_user = [t["cpu_user_us"] for t in turns]
+        warm_data = {"wall_ns": wall, "cpu_total_us": cpu_total, "cpu_user_us": cpu_user}
+        fixture_result = {
+            "tool_steps": steps,
+            "payload_bytes": payload_bytes,
+            "measured_turns": warm_turns,
+            "warmup_turns": warmup_turns,
+            "timing": {
+                "wall_ns": statistics.median(wall),
+                "cpu_total_us": statistics.median(cpu_total),
+                "cpu_user_us": statistics.median(cpu_user),
+            },
+            "resources": fixture_result["resources"],
+        }
     perf, perf_event_labels = parse_perf(completed.stderr) if use_perf else ({}, {})
     derived: dict[str, float | None] = {}
     instructions = perf.get("instructions")
@@ -118,12 +149,15 @@ def run_sample(
             derived["process_instructions_per_tool_step"] = instructions / steps
         if cycles is not None:
             derived["process_cycles_per_tool_step"] = cycles / steps
-    return {
+    sample = {
         "fixture": fixture_result,
         "perf": perf,
         "perf_event_labels": perf_event_labels,
         "derived": derived,
     }
+    if warm_data is not None:
+        sample["warm_turns"] = warm_data
+    return sample
 
 
 def numeric_path(sample: dict[str, Any], path: tuple[str, ...]) -> float | None:
@@ -217,14 +251,16 @@ def main() -> None:
     parser.add_argument("--steps", type=parse_steps, default=parse_steps("0,1,4,16,64,256"))
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--payload-bytes", type=int, default=64)
+    parser.add_argument("--warm-turns", type=int, default=0, help="measured turns per step in a single warm process")
+    parser.add_argument("--warmup-turns", type=int, default=1, help="unmeasured warmup turns before measurement")
     parser.add_argument("--cpu", type=int, default=0, help="logical CPU to pin, or -1 to disable pinning")
     parser.add_argument("--seed", type=int, default=20260902)
     parser.add_argument("--perf", choices=("auto", "on", "off"), default="auto")
     parser.add_argument("--node", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    if args.repeats < 1 or args.payload_bytes < 1:
-        parser.error("repeats and payload-bytes must be positive")
+    if args.repeats < 1 or args.payload_bytes < 1 or args.warm_turns < 0 or args.warmup_turns < 0:
+        parser.error("repeats and payload-bytes must be positive; warm-turns and warmup-turns must be non-negative")
 
     root = Path(__file__).resolve().parents[2]
     node = (args.node or default_node(root)).resolve()
@@ -244,6 +280,8 @@ def main() -> None:
             payload_bytes=args.payload_bytes,
             cpu=None if args.cpu < 0 else args.cpu,
             use_perf=use_perf,
+            warm_turns=args.warm_turns,
+            warmup_turns=args.warmup_turns,
         )
         sample["sample_index"] = index
         samples.append(sample)
@@ -256,12 +294,14 @@ def main() -> None:
 
     aggregates, fits = aggregate(samples, args.steps)
     result = {
-        "benchmark": "C1 in-process deterministic Agent Loop scaling",
+        "benchmark": "C1-warm fixed-context Agent Loop scaling" if args.warm_turns > 0 else "C1 in-process deterministic Agent Loop scaling",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "design": {
             "steps": args.steps,
             "repeats": args.repeats,
             "payload_bytes": args.payload_bytes,
+            "warm_turns": args.warm_turns,
+            "warmup_turns": args.warmup_turns,
             "randomization_seed": args.seed,
             "cpu_affinity": None if args.cpu < 0 else args.cpu,
             "perf_enabled": use_perf,
@@ -269,7 +309,11 @@ def main() -> None:
             "observed_perf_event_labels": samples[0]["perf_event_labels"] if samples else {},
             "internal_scope": "prompt enqueue through agent idle; setup and teardown excluded",
             "perf_scope": "whole Node fixture process; startup, setup, measured turn, and teardown included",
-            "context_policy": "one in-memory append-only Session whose derived context grows each tool step",
+            "context_policy": (
+                "one in-memory append-only Session whose derived context grows each tool step"
+                if args.warm_turns == 0 else
+                "fresh Session per turn (fixed context); each step median taken over warm turns"
+            ),
         },
         "host": {
             "platform": platform.platform(),
@@ -292,7 +336,8 @@ def main() -> None:
             "The Session context grows with tool steps; C1 does not isolate fixed-context loop cost.",
             "Whole-process perf counters include Node/V8 startup and Harness composition; slope estimates amortize that fixed intercept.",
             "No claim of cross-ISA instruction equivalence is made.",
-            "A :u event label means the host restricted perf to user space; software scheduling counters may then read zero and must not be interpreted as absence of context switches.",
+            "Default cycles/instructions are user+kernel totals; cycles:k/instructions:k are sampled separately and derived *_u / *_kernel_ratio split user from kernel. A perf restriction to user space will omit the kernel fields.",
+            "Warm mode still includes per-step process startup in whole-process perf; only the internal prompt-window timing is steady-state.",
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

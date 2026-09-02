@@ -19,7 +19,7 @@ from typing import Any
 
 CONDITIONS = ["dsh-managed", "raw-oneshot", "persistent"]
 PERF_EVENTS = [
-    "task-clock", "cycles", "instructions", "branches", "branch-misses",
+    "task-clock", "cycles", "cycles:k", "instructions", "instructions:k", "branches", "branch-misses",
     "cache-references", "cache-misses", "context-switches", "cpu-migrations", "page-faults",
 ]
 
@@ -63,14 +63,21 @@ def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
         if len(fields) < 3:
             continue
         label = fields[2].strip()
-        event = label.split(":", 1)[0]
-        if event not in PERF_EVENTS:
+        if label not in PERF_EVENTS:
             continue
+        key = label.replace(":", "_")
         try:
-            metrics[event] = float(fields[0].strip())
+            metrics[key] = float(fields[0].strip())
         except ValueError:
-            metrics[event] = None
-        labels[event] = label
+            metrics[key] = None
+        labels[key] = label
+    for base in ("cycles", "instructions"):
+        total = metrics.get(base)
+        kernel = metrics.get(f"{base}_k")
+        if total is not None and kernel is not None:
+            metrics[f"{base}_u"] = total - kernel
+            if total:
+                metrics[f"{base}_kernel_ratio"] = kernel / total
     return metrics, labels
 
 
@@ -229,7 +236,7 @@ def main() -> None:
             "The persistent condition excludes shell startup from scoped loop timing but whole-process perf includes it.",
             "process.cpuUsage reports the Node controller only; inherited perf counters cover descendant shell processes.",
             "The pilot uses a no-op builtin plus acknowledgement; filesystem and external-command workloads are separate conditions.",
-            "A :u event label excludes kernel execution and makes scheduling counters non-interpretable.",
+            "Default cycles/instructions are user+kernel totals; cycles:k/instructions:k are sampled separately and derived *_u / *_kernel_ratio split user from kernel. A perf restriction to user space will omit the kernel fields.",
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

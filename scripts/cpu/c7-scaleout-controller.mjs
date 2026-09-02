@@ -15,10 +15,16 @@ const agents = positiveInteger(process.argv[2], 'agents')
 const toolSteps = positiveInteger(process.argv[3] ?? '64', 'tool-steps')
 const payloadBytes = positiveInteger(process.argv[4] ?? '64', 'payload-bytes')
 const fixture = join(dirname(fileURLToPath(import.meta.url)), 'c1-agent-loop.mjs')
+const cpuList = (process.argv[5] ?? '').split(',').filter(Boolean).map(Number)
 
-function runAgent(index) {
+function runAgent(index, cpu) {
   return new Promise((resolve, reject) => {
-    execFile(process.execPath, [fixture, String(toolSteps), String(payloadBytes)], {
+    const hardPin = cpu !== undefined
+    const binary = hardPin ? 'taskset' : process.execPath
+    const args = hardPin
+      ? ['-c', String(cpu), process.execPath, fixture, String(toolSteps), String(payloadBytes)]
+      : [fixture, String(toolSteps), String(payloadBytes)]
+    execFile(binary, args, {
       cwd: process.cwd(), env: process.env, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024,
     }, (error, output, errorText) => {
       if (error !== null) {
@@ -37,7 +43,10 @@ function runAgent(index) {
 
 const beforeCpu = process.cpuUsage()
 const started = process.hrtime.bigint()
-const children = await Promise.all(Array.from({ length: agents }, (_, index) => runAgent(index + 1)))
+const children = await Promise.all(Array.from({ length: agents }, (_, index) => {
+  const cpu = cpuList.length ? cpuList[index] : undefined
+  return runAgent(index + 1, cpu)
+}))
 const ended = process.hrtime.bigint()
 const cpu = process.cpuUsage(beforeCpu)
 const wallNs = Number(ended - started)
@@ -58,6 +67,8 @@ console.log(JSON.stringify({
   agents, tool_steps_per_agent: toolSteps, payload_bytes: payloadBytes,
   total_tool_steps: totalToolSteps,
   total_provider_requests: agents * (toolSteps + 1),
+  cpu_binding: cpuList.slice(0, agents),
+  hard_pin: cpuList.length > 0,
   timing: {
     wall_ns: wallNs,
     controller_cpu_user_us: cpu.user,

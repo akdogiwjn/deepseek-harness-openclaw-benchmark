@@ -196,7 +196,9 @@ randomized repetitions, scoped CPU timing, and optional whole-process
 `CPU_BENCHMARK.md` for the designs and commands; the first ARM64 pilots are
 documented in `results/C1_REPORT.md`, `results/C2_REPORT.md`, and
 `results/C3_REPORT.md` through `results/C7_REPORT.md`, with complete samples in
-the corresponding JSON files.
+the corresponding JSON files. `run-c1.py --warm-turns` provides a warm
+steady-state fixed-context variant, and `run-c7.py --hard-pin` separates core
+scaling from scheduler migration.
 
 ## Frozen evidence
 

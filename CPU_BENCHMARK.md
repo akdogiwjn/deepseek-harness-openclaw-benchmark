@@ -67,6 +67,32 @@ means kernel execution was excluded; under such permissions, zero-valued
 context-switch/migration software events are not evidence that scheduling did
 not occur. The fixture's prompt-window `resourceUsage()` deltas remain separate.
 
+All runners also collect `cycles:k` and `instructions:k`; when the host permits
+user+kernel access (`perf_event_paranoid <= 1`) the plain `cycles`/`instructions`
+counters are user+kernel totals and each runner derives the `*_u` component and
+`*_kernel_ratio`. These fields let the process/scheduler/filesystem cases (C4,
+C6, C7) attribute kernel-side work instead of silently dropping it under `:u`.
+
+### C1-warm steady-state variant
+
+`run-c1.py` accepts `--warm-turns` and `--warmup-turns`. With `--warm-turns > 0`
+the fixture reuses one composed Harness and creates a fresh Session per turn, so
+every turn has fixed context. The first `--warmup-turns` turns are discarded and
+the runner reports the per-step median over the remaining warm turns. Whole-process
+perf still includes process startup, so the cold/warm contrast is visible only in
+the internal prompt-window timing; compare by running the same `--steps` sweep
+with and without `--warm-turns`.
+
+```bash
+scripts/cpu/run-c1.py \
+  --steps 0,1,4,16,64,256 \
+  --repeats 5 \
+  --warm-turns 10 \
+  --warmup-turns 2 \
+  --cpu 0 \
+  --output results/c1-warm-agent-loop-pilot.json
+```
+
 ## C2 Session/Event Log event-count scaling
 
 C2 removes the Agent Loop and measures DSH Session primitives directly. Each
@@ -311,3 +337,21 @@ The batch scope includes process startup, Harness composition, execution, and
 exit. This is a multi-process topology; multiple Agents in one shared runtime
 are a separate condition. Selected-core NUMA placement must be inspected before
 cross-host interpretation. See `results/C7_REPORT.md`.
+
+### C7-B hard-pin placement
+
+`run-c7.py --hard-pin` translates the shared-cpuset placement into one hard-pinned
+core per Agent: agent `i` runs under `taskset -c <core_i>` where `core_i` is the
+`i`-th selected physical core. The controller itself is left unpinned. This
+separates core scaling from Linux scheduler migration; the default shared cpuset
+remains the scheduler-managed baseline.
+
+```bash
+scripts/cpu/run-c7.py \
+  --agents 1,2,4,8,16,32 \
+  --repeats 5 \
+  --tool-steps 64 \
+  --payload-bytes 64 \
+  --hard-pin \
+  --output results/c7-agent-scaleout-hardpin-pilot.json
+```

@@ -18,7 +18,7 @@ from typing import Any
 
 
 PERF_EVENTS = [
-    "task-clock", "cycles", "instructions", "branches", "branch-misses",
+    "task-clock", "cycles", "cycles:k", "instructions", "instructions:k", "branches", "branch-misses",
     "cache-references", "cache-misses", "context-switches", "cpu-migrations", "page-faults",
 ]
 OPERATIONS = ["append", "derive_messages", "fork_prefix", "jsonl_write", "jsonl_warm_load"]
@@ -64,14 +64,21 @@ def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
         if len(fields) < 3:
             continue
         label = fields[2].strip()
-        event = label.split(":", 1)[0]
-        if event not in PERF_EVENTS:
+        if label not in PERF_EVENTS:
             continue
+        key = label.replace(":", "_")
         try:
-            metrics[event] = float(fields[0].strip())
+            metrics[key] = float(fields[0].strip())
         except ValueError:
-            metrics[event] = None
-        labels[event] = label
+            metrics[key] = None
+        labels[key] = label
+    for base in ("cycles", "instructions"):
+        total = metrics.get(base)
+        kernel = metrics.get(f"{base}_k")
+        if total is not None and kernel is not None:
+            metrics[f"{base}_u"] = total - kernel
+            if total:
+                metrics[f"{base}_kernel_ratio"] = kernel / total
     return metrics, labels
 
 
@@ -245,7 +252,7 @@ def main() -> None:
             "deriveMessages sees completed user-only turns, not tool-heavy or chunk-heavy event shapes.",
             "JSONL load uses a fresh backend but warm host page cache; this is not a cold-storage measurement.",
             "Whole-process perf includes Node/V8 startup, setup, all five primitives, cleanup, and teardown.",
-            "A :u event label excludes kernel execution and makes zero scheduling counters non-interpretable.",
+            "Default cycles/instructions are user+kernel totals; cycles:k/instructions:k are sampled separately and derived *_u / *_kernel_ratio split user from kernel. A perf restriction to user space will omit the kernel fields.",
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

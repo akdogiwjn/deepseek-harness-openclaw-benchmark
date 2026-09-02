@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 CONDITIONS = [(backend, workload) for backend in ("local", "sandbox") for workload in ("read", "write")]
-PERF_EVENTS = ["task-clock", "cycles", "instructions", "branches", "branch-misses", "cache-references",
+PERF_EVENTS = ["task-clock", "cycles", "cycles:k", "instructions", "instructions:k", "branches", "branch-misses", "cache-references",
                "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
 
 
@@ -40,11 +40,19 @@ def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
     for line in stderr.splitlines():
         fields = line.split(",")
         if len(fields) < 3: continue
-        label, event = fields[2].strip(), fields[2].strip().split(":", 1)[0]
-        if event not in PERF_EVENTS: continue
-        try: metrics[event] = float(fields[0].strip())
-        except ValueError: metrics[event] = None
-        labels[event] = label
+        label = fields[2].strip()
+        if label not in PERF_EVENTS: continue
+        key = label.replace(":", "_")
+        try: metrics[key] = float(fields[0].strip())
+        except ValueError: metrics[key] = None
+        labels[key] = label
+    for base in ("cycles", "instructions"):
+        total = metrics.get(base)
+        kernel = metrics.get(f"{base}_k")
+        if total is not None and kernel is not None:
+            metrics[f"{base}_u"] = total - kernel
+            if total:
+                metrics[f"{base}_kernel_ratio"] = kernel / total
     return metrics, labels
 
 
@@ -156,7 +164,7 @@ def main() -> None:
                  "Writes use DSH atomic whole-file replacement with a fixed 256-byte payload.",
                  "W10 covers denial semantics; C6 measures allowed workspace operations only.",
                  "Whole-process perf includes Node/V8 startup, composition, workspace setup/cleanup, and teardown.",
-                 "A :u event label excludes kernel execution; process.cpuUsage still includes this Node process's system CPU."],}
+                 "Default cycles/instructions are user+kernel totals; cycles:k/instructions:k are sampled separately and derived *_u / *_kernel_ratio split user from kernel. A perf restriction to user space will omit the kernel fields."],}
     args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(json.dumps(result, indent=2)+"\n")
     print(f"[done] wrote {args.output}")
 
