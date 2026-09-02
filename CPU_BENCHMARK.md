@@ -111,3 +111,49 @@ This first C2 condition fixes payload size and uses completed user-only turns.
 It does not represent tool-heavy histories, streaming chunks, compaction
 events, cold storage, or payload-size scaling. See `results/C2_REPORT.md` for
 the pilot observations and their interpretation limits.
+
+## C3 fixed-shape context and JSON scaling
+
+C3 holds event count, message count, block count, system prompt, and tool schema
+constant while growing one ASCII user text block from 4 KiB to 16 MiB. It
+separately times:
+
+- Session `deriveMessages()`;
+- the pinned DSH DeepSeek `serializeRequest()` wire assembly;
+- request `JSON.stringify()` and `JSON.parse()`;
+- the pinned DSH `parseSse()` plus JSON decoding of one response data event.
+
+Each scoped operation repeats three times in the same process. The fixture
+validates the complete request and response payload round trips. SSE data is
+pre-encoded outside timing and supplied in 16 KiB transport chunks; stream
+construction, framing, decoding, and response `JSON.parse()` remain inside the
+SSE measurement.
+
+Run a short functional smoke test:
+
+```bash
+scripts/cpu/run-c3.py \
+  --sizes 4K,64K,1M \
+  --repeats 1 \
+  --iterations 2 \
+  --cpu 0 \
+  --perf off \
+  --output /tmp/c3-context-smoke.json
+```
+
+Run the initial scaling design:
+
+```bash
+scripts/cpu/run-c3.py \
+  --sizes 4K,16K,64K,256K,1M,4M,16M \
+  --repeats 5 \
+  --iterations 3 \
+  --stream-chunk-bytes 16384 \
+  --cpu 0 \
+  --output results/c3-context-json-pilot.json
+```
+
+Growing response content with request context supplies a common byte axis for
+the pilot; it does not claim those sizes are coupled in production. The SSE
+condition includes framing and JSON decode, not the complete adapter translation
+state machine. See `results/C3_REPORT.md` for results and interpretation limits.

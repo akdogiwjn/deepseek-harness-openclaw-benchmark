@@ -1,0 +1,4862 @@
+{
+  "benchmark": "C3 fixed-shape context-byte scaling",
+  "created_at": "2026-09-02T02:00:55.772312+00:00",
+  "design": {
+    "context_bytes": [
+      4096,
+      16384,
+      65536,
+      262144,
+      1048576,
+      4194304,
+      16777216
+    ],
+    "repeats": 5,
+    "iterations_per_scoped_operation": 3,
+    "message_shape": "one completed user turn with one ASCII text block",
+    "stream_chunk_bytes": 16384,
+    "randomization_seed": 20260902,
+    "cpu_affinity": 0,
+    "perf_enabled": true,
+    "perf_events": [
+      "task-clock",
+      "cycles",
+      "instructions",
+      "branches",
+      "branch-misses",
+      "cache-references",
+      "cache-misses",
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "observed_perf_event_labels": {
+      "task-clock": "task-clock:u",
+      "cycles": "cycles:u",
+      "instructions": "instructions:u",
+      "branches": "branches:u",
+      "branch-misses": "branch-misses:u",
+      "cache-references": "cache-references:u",
+      "cache-misses": "cache-misses:u",
+      "context-switches": "context-switches:u",
+      "cpu-migrations": "cpu-migrations:u",
+      "page-faults": "page-faults:u"
+    }
+  },
+  "host": {
+    "platform": "Linux-6.6.0-28.0.0.34.oe2403.aarch64-aarch64-with-glibc2.38",
+    "machine": "aarch64",
+    "logical_cpus": 256,
+    "node": "v24.15.0",
+    "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64",
+    "perf_event_paranoid": "2"
+  },
+  "aggregates": {
+    "4096": {
+      "context_bytes": 4096,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 4540.0,
+        "min": 4540.0,
+        "max": 4540.0
+      },
+      "response_json_bytes": {
+        "median": 4260.0,
+        "min": 4260.0,
+        "max": 4260.0
+      },
+      "sse_wire_bytes": {
+        "median": 4282.0,
+        "min": 4282.0,
+        "max": 4282.0
+      },
+      "max_rss_kb": {
+        "median": 52208.0,
+        "min": 52200.0,
+        "max": 53624.0
+      },
+      "cycles": {
+        "median": 160847686.0,
+        "min": 159311816.0,
+        "max": 164688555.0
+      },
+      "instructions": {
+        "median": 247416008.0,
+        "min": 245831833.0,
+        "max": 251995971.0
+      },
+      "ipc": {
+        "median": 1.5403051704929371,
+        "min": 1.525558224916058,
+        "max": 1.550097264066329
+      },
+      "cache_mpki": {
+        "median": 5.243010085994003,
+        "min": 5.15726499452644,
+        "max": 5.320496481375612
+      },
+      "branch_mpki": {
+        "median": 10.171803095980657,
+        "min": 9.874815306726324,
+        "max": 10.277783369798401
+      },
+      "derive_messages_wall_ns": {
+        "median": 35617.0,
+        "min": 34053.666666666664,
+        "max": 36457.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 41.666666666666664,
+        "min": 40.0,
+        "max": 42.333333333333336
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 10.172526041666666,
+        "min": 9.765625,
+        "max": 10.335286458333334
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 98058.0,
+        "min": 97518.0,
+        "max": 98951.33333333333
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 99.66666666666667,
+        "min": 99.0,
+        "max": 100.66666666666667
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 24.332682291666668,
+        "min": 24.169921875,
+        "max": 24.576822916666668
+      },
+      "json_encode_request_wall_ns": {
+        "median": 14246.666666666666,
+        "min": 13760.333333333334,
+        "max": 14717.0
+      },
+      "json_encode_request_cpu_us": {
+        "median": 15.333333333333334,
+        "min": 15.0,
+        "max": 16.0
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 3.7434895833333335,
+        "min": 3.662109375,
+        "max": 3.90625
+      },
+      "json_decode_request_wall_ns": {
+        "median": 13647.0,
+        "min": 12760.333333333334,
+        "max": 15697.0
+      },
+      "json_decode_request_cpu_us": {
+        "median": 14.666666666666666,
+        "min": 14.0,
+        "max": 17.666666666666668
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 3.5807291666666665,
+        "min": 3.41796875,
+        "max": 4.313151041666667
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 2246957.3333333335,
+        "min": 2098515.3333333335,
+        "max": 2497094.0
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 2245.3333333333335,
+        "min": 2091.3333333333335,
+        "max": 2273.3333333333335
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 548.1770833333334,
+        "min": 510.57942708333337,
+        "max": 555.0130208333334
+      }
+    },
+    "16384": {
+      "context_bytes": 16384,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 16828.0,
+        "min": 16828.0,
+        "max": 16828.0
+      },
+      "response_json_bytes": {
+        "median": 16548.0,
+        "min": 16548.0,
+        "max": 16548.0
+      },
+      "sse_wire_bytes": {
+        "median": 16570.0,
+        "min": 16570.0,
+        "max": 16570.0
+      },
+      "max_rss_kb": {
+        "median": 52212.0,
+        "min": 50620.0,
+        "max": 52520.0
+      },
+      "cycles": {
+        "median": 162795139.0,
+        "min": 158345372.0,
+        "max": 167276956.0
+      },
+      "instructions": {
+        "median": 252734288.0,
+        "min": 249318569.0,
+        "max": 255368385.0
+      },
+      "ipc": {
+        "median": 1.5492811321311755,
+        "min": 1.5266202297464093,
+        "max": 1.5745238768329775
+      },
+      "cache_mpki": {
+        "median": 5.23458564540427,
+        "min": 5.1858024633707105,
+        "max": 5.308038748250812
+      },
+      "branch_mpki": {
+        "median": 9.911836735029796,
+        "min": 9.524974451461736,
+        "max": 10.28968797370904
+      },
+      "derive_messages_wall_ns": {
+        "median": 35104.0,
+        "min": 33277.333333333336,
+        "max": 35770.333333333336
+      },
+      "derive_messages_cpu_us": {
+        "median": 41.0,
+        "min": 40.333333333333336,
+        "max": 41.666666666666664
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 2.50244140625,
+        "min": 2.4617513020833335,
+        "max": 2.5431315104166665
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 98504.66666666667,
+        "min": 98024.66666666667,
+        "max": 212226.33333333334
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 100.33333333333333,
+        "min": 99.66666666666667,
+        "max": 211.66666666666666
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 6.123860677083333,
+        "min": 6.083170572916667,
+        "max": 12.919108072916666
+      },
+      "json_encode_request_wall_ns": {
+        "median": 23800.333333333332,
+        "min": 23593.666666666668,
+        "max": 42937.333333333336
+      },
+      "json_encode_request_cpu_us": {
+        "median": 25.0,
+        "min": 24.666666666666668,
+        "max": 44.666666666666664
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 1.52587890625,
+        "min": 1.5055338541666667,
+        "max": 2.7262369791666665
+      },
+      "json_decode_request_wall_ns": {
+        "median": 18666.666666666668,
+        "min": 17663.666666666668,
+        "max": 20523.666666666668
+      },
+      "json_decode_request_cpu_us": {
+        "median": 19.666666666666668,
+        "min": 18.666666666666668,
+        "max": 22.0
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 1.2003580729166667,
+        "min": 1.1393229166666667,
+        "max": 1.3427734375
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 2269377.6666666665,
+        "min": 2161692.6666666665,
+        "max": 2375002.3333333335
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 2266.3333333333335,
+        "min": 2163.0,
+        "max": 2279.0
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 138.32600911458334,
+        "min": 132.01904296875,
+        "max": 139.09912109375
+      }
+    },
+    "65536": {
+      "context_bytes": 65536,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 65980.0,
+        "min": 65980.0,
+        "max": 65980.0
+      },
+      "response_json_bytes": {
+        "median": 65700.0,
+        "min": 65700.0,
+        "max": 65700.0
+      },
+      "sse_wire_bytes": {
+        "median": 65722.0,
+        "min": 65722.0,
+        "max": 65722.0
+      },
+      "max_rss_kb": {
+        "median": 54260.0,
+        "min": 54256.0,
+        "max": 54260.0
+      },
+      "cycles": {
+        "median": 169925493.0,
+        "min": 167618667.0,
+        "max": 172461410.0
+      },
+      "instructions": {
+        "median": 262770555.0,
+        "min": 259473719.0,
+        "max": 264689998.0
+      },
+      "ipc": {
+        "median": 1.5480001341378047,
+        "min": 1.5347781164493552,
+        "max": 1.5530365652668725
+      },
+      "cache_mpki": {
+        "median": 5.453036194277219,
+        "min": 5.249877254523233,
+        "max": 5.485657682348939
+      },
+      "branch_mpki": {
+        "median": 9.934020436732474,
+        "min": 9.602078428605711,
+        "max": 10.049596310362856
+      },
+      "derive_messages_wall_ns": {
+        "median": 35710.666666666664,
+        "min": 35200.666666666664,
+        "max": 40107.333333333336
+      },
+      "derive_messages_cpu_us": {
+        "median": 41.666666666666664,
+        "min": 41.0,
+        "max": 194.33333333333334
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 0.6357828776041666,
+        "min": 0.6256103515625,
+        "max": 2.9652913411458335
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 98411.33333333333,
+        "min": 97504.66666666667,
+        "max": 100464.66666666667
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 100.0,
+        "min": 99.0,
+        "max": 102.66666666666667
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 1.52587890625,
+        "min": 1.5106201171875,
+        "max": 1.5665690104166667
+      },
+      "json_encode_request_wall_ns": {
+        "median": 73657.66666666667,
+        "min": 72367.66666666667,
+        "max": 78621.0
+      },
+      "json_encode_request_cpu_us": {
+        "median": 75.0,
+        "min": 74.66666666666667,
+        "max": 80.33333333333333
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 1.1444091796875,
+        "min": 1.1393229166666667,
+        "max": 1.2257893880208333
+      },
+      "json_decode_request_wall_ns": {
+        "median": 54171.0,
+        "min": 53770.666666666664,
+        "max": 72214.0
+      },
+      "json_decode_request_cpu_us": {
+        "median": 55.666666666666664,
+        "min": 55.0,
+        "max": 74.33333333333333
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 0.8494059244791666,
+        "min": 0.8392333984375,
+        "max": 1.1342366536458333
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 2974320.6666666665,
+        "min": 2719997.0,
+        "max": 3171223.3333333335
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 2972.0,
+        "min": 2718.3333333333335,
+        "max": 3027.6666666666665
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 45.34912109375,
+        "min": 41.478474934895836,
+        "max": 46.198527018229164
+      }
+    },
+    "262144": {
+      "context_bytes": 262144,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 262588.0,
+        "min": 262588.0,
+        "max": 262588.0
+      },
+      "response_json_bytes": {
+        "median": 262308.0,
+        "min": 262308.0,
+        "max": 262308.0
+      },
+      "sse_wire_bytes": {
+        "median": 262330.0,
+        "min": 262330.0,
+        "max": 262330.0
+      },
+      "max_rss_kb": {
+        "median": 56308.0,
+        "min": 56236.0,
+        "max": 56308.0
+      },
+      "cycles": {
+        "median": 180128632.0,
+        "min": 178286178.0,
+        "max": 188236259.0
+      },
+      "instructions": {
+        "median": 283707282.0,
+        "min": 280406131.0,
+        "max": 285321162.0
+      },
+      "ipc": {
+        "median": 1.5630439955051774,
+        "min": 1.515760903429344,
+        "max": 1.5861354153881744
+      },
+      "cache_mpki": {
+        "median": 5.421508722066478,
+        "min": 5.33123784958047,
+        "max": 5.588615321681393
+      },
+      "branch_mpki": {
+        "median": 9.281421969281705,
+        "min": 8.965980847259006,
+        "max": 9.73007743463487
+      },
+      "derive_messages_wall_ns": {
+        "median": 35780.333333333336,
+        "min": 34630.333333333336,
+        "max": 43860.666666666664
+      },
+      "derive_messages_cpu_us": {
+        "median": 41.666666666666664,
+        "min": 41.0,
+        "max": 171.66666666666666
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 0.15894571940104166,
+        "min": 0.156402587890625,
+        "max": 0.6548563639322916
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 98714.66666666667,
+        "min": 98588.0,
+        "max": 115301.33333333333
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 100.66666666666667,
+        "min": 100.33333333333333,
+        "max": 117.66666666666667
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 0.3840128580729167,
+        "min": 0.3827412923177083,
+        "max": 0.4488627115885417
+      },
+      "json_encode_request_wall_ns": {
+        "median": 337508.0,
+        "min": 315177.6666666667,
+        "max": 448116.0
+      },
+      "json_encode_request_cpu_us": {
+        "median": 339.3333333333333,
+        "min": 317.0,
+        "max": 417.3333333333333
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 1.2944539388020833,
+        "min": 1.209259033203125,
+        "max": 1.5920003255208333
+      },
+      "json_decode_request_wall_ns": {
+        "median": 518857.3333333333,
+        "min": 485250.0,
+        "max": 535117.3333333334
+      },
+      "json_decode_request_cpu_us": {
+        "median": 521.3333333333334,
+        "min": 488.3333333333333,
+        "max": 535.3333333333334
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 1.9887288411458335,
+        "min": 1.8628438313802083,
+        "max": 2.0421346028645835
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 3755574.6666666665,
+        "min": 3707250.3333333335,
+        "max": 4050738.6666666665
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 3726.6666666666665,
+        "min": 3622.6666666666665,
+        "max": 3793.3333333333335
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 14.216105143229166,
+        "min": 13.819376627604166,
+        "max": 14.470418294270834
+      }
+    },
+    "1048576": {
+      "context_bytes": 1048576,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 1049020.0,
+        "min": 1049020.0,
+        "max": 1049020.0
+      },
+      "response_json_bytes": {
+        "median": 1048740.0,
+        "min": 1048740.0,
+        "max": 1048740.0
+      },
+      "sse_wire_bytes": {
+        "median": 1048762.0,
+        "min": 1048762.0,
+        "max": 1048762.0
+      },
+      "max_rss_kb": {
+        "median": 70644.0,
+        "min": 70640.0,
+        "max": 72904.0
+      },
+      "cycles": {
+        "median": 214818959.0,
+        "min": 210737382.0,
+        "max": 217095813.0
+      },
+      "instructions": {
+        "median": 376089653.0,
+        "min": 375878936.0,
+        "max": 376311059.0
+      },
+      "ipc": {
+        "median": 1.750728402887382,
+        "min": 1.7326828868873672,
+        "max": 1.7836367351284643
+      },
+      "cache_mpki": {
+        "median": 5.360248504363931,
+        "min": 5.281961153578467,
+        "max": 5.383517952705921
+      },
+      "branch_mpki": {
+        "median": 7.608620399327674,
+        "min": 7.3525375734276315,
+        "max": 7.961719297891153
+      },
+      "derive_messages_wall_ns": {
+        "median": 34937.333333333336,
+        "min": 34114.0,
+        "max": 35867.333333333336
+      },
+      "derive_messages_cpu_us": {
+        "median": 41.0,
+        "min": 40.0,
+        "max": 42.0
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 0.03910064697265625,
+        "min": 0.03814697265625,
+        "max": 0.0400543212890625
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 100678.0,
+        "min": 99531.33333333333,
+        "max": 124265.0
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 102.66666666666667,
+        "min": 101.33333333333333,
+        "max": 126.33333333333333
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 0.09791056315104167,
+        "min": 0.09663899739583333,
+        "max": 0.12048085530598958
+      },
+      "json_encode_request_wall_ns": {
+        "median": 1549464.3333333333,
+        "min": 1406782.6666666667,
+        "max": 1607331.6666666667
+      },
+      "json_encode_request_cpu_us": {
+        "median": 1478.0,
+        "min": 1406.6666666666667,
+        "max": 1577.6666666666667
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 1.4095306396484375,
+        "min": 1.3415018717447917,
+        "max": 1.5045801798502605
+      },
+      "json_decode_request_wall_ns": {
+        "median": 826841.3333333334,
+        "min": 786060.6666666666,
+        "max": 905306.0
+      },
+      "json_decode_request_cpu_us": {
+        "median": 826.6666666666666,
+        "min": 788.6666666666666,
+        "max": 905.3333333333334
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 0.7883707682291666,
+        "min": 0.7521311442057291,
+        "max": 0.8633931477864584
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 6154950.666666667,
+        "min": 5919334.333333333,
+        "max": 6650250.666666667
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 6083.0,
+        "min": 5910.0,
+        "max": 6643.333333333333
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 5.801200866699219,
+        "min": 5.6362152099609375,
+        "max": 6.3355763753255205
+      }
+    },
+    "4194304": {
+      "context_bytes": 4194304,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 4194748.0,
+        "min": 4194748.0,
+        "max": 4194748.0
+      },
+      "response_json_bytes": {
+        "median": 4194468.0,
+        "min": 4194468.0,
+        "max": 4194468.0
+      },
+      "sse_wire_bytes": {
+        "median": 4194490.0,
+        "min": 4194490.0,
+        "max": 4194490.0
+      },
+      "max_rss_kb": {
+        "median": 146716.0,
+        "min": 146032.0,
+        "max": 147140.0
+      },
+      "cycles": {
+        "median": 369884798.0,
+        "min": 364102850.0,
+        "max": 375580458.0
+      },
+      "instructions": {
+        "median": 743384725.0,
+        "min": 738623002.0,
+        "max": 754637553.0
+      },
+      "ipc": {
+        "median": 2.02887666447179,
+        "min": 1.9792955388536215,
+        "max": 2.0394571291500414
+      },
+      "cache_mpki": {
+        "median": 5.239671824467293,
+        "min": 5.205750740050966,
+        "max": 5.317622042879614
+      },
+      "branch_mpki": {
+        "median": 5.2466007550628655,
+        "min": 4.906531599547896,
+        "max": 5.477934726194435
+      },
+      "derive_messages_wall_ns": {
+        "median": 35537.0,
+        "min": 35153.666666666664,
+        "max": 38114.0
+      },
+      "derive_messages_cpu_us": {
+        "median": 42.0,
+        "min": 41.0,
+        "max": 42.333333333333336
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 0.010013580322265625,
+        "min": 0.009775161743164062,
+        "max": 0.010093053181966146
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 102161.33333333333,
+        "min": 99211.33333333333,
+        "max": 103711.33333333333
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 104.0,
+        "min": 101.0,
+        "max": 105.33333333333333
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 0.0247955322265625,
+        "min": 0.024080276489257812,
+        "max": 0.025113423665364582
+      },
+      "json_encode_request_wall_ns": {
+        "median": 4751298.333333333,
+        "min": 4602166.0,
+        "max": 4972334.333333333
+      },
+      "json_encode_request_cpu_us": {
+        "median": 4745.333333333333,
+        "min": 4521.666666666667,
+        "max": 4965.333333333333
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 1.1313756306966145,
+        "min": 1.0780493418375652,
+        "max": 1.1838277180989583
+      },
+      "json_decode_request_wall_ns": {
+        "median": 2421576.3333333335,
+        "min": 2017437.3333333333,
+        "max": 2470490.3333333335
+      },
+      "json_decode_request_cpu_us": {
+        "median": 2421.3333333333335,
+        "min": 1993.6666666666667,
+        "max": 2458.6666666666665
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 0.5772908528645834,
+        "min": 0.4753271738688151,
+        "max": 0.5861918131510416
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 17599863.333333332,
+        "min": 17088663.0,
+        "max": 17651310.666666668
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 17532.0,
+        "min": 16991.333333333332,
+        "max": 17581.0
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 4.179954528808594,
+        "min": 4.051049550374349,
+        "max": 4.19163703918457
+      }
+    },
+    "16777216": {
+      "context_bytes": 16777216,
+      "samples": 5,
+      "request_json_bytes": {
+        "median": 16777660.0,
+        "min": 16777660.0,
+        "max": 16777660.0
+      },
+      "response_json_bytes": {
+        "median": 16777380.0,
+        "min": 16777380.0,
+        "max": 16777380.0
+      },
+      "sse_wire_bytes": {
+        "median": 16777402.0,
+        "min": 16777402.0,
+        "max": 16777402.0
+      },
+      "max_rss_kb": {
+        "median": 346252.0,
+        "min": 345840.0,
+        "max": 348384.0
+      },
+      "cycles": {
+        "median": 779220854.0,
+        "min": 764183334.0,
+        "max": 784426374.0
+      },
+      "instructions": {
+        "median": 1939895097.0,
+        "min": 1913424123.0,
+        "max": 1941007840.0
+      },
+      "ipc": {
+        "median": 2.4882148392809826,
+        "min": 2.4737707200038637,
+        "max": 2.5038809901604058
+      },
+      "cache_mpki": {
+        "median": 4.572373633193553,
+        "min": 4.526423111012172,
+        "max": 4.6441763188746
+      },
+      "branch_mpki": {
+        "median": 2.635590792696054,
+        "min": 2.417478145277883,
+        "max": 2.683837908581507
+      },
+      "derive_messages_wall_ns": {
+        "median": 35480.333333333336,
+        "min": 34757.0,
+        "max": 48850.666666666664
+      },
+      "derive_messages_cpu_us": {
+        "median": 44.666666666666664,
+        "min": 41.666666666666664,
+        "max": 57.666666666666664
+      },
+      "derive_messages_cpu_ns_per_context_byte": {
+        "median": 0.0026623407999674478,
+        "min": 0.002483526865641276,
+        "max": 0.003437201182047526
+      },
+      "assemble_wire_request_wall_ns": {
+        "median": 102778.0,
+        "min": 101348.0,
+        "max": 130701.66666666667
+      },
+      "assemble_wire_request_cpu_us": {
+        "median": 104.66666666666667,
+        "min": 102.66666666666667,
+        "max": 133.0
+      },
+      "assemble_wire_request_cpu_ns_per_context_byte": {
+        "median": 0.006238619486490886,
+        "min": 0.0061194101969401045,
+        "max": 0.007927417755126953
+      },
+      "json_encode_request_wall_ns": {
+        "median": 16023485.333333334,
+        "min": 15941407.333333334,
+        "max": 16240164.666666666
+      },
+      "json_encode_request_cpu_us": {
+        "median": 15938.0,
+        "min": 15752.666666666666,
+        "max": 16087.666666666666
+      },
+      "json_encode_request_cpu_ns_per_context_byte": {
+        "median": 0.9499788284301758,
+        "min": 0.9389321009318033,
+        "max": 0.9588996569315592
+      },
+      "json_decode_request_wall_ns": {
+        "median": 11074887.666666666,
+        "min": 10840281.0,
+        "max": 11345681.333333334
+      },
+      "json_decode_request_cpu_us": {
+        "median": 11034.333333333334,
+        "min": 10809.666666666666,
+        "max": 11277.333333333334
+      },
+      "json_decode_request_cpu_ns_per_context_byte": {
+        "median": 0.6576975186665853,
+        "min": 0.6443063418070475,
+        "max": 0.6721814473470052
+      },
+      "sse_frame_and_json_decode_wall_ns": {
+        "median": 42739049.333333336,
+        "min": 41360600.666666664,
+        "max": 43181678.666666664
+      },
+      "sse_frame_and_json_decode_cpu_us": {
+        "median": 42558.333333333336,
+        "min": 41186.333333333336,
+        "max": 43014.333333333336
+      },
+      "sse_frame_and_json_decode_cpu_ns_per_context_byte": {
+        "median": 2.5366743405659995,
+        "min": 2.4548967679341636,
+        "max": 2.5638540585835776
+      }
+    }
+  },
+  "linear_fits_over_context_byte_medians": {
+    "request_json_bytes": {
+      "intercept": 444.0,
+      "per_context_byte_slope": 1.0
+    },
+    "response_json_bytes": {
+      "intercept": 164.0,
+      "per_context_byte_slope": 1.0
+    },
+    "sse_wire_bytes": {
+      "intercept": 186.0,
+      "per_context_byte_slope": 1.0
+    },
+    "max_rss_kb": {
+      "intercept": 54935.864057672516,
+      "per_context_byte_slope": 0.017616436059936565
+    },
+    "cycles": {
+      "intercept": 173748854.6846893,
+      "per_context_byte_slope": 36.72076974651822
+    },
+    "instructions": {
+      "intercept": 264813993.96086508,
+      "per_context_byte_slope": 100.69178617563855
+    },
+    "ipc": {
+      "intercept": 1.6025338915086575,
+      "per_context_byte_slope": 5.591464521626752e-08
+    },
+    "cache_mpki": {
+      "intercept": 5.36469136968102,
+      "per_context_byte_slope": -4.597609120712808e-08
+    },
+    "branch_mpki": {
+      "intercept": 9.190296537131212,
+      "per_context_byte_slope": -4.2659479468615104e-07
+    },
+    "derive_messages_wall_ns": {
+      "intercept": 35447.04949078842,
+      "per_context_byte_slope": 1.6684461742449348e-06
+    },
+    "derive_messages_cpu_us": {
+      "intercept": 41.32898500972651,
+      "per_context_byte_slope": 1.9508769921897673e-07
+    },
+    "assemble_wire_request_wall_ns": {
+      "intercept": 99088.90628218332,
+      "per_context_byte_slope": 0.00025409473249576474
+    },
+    "assemble_wire_request_cpu_us": {
+      "intercept": 100.88036388602815,
+      "per_context_byte_slope": 2.609704036739814e-07
+    },
+    "json_encode_request_wall_ns": {
+      "intercept": 212355.75203112466,
+      "per_context_byte_slope": 0.9516598165922634
+    },
+    "json_encode_request_cpu_us": {
+      "intercept": 204.25460579013634,
+      "per_context_byte_slope": 0.0009471555475522564
+    },
+    "json_decode_request_wall_ns": {
+      "intercept": 47654.763874585275,
+      "per_context_byte_slope": 0.6524900281099802
+    },
+    "json_decode_request_cpu_us": {
+      "intercept": 50.606190639661236,
+      "per_context_byte_slope": 0.0006500025452225261
+    },
+    "sse_frame_and_json_decode_wall_ns": {
+      "intercept": 3421326.4146355437,
+      "per_context_byte_slope": 2.4047833127543727
+    },
+    "sse_frame_and_json_decode_cpu_us": {
+      "intercept": 3401.988614257926,
+      "per_context_byte_slope": 0.002394900450301588
+    }
+  },
+  "samples": [
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4194304,
+        "request_json_bytes": 4194748,
+        "response_json_bytes": 4194468,
+        "sse_wire_bytes": 4194490,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 106242,
+            "cpu_user_us": 109,
+            "cpu_system_us": 17,
+            "cpu_total_us": 126,
+            "cpu_us_per_iteration": 42,
+            "wall_ns_per_iteration": 35414
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 306484,
+            "cpu_user_us": 270,
+            "cpu_system_us": 42,
+            "cpu_total_us": 312,
+            "cpu_us_per_iteration": 104,
+            "wall_ns_per_iteration": 102161.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 14917003,
+            "cpu_user_us": 11112,
+            "cpu_system_us": 3784,
+            "cpu_total_us": 14896,
+            "cpu_us_per_iteration": 4965.333333333333,
+            "wall_ns_per_iteration": 4972334.333333333
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 7303280,
+            "cpu_user_us": 3498,
+            "cpu_system_us": 3784,
+            "cpu_total_us": 7282,
+            "cpu_us_per_iteration": 2427.3333333333335,
+            "wall_ns_per_iteration": 2434426.6666666665
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 51265989,
+            "cpu_user_us": 23489,
+            "cpu_system_us": 27485,
+            "cpu_total_us": 50974,
+            "cpu_us_per_iteration": 16991.333333333332,
+            "wall_ns_per_iteration": 17088663
+          }
+        },
+        "resources": {
+          "max_rss_kb": 146032,
+          "minor_page_faults": 20139,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 81,
+          "involuntary_context_switches": 23
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 166.27,
+        "cycles": 364102850.0,
+        "instructions": 738623002.0,
+        "branches": 172761843.0,
+        "branch-misses": 3875260.0,
+        "cache-references": 268483904.0,
+        "cache-misses": 3846826.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 20312.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.0286108773935716,
+        "cache_mpki": 5.208104797147923,
+        "branch_mpki": 5.2466007550628655,
+        "derive_messages_cpu_ns_per_context_byte": 0.010013580322265625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.0247955322265625,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1838277180989583,
+        "json_decode_request_cpu_ns_per_context_byte": 0.5787213643391927,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 4.051049550374349
+      },
+      "sample_index": 1
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4096,
+        "request_json_bytes": 4540,
+        "response_json_bytes": 4260,
+        "sse_wire_bytes": 4282,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 109371,
+            "cpu_user_us": 64,
+            "cpu_system_us": 63,
+            "cpu_total_us": 127,
+            "cpu_us_per_iteration": 42.333333333333336,
+            "wall_ns_per_iteration": 36457
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 296854,
+            "cpu_user_us": 151,
+            "cpu_system_us": 151,
+            "cpu_total_us": 302,
+            "cpu_us_per_iteration": 100.66666666666667,
+            "wall_ns_per_iteration": 98951.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 41281,
+            "cpu_user_us": 23,
+            "cpu_system_us": 22,
+            "cpu_total_us": 45,
+            "cpu_us_per_iteration": 15,
+            "wall_ns_per_iteration": 13760.333333333334
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 42080,
+            "cpu_user_us": 23,
+            "cpu_system_us": 23,
+            "cpu_total_us": 46,
+            "cpu_us_per_iteration": 15.333333333333334,
+            "wall_ns_per_iteration": 14026.666666666666
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6740872,
+            "cpu_user_us": 6736,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6736,
+            "cpu_us_per_iteration": 2245.3333333333335,
+            "wall_ns_per_iteration": 2246957.3333333335
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52208,
+          "minor_page_faults": 4120,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 37,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 69.17,
+        "cycles": 164688555.0,
+        "instructions": 251995971.0,
+        "branches": 48656296.0,
+        "branch-misses": 2589960.0,
+        "cache-references": 98311479.0,
+        "cache-misses": 1299610.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4286.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.530136511307662,
+        "cache_mpki": 5.15726499452644,
+        "branch_mpki": 10.277783369798401,
+        "derive_messages_cpu_ns_per_context_byte": 10.335286458333334,
+        "assemble_wire_request_cpu_ns_per_context_byte": 24.576822916666668,
+        "json_encode_request_cpu_ns_per_context_byte": 3.662109375,
+        "json_decode_request_cpu_ns_per_context_byte": 3.7434895833333335,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 548.1770833333334
+      },
+      "sample_index": 2
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 1048576,
+        "request_json_bytes": 1049020,
+        "response_json_bytes": 1048740,
+        "sse_wire_bytes": 1048762,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 104812,
+            "cpu_user_us": 97,
+            "cpu_system_us": 26,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 34937.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 301135,
+            "cpu_user_us": 240,
+            "cpu_system_us": 66,
+            "cpu_total_us": 306,
+            "cpu_us_per_iteration": 102,
+            "wall_ns_per_iteration": 100378.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 4692284,
+            "cpu_user_us": 4264,
+            "cpu_system_us": 83,
+            "cpu_total_us": 4347,
+            "cpu_us_per_iteration": 1449,
+            "wall_ns_per_iteration": 1564094.6666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 2480524,
+            "cpu_user_us": 2480,
+            "cpu_system_us": 0,
+            "cpu_total_us": 2480,
+            "cpu_us_per_iteration": 826.6666666666666,
+            "wall_ns_per_iteration": 826841.3333333334
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 18464852,
+            "cpu_user_us": 14613,
+            "cpu_system_us": 3636,
+            "cpu_total_us": 18249,
+            "cpu_us_per_iteration": 6083,
+            "wall_ns_per_iteration": 6154950.666666667
+          }
+        },
+        "resources": {
+          "max_rss_kb": 70644,
+          "minor_page_faults": 10254,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 59,
+          "involuntary_context_switches": 14
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 94.77,
+        "cycles": 210737382.0,
+        "instructions": 375878936.0,
+        "branches": 79858646.0,
+        "branch-misses": 2763664.0,
+        "cache-references": 143843392.0,
+        "cache-misses": 2023551.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 10401.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7836367351284643,
+        "cache_mpki": 5.383517952705921,
+        "branch_mpki": 7.3525375734276315,
+        "derive_messages_cpu_ns_per_context_byte": 0.03910064697265625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.0972747802734375,
+        "json_encode_request_cpu_ns_per_context_byte": 1.3818740844726562,
+        "json_decode_request_cpu_ns_per_context_byte": 0.7883707682291666,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 5.801200866699219
+      },
+      "sample_index": 3
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 65536,
+        "request_json_bytes": 65980,
+        "response_json_bytes": 65700,
+        "sse_wire_bytes": 65722,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 107132,
+            "cpu_user_us": 107,
+            "cpu_system_us": 18,
+            "cpu_total_us": 125,
+            "cpu_us_per_iteration": 41.666666666666664,
+            "wall_ns_per_iteration": 35710.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 295234,
+            "cpu_user_us": 257,
+            "cpu_system_us": 43,
+            "cpu_total_us": 300,
+            "cpu_us_per_iteration": 100,
+            "wall_ns_per_iteration": 98411.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 217103,
+            "cpu_user_us": 193,
+            "cpu_system_us": 32,
+            "cpu_total_us": 225,
+            "cpu_us_per_iteration": 75,
+            "wall_ns_per_iteration": 72367.66666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 161312,
+            "cpu_user_us": 141,
+            "cpu_system_us": 24,
+            "cpu_total_us": 165,
+            "cpu_us_per_iteration": 55,
+            "wall_ns_per_iteration": 53770.666666666664
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 8922962,
+            "cpu_user_us": 8772,
+            "cpu_system_us": 144,
+            "cpu_total_us": 8916,
+            "cpu_us_per_iteration": 2972,
+            "wall_ns_per_iteration": 2974320.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 54256,
+          "minor_page_faults": 4455,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 40,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 71.25,
+        "cycles": 168872050.0,
+        "instructions": 261553082.0,
+        "branches": 51156269.0,
+        "branch-misses": 2582254.0,
+        "cache-references": 102754991.0,
+        "cache-misses": 1431543.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4612.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5488239883391006,
+        "cache_mpki": 5.473240800886453,
+        "branch_mpki": 9.872772212257853,
+        "derive_messages_cpu_ns_per_context_byte": 0.6357828776041666,
+        "assemble_wire_request_cpu_ns_per_context_byte": 1.52587890625,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1444091796875,
+        "json_decode_request_cpu_ns_per_context_byte": 0.8392333984375,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 45.34912109375
+      },
+      "sample_index": 4
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4096,
+        "request_json_bytes": 4540,
+        "response_json_bytes": 4260,
+        "sse_wire_bytes": 4282,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 107751,
+            "cpu_user_us": 106,
+            "cpu_system_us": 19,
+            "cpu_total_us": 125,
+            "cpu_us_per_iteration": 41.666666666666664,
+            "wall_ns_per_iteration": 35917
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 294814,
+            "cpu_user_us": 254,
+            "cpu_system_us": 46,
+            "cpu_total_us": 300,
+            "cpu_us_per_iteration": 100,
+            "wall_ns_per_iteration": 98271.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 41750,
+            "cpu_user_us": 38,
+            "cpu_system_us": 7,
+            "cpu_total_us": 45,
+            "cpu_us_per_iteration": 15,
+            "wall_ns_per_iteration": 13916.666666666666
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 40941,
+            "cpu_user_us": 37,
+            "cpu_system_us": 7,
+            "cpu_total_us": 44,
+            "cpu_us_per_iteration": 14.666666666666666,
+            "wall_ns_per_iteration": 13647
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6824643,
+            "cpu_user_us": 6820,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6820,
+            "cpu_us_per_iteration": 2273.3333333333335,
+            "wall_ns_per_iteration": 2274881
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52208,
+          "minor_page_faults": 4099,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 41,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 67.53,
+        "cycles": 159311816.0,
+        "instructions": 246918846.0,
+        "branches": 47642386.0,
+        "branch-misses": 2438278.0,
+        "cache-references": 97960485.0,
+        "cache-misses": 1294598.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4250.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5499091793668336,
+        "cache_mpki": 5.243010085994003,
+        "branch_mpki": 9.874815306726324,
+        "derive_messages_cpu_ns_per_context_byte": 10.172526041666666,
+        "assemble_wire_request_cpu_ns_per_context_byte": 24.4140625,
+        "json_encode_request_cpu_ns_per_context_byte": 3.662109375,
+        "json_decode_request_cpu_ns_per_context_byte": 3.5807291666666665,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 555.0130208333334
+      },
+      "sample_index": 5
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16384,
+        "request_json_bytes": 16828,
+        "response_json_bytes": 16548,
+        "sse_wire_bytes": 16570,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 105792,
+            "cpu_user_us": 115,
+            "cpu_system_us": 9,
+            "cpu_total_us": 124,
+            "cpu_us_per_iteration": 41.333333333333336,
+            "wall_ns_per_iteration": 35264
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 295514,
+            "cpu_user_us": 279,
+            "cpu_system_us": 21,
+            "cpu_total_us": 300,
+            "cpu_us_per_iteration": 100,
+            "wall_ns_per_iteration": 98504.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 70781,
+            "cpu_user_us": 69,
+            "cpu_system_us": 5,
+            "cpu_total_us": 74,
+            "cpu_us_per_iteration": 24.666666666666668,
+            "wall_ns_per_iteration": 23593.666666666668
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 56261,
+            "cpu_user_us": 56,
+            "cpu_system_us": 5,
+            "cpu_total_us": 61,
+            "cpu_us_per_iteration": 20.333333333333332,
+            "wall_ns_per_iteration": 18753.666666666668
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6808133,
+            "cpu_user_us": 6804,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6804,
+            "cpu_us_per_iteration": 2268,
+            "wall_ns_per_iteration": 2269377.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52212,
+          "minor_page_faults": 4215,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 34,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 69.74,
+        "cycles": 164675301.0,
+        "instructions": 253674109.0,
+        "branches": 49148889.0,
+        "branch-misses": 2559364.0,
+        "cache-references": 99530663.0,
+        "cache-misses": 1346512.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4373.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5404502524637862,
+        "cache_mpki": 5.308038748250812,
+        "branch_mpki": 10.08918099718249,
+        "derive_messages_cpu_ns_per_context_byte": 2.5227864583333335,
+        "assemble_wire_request_cpu_ns_per_context_byte": 6.103515625,
+        "json_encode_request_cpu_ns_per_context_byte": 1.5055338541666667,
+        "json_decode_request_cpu_ns_per_context_byte": 1.2410481770833333,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 138.427734375
+      },
+      "sample_index": 6
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 65536,
+        "request_json_bytes": 65980,
+        "response_json_bytes": 65700,
+        "sse_wire_bytes": 65722,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 106352,
+            "cpu_user_us": 97,
+            "cpu_system_us": 27,
+            "cpu_total_us": 124,
+            "cpu_us_per_iteration": 41.333333333333336,
+            "wall_ns_per_iteration": 35450.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 292514,
+            "cpu_user_us": 234,
+            "cpu_system_us": 64,
+            "cpu_total_us": 298,
+            "cpu_us_per_iteration": 99.33333333333333,
+            "wall_ns_per_iteration": 97504.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 235863,
+            "cpu_user_us": 189,
+            "cpu_system_us": 52,
+            "cpu_total_us": 241,
+            "cpu_us_per_iteration": 80.33333333333333,
+            "wall_ns_per_iteration": 78621
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 162112,
+            "cpu_user_us": 131,
+            "cpu_system_us": 35,
+            "cpu_total_us": 166,
+            "cpu_us_per_iteration": 55.333333333333336,
+            "wall_ns_per_iteration": 54037.333333333336
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 9251676,
+            "cpu_user_us": 2041,
+            "cpu_system_us": 7042,
+            "cpu_total_us": 9083,
+            "cpu_us_per_iteration": 3027.6666666666665,
+            "wall_ns_per_iteration": 3083892
+          }
+        },
+        "resources": {
+          "max_rss_kb": 54260,
+          "minor_page_faults": 4458,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 45,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 72.12,
+        "cycles": 170521553.0,
+        "instructions": 262770555.0,
+        "branches": 51419723.0,
+        "branch-misses": 2640738.0,
+        "cache-references": 102712452.0,
+        "cache-misses": 1423887.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4610.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5409814793324104,
+        "cache_mpki": 5.418746404063423,
+        "branch_mpki": 10.049596310362856,
+        "derive_messages_cpu_ns_per_context_byte": 0.6306966145833334,
+        "assemble_wire_request_cpu_ns_per_context_byte": 1.5157063802083333,
+        "json_encode_request_cpu_ns_per_context_byte": 1.2257893880208333,
+        "json_decode_request_cpu_ns_per_context_byte": 0.8443196614583334,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 46.198527018229164
+      },
+      "sample_index": 7
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16777216,
+        "request_json_bytes": 16777660,
+        "response_json_bytes": 16777380,
+        "sse_wire_bytes": 16777402,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 104271,
+            "cpu_user_us": 126,
+            "cpu_system_us": 9,
+            "cpu_total_us": 135,
+            "cpu_us_per_iteration": 45,
+            "wall_ns_per_iteration": 34757
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 307694,
+            "cpu_user_us": 292,
+            "cpu_system_us": 20,
+            "cpu_total_us": 312,
+            "cpu_us_per_iteration": 104,
+            "wall_ns_per_iteration": 102564.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 48720494,
+            "cpu_user_us": 40247,
+            "cpu_system_us": 8016,
+            "cpu_total_us": 48263,
+            "cpu_us_per_iteration": 16087.666666666666,
+            "wall_ns_per_iteration": 16240164.666666666
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 33064151,
+            "cpu_user_us": 28983,
+            "cpu_system_us": 3919,
+            "cpu_total_us": 32902,
+            "cpu_us_per_iteration": 10967.333333333334,
+            "wall_ns_per_iteration": 11021383.666666666
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 129545036,
+            "cpu_user_us": 97556,
+            "cpu_system_us": 31487,
+            "cpu_total_us": 129043,
+            "cpu_us_per_iteration": 43014.333333333336,
+            "wall_ns_per_iteration": 43181678.666666664
+          }
+        },
+        "resources": {
+          "max_rss_kb": 348384,
+          "minor_page_faults": 30952,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 123,
+          "involuntary_context_switches": 49
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 336.08,
+        "cycles": 777626485.0,
+        "instructions": 1941007840.0,
+        "branches": 487856619.0,
+        "branch-misses": 4866805.0,
+        "cache-references": 681090497.0,
+        "cache-misses": 8968825.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 31075.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.496067041749485,
+        "cache_mpki": 4.620705189938851,
+        "branch_mpki": 2.5073597848012814,
+        "derive_messages_cpu_ns_per_context_byte": 0.002682209014892578,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.006198883056640625,
+        "json_encode_request_cpu_ns_per_context_byte": 0.9588996569315592,
+        "json_decode_request_cpu_ns_per_context_byte": 0.6537040074666342,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 2.5638540585835776
+      },
+      "sample_index": 8
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 262144,
+        "request_json_bytes": 262588,
+        "response_json_bytes": 262308,
+        "sse_wire_bytes": 262330,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 103891,
+            "cpu_user_us": 123,
+            "cpu_system_us": 0,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 34630.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 296144,
+            "cpu_user_us": 301,
+            "cpu_system_us": 0,
+            "cpu_total_us": 301,
+            "cpu_us_per_iteration": 100.33333333333333,
+            "wall_ns_per_iteration": 98714.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 945533,
+            "cpu_user_us": 951,
+            "cpu_system_us": 0,
+            "cpu_total_us": 951,
+            "cpu_us_per_iteration": 317,
+            "wall_ns_per_iteration": 315177.6666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 1605352,
+            "cpu_user_us": 1606,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1606,
+            "cpu_us_per_iteration": 535.3333333333334,
+            "wall_ns_per_iteration": 535117.3333333334
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 11266724,
+            "cpu_user_us": 7415,
+            "cpu_system_us": 3845,
+            "cpu_total_us": 11260,
+            "cpu_us_per_iteration": 3753.3333333333335,
+            "wall_ns_per_iteration": 3755574.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56308,
+          "minor_page_faults": 5630,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 46,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 77.58,
+        "cycles": 180128632.0,
+        "instructions": 283707282.0,
+        "branches": 56864779.0,
+        "branch-misses": 2633207.0,
+        "cache-references": 110826813.0,
+        "cache-misses": 1512511.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5740.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5750260180735731,
+        "cache_mpki": 5.33123784958047,
+        "branch_mpki": 9.281421969281705,
+        "derive_messages_cpu_ns_per_context_byte": 0.156402587890625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.3827412923177083,
+        "json_encode_request_cpu_ns_per_context_byte": 1.209259033203125,
+        "json_decode_request_cpu_ns_per_context_byte": 2.0421346028645835,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 14.317830403645834
+      },
+      "sample_index": 9
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 262144,
+        "request_json_bytes": 262588,
+        "response_json_bytes": 262308,
+        "sse_wire_bytes": 262330,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 105151,
+            "cpu_user_us": 96,
+            "cpu_system_us": 27,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 35050.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 295764,
+            "cpu_user_us": 236,
+            "cpu_system_us": 65,
+            "cpu_total_us": 301,
+            "cpu_us_per_iteration": 100.33333333333333,
+            "wall_ns_per_iteration": 98588
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 1344348,
+            "cpu_user_us": 0,
+            "cpu_system_us": 1252,
+            "cpu_total_us": 1252,
+            "cpu_us_per_iteration": 417.3333333333333,
+            "wall_ns_per_iteration": 448116
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 1455750,
+            "cpu_user_us": 0,
+            "cpu_system_us": 1465,
+            "cpu_total_us": 1465,
+            "cpu_us_per_iteration": 488.3333333333333,
+            "wall_ns_per_iteration": 485250
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 11486787,
+            "cpu_user_us": 10980,
+            "cpu_system_us": 200,
+            "cpu_total_us": 11180,
+            "cpu_us_per_iteration": 3726.6666666666665,
+            "wall_ns_per_iteration": 3828929
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56308,
+          "minor_page_faults": 5575,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 54,
+          "involuntary_context_switches": 13
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 77.75,
+        "cycles": 179613295.0,
+        "instructions": 280406131.0,
+        "branches": 56131076.0,
+        "branch-misses": 2514116.0,
+        "cache-references": 110325842.0,
+        "cache-misses": 1567082.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5677.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5611657867531465,
+        "cache_mpki": 5.588615321681393,
+        "branch_mpki": 8.965980847259006,
+        "derive_messages_cpu_ns_per_context_byte": 0.156402587890625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.3827412923177083,
+        "json_encode_request_cpu_ns_per_context_byte": 1.5920003255208333,
+        "json_decode_request_cpu_ns_per_context_byte": 1.8628438313802083,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 14.216105143229166
+      },
+      "sample_index": 10
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4096,
+        "request_json_bytes": 4540,
+        "response_json_bytes": 4260,
+        "sse_wire_bytes": 4282,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 103502,
+            "cpu_user_us": 112,
+            "cpu_system_us": 9,
+            "cpu_total_us": 121,
+            "cpu_us_per_iteration": 40.333333333333336,
+            "wall_ns_per_iteration": 34500.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 294174,
+            "cpu_user_us": 276,
+            "cpu_system_us": 23,
+            "cpu_total_us": 299,
+            "cpu_us_per_iteration": 99.66666666666667,
+            "wall_ns_per_iteration": 98058
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 44151,
+            "cpu_user_us": 44,
+            "cpu_system_us": 4,
+            "cpu_total_us": 48,
+            "cpu_us_per_iteration": 16,
+            "wall_ns_per_iteration": 14717
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 47091,
+            "cpu_user_us": 49,
+            "cpu_system_us": 4,
+            "cpu_total_us": 53,
+            "cpu_us_per_iteration": 17.666666666666668,
+            "wall_ns_per_iteration": 15697
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6295546,
+            "cpu_user_us": 6274,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6274,
+            "cpu_us_per_iteration": 2091.3333333333335,
+            "wall_ns_per_iteration": 2098515.3333333335
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52212,
+          "minor_page_faults": 4152,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 40,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 68.21,
+        "cycles": 160847686.0,
+        "instructions": 249329558.0,
+        "branches": 48165245.0,
+        "branch-misses": 2479958.0,
+        "cache-references": 98481629.0,
+        "cache-misses": 1294538.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4297.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.550097264066329,
+        "cache_mpki": 5.192075943117824,
+        "branch_mpki": 9.946506222098224,
+        "derive_messages_cpu_ns_per_context_byte": 9.847005208333334,
+        "assemble_wire_request_cpu_ns_per_context_byte": 24.332682291666668,
+        "json_encode_request_cpu_ns_per_context_byte": 3.90625,
+        "json_decode_request_cpu_ns_per_context_byte": 4.313151041666667,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 510.57942708333337
+      },
+      "sample_index": 11
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4194304,
+        "request_json_bytes": 4194748,
+        "response_json_bytes": 4194468,
+        "sse_wire_bytes": 4194490,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 114342,
+            "cpu_user_us": 126,
+            "cpu_system_us": 0,
+            "cpu_total_us": 126,
+            "cpu_us_per_iteration": 42,
+            "wall_ns_per_iteration": 38114
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 311134,
+            "cpu_user_us": 316,
+            "cpu_system_us": 0,
+            "cpu_total_us": 316,
+            "cpu_us_per_iteration": 105.33333333333333,
+            "wall_ns_per_iteration": 103711.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 13806498,
+            "cpu_user_us": 9813,
+            "cpu_system_us": 3752,
+            "cpu_total_us": 13565,
+            "cpu_us_per_iteration": 4521.666666666667,
+            "wall_ns_per_iteration": 4602166
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 6052312,
+            "cpu_user_us": 5981,
+            "cpu_system_us": 0,
+            "cpu_total_us": 5981,
+            "cpu_us_per_iteration": 1993.6666666666667,
+            "wall_ns_per_iteration": 2017437.3333333333
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 52930481,
+            "cpu_user_us": 36850,
+            "cpu_system_us": 15893,
+            "cpu_total_us": 52743,
+            "cpu_us_per_iteration": 17581,
+            "wall_ns_per_iteration": 17643493.666666668
+          }
+        },
+        "resources": {
+          "max_rss_kb": 146248,
+          "minor_page_faults": 18843,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 97,
+          "involuntary_context_switches": 28
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 168.89,
+        "cycles": 375580458.0,
+        "instructions": 743384725.0,
+        "branches": 173652460.0,
+        "branch-misses": 4072213.0,
+        "cache-references": 268568440.0,
+        "cache-misses": 3953039.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 19015.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.9792955388536215,
+        "cache_mpki": 5.317622042879614,
+        "branch_mpki": 5.477934726194435,
+        "derive_messages_cpu_ns_per_context_byte": 0.010013580322265625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.025113423665364582,
+        "json_encode_request_cpu_ns_per_context_byte": 1.0780493418375652,
+        "json_decode_request_cpu_ns_per_context_byte": 0.4753271738688151,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 4.19163703918457
+      },
+      "sample_index": 12
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 65536,
+        "request_json_bytes": 65980,
+        "response_json_bytes": 65700,
+        "sse_wire_bytes": 65722,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 108571,
+            "cpu_user_us": 81,
+            "cpu_system_us": 45,
+            "cpu_total_us": 126,
+            "cpu_us_per_iteration": 42,
+            "wall_ns_per_iteration": 36190.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 300094,
+            "cpu_user_us": 196,
+            "cpu_system_us": 109,
+            "cpu_total_us": 305,
+            "cpu_us_per_iteration": 101.66666666666667,
+            "wall_ns_per_iteration": 100031.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 220313,
+            "cpu_user_us": 144,
+            "cpu_system_us": 80,
+            "cpu_total_us": 224,
+            "cpu_us_per_iteration": 74.66666666666667,
+            "wall_ns_per_iteration": 73437.66666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 162513,
+            "cpu_user_us": 107,
+            "cpu_system_us": 60,
+            "cpu_total_us": 167,
+            "cpu_us_per_iteration": 55.666666666666664,
+            "wall_ns_per_iteration": 54171
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 8159991,
+            "cpu_user_us": 8063,
+            "cpu_system_us": 92,
+            "cpu_total_us": 8155,
+            "cpu_us_per_iteration": 2718.3333333333335,
+            "wall_ns_per_iteration": 2719997
+          }
+        },
+        "resources": {
+          "max_rss_kb": 54260,
+          "minor_page_faults": 4468,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 40,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 71.88,
+        "cycles": 169925493.0,
+        "instructions": 263900504.0,
+        "branches": 51541166.0,
+        "branch-misses": 2621593.0,
+        "cache-references": 103023799.0,
+        "cache-misses": 1439059.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4627.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5530365652668725,
+        "cache_mpki": 5.453036194277219,
+        "branch_mpki": 9.934020436732474,
+        "derive_messages_cpu_ns_per_context_byte": 0.640869140625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 1.5513102213541667,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1393229166666667,
+        "json_decode_request_cpu_ns_per_context_byte": 0.8494059244791666,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 41.478474934895836
+      },
+      "sample_index": 13
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16777216,
+        "request_json_bytes": 16777660,
+        "response_json_bytes": 16777380,
+        "sse_wire_bytes": 16777402,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 106441,
+            "cpu_user_us": 80,
+            "cpu_system_us": 47,
+            "cpu_total_us": 127,
+            "cpu_us_per_iteration": 42.333333333333336,
+            "wall_ns_per_iteration": 35480.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 304044,
+            "cpu_user_us": 193,
+            "cpu_system_us": 115,
+            "cpu_total_us": 308,
+            "cpu_us_per_iteration": 102.66666666666667,
+            "wall_ns_per_iteration": 101348
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 47824222,
+            "cpu_user_us": 43334,
+            "cpu_system_us": 3924,
+            "cpu_total_us": 47258,
+            "cpu_us_per_iteration": 15752.666666666666,
+            "wall_ns_per_iteration": 15941407.333333334
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 33346504,
+            "cpu_user_us": 29104,
+            "cpu_system_us": 3999,
+            "cpu_total_us": 33103,
+            "cpu_us_per_iteration": 11034.333333333334,
+            "wall_ns_per_iteration": 11115501.333333334
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 127502299,
+            "cpu_user_us": 103152,
+            "cpu_system_us": 23816,
+            "cpu_total_us": 126968,
+            "cpu_us_per_iteration": 42322.666666666664,
+            "wall_ns_per_iteration": 42500766.333333336
+          }
+        },
+        "resources": {
+          "max_rss_kb": 346252,
+          "minor_page_faults": 30678,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 124,
+          "involuntary_context_switches": 48
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 336.62,
+        "cycles": 779220854.0,
+        "instructions": 1938868892.0,
+        "branches": 487754595.0,
+        "branch-misses": 5110065.0,
+        "cache-references": 678237681.0,
+        "cache-misses": 8865233.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 30799.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.4882148392809826,
+        "cache_mpki": 4.572373633193553,
+        "branch_mpki": 2.635590792696054,
+        "derive_messages_cpu_ns_per_context_byte": 0.0025232632954915366,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.0061194101969401045,
+        "json_encode_request_cpu_ns_per_context_byte": 0.9389321009318033,
+        "json_decode_request_cpu_ns_per_context_byte": 0.6576975186665853,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 2.522627512613932
+      },
+      "sample_index": 14
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16384,
+        "request_json_bytes": 16828,
+        "response_json_bytes": 16548,
+        "sse_wire_bytes": 16570,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 104161,
+            "cpu_user_us": 79,
+            "cpu_system_us": 44,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 34720.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 294074,
+            "cpu_user_us": 193,
+            "cpu_system_us": 106,
+            "cpu_total_us": 299,
+            "cpu_us_per_iteration": 99.66666666666667,
+            "wall_ns_per_iteration": 98024.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 71361,
+            "cpu_user_us": 49,
+            "cpu_system_us": 26,
+            "cpu_total_us": 75,
+            "cpu_us_per_iteration": 25,
+            "wall_ns_per_iteration": 23787
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 52991,
+            "cpu_user_us": 36,
+            "cpu_system_us": 20,
+            "cpu_total_us": 56,
+            "cpu_us_per_iteration": 18.666666666666668,
+            "wall_ns_per_iteration": 17663.666666666668
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 7125007,
+            "cpu_user_us": 5813,
+            "cpu_system_us": 986,
+            "cpu_total_us": 6799,
+            "cpu_us_per_iteration": 2266.3333333333335,
+            "wall_ns_per_iteration": 2375002.3333333335
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52212,
+          "minor_page_faults": 4148,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 42,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 68.8,
+        "cycles": 162145027.0,
+        "instructions": 251208231.0,
+        "branches": 48605688.0,
+        "branch-misses": 2458500.0,
+        "cache-references": 99399353.0,
+        "cache-misses": 1314971.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4321.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5492811321311755,
+        "cache_mpki": 5.23458564540427,
+        "branch_mpki": 9.786701614884587,
+        "derive_messages_cpu_ns_per_context_byte": 2.50244140625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 6.083170572916667,
+        "json_encode_request_cpu_ns_per_context_byte": 1.52587890625,
+        "json_decode_request_cpu_ns_per_context_byte": 1.1393229166666667,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 138.32600911458334
+      },
+      "sample_index": 15
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16777216,
+        "request_json_bytes": 16777660,
+        "response_json_bytes": 16777380,
+        "sse_wire_bytes": 16777402,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 146552,
+            "cpu_user_us": 129,
+            "cpu_system_us": 44,
+            "cpu_total_us": 173,
+            "cpu_us_per_iteration": 57.666666666666664,
+            "wall_ns_per_iteration": 48850.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 392105,
+            "cpu_user_us": 299,
+            "cpu_system_us": 100,
+            "cpu_total_us": 399,
+            "cpu_us_per_iteration": 133,
+            "wall_ns_per_iteration": 130701.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 47979735,
+            "cpu_user_us": 47418,
+            "cpu_system_us": 359,
+            "cpu_total_us": 47777,
+            "cpu_us_per_iteration": 15925.666666666666,
+            "wall_ns_per_iteration": 15993245
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 34037044,
+            "cpu_user_us": 26209,
+            "cpu_system_us": 7623,
+            "cpu_total_us": 33832,
+            "cpu_us_per_iteration": 11277.333333333334,
+            "wall_ns_per_iteration": 11345681.333333334
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 124081802,
+            "cpu_user_us": 83827,
+            "cpu_system_us": 39732,
+            "cpu_total_us": 123559,
+            "cpu_us_per_iteration": 41186.333333333336,
+            "wall_ns_per_iteration": 41360600.666666664
+          }
+        },
+        "resources": {
+          "max_rss_kb": 346020,
+          "minor_page_faults": 30964,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 130,
+          "involuntary_context_switches": 44
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 331.53,
+        "cycles": 764183334.0,
+        "instructions": 1913424123.0,
+        "branches": 482241252.0,
+        "branch-misses": 4625661.0,
+        "cache-references": 671580136.0,
+        "cache-misses": 8886279.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 31066.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.5038809901604058,
+        "cache_mpki": 4.6441763188746,
+        "branch_mpki": 2.417478145277883,
+        "derive_messages_cpu_ns_per_context_byte": 0.003437201182047526,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.007927417755126953,
+        "json_encode_request_cpu_ns_per_context_byte": 0.9492437044779459,
+        "json_decode_request_cpu_ns_per_context_byte": 0.6721814473470052,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 2.4548967679341636
+      },
+      "sample_index": 16
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4194304,
+        "request_json_bytes": 4194748,
+        "response_json_bytes": 4194468,
+        "sse_wire_bytes": 4194490,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 105461,
+            "cpu_user_us": 74,
+            "cpu_system_us": 49,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 35153.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 307534,
+            "cpu_user_us": 187,
+            "cpu_system_us": 125,
+            "cpu_total_us": 312,
+            "cpu_us_per_iteration": 104,
+            "wall_ns_per_iteration": 102511.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 14253895,
+            "cpu_user_us": 13270,
+            "cpu_system_us": 966,
+            "cpu_total_us": 14236,
+            "cpu_us_per_iteration": 4745.333333333333,
+            "wall_ns_per_iteration": 4751298.333333333
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 7411471,
+            "cpu_user_us": 7312,
+            "cpu_system_us": 64,
+            "cpu_total_us": 7376,
+            "cpu_us_per_iteration": 2458.6666666666665,
+            "wall_ns_per_iteration": 2470490.3333333335
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 52953932,
+            "cpu_user_us": 37187,
+            "cpu_system_us": 15547,
+            "cpu_total_us": 52734,
+            "cpu_us_per_iteration": 17578,
+            "wall_ns_per_iteration": 17651310.666666668
+          }
+        },
+        "resources": {
+          "max_rss_kb": 146716,
+          "minor_page_faults": 20448,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 93,
+          "involuntary_context_switches": 23
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 167.98,
+        "cycles": 369884798.0,
+        "instructions": 751747955.0,
+        "branches": 175513000.0,
+        "branch-misses": 3704437.0,
+        "cache-references": 274750879.0,
+        "cache-misses": 3951061.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 20622.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.0323840262286206,
+        "cache_mpki": 5.255832056104495,
+        "branch_mpki": 4.927764652183191,
+        "derive_messages_cpu_ns_per_context_byte": 0.009775161743164062,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.0247955322265625,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1313756306966145,
+        "json_decode_request_cpu_ns_per_context_byte": 0.5861918131510416,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 4.190921783447266
+      },
+      "sample_index": 17
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16384,
+        "request_json_bytes": 16828,
+        "response_json_bytes": 16548,
+        "sse_wire_bytes": 16570,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 105312,
+            "cpu_user_us": 114,
+            "cpu_system_us": 9,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 35104
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 636679,
+            "cpu_user_us": 635,
+            "cpu_system_us": 0,
+            "cpu_total_us": 635,
+            "cpu_us_per_iteration": 211.66666666666666,
+            "wall_ns_per_iteration": 212226.33333333334
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 128812,
+            "cpu_user_us": 134,
+            "cpu_system_us": 0,
+            "cpu_total_us": 134,
+            "cpu_us_per_iteration": 44.666666666666664,
+            "wall_ns_per_iteration": 42937.333333333336
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 61571,
+            "cpu_user_us": 66,
+            "cpu_system_us": 0,
+            "cpu_total_us": 66,
+            "cpu_us_per_iteration": 22,
+            "wall_ns_per_iteration": 20523.666666666668
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6485078,
+            "cpu_user_us": 6489,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6489,
+            "cpu_us_per_iteration": 2163,
+            "wall_ns_per_iteration": 2161692.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 50620,
+          "minor_page_faults": 4293,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 37,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 67.2,
+        "cycles": 158345372.0,
+        "instructions": 249318569.0,
+        "branches": 48150925.0,
+        "branch-misses": 2374753.0,
+        "cache-references": 99590313.0,
+        "cache-misses": 1306038.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4441.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5745238768329775,
+        "cache_mpki": 5.238430515779192,
+        "branch_mpki": 9.524974451461736,
+        "derive_messages_cpu_ns_per_context_byte": 2.50244140625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 12.919108072916666,
+        "json_encode_request_cpu_ns_per_context_byte": 2.7262369791666665,
+        "json_decode_request_cpu_ns_per_context_byte": 1.3427734375,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 132.01904296875
+      },
+      "sample_index": 18
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4194304,
+        "request_json_bytes": 4194748,
+        "response_json_bytes": 4194468,
+        "sse_wire_bytes": 4194490,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 106611,
+            "cpu_user_us": 109,
+            "cpu_system_us": 17,
+            "cpu_total_us": 126,
+            "cpu_us_per_iteration": 42,
+            "wall_ns_per_iteration": 35537
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 297634,
+            "cpu_user_us": 262,
+            "cpu_system_us": 41,
+            "cpu_total_us": 303,
+            "cpu_us_per_iteration": 101,
+            "wall_ns_per_iteration": 99211.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 14155223,
+            "cpu_user_us": 10458,
+            "cpu_system_us": 3676,
+            "cpu_total_us": 14134,
+            "cpu_us_per_iteration": 4711.333333333333,
+            "wall_ns_per_iteration": 4718407.666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 6990186,
+            "cpu_user_us": 3238,
+            "cpu_system_us": 3724,
+            "cpu_total_us": 6962,
+            "cpu_us_per_iteration": 2320.6666666666665,
+            "wall_ns_per_iteration": 2330062
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 52799590,
+            "cpu_user_us": 36562,
+            "cpu_system_us": 16034,
+            "cpu_total_us": 52596,
+            "cpu_us_per_iteration": 17532,
+            "wall_ns_per_iteration": 17599863.333333332
+          }
+        },
+        "resources": {
+          "max_rss_kb": 147076,
+          "minor_page_faults": 20033,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 93,
+          "involuntary_context_switches": 26
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 166.42,
+        "cycles": 364179873.0,
+        "instructions": 738876046.0,
+        "branches": 172856279.0,
+        "branch-misses": 3877998.0,
+        "cache-references": 268322481.0,
+        "cache-misses": 3871468.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 20204.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.02887666447179,
+        "cache_mpki": 5.239671824467293,
+        "branch_mpki": 5.24850957206427,
+        "derive_messages_cpu_ns_per_context_byte": 0.010013580322265625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.024080276489257812,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1232693990071614,
+        "json_decode_request_cpu_ns_per_context_byte": 0.553290049235026,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 4.179954528808594
+      },
+      "sample_index": 19
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16384,
+        "request_json_bytes": 16828,
+        "response_json_bytes": 16548,
+        "sse_wire_bytes": 16570,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 107311,
+            "cpu_user_us": 98,
+            "cpu_system_us": 27,
+            "cpu_total_us": 125,
+            "cpu_us_per_iteration": 41.666666666666664,
+            "wall_ns_per_iteration": 35770.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 296614,
+            "cpu_user_us": 237,
+            "cpu_system_us": 65,
+            "cpu_total_us": 302,
+            "cpu_us_per_iteration": 100.66666666666667,
+            "wall_ns_per_iteration": 98871.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 71401,
+            "cpu_user_us": 59,
+            "cpu_system_us": 16,
+            "cpu_total_us": 75,
+            "cpu_us_per_iteration": 25,
+            "wall_ns_per_iteration": 23800.333333333332
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 55081,
+            "cpu_user_us": 46,
+            "cpu_system_us": 13,
+            "cpu_total_us": 59,
+            "cpu_us_per_iteration": 19.666666666666668,
+            "wall_ns_per_iteration": 18360.333333333332
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6777362,
+            "cpu_user_us": 3103,
+            "cpu_system_us": 3671,
+            "cpu_total_us": 6774,
+            "cpu_us_per_iteration": 2258,
+            "wall_ns_per_iteration": 2259120.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52520,
+          "minor_page_faults": 4242,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 34,
+          "involuntary_context_switches": 8
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 70.37,
+        "cycles": 167276956.0,
+        "instructions": 255368385.0,
+        "branches": 49550707.0,
+        "branch-misses": 2627661.0,
+        "cache-references": 99409814.0,
+        "cache-misses": 1324290.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4401.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5266202297464093,
+        "cache_mpki": 5.1858024633707105,
+        "branch_mpki": 10.28968797370904,
+        "derive_messages_cpu_ns_per_context_byte": 2.5431315104166665,
+        "assemble_wire_request_cpu_ns_per_context_byte": 6.144205729166667,
+        "json_encode_request_cpu_ns_per_context_byte": 1.52587890625,
+        "json_decode_request_cpu_ns_per_context_byte": 1.2003580729166667,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 137.8173828125
+      },
+      "sample_index": 20
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16777216,
+        "request_json_bytes": 16777660,
+        "response_json_bytes": 16777380,
+        "sse_wire_bytes": 16777402,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 111002,
+            "cpu_user_us": 109,
+            "cpu_system_us": 25,
+            "cpu_total_us": 134,
+            "cpu_us_per_iteration": 44.666666666666664,
+            "wall_ns_per_iteration": 37000.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 317535,
+            "cpu_user_us": 263,
+            "cpu_system_us": 61,
+            "cpu_total_us": 324,
+            "cpu_us_per_iteration": 108,
+            "wall_ns_per_iteration": 105845
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 48150616,
+            "cpu_user_us": 35969,
+            "cpu_system_us": 12042,
+            "cpu_total_us": 48011,
+            "cpu_us_per_iteration": 16003.666666666666,
+            "wall_ns_per_iteration": 16050205.333333334
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 33224663,
+            "cpu_user_us": 33106,
+            "cpu_system_us": 0,
+            "cpu_total_us": 33106,
+            "cpu_us_per_iteration": 11035.333333333334,
+            "wall_ns_per_iteration": 11074887.666666666
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 128380651,
+            "cpu_user_us": 79787,
+            "cpu_system_us": 48084,
+            "cpu_total_us": 127871,
+            "cpu_us_per_iteration": 42623.666666666664,
+            "wall_ns_per_iteration": 42793550.333333336
+          }
+        },
+        "resources": {
+          "max_rss_kb": 346540,
+          "minor_page_faults": 31095,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 141,
+          "involuntary_context_switches": 50
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 339.85,
+        "cycles": 784426374.0,
+        "instructions": 1940490996.0,
+        "branches": 488080059.0,
+        "branch-misses": 5173240.0,
+        "cache-references": 678522940.0,
+        "cache-misses": 8797913.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 31221.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.4737707200038637,
+        "cache_mpki": 4.533859223328238,
+        "branch_mpki": 2.6659438310529526,
+        "derive_messages_cpu_ns_per_context_byte": 0.0026623407999674478,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.0064373016357421875,
+        "json_encode_request_cpu_ns_per_context_byte": 0.9538928667704264,
+        "json_decode_request_cpu_ns_per_context_byte": 0.6577571233113607,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 2.5405685106913247
+      },
+      "sample_index": 21
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 1048576,
+        "request_json_bytes": 1049020,
+        "response_json_bytes": 1048740,
+        "sse_wire_bytes": 1048762,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 102822,
+            "cpu_user_us": 104,
+            "cpu_system_us": 17,
+            "cpu_total_us": 121,
+            "cpu_us_per_iteration": 40.333333333333336,
+            "wall_ns_per_iteration": 34274
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 302034,
+            "cpu_user_us": 264,
+            "cpu_system_us": 44,
+            "cpu_total_us": 308,
+            "cpu_us_per_iteration": 102.66666666666667,
+            "wall_ns_per_iteration": 100678
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 4648393,
+            "cpu_user_us": 4389,
+            "cpu_system_us": 45,
+            "cpu_total_us": 4434,
+            "cpu_us_per_iteration": 1478,
+            "wall_ns_per_iteration": 1549464.3333333333
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 2715918,
+            "cpu_user_us": 2716,
+            "cpu_system_us": 0,
+            "cpu_total_us": 2716,
+            "cpu_us_per_iteration": 905.3333333333334,
+            "wall_ns_per_iteration": 905306
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 17758003,
+            "cpu_user_us": 16762,
+            "cpu_system_us": 968,
+            "cpu_total_us": 17730,
+            "cpu_us_per_iteration": 5910,
+            "wall_ns_per_iteration": 5919334.333333333
+          }
+        },
+        "resources": {
+          "max_rss_kb": 70640,
+          "minor_page_faults": 10228,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 68,
+          "involuntary_context_switches": 17
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 97.5,
+        "cycles": 217095813.0,
+        "instructions": 376158200.0,
+        "branches": 80355985.0,
+        "branch-misses": 2994866.0,
+        "cache-references": 141982719.0,
+        "cache-misses": 1986853.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 10395.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7326828868873672,
+        "cache_mpki": 5.281961153578467,
+        "branch_mpki": 7.961719297891153,
+        "derive_messages_cpu_ns_per_context_byte": 0.038464864095052086,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.09791056315104167,
+        "json_encode_request_cpu_ns_per_context_byte": 1.4095306396484375,
+        "json_decode_request_cpu_ns_per_context_byte": 0.8633931477864584,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 5.6362152099609375
+      },
+      "sample_index": 22
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 262144,
+        "request_json_bytes": 262588,
+        "response_json_bytes": 262308,
+        "sse_wire_bytes": 262330,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 131582,
+            "cpu_user_us": 376,
+            "cpu_system_us": 0,
+            "cpu_total_us": 376,
+            "cpu_us_per_iteration": 125.33333333333333,
+            "wall_ns_per_iteration": 43860.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 345904,
+            "cpu_user_us": 353,
+            "cpu_system_us": 0,
+            "cpu_total_us": 353,
+            "cpu_us_per_iteration": 117.66666666666667,
+            "wall_ns_per_iteration": 115301.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 1033175,
+            "cpu_user_us": 1039,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1039,
+            "cpu_us_per_iteration": 346.3333333333333,
+            "wall_ns_per_iteration": 344391.6666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 1556572,
+            "cpu_user_us": 1564,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1564,
+            "cpu_us_per_iteration": 521.3333333333334,
+            "wall_ns_per_iteration": 518857.3333333333
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 12152216,
+            "cpu_user_us": 11380,
+            "cpu_system_us": 0,
+            "cpu_total_us": 11380,
+            "cpu_us_per_iteration": 3793.3333333333335,
+            "wall_ns_per_iteration": 4050738.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56308,
+          "minor_page_faults": 5607,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 55,
+          "involuntary_context_switches": 13
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 80.44,
+        "cycles": 188236259.0,
+        "instructions": 285321162.0,
+        "branches": 57249461.0,
+        "branch-misses": 2776197.0,
+        "cache-references": 110529480.0,
+        "cache-misses": 1578321.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5710.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.515760903429344,
+        "cache_mpki": 5.531734796453689,
+        "branch_mpki": 9.73007743463487,
+        "derive_messages_cpu_ns_per_context_byte": 0.4781087239583333,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.4488627115885417,
+        "json_encode_request_cpu_ns_per_context_byte": 1.3211568196614583,
+        "json_decode_request_cpu_ns_per_context_byte": 1.9887288411458335,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 14.470418294270834
+      },
+      "sample_index": 23
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 1048576,
+        "request_json_bytes": 1049020,
+        "response_json_bytes": 1048740,
+        "sse_wire_bytes": 1048762,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 106751,
+            "cpu_user_us": 126,
+            "cpu_system_us": 0,
+            "cpu_total_us": 126,
+            "cpu_us_per_iteration": 42,
+            "wall_ns_per_iteration": 35583.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 372795,
+            "cpu_user_us": 379,
+            "cpu_system_us": 0,
+            "cpu_total_us": 379,
+            "cpu_us_per_iteration": 126.33333333333333,
+            "wall_ns_per_iteration": 124265
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 4220348,
+            "cpu_user_us": 4220,
+            "cpu_system_us": 0,
+            "cpu_total_us": 4220,
+            "cpu_us_per_iteration": 1406.6666666666667,
+            "wall_ns_per_iteration": 1406782.6666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 2358182,
+            "cpu_user_us": 2366,
+            "cpu_system_us": 0,
+            "cpu_total_us": 2366,
+            "cpu_us_per_iteration": 788.6666666666666,
+            "wall_ns_per_iteration": 786060.6666666666
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 18799946,
+            "cpu_user_us": 14850,
+            "cpu_system_us": 3687,
+            "cpu_total_us": 18537,
+            "cpu_us_per_iteration": 6179,
+            "wall_ns_per_iteration": 6266648.666666667
+          }
+        },
+        "resources": {
+          "max_rss_kb": 72904,
+          "minor_page_faults": 10011,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 69,
+          "involuntary_context_switches": 17
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 95.82,
+        "cycles": 214451076.0,
+        "instructions": 375879931.0,
+        "branches": 79917858.0,
+        "branch-misses": 2848374.0,
+        "cache-references": 143445501.0,
+        "cache-misses": 2002324.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 10160.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.752753765618784,
+        "cache_mpki": 5.3270308810395095,
+        "branch_mpki": 7.577882629759236,
+        "derive_messages_cpu_ns_per_context_byte": 0.0400543212890625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.12048085530598958,
+        "json_encode_request_cpu_ns_per_context_byte": 1.3415018717447917,
+        "json_decode_request_cpu_ns_per_context_byte": 0.7521311442057291,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 5.892753601074219
+      },
+      "sample_index": 24
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 65536,
+        "request_json_bytes": 65980,
+        "response_json_bytes": 65700,
+        "sse_wire_bytes": 65722,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 120322,
+            "cpu_user_us": 416,
+            "cpu_system_us": 167,
+            "cpu_total_us": 583,
+            "cpu_us_per_iteration": 194.33333333333334,
+            "wall_ns_per_iteration": 40107.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 301394,
+            "cpu_user_us": 220,
+            "cpu_system_us": 88,
+            "cpu_total_us": 308,
+            "cpu_us_per_iteration": 102.66666666666667,
+            "wall_ns_per_iteration": 100464.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 230273,
+            "cpu_user_us": 0,
+            "cpu_system_us": 229,
+            "cpu_total_us": 229,
+            "cpu_us_per_iteration": 76.33333333333333,
+            "wall_ns_per_iteration": 76757.66666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 216642,
+            "cpu_user_us": 0,
+            "cpu_system_us": 223,
+            "cpu_total_us": 223,
+            "cpu_us_per_iteration": 74.33333333333333,
+            "wall_ns_per_iteration": 72214
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 8298153,
+            "cpu_user_us": 5889,
+            "cpu_system_us": 2407,
+            "cpu_total_us": 8296,
+            "cpu_us_per_iteration": 2765.3333333333335,
+            "wall_ns_per_iteration": 2766051
+          }
+        },
+        "resources": {
+          "max_rss_kb": 54260,
+          "minor_page_faults": 4497,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 42,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 72.99,
+        "cycles": 172461410.0,
+        "instructions": 264689998.0,
+        "branches": 51708590.0,
+        "branch-misses": 2657410.0,
+        "cache-references": 103166844.0,
+        "cache-misses": 1389590.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4653.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5347781164493552,
+        "cache_mpki": 5.249877254523233,
+        "branch_mpki": 10.039706902714169,
+        "derive_messages_cpu_ns_per_context_byte": 2.9652913411458335,
+        "assemble_wire_request_cpu_ns_per_context_byte": 1.5665690104166667,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1647542317708333,
+        "json_decode_request_cpu_ns_per_context_byte": 1.1342366536458333,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 42.195638020833336
+      },
+      "sample_index": 25
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 1048576,
+        "request_json_bytes": 1049020,
+        "response_json_bytes": 1048740,
+        "sse_wire_bytes": 1048762,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 102342,
+            "cpu_user_us": 112,
+            "cpu_system_us": 8,
+            "cpu_total_us": 120,
+            "cpu_us_per_iteration": 40,
+            "wall_ns_per_iteration": 34114
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 298594,
+            "cpu_user_us": 282,
+            "cpu_system_us": 22,
+            "cpu_total_us": 304,
+            "cpu_us_per_iteration": 101.33333333333333,
+            "wall_ns_per_iteration": 99531.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 4560983,
+            "cpu_user_us": 465,
+            "cpu_system_us": 4095,
+            "cpu_total_us": 4560,
+            "cpu_us_per_iteration": 1520,
+            "wall_ns_per_iteration": 1520327.6666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 2496194,
+            "cpu_user_us": 2494,
+            "cpu_system_us": 0,
+            "cpu_total_us": 2494,
+            "cpu_us_per_iteration": 831.3333333333334,
+            "wall_ns_per_iteration": 832064.6666666666
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 18289699,
+            "cpu_user_us": 9046,
+            "cpu_system_us": 9012,
+            "cpu_total_us": 18058,
+            "cpu_us_per_iteration": 6019.333333333333,
+            "wall_ns_per_iteration": 6096566.333333333
+          }
+        },
+        "resources": {
+          "max_rss_kb": 70644,
+          "minor_page_faults": 10224,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 62,
+          "involuntary_context_switches": 18
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 96.68,
+        "cycles": 215553958.0,
+        "instructions": 376311059.0,
+        "branches": 80047658.0,
+        "branch-misses": 2863208.0,
+        "cache-references": 143353533.0,
+        "cache-misses": 2024776.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 10372.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.7457858927368897,
+        "cache_mpki": 5.380591273029794,
+        "branch_mpki": 7.608620399327674,
+        "derive_messages_cpu_ns_per_context_byte": 0.03814697265625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.09663899739583333,
+        "json_encode_request_cpu_ns_per_context_byte": 1.4495849609375,
+        "json_decode_request_cpu_ns_per_context_byte": 0.7928212483723959,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 5.7404836018880205
+      },
+      "sample_index": 26
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 262144,
+        "request_json_bytes": 262588,
+        "response_json_bytes": 262308,
+        "sse_wire_bytes": 262330,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 120632,
+            "cpu_user_us": 479,
+            "cpu_system_us": 36,
+            "cpu_total_us": 515,
+            "cpu_us_per_iteration": 171.66666666666666,
+            "wall_ns_per_iteration": 40210.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 302664,
+            "cpu_user_us": 286,
+            "cpu_system_us": 22,
+            "cpu_total_us": 308,
+            "cpu_us_per_iteration": 102.66666666666667,
+            "wall_ns_per_iteration": 100888
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 1012524,
+            "cpu_user_us": 945,
+            "cpu_system_us": 73,
+            "cpu_total_us": 1018,
+            "cpu_us_per_iteration": 339.3333333333333,
+            "wall_ns_per_iteration": 337508
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 1597852,
+            "cpu_user_us": 1594,
+            "cpu_system_us": 0,
+            "cpu_total_us": 1594,
+            "cpu_us_per_iteration": 531.3333333333334,
+            "wall_ns_per_iteration": 532617.3333333334
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 11121751,
+            "cpu_user_us": 11110,
+            "cpu_system_us": 0,
+            "cpu_total_us": 11110,
+            "cpu_us_per_iteration": 3703.3333333333335,
+            "wall_ns_per_iteration": 3707250.3333333335
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56308,
+          "minor_page_faults": 5639,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 44,
+          "involuntary_context_switches": 9
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 78.69,
+        "cycles": 182484619.0,
+        "instructions": 285231488.0,
+        "branches": 57177149.0,
+        "branch-misses": 2695095.0,
+        "cache-references": 110808104.0,
+        "cache-misses": 1546385.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5741.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5630439955051774,
+        "cache_mpki": 5.421508722066478,
+        "branch_mpki": 9.448799004968203,
+        "derive_messages_cpu_ns_per_context_byte": 0.6548563639322916,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.3916422526041667,
+        "json_encode_request_cpu_ns_per_context_byte": 1.2944539388020833,
+        "json_decode_request_cpu_ns_per_context_byte": 2.0268758138020835,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 14.127095540364584
+      },
+      "sample_index": 27
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4096,
+        "request_json_bytes": 4540,
+        "response_json_bytes": 4260,
+        "sse_wire_bytes": 4282,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 102161,
+            "cpu_user_us": 83,
+            "cpu_system_us": 37,
+            "cpu_total_us": 120,
+            "cpu_us_per_iteration": 40,
+            "wall_ns_per_iteration": 34053.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 293204,
+            "cpu_user_us": 206,
+            "cpu_system_us": 92,
+            "cpu_total_us": 298,
+            "cpu_us_per_iteration": 99.33333333333333,
+            "wall_ns_per_iteration": 97734.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 42740,
+            "cpu_user_us": 32,
+            "cpu_system_us": 14,
+            "cpu_total_us": 46,
+            "cpu_us_per_iteration": 15.333333333333334,
+            "wall_ns_per_iteration": 14246.666666666666
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 38281,
+            "cpu_user_us": 29,
+            "cpu_system_us": 13,
+            "cpu_total_us": 42,
+            "cpu_us_per_iteration": 14,
+            "wall_ns_per_iteration": 12760.333333333334
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6548319,
+            "cpu_user_us": 6763,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6763,
+            "cpu_us_per_iteration": 2254.3333333333335,
+            "wall_ns_per_iteration": 2182773
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52200,
+          "minor_page_faults": 4106,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 39,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 68.1,
+        "cycles": 160627915.0,
+        "instructions": 247416008.0,
+        "branches": 47850469.0,
+        "branch-misses": 2527558.0,
+        "cache-references": 97271146.0,
+        "cache-misses": 1316376.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4251.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5403051704929371,
+        "cache_mpki": 5.320496481375612,
+        "branch_mpki": 10.215822413560241,
+        "derive_messages_cpu_ns_per_context_byte": 9.765625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 24.251302083333332,
+        "json_encode_request_cpu_ns_per_context_byte": 3.7434895833333335,
+        "json_decode_request_cpu_ns_per_context_byte": 3.41796875,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 550.3743489583334
+      },
+      "sample_index": 28
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 65536,
+        "request_json_bytes": 65980,
+        "response_json_bytes": 65700,
+        "sse_wire_bytes": 65722,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 105602,
+            "cpu_user_us": 76,
+            "cpu_system_us": 47,
+            "cpu_total_us": 123,
+            "cpu_us_per_iteration": 41,
+            "wall_ns_per_iteration": 35200.666666666664
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 292584,
+            "cpu_user_us": 183,
+            "cpu_system_us": 114,
+            "cpu_total_us": 297,
+            "cpu_us_per_iteration": 99,
+            "wall_ns_per_iteration": 97528
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 220973,
+            "cpu_user_us": 139,
+            "cpu_system_us": 86,
+            "cpu_total_us": 225,
+            "cpu_us_per_iteration": 75,
+            "wall_ns_per_iteration": 73657.66666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 165832,
+            "cpu_user_us": 105,
+            "cpu_system_us": 66,
+            "cpu_total_us": 171,
+            "cpu_us_per_iteration": 57,
+            "wall_ns_per_iteration": 55277.333333333336
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 9513670,
+            "cpu_user_us": 9081,
+            "cpu_system_us": 0,
+            "cpu_total_us": 9081,
+            "cpu_us_per_iteration": 3027,
+            "wall_ns_per_iteration": 3171223.3333333335
+          }
+        },
+        "resources": {
+          "max_rss_kb": 54260,
+          "minor_page_faults": 4477,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 43,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 71.19,
+        "cycles": 167618667.0,
+        "instructions": 259473719.0,
+        "branches": 50672888.0,
+        "branch-misses": 2491487.0,
+        "cache-references": 102785119.0,
+        "cache-misses": 1423384.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4625.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5480001341378047,
+        "cache_mpki": 5.485657682348939,
+        "branch_mpki": 9.602078428605711,
+        "derive_messages_cpu_ns_per_context_byte": 0.6256103515625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 1.5106201171875,
+        "json_encode_request_cpu_ns_per_context_byte": 1.1444091796875,
+        "json_decode_request_cpu_ns_per_context_byte": 0.8697509765625,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 46.1883544921875
+      },
+      "sample_index": 29
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16777216,
+        "request_json_bytes": 16777660,
+        "response_json_bytes": 16777380,
+        "sse_wire_bytes": 16777402,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 104341,
+            "cpu_user_us": 117,
+            "cpu_system_us": 8,
+            "cpu_total_us": 125,
+            "cpu_us_per_iteration": 41.666666666666664,
+            "wall_ns_per_iteration": 34780.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 308334,
+            "cpu_user_us": 294,
+            "cpu_system_us": 20,
+            "cpu_total_us": 314,
+            "cpu_us_per_iteration": 104.66666666666667,
+            "wall_ns_per_iteration": 102778
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 48070456,
+            "cpu_user_us": 47807,
+            "cpu_system_us": 7,
+            "cpu_total_us": 47814,
+            "cpu_us_per_iteration": 15938,
+            "wall_ns_per_iteration": 16023485.333333334
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 32520843,
+            "cpu_user_us": 28491,
+            "cpu_system_us": 3938,
+            "cpu_total_us": 32429,
+            "cpu_us_per_iteration": 10809.666666666666,
+            "wall_ns_per_iteration": 10840281
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 128217148,
+            "cpu_user_us": 103857,
+            "cpu_system_us": 23818,
+            "cpu_total_us": 127675,
+            "cpu_us_per_iteration": 42558.333333333336,
+            "wall_ns_per_iteration": 42739049.333333336
+          }
+        },
+        "resources": {
+          "max_rss_kb": 345840,
+          "minor_page_faults": 32417,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 140,
+          "involuntary_context_switches": 50
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 339.78,
+        "cycles": 781660824.0,
+        "instructions": 1939895097.0,
+        "branches": 487795662.0,
+        "branch-misses": 5206364.0,
+        "cache-references": 680143197.0,
+        "cache-misses": 8780786.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 32519.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.4817606785932513,
+        "cache_mpki": 4.526423111012172,
+        "branch_mpki": 2.683837908581507,
+        "derive_messages_cpu_ns_per_context_byte": 0.002483526865641276,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.006238619486490886,
+        "json_encode_request_cpu_ns_per_context_byte": 0.9499788284301758,
+        "json_decode_request_cpu_ns_per_context_byte": 0.6443063418070475,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 2.5366743405659995
+      },
+      "sample_index": 30
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4194304,
+        "request_json_bytes": 4194748,
+        "response_json_bytes": 4194468,
+        "sse_wire_bytes": 4194490,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 107041,
+            "cpu_user_us": 85,
+            "cpu_system_us": 42,
+            "cpu_total_us": 127,
+            "cpu_us_per_iteration": 42.333333333333336,
+            "wall_ns_per_iteration": 35680.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 306274,
+            "cpu_user_us": 207,
+            "cpu_system_us": 103,
+            "cpu_total_us": 310,
+            "cpu_us_per_iteration": 103.33333333333333,
+            "wall_ns_per_iteration": 102091.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 14755671,
+            "cpu_user_us": 14417,
+            "cpu_system_us": 0,
+            "cpu_total_us": 14417,
+            "cpu_us_per_iteration": 4805.666666666667,
+            "wall_ns_per_iteration": 4918557
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 7264729,
+            "cpu_user_us": 7264,
+            "cpu_system_us": 0,
+            "cpu_total_us": 7264,
+            "cpu_us_per_iteration": 2421.3333333333335,
+            "wall_ns_per_iteration": 2421576.3333333335
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 52509286,
+            "cpu_user_us": 36186,
+            "cpu_system_us": 16088,
+            "cpu_total_us": 52274,
+            "cpu_us_per_iteration": 17424.666666666668,
+            "wall_ns_per_iteration": 17503095.333333332
+          }
+        },
+        "resources": {
+          "max_rss_kb": 147140,
+          "minor_page_faults": 20349,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 85,
+          "involuntary_context_switches": 23
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 168.37,
+        "cycles": 370018836.0,
+        "instructions": 754637553.0,
+        "branches": 175954521.0,
+        "branch-misses": 3702653.0,
+        "cache-references": 275899810.0,
+        "cache-misses": 3928455.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 20521.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 2.0394571291500414,
+        "cache_mpki": 5.205750740050966,
+        "branch_mpki": 4.906531599547896,
+        "derive_messages_cpu_ns_per_context_byte": 0.010093053181966146,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.024636586507161457,
+        "json_encode_request_cpu_ns_per_context_byte": 1.145760218302409,
+        "json_decode_request_cpu_ns_per_context_byte": 0.5772908528645834,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 4.154364267985026
+      },
+      "sample_index": 31
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 16384,
+        "request_json_bytes": 16828,
+        "response_json_bytes": 16548,
+        "sse_wire_bytes": 16570,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 99832,
+            "cpu_user_us": 104,
+            "cpu_system_us": 17,
+            "cpu_total_us": 121,
+            "cpu_us_per_iteration": 40.333333333333336,
+            "wall_ns_per_iteration": 33277.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 295204,
+            "cpu_user_us": 258,
+            "cpu_system_us": 43,
+            "cpu_total_us": 301,
+            "cpu_us_per_iteration": 100.33333333333333,
+            "wall_ns_per_iteration": 98401.33333333333
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 71811,
+            "cpu_user_us": 65,
+            "cpu_system_us": 11,
+            "cpu_total_us": 76,
+            "cpu_us_per_iteration": 25.333333333333332,
+            "wall_ns_per_iteration": 23937
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 56000,
+            "cpu_user_us": 51,
+            "cpu_system_us": 8,
+            "cpu_total_us": 59,
+            "cpu_us_per_iteration": 19.666666666666668,
+            "wall_ns_per_iteration": 18666.666666666668
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 6839693,
+            "cpu_user_us": 6837,
+            "cpu_system_us": 0,
+            "cpu_total_us": 6837,
+            "cpu_us_per_iteration": 2279,
+            "wall_ns_per_iteration": 2279897.6666666665
+          }
+        },
+        "resources": {
+          "max_rss_kb": 52212,
+          "minor_page_faults": 4218,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 35,
+          "involuntary_context_switches": 10
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 69.2,
+        "cycles": 162795139.0,
+        "instructions": 252734288.0,
+        "branches": 48905160.0,
+        "branch-misses": 2505061.0,
+        "cache-references": 99580041.0,
+        "cache-misses": 1320981.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4373.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5524682711809963,
+        "cache_mpki": 5.226758151628402,
+        "branch_mpki": 9.911836735029796,
+        "derive_messages_cpu_ns_per_context_byte": 2.4617513020833335,
+        "assemble_wire_request_cpu_ns_per_context_byte": 6.123860677083333,
+        "json_encode_request_cpu_ns_per_context_byte": 1.5462239583333333,
+        "json_decode_request_cpu_ns_per_context_byte": 1.2003580729166667,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 139.09912109375
+      },
+      "sample_index": 32
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 4096,
+        "request_json_bytes": 4540,
+        "response_json_bytes": 4260,
+        "sse_wire_bytes": 4282,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 106851,
+            "cpu_user_us": 71,
+            "cpu_system_us": 54,
+            "cpu_total_us": 125,
+            "cpu_us_per_iteration": 41.666666666666664,
+            "wall_ns_per_iteration": 35617
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 292554,
+            "cpu_user_us": 170,
+            "cpu_system_us": 127,
+            "cpu_total_us": 297,
+            "cpu_us_per_iteration": 99,
+            "wall_ns_per_iteration": 97518
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 43680,
+            "cpu_user_us": 28,
+            "cpu_system_us": 20,
+            "cpu_total_us": 48,
+            "cpu_us_per_iteration": 16,
+            "wall_ns_per_iteration": 14560
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 40230,
+            "cpu_user_us": 25,
+            "cpu_system_us": 18,
+            "cpu_total_us": 43,
+            "cpu_us_per_iteration": 14.333333333333334,
+            "wall_ns_per_iteration": 13410
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 7491282,
+            "cpu_user_us": 3230,
+            "cpu_system_us": 3447,
+            "cpu_total_us": 6677,
+            "cpu_us_per_iteration": 2225.6666666666665,
+            "wall_ns_per_iteration": 2497094
+          }
+        },
+        "resources": {
+          "max_rss_kb": 53624,
+          "minor_page_faults": 4210,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 39,
+          "involuntary_context_switches": 12
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 68.18,
+        "cycles": 161142216.0,
+        "instructions": 245831833.0,
+        "branches": 47522989.0,
+        "branch-misses": 2500553.0,
+        "cache-references": 96687676.0,
+        "cache-misses": 1302549.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 4357.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.525558224916058,
+        "cache_mpki": 5.298536744018827,
+        "branch_mpki": 10.171803095980657,
+        "derive_messages_cpu_ns_per_context_byte": 10.172526041666666,
+        "assemble_wire_request_cpu_ns_per_context_byte": 24.169921875,
+        "json_encode_request_cpu_ns_per_context_byte": 3.90625,
+        "json_decode_request_cpu_ns_per_context_byte": 3.4993489583333335,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 543.3756510416666
+      },
+      "sample_index": 33
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 1048576,
+        "request_json_bytes": 1049020,
+        "response_json_bytes": 1048740,
+        "sse_wire_bytes": 1048762,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 107602,
+            "cpu_user_us": 81,
+            "cpu_system_us": 45,
+            "cpu_total_us": 126,
+            "cpu_us_per_iteration": 42,
+            "wall_ns_per_iteration": 35867.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 322034,
+            "cpu_user_us": 320,
+            "cpu_system_us": 0,
+            "cpu_total_us": 320,
+            "cpu_us_per_iteration": 106.66666666666667,
+            "wall_ns_per_iteration": 107344.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 4821995,
+            "cpu_user_us": 4733,
+            "cpu_system_us": 0,
+            "cpu_total_us": 4733,
+            "cpu_us_per_iteration": 1577.6666666666667,
+            "wall_ns_per_iteration": 1607331.6666666667
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 2390213,
+            "cpu_user_us": 2398,
+            "cpu_system_us": 0,
+            "cpu_total_us": 2398,
+            "cpu_us_per_iteration": 799.3333333333334,
+            "wall_ns_per_iteration": 796737.6666666666
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 19950752,
+            "cpu_user_us": 12320,
+            "cpu_system_us": 7610,
+            "cpu_total_us": 19930,
+            "cpu_us_per_iteration": 6643.333333333333,
+            "wall_ns_per_iteration": 6650250.666666667
+          }
+        },
+        "resources": {
+          "max_rss_kb": 70640,
+          "minor_page_faults": 10256,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 64,
+          "involuntary_context_switches": 17
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 96.15,
+        "cycles": 214818959.0,
+        "instructions": 376089653.0,
+        "branches": 79930401.0,
+        "branch-misses": 2867356.0,
+        "cache-references": 142965320.0,
+        "cache-misses": 2015934.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 10404.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.750728402887382,
+        "cache_mpki": 5.360248504363931,
+        "branch_mpki": 7.624128920132774,
+        "derive_messages_cpu_ns_per_context_byte": 0.0400543212890625,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.10172526041666667,
+        "json_encode_request_cpu_ns_per_context_byte": 1.5045801798502605,
+        "json_decode_request_cpu_ns_per_context_byte": 0.7623036702473959,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 6.3355763753255205
+      },
+      "sample_index": 34
+    },
+    {
+      "fixture": {
+        "benchmark": "C3 fixed-shape context serialization and SSE parsing",
+        "context_bytes": 262144,
+        "request_json_bytes": 262588,
+        "response_json_bytes": 262308,
+        "sse_wire_bytes": 262330,
+        "iterations": 3,
+        "stream_chunk_bytes": 16384,
+        "operations": {
+          "derive_messages": {
+            "iterations": 3,
+            "wall_ns": 107341,
+            "cpu_user_us": 125,
+            "cpu_system_us": 0,
+            "cpu_total_us": 125,
+            "cpu_us_per_iteration": 41.666666666666664,
+            "wall_ns_per_iteration": 35780.333333333336
+          },
+          "assemble_wire_request": {
+            "iterations": 3,
+            "wall_ns": 295784,
+            "cpu_user_us": 302,
+            "cpu_system_us": 0,
+            "cpu_total_us": 302,
+            "cpu_us_per_iteration": 100.66666666666667,
+            "wall_ns_per_iteration": 98594.66666666667
+          },
+          "json_encode_request": {
+            "iterations": 3,
+            "wall_ns": 946363,
+            "cpu_user_us": 952,
+            "cpu_system_us": 0,
+            "cpu_total_us": 952,
+            "cpu_us_per_iteration": 317.3333333333333,
+            "wall_ns_per_iteration": 315454.3333333333
+          },
+          "json_decode_request": {
+            "iterations": 3,
+            "wall_ns": 1474560,
+            "cpu_user_us": 0,
+            "cpu_system_us": 1473,
+            "cpu_total_us": 1473,
+            "cpu_us_per_iteration": 491,
+            "wall_ns_per_iteration": 491520
+          },
+          "sse_frame_and_json_decode": {
+            "iterations": 3,
+            "wall_ns": 11189463,
+            "cpu_user_us": 9379,
+            "cpu_system_us": 1489,
+            "cpu_total_us": 10868,
+            "cpu_us_per_iteration": 3622.6666666666665,
+            "wall_ns_per_iteration": 3729821
+          }
+        },
+        "resources": {
+          "max_rss_kb": 56236,
+          "minor_page_faults": 5617,
+          "major_page_faults": 0,
+          "voluntary_context_switches": 44,
+          "involuntary_context_switches": 11
+        },
+        "checks": {
+          "event_count_exact": true,
+          "derived_message_count_exact": true,
+          "derived_payload_exact": true,
+          "request_wire_payload_exact": true,
+          "request_json_utf8_size_exact": true,
+          "request_decode_payload_exact": true,
+          "sse_event_count_exact": true,
+          "sse_payload_exact": true
+        }
+      },
+      "perf": {
+        "task-clock": 76.36,
+        "cycles": 178286178.0,
+        "instructions": 282786021.0,
+        "branches": 56727223.0,
+        "branch-misses": 2607575.0,
+        "cache-references": 110829422.0,
+        "cache-misses": 1530234.0,
+        "context-switches": 0.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 5720.0
+      },
+      "perf_event_labels": {
+        "task-clock": "task-clock:u",
+        "cycles": "cycles:u",
+        "instructions": "instructions:u",
+        "branches": "branches:u",
+        "branch-misses": "branch-misses:u",
+        "cache-references": "cache-references:u",
+        "cache-misses": "cache-misses:u",
+        "context-switches": "context-switches:u",
+        "cpu-migrations": "cpu-migrations:u",
+        "page-faults": "page-faults:u"
+      },
+      "derived": {
+        "ipc": 1.5861354153881744,
+        "cache_mpki": 5.411278798678666,
+        "branch_mpki": 9.221018036107237,
+        "derive_messages_cpu_ns_per_context_byte": 0.15894571940104166,
+        "assemble_wire_request_cpu_ns_per_context_byte": 0.3840128580729167,
+        "json_encode_request_cpu_ns_per_context_byte": 1.2105305989583333,
+        "json_decode_request_cpu_ns_per_context_byte": 1.873016357421875,
+        "sse_frame_and_json_decode_cpu_ns_per_context_byte": 13.819376627604166
+      },
+      "sample_index": 35
+    }
+  ],
+  "limitations": [
+    "The size sweep fixes event/message/tool-schema counts and uses one ASCII user text block.",
+    "Request assembly is the pinned DSH DeepSeek serializer; JSON encode/decode are the Node/V8 primitives used at its transport boundary.",
+    "SSE uses the pinned DSH framing parser plus JSON.parse, not the complete adapter translation state machine.",
+    "SSE response text grows with request context size only to provide a common byte axis; real request and response sizes are independent.",
+    "Whole-process perf includes Node/V8 startup, setup, every scoped operation, cleanup, and teardown.",
+    "A :u event label excludes kernel execution and makes zero scheduling counters non-interpretable."
+  ]
+}
