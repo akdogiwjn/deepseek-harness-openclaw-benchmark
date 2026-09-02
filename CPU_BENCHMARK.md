@@ -200,3 +200,38 @@ controller, while perf's default inheritance covers descendants. On a host that
 only permits `:u` events, perf omits exactly the kernel work that process-launch
 research needs; treat that run as a user-space pilot and rerun with user+kernel
 PMU access for total CPU attribution. See `results/C4_REPORT.md`.
+
+## C5 DSH native-vs-PTC scaling
+
+C5 measures the CPU tradeoff behind W8's executor collapse using one real DSH
+Agent Loop and a deterministic in-process adapter. Native mode emits one model-
+visible `noop` call per operation. PTC emits one `run_code` call; the shipped
+worker-thread runtime then invokes the same no-op tool N times sequentially.
+Native therefore makes `N + 1` provider requests while PTC always makes two.
+
+Run a smoke test:
+
+```bash
+scripts/cpu/run-c5.py \
+  --counts 0,4 \
+  --repeats 1 \
+  --cpu 0 \
+  --perf off \
+  --output /tmp/c5-code-mode-smoke.json
+```
+
+Run the initial scaling design:
+
+```bash
+scripts/cpu/run-c5.py \
+  --counts 0,1,4,16,64,256,1024 \
+  --repeats 5 \
+  --payload-bytes 16 \
+  --cpu 0 \
+  --output results/c5-code-mode-cpu-pilot.json
+```
+
+The adapter removes real network/model latency, so the experiment measures
+local runtime work rather than the end-to-end value of fewer remote calls. PTC
+uses a fresh worker for each program. The no-op tool excludes shell, filesystem,
+payload, and useful program-compute costs. See `results/C5_REPORT.md`.

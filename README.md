@@ -186,11 +186,13 @@ scales append-only Session/Event Log primitives. C3 holds the Session/message
 shape fixed while scaling context bytes through request assembly, JSON
 encode/decode, and SSE parsing. C4 audits the pinned shell implementation and
 compares its real managed one-shot path with raw one-shot and persistent
-benchmark controls. All use exact semantic invariants, randomized repetitions,
-scoped CPU timing, and optional whole-process `perf stat`. See
+benchmark controls. C5 measures the DSH Native-to-PTC CPU crossover using its
+real worker-thread code runtime and a deterministic Agent Loop. All use exact
+semantic invariants, randomized repetitions, scoped CPU timing, and optional
+whole-process `perf stat`. See
 `CPU_BENCHMARK.md` for the designs and commands; the first ARM64 pilots are
 documented in `results/C1_REPORT.md`, `results/C2_REPORT.md`, and
-`results/C3_REPORT.md` through `results/C4_REPORT.md`, with complete samples in
+`results/C3_REPORT.md` through `results/C5_REPORT.md`, with complete samples in
 the corresponding JSON files.
 
 ## Frozen evidence
