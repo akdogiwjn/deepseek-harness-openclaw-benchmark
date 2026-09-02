@@ -38,13 +38,13 @@ def _probe_optional(perf: str) -> list[str]:
 
 
 def probe_perf() -> tuple[str, list[str]]:
-    """Return (mode, events): mode in full/user-only/off plus the event list to pass to perf."""
+    """Return (mode, events): mode in user-kernel/user-only/off plus the event list to pass to perf."""
     perf = shutil.which("perf")
     if perf is None:
         return "off", []
-    full = REQUIRED_EVENTS + KERNEL_SPLIT_EVENTS
-    if _run(perf, full, "cycles:k"):
-        return "full", full + _probe_optional(perf)
+    full_events = REQUIRED_EVENTS + KERNEL_SPLIT_EVENTS
+    if _run(perf, full_events, "cycles:k"):
+        return "user-kernel", full_events + _probe_optional(perf)
     if _run(perf, REQUIRED_EVENTS, "cycles:u"):
         return "user-only", REQUIRED_EVENTS + _probe_optional(perf)
     return "off", []

@@ -294,7 +294,9 @@ def main() -> None:
                 if args.warm_turns == 0 else
                 "Warm mode uses a fresh Session per turn, so per-turn context is fixed; only the steady-state turn cost is measured."
             ),
-            "Whole-process perf counters include Node/V8 startup and Harness composition; slope estimates amortize that fixed intercept.",
+            "Whole-process perf counters include Node/V8 startup and Harness composition; slope estimates amortize that fixed intercept."
+            if args.warm_turns == 0 else
+            "Warm-mode whole-process perf is diagnostic only and is excluded from steady-state derived metrics and fits.",
             "No claim of cross-ISA instruction equivalence is made.",
             "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields.",
             "Warm mode still includes per-step process startup in whole-process perf; only the internal prompt-window timing is steady-state.",
