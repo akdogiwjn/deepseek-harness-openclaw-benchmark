@@ -8,12 +8,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from perf_utils import parse_perf, probe_perf
+
 CONDITIONS = [(backend, workload) for backend in ("local", "sandbox") for workload in ("read", "write")]
-_PERF_SPLIT_NAMES = frozenset(("cycles", "instructions"))
-PERF_EVENTS = ["task-clock", "cycles:u", "cycles:k", "instructions:u", "instructions:k", "branches", "branch-misses", "cache-references",
-               "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
-PERF_EVENTS_USER_ONLY = ["task-clock", "cycles:u", "instructions:u", "branches", "branch-misses", "cache-references",
-                         "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
 
 
 def parse_counts(raw: str) -> list[int]:
@@ -29,47 +26,6 @@ def default_node(root: Path) -> Path:
     arch = {"aarch64": "arm64", "arm64": "arm64", "x86_64": "x64", "amd64": "x64"}.get(platform.machine().lower())
     if arch is None: raise RuntimeError(f"unsupported architecture: {platform.machine()}")
     return root / f"node-v{revisions['NODE_VERSION']}-linux-{arch}/bin/node"
-
-
-def perf_mode() -> str:
-    perf = shutil.which("perf")
-    if perf is None: return "off"
-    for mode, events, marker in (
-        ("full", PERF_EVENTS, "cycles:k"),
-        ("user-only", PERF_EVENTS_USER_ONLY, "cycles:u"),
-    ):
-        completed = subprocess.run([perf, "stat", "-x,", "-e", ",".join(events), "--", "true"],
-                                   text=True, capture_output=True, check=False)
-        if completed.returncode == 0 and marker in completed.stderr:
-            return mode
-    return "off"
-
-
-def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
-    metrics, labels = {}, {}
-    base_names = {
-        "task-clock", "branches", "branch-misses", "cache-references", "cache-misses",
-        "context-switches", "cpu-migrations", "page-faults",
-    } | set(_PERF_SPLIT_NAMES)
-    for line in stderr.splitlines():
-        fields = line.split(",")
-        if len(fields) < 3: continue
-        label = fields[2].strip()
-        base = label.split(":", 1)[0]
-        if base not in base_names: continue
-        key = label.replace(":", "_") if base in _PERF_SPLIT_NAMES else base
-        try: metrics[key] = float(fields[0].strip())
-        except ValueError: metrics[key] = None
-        labels[key] = label
-    for base in _PERF_SPLIT_NAMES:
-        user = metrics.get(f"{base}_u")
-        kernel = metrics.get(f"{base}_k")
-        if user is not None:
-            total = user + (kernel or 0.0)
-            metrics[base] = total
-            if kernel is not None and total:
-                metrics[f"{base}_kernel_ratio"] = kernel / total
-    return metrics, labels
 
 
 def run_sample(node: Path, fixture: Path, backend: str, workload: str, count: int,
@@ -152,10 +108,9 @@ def main() -> None:
     args = parser.parse_args()
     if args.repeats < 1 or args.payload_bytes < 16: parser.error("repeats positive; payload-bytes at least 16")
     root = Path(__file__).resolve().parents[2]; node = (args.node or default_node(root)).resolve()
-    fixture = root / "scripts/cpu/c6-fs-sandbox.mjs"; mode = perf_mode()
+    fixture = root / "scripts/cpu/c6-fs-sandbox.mjs"; mode, perf_events = probe_perf()
     if args.perf == "on" and mode == "off": parser.error("perf requested but unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
-    perf_events = PERF_EVENTS if mode == "full" else (PERF_EVENTS_USER_ONLY if mode == "user-only" else [])
     schedule = [(b, w, n) for b, w in CONDITIONS for n in args.counts for _ in range(args.repeats)]
     random.Random(args.seed).shuffle(schedule); samples = []
     for index, (backend, workload, count) in enumerate(schedule, 1):

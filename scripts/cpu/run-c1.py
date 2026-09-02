@@ -16,34 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-
-_PERF_SPLIT_NAMES = frozenset(("cycles", "instructions"))
-PERF_EVENTS = [
-    "task-clock",
-    "cycles:u",
-    "cycles:k",
-    "instructions:u",
-    "instructions:k",
-    "branches",
-    "branch-misses",
-    "cache-references",
-    "cache-misses",
-    "context-switches",
-    "cpu-migrations",
-    "page-faults",
-]
-PERF_EVENTS_USER_ONLY = [
-    "task-clock",
-    "cycles:u",
-    "instructions:u",
-    "branches",
-    "branch-misses",
-    "cache-references",
-    "cache-misses",
-    "context-switches",
-    "cpu-migrations",
-    "page-faults",
-]
+from perf_utils import parse_perf, probe_perf
 
 
 def parse_steps(raw: str) -> list[int]:
@@ -65,38 +38,6 @@ def default_node(root: Path) -> Path:
     if arch is None:
         raise RuntimeError(f"unsupported architecture: {platform.machine()}")
     return root / f"node-v{revisions['NODE_VERSION']}-linux-{arch}" / "bin" / "node"
-
-
-def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
-    metrics: dict[str, float | None] = {}
-    labels: dict[str, str] = {}
-    base_names = {
-        "task-clock", "branches", "branch-misses", "cache-references", "cache-misses",
-        "context-switches", "cpu-migrations", "page-faults",
-    } | set(_PERF_SPLIT_NAMES)
-    for line in stderr.splitlines():
-        fields = line.split(",")
-        if len(fields) < 3:
-            continue
-        label = fields[2].strip()
-        base = label.split(":", 1)[0]
-        if base not in base_names:
-            continue
-        key = label.replace(":", "_") if base in _PERF_SPLIT_NAMES else base
-        try:
-            metrics[key] = float(fields[0].strip())
-        except ValueError:
-            metrics[key] = None
-        labels[key] = label
-    for base in _PERF_SPLIT_NAMES:
-        user = metrics.get(f"{base}_u")
-        kernel = metrics.get(f"{base}_k")
-        if user is not None:
-            total = user + (kernel or 0.0)
-            metrics[base] = total
-            if kernel is not None and total:
-                metrics[f"{base}_kernel_ratio"] = kernel / total
-    return metrics, labels
 
 
 def run_sample(
@@ -151,30 +92,36 @@ def run_sample(
         }
     perf, perf_event_labels = parse_perf(completed.stderr) if use_perf else ({}, {})
     derived: dict[str, float | None] = {}
-    instructions = perf.get("instructions")
-    cycles = perf.get("cycles")
-    branches = perf.get("branches")
-    branch_misses = perf.get("branch-misses")
-    cache_misses = perf.get("cache-misses")
-    if instructions and cycles:
-        derived["ipc"] = instructions / cycles
-    if instructions and branch_misses is not None:
-        derived["branch_mpki"] = branch_misses / instructions * 1000
-    if instructions and cache_misses is not None:
-        derived["cache_mpki"] = cache_misses / instructions * 1000
     if steps > 0:
         derived["internal_cpu_us_per_tool_step"] = fixture_result["timing"]["cpu_total_us"] / steps
         derived["internal_wall_ns_per_tool_step"] = fixture_result["timing"]["wall_ns"] / steps
-        if instructions is not None:
-            derived["process_instructions_per_tool_step"] = instructions / steps
-        if cycles is not None:
-            derived["process_cycles_per_tool_step"] = cycles / steps
+    if not warm:
+        instructions = perf.get("instructions")
+        cycles = perf.get("cycles")
+        branches = perf.get("branches")
+        branch_misses = perf.get("branch-misses")
+        cache_misses = perf.get("cache-misses")
+        if instructions and cycles:
+            derived["ipc"] = instructions / cycles
+        if instructions and branch_misses is not None:
+            derived["branch_mpki"] = branch_misses / instructions * 1000
+        if instructions and cache_misses is not None:
+            derived["cache_mpki"] = cache_misses / instructions * 1000
+        if steps > 0:
+            if instructions is not None:
+                derived["process_instructions_per_tool_step"] = instructions / steps
+            if cycles is not None:
+                derived["process_cycles_per_tool_step"] = cycles / steps
     sample = {
         "fixture": fixture_result,
-        "perf": perf,
-        "perf_event_labels": perf_event_labels,
         "derived": derived,
+        "perf_event_labels": perf_event_labels,
     }
+    if warm:
+        sample["perf"] = {}
+        sample["diagnostic_whole_process_perf"] = perf
+    else:
+        sample["perf"] = perf
     if warm_data is not None:
         sample["warm_turns"] = warm_data
     return sample
@@ -239,25 +186,6 @@ def aggregate(samples: list[dict[str, Any]], steps: list[int]) -> tuple[dict[str
     return by_steps, fits
 
 
-def perf_mode() -> str:
-    perf = shutil.which("perf")
-    if perf is None:
-        return "off"
-    for mode, events, marker in (
-        ("full", PERF_EVENTS, "cycles:k"),
-        ("user-only", PERF_EVENTS_USER_ONLY, "cycles:u"),
-    ):
-        completed = subprocess.run(
-            [perf, "stat", "-x,", "-e", ",".join(events), "--", "true"],
-            text=True,
-            capture_output=True,
-            check=False,
-        )
-        if completed.returncode == 0 and marker in completed.stderr:
-            return mode
-    return "off"
-
-
 def lscpu_metadata() -> dict[str, str]:
     completed = subprocess.run(["lscpu", "-J"], text=True, capture_output=True, check=False)
     if completed.returncode != 0:
@@ -291,11 +219,10 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]
     node = (args.node or default_node(root)).resolve()
     fixture = root / "scripts" / "cpu" / "c1-agent-loop.mjs"
-    mode = perf_mode()
+    mode, perf_events = probe_perf()
     if args.perf == "on" and mode == "off":
         parser.error("perf was requested but the selected events are unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
-    perf_events = PERF_EVENTS if mode == "full" else (PERF_EVENTS_USER_ONLY if mode == "user-only" else [])
     schedule = [count for count in args.steps for _ in range(args.repeats)]
     random.Random(args.seed).shuffle(schedule)
     samples = []

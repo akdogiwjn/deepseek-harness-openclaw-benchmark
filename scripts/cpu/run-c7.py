@@ -8,11 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-_PERF_SPLIT_NAMES = frozenset(("cycles", "instructions"))
-PERF_EVENTS = ["task-clock", "cycles:u", "cycles:k", "instructions:u", "instructions:k", "branches", "branch-misses", "cache-references",
-               "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
-PERF_EVENTS_USER_ONLY = ["task-clock", "cycles:u", "instructions:u", "branches", "branch-misses", "cache-references",
-                         "cache-misses", "context-switches", "cpu-migrations", "page-faults"]
+from perf_utils import parse_perf, probe_perf
 
 
 def parse_counts(raw: str) -> list[int]:
@@ -39,47 +35,6 @@ def physical_cpu_candidates() -> tuple[list[int], str]:
         key = (socket, core)
         if key not in seen: seen.add(key); selected.append(cpu)
     return selected, raw
-
-
-def perf_mode() -> str:
-    perf = shutil.which("perf")
-    if perf is None: return "off"
-    for mode, events, marker in (
-        ("full", PERF_EVENTS, "cycles:k"),
-        ("user-only", PERF_EVENTS_USER_ONLY, "cycles:u"),
-    ):
-        completed = subprocess.run([perf, "stat", "-x,", "-e", ",".join(events), "--", "true"],
-                                   text=True, capture_output=True, check=False)
-        if completed.returncode == 0 and marker in completed.stderr:
-            return mode
-    return "off"
-
-
-def parse_perf(stderr: str) -> tuple[dict[str, float | None], dict[str, str]]:
-    metrics, labels = {}, {}
-    base_names = {
-        "task-clock", "branches", "branch-misses", "cache-references", "cache-misses",
-        "context-switches", "cpu-migrations", "page-faults",
-    } | set(_PERF_SPLIT_NAMES)
-    for line in stderr.splitlines():
-        fields = line.split(",")
-        if len(fields) < 3: continue
-        label = fields[2].strip()
-        base = label.split(":", 1)[0]
-        if base not in base_names: continue
-        key = label.replace(":", "_") if base in _PERF_SPLIT_NAMES else base
-        try: metrics[key] = float(fields[0].strip())
-        except ValueError: metrics[key] = None
-        labels[key] = label
-    for base in _PERF_SPLIT_NAMES:
-        user = metrics.get(f"{base}_u")
-        kernel = metrics.get(f"{base}_k")
-        if user is not None:
-            total = user + (kernel or 0.0)
-            metrics[base] = total
-            if kernel is not None and total:
-                metrics[f"{base}_kernel_ratio"] = kernel / total
-    return metrics, labels
 
 
 def run_sample(node: Path, controller: Path, agents: int, steps: int, payload: int,
@@ -161,10 +116,9 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]; node = (args.node or default_node(root)).resolve()
     controller = root / "scripts/cpu/c7-scaleout-controller.mjs"; cpus, topology = physical_cpu_candidates()
     if max(args.agents) > len(cpus): parser.error(f"need {max(args.agents)} physical cores, found {len(cpus)}")
-    mode = perf_mode()
+    mode, perf_events = probe_perf()
     if args.perf == "on" and mode == "off": parser.error("perf requested but unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
-    perf_events = PERF_EVENTS if mode == "full" else (PERF_EVENTS_USER_ONLY if mode == "user-only" else [])
     schedule = [count for count in args.agents for _ in range(args.repeats)]; random.Random(args.seed).shuffle(schedule)
     samples = []
     for index, count in enumerate(schedule, 1):
