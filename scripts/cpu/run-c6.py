@@ -108,7 +108,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.repeats < 1 or args.payload_bytes < 16: parser.error("repeats positive; payload-bytes at least 16")
     root = Path(__file__).resolve().parents[2]; node = (args.node or default_node(root)).resolve()
-    fixture = root / "scripts/cpu/c6-fs-sandbox.mjs"; mode, perf_events = probe_perf()
+    fixture = root / "scripts/cpu/c6-fs-sandbox.mjs"
+    mode, perf_events = ("off", []) if args.perf == "off" else probe_perf()
     if args.perf == "on" and mode == "off": parser.error("perf requested but unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
     schedule = [(b, w, n) for b, w in CONDITIONS for n in args.counts for _ in range(args.repeats)]

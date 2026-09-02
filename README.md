@@ -201,7 +201,9 @@ steady-state fixed-context variant, and `run-c7.py --hard-pin` separates core
 scaling from scheduler migration. C8 measures the token-meter / context-pressure
 path (`TokenMeter.measure`) rather than a tokenizer, with cold, incremental,
 repeat, and surface-shape subtests under `run-c8.py`; see
-`results/C8_REPORT.md` for the pilot.
+`results/C8_REPORT.md` for the pilot. That report is generated from the seven
+validated pilot JSON files by `scripts/cpu/render-c8-report.py`, rather than from
+hand-copied measurements.
 
 ## Frozen evidence
 

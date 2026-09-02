@@ -56,8 +56,8 @@ def run_sample(node: Path, controller: Path, agents: int, steps: int, payload: i
     if instructions and perf.get("cache-misses") is not None: derived["cache_mpki"] = perf["cache-misses"] / instructions * 1000
     if instructions and perf.get("branch-misses") is not None: derived["branch_mpki"] = perf["branch-misses"] / instructions * 1000
     if task_clock is not None:
-        derived["average_cpu_cores"] = task_clock / wall_ms
-        derived["cpu_affinity_utilization"] = task_clock / wall_ms / agents
+        derived["average_cpu_cores_including_controller"] = task_clock / wall_ms
+        derived["task_clock_per_worker_core"] = task_clock / wall_ms / agents
     for name, value in (("instructions_per_agent", instructions), ("cycles_per_agent", cycles),
                         ("task_clock_ms_per_agent", task_clock)):
         if value is not None: derived[name] = value / agents
@@ -79,8 +79,9 @@ def summarize(samples: list[dict[str, Any]], counts: list[int]) -> tuple[dict[st
              "max_child_max_rss_kb": ("fixture", "memory", "max_child_max_rss_kb"),
              "cycles": ("perf", "cycles"), "instructions": ("perf", "instructions"), "task_clock_ms": ("perf", "task-clock"),
              "page_faults": ("perf", "page-faults"), "ipc": ("derived", "ipc"), "cache_mpki": ("derived", "cache_mpki"),
-             "branch_mpki": ("derived", "branch_mpki"), "average_cpu_cores": ("derived", "average_cpu_cores"),
-             "cpu_affinity_utilization": ("derived", "cpu_affinity_utilization"),
+             "branch_mpki": ("derived", "branch_mpki"),
+             "average_cpu_cores_including_controller": ("derived", "average_cpu_cores_including_controller"),
+             "task_clock_per_worker_core": ("derived", "task_clock_per_worker_core"),
              "instructions_per_agent": ("derived", "instructions_per_agent"), "cycles_per_agent": ("derived", "cycles_per_agent"),
              "task_clock_ms_per_agent": ("derived", "task_clock_ms_per_agent")}
     aggregates = {}
@@ -116,7 +117,7 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]; node = (args.node or default_node(root)).resolve()
     controller = root / "scripts/cpu/c7-scaleout-controller.mjs"; cpus, topology = physical_cpu_candidates()
     if max(args.agents) > len(cpus): parser.error(f"need {max(args.agents)} physical cores, found {len(cpus)}")
-    mode, perf_events = probe_perf()
+    mode, perf_events = ("off", []) if args.perf == "off" else probe_perf()
     if args.perf == "on" and mode == "off": parser.error("perf requested but unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
     schedule = [count for count in args.agents for _ in range(args.repeats)]; random.Random(args.seed).shuffle(schedule)
@@ -146,6 +147,7 @@ def main() -> None:
                  "sum_child_max_rss_kb sums per-process maxima and is not a synchronized aggregate peak.",
 "CPU sets use one thread per physical core and nested prefixes but do not spread across NUMA nodes.",
                    "Controller placement is identical across modes; only child cpusets differ (shared pool vs per-Agent pin).",
+                  "Perf task-clock includes the unbound controller, so task_clock_per_worker_core is a capacity ratio, not worker-cpuset utilization and may exceed one.",
                   "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields."],}
     args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(json.dumps(result, indent=2)+"\n")
     print(f"[done] wrote {args.output}")

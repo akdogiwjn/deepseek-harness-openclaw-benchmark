@@ -172,7 +172,7 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]
     node = (args.node or default_node(root)).resolve()
     fixture = root / "scripts" / "cpu" / "c8-token-meter.mjs"
-    mode, perf_events = probe_perf()
+    mode, perf_events = ("off", []) if args.perf == "off" else probe_perf()
     if args.perf == "on" and mode == "off":
         parser.error("perf was requested but the selected events are unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
@@ -181,7 +181,7 @@ def main() -> None:
     samples = []
 
     def iterations_for(size: int) -> int:
-        if args.subtest == "cold":
+        if args.subtest == "cold" or (args.subtest == "shape" and args.shape != "schema"):
             return 1
         return max(20, args.iterations // max(1, size // 1000))
 
@@ -214,12 +214,13 @@ def main() -> None:
         "design": {
             "subtest": args.subtest,
             "shape": args.shape if args.subtest == "shape" else None,
-            "surface_events": args.sizes,
+            "input_sizes": args.sizes,
+            "size_parameter": "tool_count" if (args.subtest == "shape" and args.shape == "schema") else "surface_nodes",
             "x_axis": "schema_bytes" if (args.subtest == "shape" and args.shape == "schema")
             else ("effective_surface_nodes" if args.subtest == "incremental" else "surface_nodes"),
             "repeats": args.repeats,
             "base_iterations": args.iterations,
-            "iterations_scaling": "max(20, base // max(1, size // 1000)); cold uses 1",
+            "iterations_scaling": "max(20, base // max(1, size // 1000)); cold and non-schema shape use 1",
             "payload_bytes": args.payload_bytes,
             "randomization_seed": args.seed,
             "cpu_affinity": None if args.cpu < 0 else args.cpu,
@@ -230,7 +231,11 @@ def main() -> None:
             "internal_scope": {
                 "cold": "first TokenMeter.measure(session) prompt-window",
                 "repeat": "TokenMeter.measure(session) batch",
-                "shape": "TokenMeter.measure(session[, header]) batch",
+                "shape": (
+                    "TokenMeter.measure(session, header) batch on a pre-synced 32-node surface"
+                    if args.shape == "schema" else
+                    "first TokenMeter.measure(session) including unread-tail replay"
+                ),
                 "incremental": "append one text turn + TokenMeter.measure(session) batch",
             }[args.subtest] + "; construction excluded",
             "perf_scope": "whole Node fixture process; construction, measured calls, and teardown included",
@@ -247,14 +252,14 @@ def main() -> None:
             if shutil.which("perf") else None,
         },
         "aggregates": by_size,
-        "linear_fits_over_surface_nodes": fits,
+        "linear_fits": fits,
         "samples": samples,
         "limitations": [
             "TokenMeter uses the fixed char/4 heuristic, not a real BPE tokenizer; this measures the context-pressure accounting path, not tokenization.",
-            "measure() is O(surface): it reprices every node and deep-clones the result; the repeat subtest isolates that path.",
+            "Every measure() reprices and clones the full surface, while _sync() consumes only unread events; repeat isolates the no-unread-tail path.",
             "Whole-process perf includes session construction and teardown; only the internal prompt-window timing is construction-free.",
             "Whole-process cycles/instructions include session construction, measured calls, and teardown and are diagnostic only; they are not used for per-measure CPU-cost fits.",
-            "Surface here is text user/message nodes; tool/result and tool-schema shape costs are the C8-D condition.",
+            "The non-schema shape condition times first replay so original message blocks are priced; schema uses a pre-synced fixed 32-node surface.",
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -206,20 +206,21 @@ def main() -> None:
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--payload-bytes", type=int, default=64)
     parser.add_argument("--warm-turns", type=int, default=0, help="measured turns per step in a single warm process")
-    parser.add_argument("--warmup-turns", type=int, default=1, help="unmeasured warmup turns before measurement")
+    parser.add_argument("--warmup-turns", type=int, help="unmeasured warmup turns; defaults to 1 in warm mode, otherwise 0")
     parser.add_argument("--cpu", type=int, default=0, help="logical CPU to pin, or -1 to disable pinning")
     parser.add_argument("--seed", type=int, default=20260902)
     parser.add_argument("--perf", choices=("auto", "on", "off"), default="auto")
     parser.add_argument("--node", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    if args.repeats < 1 or args.payload_bytes < 1 or args.warm_turns < 0 or args.warmup_turns < 0:
+    warmup_turns = args.warmup_turns if args.warmup_turns is not None else (1 if args.warm_turns > 0 else 0)
+    if args.repeats < 1 or args.payload_bytes < 1 or args.warm_turns < 0 or warmup_turns < 0:
         parser.error("repeats and payload-bytes must be positive; warm-turns and warmup-turns must be non-negative")
 
     root = Path(__file__).resolve().parents[2]
     node = (args.node or default_node(root)).resolve()
     fixture = root / "scripts" / "cpu" / "c1-agent-loop.mjs"
-    mode, perf_events = probe_perf()
+    mode, perf_events = ("off", []) if args.perf == "off" else probe_perf()
     if args.perf == "on" and mode == "off":
         parser.error("perf was requested but the selected events are unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode != "off")
@@ -236,7 +237,7 @@ def main() -> None:
             use_perf=use_perf,
             perf_events=perf_events,
             warm_turns=args.warm_turns,
-            warmup_turns=args.warmup_turns,
+            warmup_turns=warmup_turns,
         )
         sample["sample_index"] = index
         samples.append(sample)
@@ -256,7 +257,7 @@ def main() -> None:
             "repeats": args.repeats,
             "payload_bytes": args.payload_bytes,
             "warm_turns": args.warm_turns,
-            "warmup_turns": args.warmup_turns,
+            "warmup_turns": warmup_turns,
             "randomization_seed": args.seed,
             "cpu_affinity": None if args.cpu < 0 else args.cpu,
             "perf_enabled": use_perf,
@@ -299,7 +300,7 @@ def main() -> None:
             "Warm-mode whole-process perf is diagnostic only and is excluded from steady-state derived metrics and fits.",
             "No claim of cross-ISA instruction equivalence is made.",
             "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields.",
-            "Warm mode still includes per-step process startup in whole-process perf; only the internal prompt-window timing is steady-state.",
+            "Warm mode still includes one process startup per sample in whole-process perf; only the internal prompt-window timing is steady-state.",
         ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

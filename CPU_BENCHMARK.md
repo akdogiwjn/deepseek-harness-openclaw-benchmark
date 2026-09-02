@@ -338,7 +338,9 @@ scripts/cpu/run-c7.py \
 The batch scope includes process startup, Harness composition, execution, and
 exit. This is a multi-process topology; multiple Agents in one shared runtime
 are a separate condition. Selected-core NUMA placement must be inspected before
-cross-host interpretation. See `results/C7_REPORT.md`.
+cross-host interpretation. Perf includes the unbound controller as well as all
+children, so `task_clock_per_worker_core` is a total-capacity ratio rather than
+worker-cpuset utilization and can exceed one. See `results/C7_REPORT.md`.
 
 ### C7-B hard-pin placement
 
@@ -366,16 +368,20 @@ C8 does not measure a tokenizer. The pinned DSH `token-meter` uses a fixed
 `char/4` density heuristic until exact tokenization is needed, so C8 measures
 the context-pressure accounting path instead: how `TokenMeter.measure(session)`
 scales with the session surface. `measure()` is O(surface) — it replays the
-durable tail, reprices every node, and deep-clones the result — so the four
-subtests isolate replay, incremental sync, repeated measure, and surface shape.
+unread durable tail, reprices every node, and deep-clones the result. Once a
+session has meter state, append events eagerly synchronize that unread tail; a
+repeat call with no new events only reprices and clones. The four subtests
+isolate cold replay, incremental append + scan, repeated scan, and surface shape.
 
 - `cold`: a fresh `TokenMeter` faces the complete history; the first measure
   replays the whole tail.
 - `incremental`: an already-synced meter appends one new text turn and re-measures
   each iteration.
 - `repeat`: the session is fixed; each measure only reprices + clones, O(surface).
-- `shape`: identical surface-node count with different content
-  (`text`, `tool-call`, `tool-result`); a large tool-schema condition is separate.
+- `shape`: the first measure replays identical event/node counts with different
+  original content (`text`, `tool-call`, `tool-result`), so message pricing is
+  inside the timed window; a large tool-schema condition instead uses repeated
+  header measurement over a pre-synced fixed 32-node surface.
 
 Surface events use a fixed payload (default 256 B, or about 64 heuristic tokens).
 Run one subtest with `--subtest`; the internal prompt-window timing is
@@ -389,7 +395,19 @@ scripts/cpu/run-c8.py --subtest repeat \
   --cpu 0 --output results/c8-token-meter-pilot.json
 ```
 
-The value of C8 is `cycles/measure`, `instructions/measure`, IPC, and cache MPKI
-across surface sizes, which is the mechanism W5 establishes (compaction /
-context pressure) measured on the CPU and the natural basis for ARM/x86
-comparison rather than a tokenizer microbenchmark.
+After producing the standard seven C8 pilot JSON files, validate their sample
+counts/checks/medians and regenerate the report without hand-copied numbers:
+
+```bash
+scripts/cpu/render-c8-report.py \
+  --results-dir results \
+  --output results/C8_REPORT.md
+```
+
+The primary C8 outputs are construction-free internal CPU and wall time per
+measure across surface sizes. Whole-process cycles, instructions, IPC, and cache
+counters remain diagnostic because `perf stat` also includes Node startup,
+Session construction, measured calls, and teardown; clean per-measure PMU
+attribution requires a future scoped perf window. C8 therefore establishes the
+W5 context-pressure mechanism on this host without claiming a tokenizer or
+cross-ISA microarchitecture result.

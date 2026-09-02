@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /** C8 token-meter / context-pressure CPU fixture.
-
-Measures the pinned DeepSeek Harness `TokenMeter.measure(session)` path, which is
-O(surface): it replays the durable tail through the session surface, reprices
-every node, and deep-clones the resulting measurement. Four subtests isolate the
-replay, incremental, repeated-measure, and surface-shape costs.
-*/
+ *
+ * Measures the pinned DeepSeek Harness `TokenMeter.measure(session)` path. A call
+ * synchronizes only the unread durable tail, then reprices every surface node and
+ * deep-clones the resulting measurement. Four subtests isolate cold replay,
+ * incremental append + scan, repeated scan, and cold surface-shape/schema costs.
+ */
 
 import { writeSync } from 'node:fs'
 import { Context } from '../../sources/deepseek-harness/vendor/cordis/lib/index.js'
@@ -194,6 +194,7 @@ if (subtest === 'cold') {
 } else if (subtest === 'shape') {
   let header
   let schemaBytes = null
+  let schemaTokens = null
   if (shape === 'schema') {
     for (let turn = 1; turn <= 32; turn += 1) appendTextTurn(session, turn)
     const tools = Array.from({ length: surfaceEvents }, (_, index) => ({
@@ -202,6 +203,7 @@ if (subtest === 'cold') {
       parameters: { type: 'object', properties: {}, required: [] },
     }))
     schemaBytes = JSON.stringify(tools).length
+    schemaTokens = Math.ceil(schemaBytes / 4) + 4
     header = { config: { provider: 'bench', model: 'deterministic' }, tools }
   } else {
     for (let turn = 1; turn <= surfaceEvents; turn += 1) {
@@ -209,15 +211,34 @@ if (subtest === 'cold') {
     }
   }
   const measureFn = () => (header === undefined ? meter.measure(session) : meter.measure(session, header))
-  const first = measureFn()
-  const beforeCpu = process.cpuUsage()
-  const started = process.hrtime.bigint()
-  let stableTokens = true
-  for (let it = 0; it < iterations; it += 1) {
-    if (measureFn().surfaceTokens !== first.surfaceTokens) stableTokens = false
+  let first
+  let wallNs
+  let cpuTotalUs
+  let measuredIterations
+  let stableTotalTokens = true
+  if (shape === 'schema') {
+    // Establish the 32-node surface before timing. The measured batch isolates
+    // header handling, schema JSON pricing, surface repricing, and cloning.
+    first = measureFn()
+    const beforeCpu = process.cpuUsage()
+    const started = process.hrtime.bigint()
+    for (let it = 0; it < iterations; it += 1) {
+      if (measureFn().totalTokens !== first.totalTokens) stableTotalTokens = false
+    }
+    const ended = process.hrtime.bigint()
+    const cpu = process.cpuUsage(beforeCpu)
+    wallNs = Number(ended - started) / iterations
+    cpuTotalUs = (cpu.user + cpu.system) / iterations
+    measuredIterations = iterations
+  } else {
+    // The first call includes replay and estimateMessage() for the original kind.
+    const run = timeMeasure(measureFn)
+    first = run.value
+    wallNs = run.wallNs
+    cpuTotalUs = run.cpuTotalUs
+    measuredIterations = 1
   }
-  const ended = process.hrtime.bigint()
-  const cpu = process.cpuUsage(beforeCpu)
+  const expectedTotalTokens = schemaTokens === null ? null : first.surfaceTokens + schemaTokens
   const output = {
     benchmark: 'C8 token-meter context-pressure',
     subtest: 'shape',
@@ -226,15 +247,26 @@ if (subtest === 'cold') {
     surface_nodes: first.nodes.length,
     surface_tokens: first.surfaceTokens,
     payload_bytes: payloadBytes,
-    iterations,
+    iterations: measuredIterations,
     ...(schemaBytes !== null ? { schema_bytes: schemaBytes } : {}),
+    ...(schemaTokens !== null ? {
+      schema_tokens: schemaTokens,
+      total_tokens: first.totalTokens,
+      baseline_tokens: first.baseline.tokens,
+    } : {}),
     measure: {
-      wall_ns: Number(ended - started) / iterations,
-      cpu_total_us: (cpu.user + cpu.system) / iterations,
+      wall_ns: wallNs,
+      cpu_total_us: cpuTotalUs,
     },
     checks: {
       surface_nodes_exact: first.nodes.length === (shape === 'schema' ? 32 : surfaceEvents),
-      stable_surface_tokens: stableTokens,
+      ...(shape === 'schema' ? {
+        stable_total_tokens: stableTotalTokens,
+        baseline_is_estimated: first.baseline.kind === 'estimated',
+        schema_tokens_exact: first.totalTokens - first.surfaceTokens === schemaTokens,
+        baseline_tokens_exact: first.baseline.tokens === expectedTotalTokens,
+        total_tokens_exact: first.totalTokens === expectedTotalTokens,
+      } : {}),
     },
   }
   await ctx.fiber.dispose()

@@ -121,7 +121,7 @@ def main() -> None:
     root = Path(__file__).resolve().parents[2]
     node = (args.node or default_node(root)).resolve()
     fixture = root / "scripts/cpu/c5-code-mode.mjs"
-    mode_, perf_events = probe_perf()
+    mode_, perf_events = ("off", []) if args.perf == "off" else probe_perf()
     if args.perf == "on" and mode_ == "off":
         parser.error("perf requested but unavailable")
     use_perf = args.perf == "on" or (args.perf == "auto" and mode_ != "off")
