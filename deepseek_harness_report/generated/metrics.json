@@ -28,8 +28,8 @@
     "dsh_completed": true,
     "openclaw_requests": 1,
     "openclaw_error": "incomplete_turn",
-    "completion_fact": "在第 2 次 request 后完成",
-    "summary": "DSH 将错误结构化后继续并完成；OpenClaw 固定版本测试场景以 `incomplete_turn` 结束"
+    "completion_fact": "在第 2 次模型请求后完成",
+    "summary": "DSH 将异常转成模型可见的错误后继续并完成；OpenClaw 固定版本测试场景以 `incomplete_turn` 结束"
   },
   "w5": {
     "dsh_tool_calls": 8,
@@ -37,7 +37,7 @@
     "dsh_completed": true,
     "openclaw_compactions": 3,
     "dsh_boundaries_reduced": true,
-    "summary": "DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降",
+    "summary": "DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 次压缩后的模型请求体均下降",
     "completion_fact": "最终任务正常完成",
     "boundaries": [
       {
@@ -72,7 +72,7 @@
     "dsh_nonzero_completed": true,
     "openclaw_nonzero_completed": true,
     "all_completed": true,
-    "summary": "两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行",
+    "summary": "两侧在缺少必填参数和子进程退出码 17 两类错误后均继续执行",
     "child_exit_code": 17
   },
   "w7": {
@@ -80,7 +80,7 @@
     "both_completed": true,
     "history_verified": true,
     "pairing_verified": true,
-    "summary": "两侧均完成 20-step Tool Chain；历史 marker 与 Tool Call/Result pairing 均验证通过；最终 request 分别保留 DSH 20、OpenClaw 20 个 Tool Result",
+    "summary": "两侧均完成 20-step Tool Chain；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result",
     "dsh_final_markers": 20,
     "openclaw_final_markers": 20,
     "dsh_request_growth_bytes": 4920,
@@ -93,9 +93,11 @@
     "dsh_code_calls": 1,
     "dsh_code_requests": 2,
     "dsh_body_reduction_pct": 70.55351223720656,
+    "dsh_body_reduction_display_pct": "70.6",
     "openclaw_direct_requests": 9,
     "openclaw_code_requests": 2,
-    "openclaw_body_reduction_pct": 74.10674268093726
+    "openclaw_body_reduction_pct": 74.10674268093726,
+    "openclaw_body_reduction_display_pct": "74.1"
   },
   "w9": {
     "prefix_identical": true,
@@ -103,10 +105,10 @@
     "synthetic_error": "TOOL_OUTCOME_UNKNOWN",
     "fork_equal": true,
     "provider_not_contacted": true,
-    "resume_facts": "committed prefix 保持不变；dangling call 未被自动重新 dispatch",
-    "fork_fact": "Parent 与 Child 在分叉边界的 derived messages 一致",
-    "replay_fact": "Replay 过程中未访问 live provider",
-    "summary": "committed prefix 保持一致；dangling call 未重发；Fork 成功；Replay 未访问 live provider"
+    "resume_facts": "已持久化的日志前缀保持不变；已记录但尚无结果的 Tool Call 未被自动重新执行",
+    "fork_fact": "父 Session 与子 Session 在分叉边界派生出的模型消息一致",
+    "replay_fact": "Replay 过程中未访问在线模型 Provider",
+    "summary": "已持久化日志保持一致；无结果的 Tool Call 未被重新执行；Fork 成功；Replay 未访问在线模型 Provider"
   },
   "w10": {
     "local_outside": "OUTSIDE_CHANGED",
@@ -133,18 +135,25 @@
     "max_context_mib": 16.0,
     "json_encode_ms": 15.43,
     "json_decode_ms": 10.706,
-    "sse_json_ms": 41.940333333333335
+    "sse_json_ms": 41.940333333333335,
+    "json_encode_display_ms": "15.43",
+    "json_decode_display_ms": "10.71",
+    "sse_json_display_ms": "41.94"
   },
   "c4": {
     "operation_count": 1000,
     "managed": 3.912926121,
     "raw_oneshot": 2.760439373,
-    "persistent": 0.063790989
+    "persistent": 0.063790989,
+    "managed_display": "3.91",
+    "persistent_display": "0.064"
   },
   "c5": {
     "operation_count": 1024,
     "native_selected_ms": 3170.871052,
     "ptc_selected_ms": 554.176657,
+    "native_selected_display_ms": "3171",
+    "ptc_selected_display_ms": "554",
     "crossover_low": 64,
     "crossover_high": 256,
     "series_ms": {
@@ -171,18 +180,25 @@
   "c6": {
     "operation_count": 1000,
     "wall_ratio_selected": 1.064078197322223,
-    "cpu_ratio_selected": 1.1019443337014312
+    "cpu_ratio_selected": 1.1019443337014312,
+    "wall_ratio_display": "1.06",
+    "cpu_ratio_display": "1.10"
   },
   "c7": {
     "agent_count": 32,
     "selected_agents_per_second": 83.17190770674354,
     "selected_efficiency_pct": 72.78145778381231,
     "selected_sum_rss_gib": 2.072551727294922,
-    "selected_max_child_rss_mib": 71.41015625
+    "selected_max_child_rss_mib": 71.41015625,
+    "selected_agents_per_second_display": "83.17",
+    "selected_efficiency_display_pct": "72.8",
+    "selected_sum_rss_display_gib": "2.07",
+    "selected_max_child_rss_display_mib": "71.4"
   },
   "c8": {
     "cold_slope": 18.498889690768394,
     "repeat_slope": 1.1536321272033994,
-    "cold_repeat_ratio": 16.035345457665827
+    "cold_repeat_ratio": 16.035345457665827,
+    "cold_repeat_ratio_display": "16.0"
   }
 }

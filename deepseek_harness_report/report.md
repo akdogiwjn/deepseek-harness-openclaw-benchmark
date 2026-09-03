@@ -170,9 +170,9 @@ W5 使用 deterministic tool chain，让 Context 持续增长，并记录 agent 
 
 | DSH compaction boundary | 压缩前 Agent body | 压缩后 Agent body | 下降 |
 |---|---:|---:|---:|
-| 第 4 次 Agent request 后 | 19,823 B | 15,718 B | 4,105 B |
-| 第 6 次 Agent request 后 | 20,162 B | 15,718 B | 4,444 B |
-| 第 8 次 Agent request 后 | 20,162 B | 15,718 B | 4,444 B |
+| 第 4 次模型请求后 | 19,823 B | 15,718 B | 4,105 B |
+| 第 6 次模型请求后 | 20,162 B | 15,718 B | 4,444 B |
+| 第 8 次模型请求后 | 20,162 B | 15,718 B | 4,444 B |
 
 三个 boundary 后的下一次 agent request body 均下降，任务仍继续完成。因此 W5 支持“Context Management 是可组合 Runtime capability”，但不支持“某一套压缩内容质量普遍更好”。
 
@@ -384,8 +384,8 @@ C 系列保留 raw samples、runner/fixture SHA、perf helper SHA、upstream rev
 
 | 项目 | 值 |
 |---|---|
-| 报告输入 SHA256 | `d86862caca226ad89b7040306011fa89fe60e9f51628dfb9b472a03409179ab3` |
-| 报告生成时 Git 状态 | `4ee66607d800 + working-tree changes` |
+| 报告输入 SHA256 | `bf9d1cc50bc740b5c896bfc0838ad142979a7bc6b87b2fe1158d4edbcae771d9` |
+| 报告生成时 Git 状态 | `eb1ec6dee437 + working-tree changes` |
 | Pinned DeepSeek Harness | `dd6322d604e00eec1ba5e0c8541159906a21094a` |
 | Pinned OpenClaw | `3c1b351555e0ebc1b022842523191691e89c7684` |
 | Node.js | `24.15.0` |

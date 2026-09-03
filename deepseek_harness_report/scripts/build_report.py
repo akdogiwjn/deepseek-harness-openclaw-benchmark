@@ -85,7 +85,7 @@ def build_metrics(data: dict) -> dict:
                            w9["fork"]["checks"]["derive_messages_equal_at_boundary"],
                            w9["llm_replay"]["checks"]["provider_not_contacted_during_replay"]))
     w4_summary = (
-        f'DSH 将错误结构化后继续并完成；OpenClaw 固定版本测试场景以 '
+        f'DSH 将异常转成模型可见的错误后继续并完成；OpenClaw 固定版本测试场景以 '
         f'`{w4["openclaw"]["runtime_error_kind"]}` 结束'
         if w4["deepseek_harness"]["runtime_completed"] else
         "DSH 未完成固定 Recovery 测试场景；详见 W4 机制结果"
@@ -94,41 +94,41 @@ def build_metrics(data: dict) -> dict:
                  if w5d["compaction_requests"] == w5o["compaction_requests"] else
                  f'分别记录到 {w5d["compaction_requests"]} 次与 {w5o["compaction_requests"]} 次 Compaction')
     w5_summary = (f'DSH 与 OpenClaw 在校准后的固定测试场景中{w5_counts}；DSH '
-                  f'{len(w5d["compaction_boundaries"])} 个 boundary 后 request body '
+                  f'{len(w5d["compaction_boundaries"])} 次压缩后的模型请求体'
                   f'{"均下降" if w5_boundaries_reduced else "未全部下降"}')
     w7_summary = (
-        f'两侧均完成 {w7["deepseek_harness"]["tool_calls"]}-step Tool Chain；历史 marker 与 '
-        f'Tool Call/Result pairing 均验证通过；最终 request 分别保留 DSH '
+        f'两侧均完成 {w7["deepseek_harness"]["tool_calls"]}-step Tool Chain；历史 Tool Result 均保留，'
+        f'Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH '
         f'{w7["deepseek_harness"]["final_request_tool_result_count"]}、OpenClaw '
         f'{w7["openclaw"]["final_request_tool_result_count"]} 个 Tool Result'
         if w7_both_completed and w7_history_verified and w7_pairing_verified else
         "W7 completion、历史 marker 或 Tool Call/Result pairing 检查未全部通过"
     )
     w9_summary = (
-        "committed prefix 保持一致；dangling call 未重发；Fork 成功；Replay 未访问 live provider"
+        "已持久化日志保持一致；无结果的 Tool Call 未被重新执行；Fork 成功；Replay 未访问在线模型 Provider"
         if w9_all_verified else "W9 Resume/Fork/Replay 检查未全部通过"
     )
     w4_completion_fact = (
-        f'在第 {w4["deepseek_harness"]["provider_requests"]} 次 request 后完成'
+        f'在第 {w4["deepseek_harness"]["provider_requests"]} 次模型请求后完成'
         if w4["deepseek_harness"]["runtime_completed"] else
-        f'在第 {w4["deepseek_harness"]["provider_requests"]} 次 request 后仍未完成'
+        f'在第 {w4["deepseek_harness"]["provider_requests"]} 次模型请求后仍未完成'
     )
     w5_completion_fact = (
         "最终任务正常完成" if w5d["runtime_completed"] else "最终任务未完成"
     )
     w9_resume_facts = (
-        "committed prefix 保持不变；dangling call 未被自动重新 dispatch"
+        "已持久化的日志前缀保持不变；已记录但尚无结果的 Tool Call 未被自动重新执行"
         if (w9["crash_resume"]["checks"]["committed_prefix_byte_identical"] and
             w9["crash_resume"]["checks"]["dangling_call_not_dispatched"]) else
         "committed prefix 或 dangling call 检查未通过"
     )
     w9_fork_fact = (
-        "Parent 与 Child 在分叉边界的 derived messages 一致"
+        "父 Session 与子 Session 在分叉边界派生出的模型消息一致"
         if w9["fork"]["checks"]["derive_messages_equal_at_boundary"] else
         "Parent 与 Child 在分叉边界的 derived messages 不一致"
     )
     w9_replay_fact = (
-        "Replay 过程中未访问 live provider"
+        "Replay 过程中未访问在线模型 Provider"
         if w9["llm_replay"]["checks"]["provider_not_contacted_during_replay"] else
         "Replay 过程中访问了 live provider"
     )
@@ -161,7 +161,7 @@ def build_metrics(data: dict) -> dict:
                "dsh_nonzero_completed": w6["scenarios"]["nonzero_child_exit"]["deepseek_harness"]["runtime_completed"],
                "openclaw_nonzero_completed": w6["scenarios"]["nonzero_child_exit"]["openclaw"]["runtime_completed"],
                "all_completed": w6_all_completed,
-               "summary": (f"两侧在 invalid args 和 exit {child_exit} 两种 Tool Error 后均继续执行"
+               "summary": (f"两侧在缺少必填参数和子进程退出码 {child_exit} 两类错误后均继续执行"
                            if w6_all_completed else "W6 的四项 Tool Error continuation 检查未全部通过"),
                "child_exit_code": child_exit},
         "w7": {"tool_calls": w7["deepseek_harness"]["tool_calls"],
@@ -177,9 +177,11 @@ def build_metrics(data: dict) -> dict:
                "dsh_code_calls": w8d["code"]["model_visible_tool_calls"],
                "dsh_code_requests": w8d["code"]["provider_requests"],
                "dsh_body_reduction_pct": w8d["paired_change"]["total_request_body_reduction_percent"],
+               "dsh_body_reduction_display_pct": f'{w8d["paired_change"]["total_request_body_reduction_percent"]:.1f}',
                "openclaw_direct_requests": w8o["direct"]["provider_requests"],
                "openclaw_code_requests": w8o["code"]["provider_requests"],
-               "openclaw_body_reduction_pct": w8o["paired_change"]["total_request_body_reduction_percent"]},
+               "openclaw_body_reduction_pct": w8o["paired_change"]["total_request_body_reduction_percent"],
+               "openclaw_body_reduction_display_pct": f'{w8o["paired_change"]["total_request_body_reduction_percent"]:.1f}'},
         "w9": {"prefix_identical": w9["crash_resume"]["checks"]["committed_prefix_byte_identical"],
                "dangling_not_dispatched": w9["crash_resume"]["checks"]["dangling_call_not_dispatched"],
                "synthetic_error": w9["crash_resume"]["synthetic_error_code"],
@@ -209,28 +211,42 @@ def build_metrics(data: dict) -> dict:
                "max_context_mib": int(max_context) / 1024 / 1024,
                "json_encode_ms": c3["aggregates"][max_context]["json_encode_request_cpu_us"]["median"] / 1000,
                "json_decode_ms": c3["aggregates"][max_context]["json_decode_request_cpu_us"]["median"] / 1000,
-               "sse_json_ms": c3["aggregates"][max_context]["sse_frame_and_json_decode_cpu_us"]["median"] / 1000},
+               "sse_json_ms": c3["aggregates"][max_context]["sse_frame_and_json_decode_cpu_us"]["median"] / 1000,
+               "json_encode_display_ms": f'{c3["aggregates"][max_context]["json_encode_request_cpu_us"]["median"] / 1000:.2f}',
+               "json_decode_display_ms": f'{c3["aggregates"][max_context]["json_decode_request_cpu_us"]["median"] / 1000:.2f}',
+               "sse_json_display_ms": f'{c3["aggregates"][max_context]["sse_frame_and_json_decode_cpu_us"]["median"] / 1000:.2f}'},
         "c4": {"operation_count": int(c4_count),
                "managed": c4["aggregates"]["dsh-managed"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000,
                "raw_oneshot": c4["aggregates"]["raw-oneshot"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000,
-               "persistent": c4["aggregates"]["persistent"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000},
+               "persistent": c4["aggregates"]["persistent"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000,
+               "managed_display": f'{c4["aggregates"]["dsh-managed"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000:.2f}',
+               "persistent_display": f'{c4["aggregates"]["persistent"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000:.3f}'},
         "c5": {"operation_count": int(c5_count),
                "native_selected_ms": c5["aggregates"]["native"][c5_count]["internal_wall_ns"]["median"] / 1_000_000,
                "ptc_selected_ms": c5["aggregates"]["ptc"][c5_count]["internal_wall_ns"]["median"] / 1_000_000,
+               "native_selected_display_ms": f'{c5["aggregates"]["native"][c5_count]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
+               "ptc_selected_display_ms": f'{c5["aggregates"]["ptc"][c5_count]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
                "crossover_low": c5_crossover[0], "crossover_high": c5_crossover[1],
                "series_ms": {mode: {count: row["internal_wall_ns"]["median"] / 1_000_000
                                      for count, row in values.items()}
                              for mode, values in c5["aggregates"].items()}},
         "c6": {"operation_count": int(c6_count),
                "wall_ratio_selected": c6["comparisons"]["write"][c6_count]["sandbox_over_local_wall_ns_per_operation"],
-               "cpu_ratio_selected": c6["comparisons"]["write"][c6_count]["sandbox_over_local_cpu_us_per_operation"]},
+               "cpu_ratio_selected": c6["comparisons"]["write"][c6_count]["sandbox_over_local_cpu_us_per_operation"],
+               "wall_ratio_display": f'{c6["comparisons"]["write"][c6_count]["sandbox_over_local_wall_ns_per_operation"]:.2f}',
+               "cpu_ratio_display": f'{c6["comparisons"]["write"][c6_count]["sandbox_over_local_cpu_us_per_operation"]:.2f}'},
         "c7": {"agent_count": int(c7_agents),
                "selected_agents_per_second": c7["aggregates"][c7_agents]["agents_per_second"]["median"],
                "selected_efficiency_pct": c7["scaling"][c7_agents]["parallel_efficiency"] * 100,
                "selected_sum_rss_gib": c7["aggregates"][c7_agents]["sum_child_max_rss_kb"]["median"] / 1024 / 1024,
-               "selected_max_child_rss_mib": c7["aggregates"][c7_agents]["max_child_max_rss_kb"]["median"] / 1024},
+               "selected_max_child_rss_mib": c7["aggregates"][c7_agents]["max_child_max_rss_kb"]["median"] / 1024,
+               "selected_agents_per_second_display": f'{c7["aggregates"][c7_agents]["agents_per_second"]["median"]:.2f}',
+               "selected_efficiency_display_pct": f'{c7["scaling"][c7_agents]["parallel_efficiency"] * 100:.1f}',
+               "selected_sum_rss_display_gib": f'{c7["aggregates"][c7_agents]["sum_child_max_rss_kb"]["median"] / 1024 / 1024:.2f}',
+               "selected_max_child_rss_display_mib": f'{c7["aggregates"][c7_agents]["max_child_max_rss_kb"]["median"] / 1024:.1f}'},
         "c8": {"cold_slope": cold_slope, "repeat_slope": repeat_slope,
-               "cold_repeat_ratio": cold_slope / repeat_slope},
+               "cold_repeat_ratio": cold_slope / repeat_slope,
+               "cold_repeat_ratio_display": f'{cold_slope / repeat_slope:.1f}'},
     }
 
 
@@ -301,7 +317,7 @@ def flatten(value, prefix="") -> dict[str, str]:
 def inject(template: str, metrics: dict, provenance: dict) -> str:
     values = flatten(metrics) | flatten(provenance)
     w5_rows = "\n".join(
-        f'| 第 {item["after_agent_request_ordinal"]} 次 Agent request 后 | '
+        f'| 第 {item["after_agent_request_ordinal"]} 次模型请求后 | '
         f'{item["agent_body_before_bytes"]:,} B | {item["agent_body_after_bytes"]:,} B | '
         f'{item["agent_body_reduction_bytes"]:,} B |'
         for item in metrics["w5"]["boundaries"])

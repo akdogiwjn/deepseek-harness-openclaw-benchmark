@@ -98,6 +98,8 @@ def main() -> None:
         "deterministic mechanism tests", "white-box mechanism tests", "calibrated fixture",
         "pinned Runtime", "先建立这个边界",
         "## 11. 实验证据、可信度与边界", "### 11.2 Provenance",
+        "Context 墛长", "summed child max RSS", "containment 判断", "Cold/Repeat 边际 slope",
+        "closed-turn boundary", "committed prefix", "dangling call", "live provider",
     )
     for phrase in editorial_asides:
         if phrase in showcase:
