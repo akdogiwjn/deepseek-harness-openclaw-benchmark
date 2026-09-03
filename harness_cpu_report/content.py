@@ -22,7 +22,7 @@ def build_features(workloads: dict, cpu: dict) -> list[dict]:
     return [
         {
             "kind": "架构机制", "name": "Everything is a Plugin / Capability Seam",
-            "mechanism": "DeepSeek Harness 基于 Cordis composition，将 LLM、Session、filesystem、sandbox、compaction 与 code runtime 组织为可替换 capability。",
+            "mechanism": "DeepSeek Harness 采用 everything-is-a-plugin 架构并由 Cordis 驱动。各运行时子系统通过 composition 和 ctx.* service/capability 接口组织；本仓库 W10 实际验证了 ctx.fs provider 的可替换边界。",
             "observation": [
                 f"W10 fs-local：inside={w10['local_a']['inside']}，outside={w10['local_a']['outside']}",
                 f"W10 fs-sandbox：inside={w10['sandbox_b']['inside']}，outside edit={w10['sandbox_b']['tool_results'][-1]['error_code']}",
@@ -119,21 +119,23 @@ def build_key_findings(workloads: dict, cpu: dict) -> list[dict]:
         {"label": "Multi-Agent / C7", "value": f"{c7['aggregates']['32']['agents_per_second']['median']:.2f} Agents/s",
          "detail": f"32 Agents；效率 {c7['scaling']['32']['parallel_efficiency']*100:.1f}%", "source": cpu["C7"]["file"]},
         {"label": "Context Pressure / C8", "value": f"{cold_slope/repeat_slope:.1f}×",
-         "detail": "Cold slope / Repeat slope",
+         "detail": "Cold / Warm Repeat 边际 CPU slope 比值；Cold 包含 durable-history replay，不是端到端 latency 倍率。",
          "source": f"{cpu['C8']['files']['cold']} + {cpu['C8']['files']['repeat']}"},
     ]
 
 
-def build_provenance(cpu: dict, benchmark_revision: str, full_replay: str) -> list[tuple[str, str]]:
+def build_provenance(cpu: dict, git_status: str, input_sha256: str,
+                     full_replay: str) -> list[tuple[str, str]]:
     c1 = cpu["C1"]["data"]
     revisions = c1["protocol"]["source_revisions"]
     host = c1["host"]
     return [
-        ("Benchmark build base", benchmark_revision),
+        ("报告生成时 Git 状态", git_status),
+        ("报告输入指纹 / SHA256", input_sha256),
         ("DeepSeek Harness", revisions["DSH_COMMIT"]),
         ("OpenClaw", revisions["OPENCLAW_COMMIT"]),
         ("Node.js", revisions["NODE_VERSION"]),
         ("Host", f"{host['machine']} / {host['logical_cpus']} logical CPUs"),
         ("perf mode", c1["design"]["perf_mode"]),
-        ("Evidence", f"W1–W10 / C1–C8 {full_replay}"),
+        ("完整证据验证", f"W1–W10 / C1–C8 {full_replay}"),
     ]

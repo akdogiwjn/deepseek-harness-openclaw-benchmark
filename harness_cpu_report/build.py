@@ -4,13 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import subprocess
 from pathlib import Path
 
 from content import MAPPING, build_features, build_key_findings, build_provenance, build_real_tasks
-from data_loader import load_cpu_results, load_evidence_index, load_workload_results
+from data_loader import (CPU_FILES, C8_FILES, WORKLOAD_FILES, load_cpu_results,
+                         load_evidence_index, load_workload_results)
 from derive import build_charts
 from validate import validate, validate_html
 
@@ -67,12 +69,37 @@ def provenance_table(items: list[tuple[str, str]]) -> str:
                    f'<p><code>{esc(value)}</code></p></div>' for label, value in items)
 
 
-def git_revision() -> str:
+def git_status_at_generation() -> str:
     revision = subprocess.run(["git", "rev-parse", "--short=12", "HEAD"], cwd=ROOT,
                               text=True, capture_output=True, check=True).stdout.strip()
     dirty = bool(subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                                 text=True, capture_output=True, check=True).stdout.strip())
     return revision + (" + working-tree changes" if dirty else "")
+
+
+def report_input_paths() -> list[Path]:
+    """Return every source/data input that determines the generated report."""
+    result_names = set(CPU_FILES.values()) | set(C8_FILES.values()) | set(WORKLOAD_FILES.values())
+    paths = [ROOT / "results" / name for name in result_names]
+    paths.append(ROOT / "evidence" / "manifest.json")
+    paths.extend(HERE.glob("*.py"))
+    paths.extend((HERE / "templates").glob("*.html"))
+    paths.extend((HERE / "static").glob("*.css"))
+    paths.extend((HERE / "static").glob("*.js"))
+    return sorted(paths, key=lambda path: path.relative_to(ROOT).as_posix())
+
+
+def report_input_fingerprint() -> str:
+    """Hash sorted relative-path + per-file-SHA256 records, excluding generated output."""
+    digest = hashlib.sha256()
+    for path in report_input_paths():
+        relative = path.relative_to(ROOT).as_posix()
+        file_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(file_sha256.encode("ascii"))
+        digest.update(b"\n")
+    return digest.hexdigest()
 
 
 def run_full_verification() -> None:
@@ -83,7 +110,12 @@ def run_full_verification() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verify", action="store_true", help="执行 W evidence 重放与 C result 全量校验")
+    parser.add_argument("--print-input-fingerprint", action="store_true",
+                        help="输出报告输入 SHA256 后退出")
     args = parser.parse_args()
+    if args.print_input_fingerprint:
+        print(report_input_fingerprint())
+        return
 
     cpu = load_cpu_results()
     workloads = load_workload_results()
@@ -95,7 +127,8 @@ def main() -> None:
     if args.verify:
         run_full_verification()
         status["full_replay"] = "PASS"
-    provenance = build_provenance(cpu, git_revision(), status["full_replay"])
+    provenance = build_provenance(
+        cpu, git_status_at_generation(), report_input_fingerprint(), status["full_replay"])
 
     evidence = load_evidence_index()
     report = {"charts": charts, "validation": status, "generated_from": "explicit W2-W10 and C1-C8 adapters"}
@@ -124,7 +157,8 @@ def main() -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(html_text, encoding="utf-8")
     validate_html(output)
-    print(f"已构建 {output}（{len(html_text):,} bytes；8 个显式 chart adapters；完整重放={status['full_replay']}）")
+    print(f"已构建 {output}（{len(html_text):,} bytes；8 个显式 chart adapters；"
+          f"完整重放={status['full_replay']}；输入 SHA256={report_input_fingerprint()}）")
 
 
 if __name__ == "__main__":

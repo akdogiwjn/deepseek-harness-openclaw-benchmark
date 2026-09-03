@@ -15,6 +15,16 @@ python3 harness_cpu_report/build.py --verify
 
 输出：`harness_cpu_report/dist/index.html`。可直接双击打开，不需要 Web Server、npm、CDN、网络或本地 JSON fetch。
 
+页面中的“报告生成时 Git 状态”只描述生成动作发生时的 checkout 与工作树，不作为
+生成 HTML 的内容标识。稳定标识使用“报告输入指纹 / SHA256”：构建器收集显式使用的
+W2–W10、C1–C8 JSON、`evidence/manifest.json`，以及报告的 Python、template、CSS 和
+JavaScript 源文件；排除 `dist/index.html`。它逐个计算文件 SHA256，再按相对路径排序，
+对 `relative_path + NUL + file_sha256 + newline` 记录重新计算总 SHA256。可直接复算：
+
+```bash
+python3 harness_cpu_report/build.py --print-input-fingerprint
+```
+
 `data_loader.py` 使用显式文件清单读取 W2–W10 与 C1–C8；`derive.py` 为每个
 CPU benchmark 提供独立、schema-aware chart adapter，明确字段、单位、series
 和坐标变换。通用 JavaScript 只渲染 chart spec，不猜测数据含义。C8 同时加载

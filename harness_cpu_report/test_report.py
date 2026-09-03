@@ -11,6 +11,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from content import build_features, build_key_findings, build_real_tasks  # noqa: E402
+from build import report_input_fingerprint, report_input_paths  # noqa: E402
 from data_loader import load_cpu_results, load_workload_results  # noqa: E402
 from derive import build_charts  # noqa: E402
 
@@ -80,6 +81,18 @@ class ReportAdaptersTest(unittest.TestCase):
         findings = build_key_findings(self.workloads, self.cpu)
         self.assertEqual(findings[0]["value"], "9 → 2")
         self.assertIn("83.17 Agents/s", [item["value"] for item in findings])
+        self.assertIn("不是端到端 latency 倍率", findings[-1]["detail"])
+
+    def test_report_input_fingerprint_is_stable_and_excludes_output(self):
+        paths = report_input_paths()
+        relative = [path.relative_to(HERE.parent).as_posix() for path in paths]
+        self.assertEqual(relative, sorted(relative))
+        self.assertIn("evidence/manifest.json", relative)
+        self.assertIn("harness_cpu_report/build.py", relative)
+        self.assertNotIn("harness_cpu_report/dist/index.html", relative)
+        fingerprint = report_input_fingerprint()
+        self.assertEqual(len(fingerprint), 64)
+        self.assertEqual(fingerprint, report_input_fingerprint())
 
 
 if __name__ == "__main__":
