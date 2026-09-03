@@ -82,3 +82,58 @@ def build_features(workloads: dict, cpu: dict) -> list[dict]:
             "sources": [workloads["W4"]["file"], workloads["W6"]["file"], cpu["C1"]["file"]],
         },
     ]
+
+
+def build_real_tasks(workloads: dict) -> list[dict]:
+    cards = []
+    for key, title in (("W2", "小型 Python Bug Fix"), ("W3", "多模块 Feature Task")):
+        data = workloads[key]["data"]
+        dsh, openclaw = data["deepseek_harness"], data["openclaw"]
+        observation = ("两侧均能完成该类基础 coding task；n=5 且 wall-time 分布重叠，不作速度排名。"
+                       if key == "W2" else
+                       "三个 incomplete_turn 现象促使 W4 使用 deterministic malformed event 隔离 recovery semantics。")
+        cards.append({
+            "key": key, "title": title,
+            "dsh": f"{dsh['successes']} / {dsh['attempts']}",
+            "openclaw": f"{openclaw['successes']} / {openclaw['attempts']}",
+            "observation": observation, "source": workloads[key]["file"],
+        })
+    return cards
+
+
+def build_key_findings(workloads: dict, cpu: dict) -> list[dict]:
+    w8 = workloads["W8"]["data"]["deepseek_harness"]
+    c4 = cpu["C4"]["data"]["aggregates"]
+    c3 = cpu["C3"]["data"]["aggregates"][str(16 * 1024 * 1024)]
+    c7 = cpu["C7"]["data"]
+    c8 = cpu["C8"]["data"]
+    cold_slope = c8["cold"]["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"]
+    repeat_slope = c8["repeat"]["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"]
+    return [
+        {"label": "PTC / W8", "value": f"{w8['direct']['provider_requests']} → {w8['code']['provider_requests']}",
+         "detail": "Provider requests", "source": workloads["W8"]["file"]},
+        {"label": "Process / C4", "value": f"{c4['dsh-managed']['1000']['wall_ns_per_operation']['median']/1e6:.2f} vs {c4['persistent']['1000']['wall_ns_per_operation']['median']/1e6:.3f} ms/op",
+         "detail": "1000 tiny ops：DSH managed vs persistent control", "source": cpu["C4"]["file"]},
+        {"label": "Long Context / C3", "value": f"{c3['sse_frame_and_json_decode_cpu_us']['median']/1000:.2f} ms",
+         "detail": "16 MiB SSE + JSON 内部 CPU", "source": cpu["C3"]["file"]},
+        {"label": "Multi-Agent / C7", "value": f"{c7['aggregates']['32']['agents_per_second']['median']:.2f} Agents/s",
+         "detail": f"32 Agents；效率 {c7['scaling']['32']['parallel_efficiency']*100:.1f}%", "source": cpu["C7"]["file"]},
+        {"label": "Context Pressure / C8", "value": f"{cold_slope/repeat_slope:.1f}×",
+         "detail": "Cold slope / Repeat slope",
+         "source": f"{cpu['C8']['files']['cold']} + {cpu['C8']['files']['repeat']}"},
+    ]
+
+
+def build_provenance(cpu: dict, benchmark_revision: str, full_replay: str) -> list[tuple[str, str]]:
+    c1 = cpu["C1"]["data"]
+    revisions = c1["protocol"]["source_revisions"]
+    host = c1["host"]
+    return [
+        ("Benchmark build base", benchmark_revision),
+        ("DeepSeek Harness", revisions["DSH_COMMIT"]),
+        ("OpenClaw", revisions["OPENCLAW_COMMIT"]),
+        ("Node.js", revisions["NODE_VERSION"]),
+        ("Host", f"{host['machine']} / {host['logical_cpus']} logical CPUs"),
+        ("perf mode", c1["design"]["perf_mode"]),
+        ("Evidence", f"W1–W10 / C1–C8 {full_replay}"),
+    ]

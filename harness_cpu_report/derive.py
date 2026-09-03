@@ -117,13 +117,37 @@ def build_c7(item: dict) -> dict:
                 {"label": "并行效率", "unit": "%", "min": 0, "max": 110})
 
 
+def build_incremental_points(data: dict) -> list[dict]:
+    """Use the time-weighted effective surface axis recorded by C8-B samples."""
+    effective_by_initial: dict[int, set[float]] = {}
+    for sample in data["samples"]:
+        fixture = sample["fixture"]
+        initial = int(fixture["surface_events"])
+        effective_by_initial.setdefault(initial, set()).add(float(fixture["effective_surface_nodes"]))
+    result = []
+    for key, aggregate in sorted(data["aggregates"].items(), key=lambda item: float(item[0])):
+        initial = int(key)
+        effective = effective_by_initial.get(initial, set())
+        if len(effective) != 1:
+            raise ValueError(f"C8 incremental initial={initial} has ambiguous effective surface: {effective}")
+        metric = aggregate["internal_cpu_us_per_measure"]
+        result.append({"x": effective.pop(), "y": float(metric["median"]),
+                       "low": float(metric["min"]), "high": float(metric["max"])})
+    return result
+
+
 def build_c8(item: dict) -> dict:
-    names = [("cold", "Cold replay"), ("incremental", "Incremental"), ("repeat", "Repeat")]
-    return spec("C8", "图 8 · TokenMeter/context pressure", "line", "Surface nodes", "log",
-                "每次 measure 的内部 CPU", "μs", [item["files"][name] for name, _ in names], [
-                    series(label, points(item["data"][name]["aggregates"], "internal_cpu_us_per_measure"), COLORS[index])
-                    for index, (name, label) in enumerate(names)
-                ], "三条曲线的 replay state 不同；用于机制分解，不是可互换延迟。")
+    names = ("cold", "incremental", "repeat")
+    return spec("C8", "图 8 · TokenMeter/context pressure", "line",
+                "Surface 规模（Incremental 使用平均 effective surface）", "log",
+                "每次测量窗口内部 CPU", "μs", [item["files"][name] for name in names], [
+                    series("Cold replay", points(item["data"]["cold"]["aggregates"],
+                                                  "internal_cpu_us_per_measure"), COLORS[0]),
+                    series("Incremental（append + measure）", build_incremental_points(item["data"]["incremental"]), COLORS[1]),
+                    series("Repeat measure", points(item["data"]["repeat"]["aggregates"],
+                                                     "internal_cpu_us_per_measure"), COLORS[2]),
+                ], "Cold：首次 measure 含 durable-history replay；Incremental：append one turn + measure；"
+                   "Repeat：surface 不变的重复 measure。三者用于机制分解，不是可互换延迟。")
 
 
 CHART_BUILDERS = {"C1": build_c1, "C2": build_c2, "C3": build_c3, "C4": build_c4,

@@ -10,7 +10,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-from content import build_features  # noqa: E402
+from content import build_features, build_key_findings, build_real_tasks  # noqa: E402
 from data_loader import load_cpu_results, load_workload_results  # noqa: E402
 from derive import build_charts  # noqa: E402
 
@@ -58,7 +58,10 @@ class ReportAdaptersTest(unittest.TestCase):
 
     def test_c8_loads_cold_incremental_repeat_and_all_shape_inputs(self):
         self.assertEqual([item["name"] for item in self.charts["C8"]["series"]],
-                         ["Cold replay", "Incremental", "Repeat"])
+                         ["Cold replay", "Incremental（append + measure）", "Repeat measure"])
+        incremental_x = [point["x"] for point in self.charts["C8"]["series"][1]["points"]]
+        self.assertEqual(incremental_x, [110.5, 200.5, 1100.5, 5020.5, 10010.5])
+        self.assertIn("测量窗口", self.charts["C8"]["y"]["label"])
         self.assertEqual(set(self.cpu["C8"]["data"]),
                          {"cold", "incremental", "repeat", "shape_schema", "shape_text",
                           "shape_tool_call", "shape_tool_result"})
@@ -69,6 +72,14 @@ class ReportAdaptersTest(unittest.TestCase):
         self.assertIn("FS_SANDBOX_DENIED", text)
         self.assertIn("Direct：8 tool calls / 9 requests", text)
         self.assertIn("PTC：1 program call / 2 requests", text)
+
+    def test_real_tasks_and_key_findings_are_data_backed(self):
+        tasks = build_real_tasks(self.workloads)
+        self.assertEqual([(item["dsh"], item["openclaw"]) for item in tasks],
+                         [("4 / 5", "5 / 5"), ("5 / 5", "2 / 5")])
+        findings = build_key_findings(self.workloads, self.cpu)
+        self.assertEqual(findings[0]["value"], "9 → 2")
+        self.assertIn("83.17 Agents/s", [item["value"] for item in findings])
 
 
 if __name__ == "__main__":
