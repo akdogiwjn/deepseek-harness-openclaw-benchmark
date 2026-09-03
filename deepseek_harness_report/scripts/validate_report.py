@@ -103,6 +103,10 @@ def main() -> None:
         "SSE parsing", "实际参与计量的 Context 节点", "Runtime Density",
         "不被包装成", "malformed provider event", "Native Tool Calling",
         "Cold 路径增长最快", "边际增长斜率约为 Warm Repeat", "μs/有效节点",
+        "Host CPU 实验看到了什么", "Agent 运行越久，状态处理成本越高",
+        "个 Context 节点时", "% efficiency", "状态平面和执行平面",
+        "lifecycle event", "automatic compaction", "Runtime lifecycle",
+        "更容易替换、观察和验证",
     )
     for phrase in editorial_asides:
         if phrase in showcase:
@@ -156,6 +160,8 @@ def main() -> None:
                          "Warm Repeat · 状态不变")
             if any(label not in text for label in c8_legend):
                 raise ValueError("C8 SVG is missing its color-keyed path legend")
+        if benchmark == "C7" and "% 并行效率" not in text:
+            raise ValueError("C7 SVG is missing the Chinese parallel-efficiency label")
     sys.path.insert(0, str(ROOT / "harness_cpu_report"))
     from data_loader import load_cpu_results  # noqa: E402
     from derive import build_charts  # noqa: E402

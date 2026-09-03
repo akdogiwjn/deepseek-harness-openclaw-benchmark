@@ -155,7 +155,7 @@ def data_c6(spec):
 def data_c7(spec, cpu):
     p=svg_open(980,650,"C7",len(spec["series"]));throughput=[spec["series"][0]];efficiency=[spec["series"][1]]
     p.append(line_panel(spec,throughput,0,30,980,285,False,False,y_label="吞吐（Agents/s）",x_label=""));p.append(line_panel(spec,efficiency,0,325,980,285,False,False,y_label="并行效率（%）",x_label="Agent 数"))
-    d=cpu["C7"]["data"];last=max(d["aggregates"],key=int);p += [svg_badge(650,45,f'{last} Agents · {d["aggregates"][last]["agents_per_second"]["median"]:.2f} Agents/s',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),svg_badge(690,355,f'{d["scaling"][last]["parallel_efficiency"]*100:.1f}% efficiency',LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],240)]
+    d=cpu["C7"]["data"];last=max(d["aggregates"],key=int);p += [svg_badge(650,45,f'{last} Agents · {d["aggregates"][last]["agents_per_second"]["median"]:.2f} Agents/s',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),svg_badge(690,355,f'{d["scaling"][last]["parallel_efficiency"]*100:.1f}% 并行效率',LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],240)]
     return finish(p)
 
 

@@ -48,9 +48,9 @@ Harness：读取 / 写入文件，重新测试，保存 Session
 | 生成代码、文本或参数 | Session、Context 与持久化 |
 | 根据观察调整计划 | Filesystem、Process、Code Runtime 与 Policy |
 
-Model 位于决策路径；Harness 位于编排中心，并连接状态平面和执行平面。
+Model 位于决策路径；Harness 位于编排中心，一端维护 Session 和 Context，另一端连接 Tool、文件系统和进程执行。
 
-<p align="center"><img src="figures/architecture/harness-model.svg" width="900" alt="Model 决策、Harness 编排并连接状态与执行平面"></p>
+<p align="center"><img src="figures/architecture/harness-model.svg" width="900" alt="Model 负责决策，Harness 维护状态并连接 Tool、文件系统和进程执行"></p>
 <p align="center"><sub>图 1-1　DeepSeek Harness 的重点变化发生在 Runtime 执行层，而不是模型推理能力本身。</sub></p>
 
 Session、Context、Provider 和 PTC 都属于这条 Harness 路径。Runtime 的恢复、持久化与进程行为是 Harness 行为，不等同于模型能力。
@@ -170,8 +170,8 @@ Profile 选择有序 Bundle，随后应用 Patch，最终由 Cordis 形成运行
 | Model Messages 更关心 | Session Event Log 更关心 |
 |---|---|
 | 模型下一次需要看到什么 | Runtime 实际发生过什么 |
-| user / assistant / tool history | turn、step、tool call/result 与 lifecycle event |
-| Model Context | Durable Execution State |
+| user / assistant / Tool 历史 | turn、step、Tool call/result 与生命周期事件 |
+| Model Context | 持久执行状态（Durable Execution State） |
 
 `deriveMessages()` 把 Event Log 投影为下一次准备发送给模型的 Context。
 
@@ -179,7 +179,7 @@ Profile 选择有序 Bundle，随后应用 Patch，最终由 Cordis 形成运行
 
 **Step** 是一次 Model Request 以及由它产生的 Tool Calls；**Turn** 是一次输入触发的整段执行，可以包含多个 Step。例如第一步运行测试并获得错误，第二步读取源码或提交修改，二者属于同一个 Turn 中的不同 Step。
 
-Turn 由一个或多个 Step 构成；各 Step 产生的 typed events 进入同一条 Session Event Log，并支撑 Context 派生、Resume、Fork 和 Replay。
+Turn 由一个或多个 Step 构成；各 Step 产生的类型化事件进入同一条 Session Event Log，并支撑 Context 派生、Resume、Fork 和 Replay。
 
 <p align="center"><img src="figures/architecture/event-log.svg" width="940" alt="Turn、Step、typed events 与 Session Event Log 派生能力"></p>
 <p align="center"><sub>图 4-1　Model Context 是持久化事件流的一种投影；恢复、分叉和重放依赖明确的日志边界。</sub></p>
@@ -204,12 +204,12 @@ Turn 由一个或多个 Step 构成；各 Step 产生的 typed events 进入同�
 
 长期 Agent 会持续累积 user、assistant、Tool Call 和 Tool Result。Runtime 必须判断当前准备发送给模型的 Context 有多大、是否接近预算、哪些信息可以压缩，以及压缩后如何保持下一轮 Model Context 有效。OpenClaw 等 Harness 已经具有 Context Compaction；研究重点不是“DSH 第一次会压缩”，而是 DSH 如何把 TokenMeter 与 Compaction 组织成可组合 Runtime capability。
 
-**TokenMeter** 评估当前模型 Context 的大小和压力。**Compaction** 在达到策略边界后生成更小的 Context 表示。`sdk-minimal` 默认没有 automatic compaction；W5 显式加载 `token-meter + compaction-basic`。
+**TokenMeter** 评估当前模型 Context 的大小和压力。**Compaction** 在达到策略边界后生成更小的 Context 表示。`sdk-minimal` 默认没有自动 Compaction；W5 显式加载 `token-meter + compaction-basic`。
 
-Pressure check 根据 TokenMeter 的计量结果选择继续执行或触发 Compaction；TokenMeter 与 Compaction 是显式加载的可选 composition，而非 minimal profile 的隐含能力。
+压力检查（Pressure Check）根据 TokenMeter 的计量结果选择继续执行或触发 Compaction；TokenMeter 与 Compaction 是显式加载的可选 composition，而非 minimal profile 的隐含能力。
 
 <p align="center"><img src="figures/architecture/context-management.svg" width="900" alt="Session projection、TokenMeter、Pressure Check 与 Compaction 路径"></p>
-<p align="center"><sub>图 5-1　Context Management 把计量、策略判断和压缩结果放入 Runtime lifecycle。</sub></p>
+<p align="center"><sub>图 5-1　Context Management 把计量、策略判断和压缩结果放入 Runtime 生命周期。</sub></p>
 
 ### 5.2 W5：压缩能否触发并继续
 
@@ -323,15 +323,15 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 
 ---
 
-## 10. Host CPU 实验看到了什么
+## 10. Host CPU 与运行时开销
 
-前面的实验主要验证 DeepSeek Harness 如何组织状态和执行。进一步观察 Host CPU，可以看到这些设计并不只有软件结构上的变化：Session 越长，需要处理的状态越多；Tool 越碎，进程和编排开销越明显；PTC 会改变本地执行粒度；多个 Agent 并发时，还会带来额外的 CPU 和内存压力。
+前面的实验主要验证 DeepSeek Harness 如何组织状态和执行。进一步观察 Host 侧开销，可以看到这些设计并不只有软件结构上的变化：Session 和 Context 状态越大，本地处理工作越多；Tool 越碎，进程和编排开销越明显；PTC 会改变本地执行粒度；多个 Agent 并发时，还会带来额外的 CPU 和内存压力。
 
 C1 还表明，随着 Agent Step 增多，Agent Loop 本身以及同步增长的 Session/Context 会形成持续增加的本地 CPU 工作。由于两者在当前测试中同时增长，C1 不能解释为纯 Agent Loop 的单步开销。
 
-### 10.1 Agent 运行越久，状态处理成本越高
+### 10.1 Session / Context 状态越大，Host 处理成本越高
 
-Agent 每执行一步，都可能产生新的 Session Event、Tool Result 和 Context。Runtime 需要保存这些状态，并在下一次模型请求前重新整理、序列化和检查 Context 大小。因此，长时间运行的 Agent 不只是模型 Token 变多，Host CPU 也会处理越来越多状态。
+Agent 执行过程中会持续产生 Session Event、Tool Result 和 Context。随着需要保存、整理或发送给模型的状态规模增大，Runtime 的本地处理工作也会增加。Compaction 可以缩小模型可见的 Context，因此不能简单理解为 Agent 运行时间越长，当前 Context 就一定越大。
 
 C3 使用相同规模的测试数据分别测量请求 JSON 编解码和模拟响应的流式解析路径。测试数据达到 {{C3_MAX_CONTEXT_MIB}} MiB 时，JSON 编码约需 {{C3_JSON_ENCODE_DISPLAY_MS}} ms CPU 时间，JSON 解码约需 {{C3_JSON_DECODE_DISPLAY_MS}} ms，SSE 流解析与 JSON 解码路径约需 {{C3_SSE_JSON_DISPLAY_MS}} ms。SSE（Server-Sent Events）是 LLM API 常用的 HTTP 流式传输格式，Harness 需要从中解析携带模型增量或 Tool Event 的 JSON 数据。
 
@@ -340,7 +340,7 @@ C3 使用相同规模的测试数据分别测量请求 JSON 编解码和模拟�
 
 C8 比较了三种 Context 计量路径：**Cold** 表示第一次从已有 Session 历史建立 TokenMeter 状态；**Incremental** 表示在已有状态上新增一段 Context 后继续计量；**Warm Repeat** 表示 Context 不变、计量状态已经同步时重复计量。
 
-三种路径的 CPU 成本都会随着 Context 规模增加。约 {{C8_SELECTED_CONTEXT_NODES_DISPLAY}} 个 Context 节点时，Cold 单次计量约需 {{C8_COLD_SELECTED_DISPLAY_MS}} ms，Incremental 约需 {{C8_INCREMENTAL_SELECTED_DISPLAY_MS}} ms，Warm Repeat 约需 {{C8_REPEAT_SELECTED_DISPLAY_MS}} ms。这说明首次从完整历史建立计量状态明显更重；状态建立后，Incremental 与 Warm Repeat 在当前固定测试场景中的成本已经比较接近。三种测量窗口的操作并不完全相同，不能将这些数值理解为可互换的端到端延迟。
+三种路径的 CPU 成本都会随着 Context 规模增加。在 C8 最大的一组 Context 测试规模下，Cold 单次计量约需 {{C8_COLD_SELECTED_DISPLAY_MS}} ms，Incremental 约需 {{C8_INCREMENTAL_SELECTED_DISPLAY_MS}} ms，Warm Repeat 约需 {{C8_REPEAT_SELECTED_DISPLAY_MS}} ms。这说明首次从完整历史建立计量状态明显更重；状态建立后，Incremental 与 Warm Repeat 在当前固定测试场景中的成本已经比较接近。三种测量窗口的操作并不完全相同，不能将这些数值理解为可互换的端到端延迟。
 
 <p align="center"><img src="figures/data/c8-context-pressure.svg" width="980" alt="C8 TokenMeter Context Pressure 的 Cold 与 Warm 结果"></p>
 <p align="center"><sub>图 10-2　Cold 路径明显高于已有状态下的 Incremental 和 Warm Repeat；后两者在大 Context 下成本接近。</sub></p>
@@ -373,9 +373,9 @@ C6 中，{{C6_OPERATION_COUNT}} 次允许写入时，sandbox/local 的执行时�
 
 ### 10.4 多个 Agent 同时运行后，问题不再只是单任务速度
 
-单个 Agent 时通常关注一次任务需要多久；当一台机器同时运行几十个 Agent 时，还需要关注总吞吐、并行效率和每个 Runtime 占用的内存。
+单个 Agent 时通常关注一次任务需要多久；当一台机器同时运行几十个 Agent 时，还需要关注总吞吐、并行效率和每个 Runtime 占用的内存。并行效率表示增加 Agent 数后，实际吞吐提升相对于理想线性扩展的程度。
 
-C7 中，{{C7_AGENT_COUNT}} 个独立 Agent 进程达到约 {{C7_SELECTED_AGENTS_PER_SECOND_DISPLAY}} Agents/s，并行效率约为 {{C7_SELECTED_EFFICIENCY_DISPLAY_PCT}}%。所有 Agent 子进程的最大驻留内存（RSS）累加约为 {{C7_SELECTED_SUM_RSS_DISPLAY_GIB}} GiB，单个子进程最高约为 {{C7_SELECTED_MAX_CHILD_RSS_DISPLAY_MIB}} MiB。
+C7 中，{{C7_AGENT_COUNT}} 个独立 Agent 进程达到约 {{C7_SELECTED_AGENTS_PER_SECOND_DISPLAY}} Agents/s，并行效率约为 {{C7_SELECTED_EFFICIENCY_DISPLAY_PCT}}%。各 Agent 子进程各自最大驻留内存（RSS）的累加值约为 {{C7_SELECTED_SUM_RSS_DISPLAY_GIB}} GiB，单个子进程最高约为 {{C7_SELECTED_MAX_CHILD_RSS_DISPLAY_MIB}} MiB；该累加值不是同一时间点的整机内存占用。
 
 <p align="center"><img src="figures/data/c7-agent-scale.svg" width="980" alt="C7 Multi-Agent 吞吐与并行效率"></p>
 <p align="center"><sub>图 10-5　多个独立 Agent 并发运行时的总吞吐与并行效率。</sub></p>
@@ -394,6 +394,6 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 4. PTC 把多次模型可见的 Tool 调用合并进一次本地 Program 执行；
 5. W4/W6 表明，错误在哪一层被结构化，会影响 Agent 是否获得继续恢复的机会。
 
-这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把组合、状态和执行机制放进统一的 Runtime 组织方式，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
+这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把组合、状态和执行机制放进统一的 Runtime 组织方式，并使这些边界成为可以单独观察和验证的架构对象。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
 
 **因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把组合、状态和执行边界提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**
