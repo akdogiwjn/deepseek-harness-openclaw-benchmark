@@ -100,6 +100,8 @@ def main() -> None:
         "## 11. 实验证据、可信度与边界", "### 11.2 Provenance",
         "Context 墛长", "summed child max RSS", "containment 判断", "Cold/Repeat 边际 slope",
         "closed-turn boundary", "committed prefix", "dangling call", "live provider",
+        "SSE parsing", "实际参与计量的 Context 节点", "Runtime Density",
+        "不被包装成", "malformed provider event", "Native Tool Calling",
     )
     for phrase in editorial_asides:
         if phrase in showcase:

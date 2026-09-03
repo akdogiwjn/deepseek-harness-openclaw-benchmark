@@ -146,6 +146,7 @@
     "raw_oneshot": 2.760439373,
     "persistent": 0.063790989,
     "managed_display": "3.91",
+    "raw_oneshot_display": "2.76",
     "persistent_display": "0.064"
   },
   "c5": {
@@ -156,6 +157,10 @@
     "ptc_selected_display_ms": "554",
     "crossover_low": 64,
     "crossover_high": 256,
+    "low_native_display_ms": "138",
+    "low_ptc_display_ms": "159",
+    "high_native_display_ms": "479",
+    "high_ptc_display_ms": "277",
     "series_ms": {
       "native": {
         "0": 9.67814,

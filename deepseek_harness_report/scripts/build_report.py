@@ -220,6 +220,7 @@ def build_metrics(data: dict) -> dict:
                "raw_oneshot": c4["aggregates"]["raw-oneshot"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000,
                "persistent": c4["aggregates"]["persistent"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000,
                "managed_display": f'{c4["aggregates"]["dsh-managed"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000:.2f}',
+               "raw_oneshot_display": f'{c4["aggregates"]["raw-oneshot"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000:.2f}',
                "persistent_display": f'{c4["aggregates"]["persistent"][c4_count]["wall_ns_per_operation"]["median"] / 1_000_000:.3f}'},
         "c5": {"operation_count": int(c5_count),
                "native_selected_ms": c5["aggregates"]["native"][c5_count]["internal_wall_ns"]["median"] / 1_000_000,
@@ -227,6 +228,10 @@ def build_metrics(data: dict) -> dict:
                "native_selected_display_ms": f'{c5["aggregates"]["native"][c5_count]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
                "ptc_selected_display_ms": f'{c5["aggregates"]["ptc"][c5_count]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
                "crossover_low": c5_crossover[0], "crossover_high": c5_crossover[1],
+               "low_native_display_ms": f'{c5["aggregates"]["native"][str(c5_crossover[0])]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
+               "low_ptc_display_ms": f'{c5["aggregates"]["ptc"][str(c5_crossover[0])]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
+               "high_native_display_ms": f'{c5["aggregates"]["native"][str(c5_crossover[1])]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
+               "high_ptc_display_ms": f'{c5["aggregates"]["ptc"][str(c5_crossover[1])]["internal_wall_ns"]["median"] / 1_000_000:.0f}',
                "series_ms": {mode: {count: row["internal_wall_ns"]["median"] / 1_000_000
                                      for count, row in values.items()}
                              for mode, values in c5["aggregates"].items()}},

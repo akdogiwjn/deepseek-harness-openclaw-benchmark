@@ -83,7 +83,7 @@ CPU 微基准实验 C1–C8
 | W3 | Multi-module Feature | 更长的真实执行链 | 是否出现值得进一步隔离的稳定性现象 | DSH {{W3_DSH_SUCCESS}}/{{W3_DSH_TOTAL}}；OpenClaw {{W3_OPENCLAW_SUCCESS}}/{{W3_OPENCLAW_TOTAL}}，观察到 `incomplete_turn` |
 | W4 | Malformed Tool Call | 固定格式异常的 provider event | 错误被结构化并继续，还是终止 Turn | {{W4_SUMMARY}} |
 | W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | {{W5_SUMMARY}} |
-| W6 | Tool Failure | 固定 invalid args / exit {{W6_CHILD_EXIT_CODE}} | 普通 Tool Failure 与 malformed event 是否同一边界 | {{W6_SUMMARY}} |
+| W6 | Tool Failure | 固定缺少必填参数 / 子进程退出码 {{W6_CHILD_EXIT_CODE}} | 普通 Tool Failure 与格式异常事件是否属于同一边界 | {{W6_SUMMARY}} |
 | W7 | Long Tool Chain | 连续 {{W7_TOOL_CALLS}} 次 Tool Call | Context、模型请求体与 Tool state 如何累积 | {{W7_SUMMARY}} |
 | W8 | Direct vs PTC | 相同 {{W8_OPERATIONS}} 个底层操作 | 模型请求次数下降是否来自编排折叠，而非漏做工作 | DSH 向模型 Provider 发出的请求从 {{W8_DSH_DIRECT_REQUESTS}} 次降至 {{W8_DSH_CODE_REQUESTS}} 次，底层操作仍为 {{W8_OPERATIONS}} 个 |
 | W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | {{W9_SUMMARY}} |
@@ -95,17 +95,17 @@ W1–W3 为真实 Agent 任务；W4–W8 为确定性机制实验；W9–W10 为
 
 W1 只验证最基础的 exact edit。W2 是 `Retry-After` parser Bug：Agent 需要运行测试、阅读代码、修改实现并再次验证，DSH 完成 {{W2_DSH_SUCCESS}}/{{W2_DSH_TOTAL}}，OpenClaw 完成 {{W2_OPENCLAW_SUCCESS}}/{{W2_OPENCLAW_TOTAL}}。样本数只有 {{W2_DSH_TOTAL}}，wall-time 分布也不用于性能排名。
 
-W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补充测试，执行链更长。DSH 完成 {{W3_DSH_SUCCESS}}/{{W3_DSH_TOTAL}}，OpenClaw 完成 {{W3_OPENCLAW_SUCCESS}}/{{W3_OPENCLAW_TOTAL}}；部分失败表现为 `incomplete_turn`。这只能说明真实任务里观察到了差异，不能说明差异一定来自某个 Harness 机制。因此 W4 固定格式异常的 provider event（malformed provider event），只观察恢复路径。
+W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补充测试，执行链更长。DSH 完成 {{W3_DSH_SUCCESS}}/{{W3_DSH_TOTAL}}，OpenClaw 完成 {{W3_OPENCLAW_SUCCESS}}/{{W3_OPENCLAW_TOTAL}}；部分失败表现为 `incomplete_turn`。这只能说明真实任务里观察到了差异，不能说明差异一定来自某个 Harness 机制。因此 W4 固定格式异常的 provider event，只观察恢复路径。
 
 ### 2.4 CPU 实验 C1–C8
 
 | 实验 | 测什么 | 对应 Runtime 工作 |
 |---|---|---|
 | C1 | Agent Loop 随 Tool Step 增长 | 控制面 |
-| C2 | Event append、derive、fork、persist、load | 状态面 |
-| C3 | Context JSON 编解码与 SSE parsing | 状态处理 / 序列化 |
-| C4 | Managed、one-shot 与 persistent process | 进程 / Tool 边界 |
-| C5 | Native Tool Calling 与 PTC | 执行粒度 |
+| C2 | Event 追加、消息派生、分叉、持久化与加载 | 状态面 |
+| C3 | Context JSON 编解码与 SSE 流解析 | 状态处理 / 序列化 |
+| C4 | DSH 管理路径、直接单次进程与持久进程 | 进程 / Tool 边界 |
+| C5 | 常规 Tool 调用与 PTC | 执行粒度 |
 | C6 | Local FS 与 Sandbox FS Policy | Capability / Policy |
 | C7 | 1→{{C7_AGENT_COUNT}} 个独立 Agent | 多 Agent 扩展 |
 | C8 | TokenMeter / Context Pressure | Context 管理 |
@@ -173,7 +173,7 @@ Profile 选择有序 Bundle，随后应用 Patch，最终由 Cordis 形成运行
 | user / assistant / tool history | turn、step、tool call/result 与 lifecycle event |
 | Model Context | Durable Execution State |
 
-`deriveMessages()` 把 Event Log 投影为 Model Context。当前准备发送给模型的 model-visible Context，后文简称 **surface**。
+`deriveMessages()` 把 Event Log 投影为下一次准备发送给模型的 Context。
 
 ### 4.2 Turn、Step 与事件流
 
@@ -202,9 +202,9 @@ Turn 由一个或多个 Step 构成；各 Step 产生的 typed events 进入同�
 
 ### 5.1 为什么 Harness 要管理 Context
 
-长期 Agent 会持续累积 user、assistant、Tool Call 和 Tool Result。Runtime 必须判断当前 surface 有多大、是否接近预算、哪些信息可以压缩，以及压缩后如何保持下一轮 Model Context 有效。OpenClaw 等 Harness 已经具有 Context Compaction；研究重点不是“DSH 第一次会压缩”，而是 DSH 如何把 TokenMeter 与 Compaction 组织成可组合 Runtime capability。
+长期 Agent 会持续累积 user、assistant、Tool Call 和 Tool Result。Runtime 必须判断当前准备发送给模型的 Context 有多大、是否接近预算、哪些信息可以压缩，以及压缩后如何保持下一轮 Model Context 有效。OpenClaw 等 Harness 已经具有 Context Compaction；研究重点不是“DSH 第一次会压缩”，而是 DSH 如何把 TokenMeter 与 Compaction 组织成可组合 Runtime capability。
 
-**TokenMeter** 评估当前 model-visible surface 的压力。**Compaction** 在达到策略边界后生成更小的 Context 表示。`sdk-minimal` 默认没有 automatic compaction；W5 显式加载 `token-meter + compaction-basic`。
+**TokenMeter** 评估当前模型 Context 的大小和压力。**Compaction** 在达到策略边界后生成更小的 Context 表示。`sdk-minimal` 默认没有 automatic compaction；W5 显式加载 `token-meter + compaction-basic`。
 
 Pressure check 根据 TokenMeter 的计量结果选择继续执行或触发 Compaction；TokenMeter 与 Compaction 是显式加载的可选 composition，而非 minimal profile 的隐含能力。
 
@@ -233,12 +233,12 @@ W5 的 DSH 固定测试场景（fixture）包含 {{W5_DSH_TOOL_CALLS}} 次 Tool 
 
 Direct Tool Calling 中，每个 Tool 都经过 Model Request、Tool Call、Runtime Dispatch、Tool Result、Context 重建和下一次 Model Request。**Programmatic Tool Calling（PTC）** 则让模型生成一个 Program，由本地 Runtime 在单个外层调用内连续调用多个 Tool，再把 Program Result 返回模型。
 
-Direct 模式逐次向模型暴露 Tool Call/Result；PTC 则把多个 Tool 调用封装在一个 Program execution boundary 内。底层 Tool 工作保持不变，变化的是模型可见的编排粒度。
+Direct 模式逐次向模型暴露 Tool Call/Result；PTC 则把多个 Tool 调用封装在一次 Program 执行边界内。底层 Tool 工作保持不变，变化的是模型可见的编排粒度。
 
 <p align="center"><img src="figures/architecture/ptc.svg" width="900" alt="Direct Tool Calling 与 PTC 的对称执行边界"></p>
-<p align="center"><sub>图 6-1　PTC 不减少底层 Tool 工作，减少的是模型层逐次暴露的 orchestration boundary。</sub></p>
+<p align="center"><sub>图 6-1　PTC 不减少底层 Tool 工作，减少的是模型层反复进入 Tool 调用流程的次数。</sub></p>
 
-让模型生成代码并在本地执行多个操作不是整个 Agent 行业首次出现。DSH 值得关注的是把 PTC 明确设计为 Runtime 的 Tool Presentation / Execution Mode，并通过正式 Code Runtime 与 Tool Pipeline 执行。
+让模型生成代码并在本地执行多个操作不是整个 Agent 行业首次出现。DSH 值得关注的是把 PTC 明确设计为 Runtime 的 Tool Presentation / Execution Mode（工具呈现与执行模式），并通过正式 Code Runtime 与 Tool Pipeline 执行。
 
 ### 6.2 W8：确认没有漏做 Tool
 
@@ -255,13 +255,13 @@ Direct 模式逐次向模型暴露 Tool Call/Result；PTC 则把多个 Tool 调�
 
 **实验事实。** DSH 的模型请求体总量下降 {{W8_DSH_BODY_REDUCTION_DISPLAY_PCT}}%；OpenClaw 的构造对照也从 {{W8_OPENCLAW_DIRECT_REQUESTS}} 次模型请求降到 {{W8_OPENCLAW_CODE_REQUESTS}} 次，请求体总量下降 {{W8_OPENCLAW_BODY_REDUCTION_DISPLAY_PCT}}%。
 
-**实际结论。** 变化来自执行粒度，而不是漏做工作。这不是实际模型质量或端到端任务延迟提升的证明；Native/PTC 的本地 CPU 成本见第 10.2 节。
+**实际结论。** 变化来自执行粒度，而不是漏做工作。这不是实际模型质量或端到端任务延迟提升的证明；常规 Tool 调用与 PTC 的本地 CPU 成本见第 10.2 节。
 
 ---
 
 ## 7. 机制洞察：错误边界如何影响恢复
 
-Error Recovery 本身不是 DeepSeek 首创功能。本章研究 W3/W4/W6 揭示的具体 Error Boundary Semantics：同一种失败在哪一层被结构化，会决定模型是否获得下一次修复机会。
+错误恢复本身不是 DeepSeek 首创功能。本章关注的是错误边界与恢复语义（Error Boundary Semantics）：同一种失败在哪一层被结构化，会决定模型是否获得下一次修复机会。
 
 ```text
 W3 真实任务观察 incomplete_turn
@@ -272,9 +272,9 @@ W6 固定格式正常的 Tool Failure
         ↓ 区分 provider event 与 Tool 执行边界
 ```
 
-在相同的 malformed provider event 下，DSH 和当前固定版本 OpenClaw 进入了不同的 Runtime 处理路径。
+在相同的格式异常 provider event 下，DSH 和当前固定版本 OpenClaw 进入了不同的 Runtime 处理路径。
 
-<p align="center"><img src="figures/architecture/recovery-boundary.svg" width="900" alt="同一 malformed provider event 在两套 Runtime 中的不同 Recovery 结果"></p>
+<p align="center"><img src="figures/architecture/recovery-boundary.svg" width="900" alt="同一格式异常 provider event 在两套 Runtime 中的不同恢复结果"></p>
 <p align="center"><sub>图 7-1　错误能否成为可反馈给模型的信息，决定当前 Turn 是否有机会进入下一 Step。</sub></p>
 
 ### 7.1 W4 与 W6 为什么不重复
@@ -312,18 +312,18 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 
 | Harness 机制 / 现象 | W 证据 | 形成的 Host 工作 | CPU 证据 |
 |---|---|---|---|
-| Capability Seam | W10 | 文件路径处理、Policy 检查 | C6 |
-| Session Event Log | W9 | append、fork、persist、load | C2 |
+| Capability Seam（能力边界） | W10 | 文件路径处理、Policy 检查 | C6 |
+| Session Event Log | W9 | 事件追加、分叉、持久化与加载 | C2 |
 | Context Management | W5 | Context 序列化、大小与压力计量 | C3 / C8 |
 | PTC / Code Mode | W8 | Process、Code Runtime、编排粒度 | C4 / C5 |
-| Recovery Semantics | W4 / W6 | Agent Loop 控制流 | C1（辅助证据） |
-| Multi-Agent Scale | — | 并发调度和内存占用 | C7 |
+| 错误恢复语义 | W4 / W6 | 可能增加 Agent Loop 与模型请求 | 未单独测量 |
+| 多 Agent 并发扩展 | — | 并发调度和内存占用 | C7 |
 
 这些 CPU 实验用于说明软件机制会形成哪些 Host 工作，不用于处理器排名。当前数据来自单一 {{META_HOST_MACHINE}} 主机、固定拓扑与确定性测试场景。
 
 ---
 
-## 10. 这些设计最终让 Host CPU 多做了什么
+## 10. Host CPU 实验看到了什么
 
 前面的实验主要验证 DeepSeek Harness 如何组织状态和执行。进一步观察 Host CPU，可以看到这些设计并不只有软件结构上的变化：Session 越长，需要处理的状态越多；Tool 越碎，进程和编排开销越明显；PTC 会改变本地执行粒度；多个 Agent 并发时，还会带来额外的 CPU 和内存压力。
 
@@ -338,10 +338,10 @@ C3 使用相同规模的测试数据分别测量请求 JSON 编解码和模拟�
 <p align="center"><img src="figures/data/c3-context-serialization.svg" width="980" alt="C3 Context 大小与 JSON、SSE 处理 CPU 时间"></p>
 <p align="center"><sub>图 10-1　随着测试数据增大，本地 JSON 编解码以及 SSE 流解析与 JSON 解码的 CPU 时间均随之增加。</sub></p>
 
-C8 进一步显示，即使没有新增 Session Event，仅重复检查当前 Context 的大小和压力，其 CPU 成本也会随着 Context 规模增加。首次从完整历史恢复计量状态的 Cold 路径成本更高；在当前测试中，其边际增长斜率约为已同步状态下 Warm Repeat 的 {{C8_COLD_REPEAT_RATIO_DISPLAY}} 倍。这里比较的是 Context 每增加一个节点时的 CPU 增量，不是端到端延迟的倍数。
+C8 比较了三种 Context 计量路径：**Cold** 表示从完整 Session 历史重新建立计量状态；**Incremental** 表示在已有状态上新增一段 Context 后继续计量；**Warm Repeat** 表示 Context 和计量状态都已同步，只重复进行计量。三种路径的 CPU 成本都会随 Context 规模增加，其中 Cold 路径增长最快。在当前测试中，Cold 的边际增长斜率约为 Warm Repeat 的 {{C8_COLD_REPEAT_RATIO_DISPLAY}} 倍。这里比较的是 Context 增大时额外增加的 CPU 成本，不是端到端延迟的倍数。
 
 <p align="center"><img src="figures/data/c8-context-pressure.svg" width="980" alt="C8 TokenMeter Context Pressure 的 Cold 与 Warm 结果"></p>
-<p align="center"><sub>图 10-2　Cold、Incremental 与 Warm Repeat 的 CPU 成本均随当前或实际参与计量的 Context 节点规模增长。</sub></p>
+<p align="center"><sub>图 10-2　随着 Context 规模增加，三种 TokenMeter 计量路径的 CPU 成本都在增长；从完整历史重新建立状态的 Cold 路径成本最高。</sub></p>
 
 C2 还确认了 Session 的追加、分叉、持久化和加载本身都有独立 CPU 成本。这些数字来自当前固定测试场景，不等同于生产端到端延迟；C8 也不是分词器性能测试。
 
@@ -349,17 +349,19 @@ C2 还确认了 Session 的追加、分叉、持久化和加载本身都有独�
 
 如果 Tool 自己只需要很短时间，但 Runtime 每次都要创建进程、建立进程间通信管道、等待退出、记录结果并再次进入 Agent Loop，那么真正耗时的可能不是 Tool 本身，而是 Tool 周围的执行边界。
 
-C4 在 {{C4_OPERATION_COUNT}} 次微操作下，DSH 管理的 one-shot `bash -c` 路径约为 {{C4_MANAGED_DISPLAY}} ms/op；作为机制对照，保持同一个 Bash 进程持续运行、避免每次重新创建进程的 persistent control 约为 {{C4_PERSISTENT_DISPLAY}} ms/op。后者不代表 OpenClaw 的实现。
+C4 使用非常短的命令比较三种进程执行方式。**DSH 管理路径**通过 Harness 的正常进程管理流程执行；**直接单次进程**绕过 DSH 管理封装，每次直接启动一个新进程，执行一次后退出；**持久进程**则保持同一个 Shell 进程运行，后续操作复用该进程。后两者用于拆分进程创建和 Runtime 管理成本，不代表 OpenClaw 的实现。
+
+在 {{C4_OPERATION_COUNT}} 次微操作下，三条路径的单次实际耗时分别约为 {{C4_MANAGED_DISPLAY}}、{{C4_RAW_ONESHOT_DISPLAY}} 和 {{C4_PERSISTENT_DISPLAY}} ms/op。
 
 <p align="center"><img src="figures/data/c4-process-lifecycle.svg" width="940" alt="C4 不同 Process lifecycle 的单次执行时间"></p>
-<p align="center"><sub>图 10-3　短 Tool 场景中，进程生命周期会形成明显的外围开销。</sub></p>
+<p align="center"><sub>图 10-3　对于执行时间很短的 Tool，反复创建进程和经过 Runtime 管理路径会形成明显的额外开销；复用长期运行进程可以显著减少这部分成本。</sub></p>
 
-这也解释了 PTC 为什么值得关注。PTC 不是让单个 Tool 变快，而是把多个 Tool 放进一次本地 Program execution 中，减少重复进入 Model/Harness 编排链路的次数。
+这也解释了 PTC 为什么值得关注。这里的**常规 Tool 调用**是 DSH 不使用 PTC 时的正常 Agent Loop 路径，并非 native code；PTC 则先启动一个本地 Program Worker，由它连续执行多个 Tool。PTC 不是让单个 Tool 变快，而是减少重复进入 Model/Harness 编排链路的次数。
 
-在当前确定性测试场景的 {{C5_OPERATION_COUNT}} 次操作点，Native 约为 {{C5_NATIVE_SELECTED_DISPLAY_MS}} ms，PTC 约为 {{C5_PTC_SELECTED_DISPLAY_MS}} ms。低操作数时 PTC 有额外启动成本，因此这个结果不能理解成“PTC 永远更快”。
+PTC 每次都要先启动 Program Worker，因此存在固定启动成本。在当前测试中，{{C5_CROSSOVER_LOW}} 次操作时常规 Tool 调用约需 {{C5_LOW_NATIVE_DISPLAY_MS}} ms，PTC 约需 {{C5_LOW_PTC_DISPLAY_MS}} ms，常规调用仍然更快；到 {{C5_CROSSOVER_HIGH}} 次操作时，常规调用约需 {{C5_HIGH_NATIVE_DISPLAY_MS}} ms，PTC 约需 {{C5_HIGH_PTC_DISPLAY_MS}} ms，PTC 已经更快。因此，两种方式的性能反转发生在 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} 次操作之间。这个区间只属于当前固定微基准，不是生产环境切换到 PTC 的阈值。
 
-<p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随操作数增长的执行时间"></p>
-<p align="center"><sub>图 10-4　当前测试中，Native 与 PTC 两条曲线的交叉区间（crossover）位于 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} 次操作之间，不是生产阈值。</sub></p>
+<p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 常规 Tool 调用与 PTC 随操作数增长的执行时间"></p>
+<p align="center"><sub>图 10-4　PTC 有固定启动成本；随着连续 Tool 操作增加，减少重复 Agent/Runtime 编排所节省的时间开始超过这部分成本。</sub></p>
 
 ### 10.3 Sandbox / Policy 也会产生实际 CPU 工作
 
@@ -392,4 +394,4 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 
 这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
 
-**因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把 composition、state 和 execution boundary 提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**
+**因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把组合、状态和执行边界提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**
