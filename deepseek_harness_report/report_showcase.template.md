@@ -78,18 +78,18 @@ CPU Microbenchmark C1–C8
 
 ### 2.2 Harness 行为实验 W1–W10
 
-| 实验 | 测试内容 | 为什么做 | 主要回答的问题 |
-|---|---|---|---|
-| W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 |
-| W2 | Python Bug Fix | 小型真实 Coding Task | 是否具备读代码、修改、测试和验证闭环 |
-| W3 | Multi-module Feature | 更长的真实执行链 | 是否出现值得进一步隔离的稳定性现象 |
-| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn |
-| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 |
-| W6 | Tool Failure | 固定 invalid args / exit {{W6_CHILD_EXIT_CODE}} | 普通 Tool Failure 与 malformed event 是否同一边界 |
-| W7 | Long Tool Chain | 连续 {{W7_TOOL_CALLS}} 次 Tool Call | Context、request body 与 Tool state 如何累积 |
-| W8 | Direct vs PTC | 相同 {{W8_OPERATIONS}} 个底层操作 | request 下降是否来自编排折叠，而非漏做工作 |
-| W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 |
-| W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 |
+| 实验 | 测试内容 | 为什么做 | 主要回答的问题 | 主要结果 |
+|---|---|---|---|---|
+| W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 | 两侧均成功并通过 verifier={{W1_BOTH_VERIFIED}} |
+| W2 | Python Bug Fix | 小型真实 Coding Task | 是否具备读代码、修改、测试和验证闭环 | DSH {{W2_DSH_SUCCESS}}/{{W2_DSH_TOTAL}}；OpenClaw {{W2_OPENCLAW_SUCCESS}}/{{W2_OPENCLAW_TOTAL}} |
+| W3 | Multi-module Feature | 更长的真实执行链 | 是否出现值得进一步隔离的稳定性现象 | DSH {{W3_DSH_SUCCESS}}/{{W3_DSH_TOTAL}}；OpenClaw {{W3_OPENCLAW_SUCCESS}}/{{W3_OPENCLAW_TOTAL}}，观察到 `incomplete_turn` |
+| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | DSH completed={{W4_DSH_COMPLETED}}；OpenClaw=`{{W4_OPENCLAW_ERROR}}` |
+| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH/OpenClaw 均触发 {{W5_DSH_COMPACTIONS}}/{{W5_OPENCLAW_COMPACTIONS}} 次；DSH boundary 后 body 均缩小={{W5_DSH_BOUNDARIES_REDUCED}} |
+| W6 | Tool Failure | 固定 invalid args / exit {{W6_CHILD_EXIT_CODE}} | 普通 Tool Failure 与 malformed event 是否同一边界 | 两侧在两种 normal Tool Error 后均继续={{W6_ALL_COMPLETED}} |
+| W7 | Long Tool Chain | 连续 {{W7_TOOL_CALLS}} 次 Tool Call | Context、request body 与 Tool state 如何累积 | 两侧完成={{W7_BOTH_COMPLETED}}；历史 markers={{W7_HISTORY_VERIFIED}}；call/result pairing={{W7_PAIRING_VERIFIED}} |
+| W8 | Direct vs PTC | 相同 {{W8_OPERATIONS}} 个底层操作 | request 下降是否来自编排折叠，而非漏做工作 | DSH provider requests {{W8_DSH_DIRECT_REQUESTS}}→{{W8_DSH_CODE_REQUESTS}}，底层操作仍为 {{W8_OPERATIONS}} |
+| W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | prefix={{W9_PREFIX_IDENTICAL}}；dangling 未重发={{W9_DANGLING_NOT_DISPATCHED}}；fork={{W9_FORK_EQUAL}}；无 live provider={{W9_PROVIDER_NOT_CONTACTED}} |
+| W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | outside policy 由 `{{W10_LOCAL_OUTSIDE}}` 变为 `{{W10_SANDBOX_ERROR}}`，切回恢复={{W10_SWAP_RESTORED}} |
 
 W1–W3 是真实 Agent workload；W4–W8 是 deterministic mechanism tests；W9–W10 是 DSH white-box mechanism tests。W9/W10 没有完全对等的 OpenClaw fixture，不能用于两套 Runtime 排名。
 
@@ -328,6 +328,8 @@ CPU 分析用于说明软件机制会形成 Host workload，不是处理器排�
 
 ## 10. CPU 数据得到的主要观察
 
+**Control Plane。** C1 使用 deterministic in-process LLM 和 no-op Tool，观察 Agent Loop 随 Tool Step 增长的本地 CPU 成本。Cold fixture 从 {{C1_INITIAL_STEPS}} 增长到 {{C1_FINAL_STEPS}} steps 时，内部 CPU 时间从 {{C1_INITIAL_CPU_MS}} ms 增长到 {{C1_FINAL_CPU_MS}} ms。由于同一 append-only Session 的 Context 也随 step 增长，这表示 control-plane 与 growing-state 的组合成本，而不是纯 `while` loop overhead；因此不再增加一张独立 C1 图。
+
 ### 10.1 长生命周期 Agent 会形成扩大的状态工作集
 
 C2 把 Session append、derive、fork、persist 和 load 的 slope 分开；C3 固定消息形状并扩大 Context Bytes；C8 区分 Cold Replay、Warm Repeat 与 Incremental pressure accounting。
@@ -416,4 +418,4 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 
 这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的价值在于把它们统一放进 composition、state 和 execution model，并让边界更容易被替换、观察与验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成 Control、State、Execution 与 Scale 四类 Host workload。
 
-因此，当前最稳健的结论不是“哪套 Harness 赢了”，而是：**Agent Harness 本身正在成为需要独立研究的 Runtime 系统。**
+**因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把 composition、state 和 execution boundary 提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**

@@ -3,6 +3,13 @@
     "host_machine": "aarch64",
     "cpu_samples_per_point": 5
   },
+  "w1": {
+    "dsh_success": true,
+    "dsh_verifier": true,
+    "openclaw_success": true,
+    "openclaw_verifier": true,
+    "both_verified": true
+  },
   "w2": {
     "dsh_success": 4,
     "dsh_total": 5,
@@ -26,6 +33,7 @@
     "dsh_compactions": 3,
     "dsh_completed": true,
     "openclaw_compactions": 3,
+    "dsh_boundaries_reduced": true,
     "boundaries": [
       {
         "compaction_request": 5,
@@ -58,10 +66,14 @@
     "openclaw_invalid_completed": true,
     "dsh_nonzero_completed": true,
     "openclaw_nonzero_completed": true,
+    "all_completed": true,
     "child_exit_code": 17
   },
   "w7": {
     "tool_calls": 20,
+    "both_completed": true,
+    "history_verified": true,
+    "pairing_verified": true,
     "dsh_final_markers": 20,
     "openclaw_final_markers": 20,
     "dsh_request_growth_bytes": 4920,
@@ -89,6 +101,12 @@
     "local_outside": "OUTSIDE_CHANGED",
     "sandbox_error": "FS_SANDBOX_DENIED",
     "swap_restored": true
+  },
+  "c1": {
+    "initial_steps": 0,
+    "final_steps": 256,
+    "initial_cpu_ms": 8.413,
+    "final_cpu_ms": 466.23
   },
   "c2": {
     "append_cpu_us": 20.716035793254093,

@@ -1,6 +1,6 @@
 {
-  "report_input_sha256": "0182fd31a4bc9e6e7793e39a59089bc1797bc471d367278f5e64a2b5899c2617",
-  "git_status_at_generation": "2e177c710fa1 + working-tree changes",
+  "report_input_sha256": "b1cdb49bf080191c5aad5e0990e9770b5552adc3b873de4b5ab359d499e2ca18",
+  "git_status_at_generation": "38d9168dba52 + working-tree changes",
   "deepseek_harness_commit": "dd6322d604e00eec1ba5e0c8541159906a21094a",
   "openclaw_commit": "3c1b351555e0ebc1b022842523191691e89c7684",
   "node_version": "24.15.0",
@@ -33,6 +33,7 @@
   "perf_mode": "user-kernel",
   "evidence_verification": "PASS",
   "result_files": {
+    "w1": "w1-pilot-001/summary.json",
     "w2": "w2-aggregate-n5.json",
     "w3": "w3-aggregate-n5.json",
     "w4": "w4-recovery-summary.json",

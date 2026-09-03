@@ -18,7 +18,7 @@ REPORT_ROOT = ROOT / "deepseek_harness_report"
 RESULTS = ROOT / "results"
 
 RESULT_FILES = {
-    "w2": "w2-aggregate-n5.json", "w3": "w3-aggregate-n5.json",
+    "w1": "w1-pilot-001/summary.json", "w2": "w2-aggregate-n5.json", "w3": "w3-aggregate-n5.json",
     "w4": "w4-recovery-summary.json", "w5": "w5-compaction-summary.json",
     "w6": "w6-tool-failure-summary.json", "w7": "w7-long-chain-summary.json",
     "w8": "w8-code-mode-summary.json", "w9": "w9-session-summary.json",
@@ -39,9 +39,9 @@ def load_inputs() -> dict:
 
 
 def build_metrics(data: dict) -> dict:
-    w2, w3, w4, w5, w6, w7, w8, w9, w10 = (data[key] for key in
-        ("w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10"))
-    c2, c3, c4, c5, c6, c7 = (data[key] for key in ("c2", "c3", "c4", "c5", "c6", "c7"))
+    w1, w2, w3, w4, w5, w6, w7, w8, w9, w10 = (data[key] for key in
+        ("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10"))
+    c1, c2, c3, c4, c5, c6, c7 = (data[key] for key in ("c1", "c2", "c3", "c4", "c5", "c6", "c7"))
     cold, repeat = data["c8_cold"], data["c8_repeat"]
     w5d, w5o = w5["calibrated_main_pair"]["deepseek_harness"], w5["calibrated_main_pair"]["openclaw"]
     w8d, w8o = w8["deepseek_harness"], w8["openclaw"]
@@ -66,8 +66,15 @@ def build_metrics(data: dict) -> dict:
     c7_agents = max(c7["aggregates"], key=int)
     child_exit = int(re.search(r"exits (\d+)", w6["scenarios"]["nonzero_child_exit"]["stimulus"]).group(1))
     return {
-        "meta": {"host_machine": data["c1"]["host"]["machine"],
-                 "cpu_samples_per_point": next(iter(data["c1"]["aggregates"].values()))["samples"]},
+        "meta": {"host_machine": c1["host"]["machine"],
+                 "cpu_samples_per_point": next(iter(c1["aggregates"].values()))["samples"]},
+        "w1": {"dsh_success": w1["deepseek_harness"]["success"],
+               "dsh_verifier": w1["deepseek_harness"]["verifier_passed"],
+               "openclaw_success": w1["openclaw"]["success"],
+               "openclaw_verifier": w1["openclaw"]["verifier_passed"],
+               "both_verified": all((w1[runtime][field]
+                                     for runtime in ("deepseek_harness", "openclaw")
+                                     for field in ("success", "verifier_passed")))},
         "w2": {"dsh_success": w2["deepseek_harness"]["successes"], "dsh_total": w2["deepseek_harness"]["attempts"],
                "openclaw_success": w2["openclaw"]["successes"], "openclaw_total": w2["openclaw"]["attempts"]},
         "w3": {"dsh_success": w3["deepseek_harness"]["successes"], "dsh_total": w3["deepseek_harness"]["attempts"],
@@ -78,13 +85,25 @@ def build_metrics(data: dict) -> dict:
                "openclaw_error": w4["openclaw"]["runtime_error_kind"]},
         "w5": {"dsh_tool_calls": w5d["tool_calls"], "dsh_compactions": w5d["compaction_requests"],
                "dsh_completed": w5d["runtime_completed"], "openclaw_compactions": w5o["compaction_requests"],
+               "dsh_boundaries_reduced": all(item["agent_body_reduction_bytes"] > 0
+                                               for item in w5d["compaction_boundaries"]),
                "boundaries": w5d["compaction_boundaries"]},
         "w6": {"dsh_invalid_completed": w6["scenarios"]["missing_required_argument"]["deepseek_harness"]["runtime_completed"],
                "openclaw_invalid_completed": w6["scenarios"]["missing_required_argument"]["openclaw"]["runtime_completed"],
                "dsh_nonzero_completed": w6["scenarios"]["nonzero_child_exit"]["deepseek_harness"]["runtime_completed"],
                "openclaw_nonzero_completed": w6["scenarios"]["nonzero_child_exit"]["openclaw"]["runtime_completed"],
+               "all_completed": all((w6["scenarios"][scenario][runtime]["runtime_completed"]
+                                      for scenario in ("missing_required_argument", "nonzero_child_exit")
+                                      for runtime in ("deepseek_harness", "openclaw"))),
                "child_exit_code": child_exit},
         "w7": {"tool_calls": w7["deepseek_harness"]["tool_calls"],
+               "both_completed": w7["deepseek_harness"]["runtime_completed"] and w7["openclaw"]["runtime_completed"],
+               "history_verified": all((w7[runtime]["all_prior_markers_present_in_every_request"] and
+                                        w7[runtime]["all_prior_markers_in_tool_results_in_every_request"] and
+                                        w7[runtime]["final_request_contains_all_tool_result_markers"]
+                                        for runtime in ("deepseek_harness", "openclaw"))),
+               "pairing_verified": all(w7[runtime]["all_tool_calls_and_results_paired"]
+                                       for runtime in ("deepseek_harness", "openclaw")),
                "dsh_final_markers": w7["deepseek_harness"]["final_request_tool_result_count"],
                "openclaw_final_markers": w7["openclaw"]["final_request_tool_result_count"],
                "dsh_request_growth_bytes": w7["deepseek_harness"]["context"]["request_body_growth_bytes"],
@@ -106,6 +125,9 @@ def build_metrics(data: dict) -> dict:
         "w10": {"local_outside": w10["local_a"]["outside"],
                 "sandbox_error": w10["sandbox_b"]["tool_results"][-1]["error_code"],
                 "swap_restored": w10["checks"]["a_equals_a_prime"]},
+        "c1": {"initial_steps": 0, "final_steps": 256,
+               "initial_cpu_ms": c1["aggregates"]["0"]["internal_cpu_total_us"]["median"] / 1000,
+               "final_cpu_ms": c1["aggregates"]["256"]["internal_cpu_total_us"]["median"] / 1000},
         "c2": {name: c2["linear_fits_over_event_count_medians"][name]["per_event_slope"] for name in
                ("append_cpu_us", "derive_messages_cpu_us", "fork_prefix_cpu_us",
                 "jsonl_write_cpu_us", "jsonl_warm_load_cpu_us")},
