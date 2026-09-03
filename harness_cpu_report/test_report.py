@@ -35,7 +35,7 @@ class ReportAdaptersTest(unittest.TestCase):
 
     def test_c2_uses_five_per_event_cpu_slopes(self):
         chart = self.charts["C2"]
-        self.assertEqual(chart["type"], "bar")
+        self.assertEqual(chart["type"], "horizontal-bar")
         self.assertEqual(chart["y"]["unit"], "μs/event")
         values = {point["x"]: point["y"] for point in chart["series"][0]["points"]}
         self.assertEqual(len(values), 5)
@@ -79,9 +79,10 @@ class ReportAdaptersTest(unittest.TestCase):
         self.assertEqual([(item["dsh"], item["openclaw"]) for item in tasks],
                          [("4 / 5", "5 / 5"), ("5 / 5", "2 / 5")])
         findings = build_key_findings(self.workloads, self.cpu)
+        self.assertEqual(len(findings), 4)
         self.assertEqual(findings[0]["value"], "9 → 2")
         self.assertIn("83.17 Agents/s", [item["value"] for item in findings])
-        self.assertIn("不是端到端 latency 倍率", findings[-1]["detail"])
+        self.assertIn("不是端到端 latency 倍率", findings[2]["detail"])
 
     def test_report_input_fingerprint_is_stable_and_excludes_output(self):
         paths = report_input_paths()

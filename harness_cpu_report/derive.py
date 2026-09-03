@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 
 
-COLORS = ["#e65d3f", "#177c78", "#e8b84a", "#6d5bd0", "#5a7184"]
+COLORS = ["#5aa7ff", "#46c8b3", "#a98bff", "#f0b75a", "#ed7474"]
 
 
 def median(record: dict, field: str) -> float:
@@ -60,7 +60,7 @@ def build_c2(item: dict) -> dict:
               ("Fork prefix", "fork_prefix_cpu_us"), ("JSONL write", "jsonl_write_cpu_us"),
               ("Warm load", "jsonl_warm_load_cpu_us")]
     bars = [{"x": label, "y": float(fits[field]["per_event_slope"])} for label, field in fields]
-    return spec("C2", "图 2 · Session/Event Log 边际成本", "bar", "Session 操作", "category",
+    return spec("C2", "图 2 · Session/Event Log 边际成本", "horizontal-bar", "Session 操作", "category",
                 "拟合 CPU 成本", "μs/event", [item["file"]],
                 [series("每事件 CPU", bars, COLORS[0])],
                 "来自 event-count medians 的线性拟合斜率，不是单点总耗时。")
@@ -138,7 +138,7 @@ def build_incremental_points(data: dict) -> list[dict]:
 
 def build_c8(item: dict) -> dict:
     names = ("cold", "incremental", "repeat")
-    return spec("C8", "图 8 · TokenMeter/context pressure", "line",
+    result = spec("C8", "图 8 · TokenMeter/context pressure", "line",
                 "Surface 规模（Incremental 使用平均 effective surface）", "log",
                 "每次测量窗口内部 CPU", "μs", [item["files"][name] for name in names], [
                     series("Cold replay", points(item["data"]["cold"]["aggregates"],
@@ -148,6 +148,8 @@ def build_c8(item: dict) -> dict:
                                                      "internal_cpu_us_per_measure"), COLORS[2]),
                 ], "Cold：首次 measure 含 durable-history replay；Incremental：append one turn + measure；"
                    "Repeat：surface 不变的重复 measure。三者用于机制分解，不是可互换延迟。")
+    result["xTicks"] = [10, 100, 1000, 10000]
+    return result
 
 
 CHART_BUILDERS = {"C1": build_c1, "C2": build_c2, "C3": build_c3, "C4": build_c4,

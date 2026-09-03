@@ -75,7 +75,7 @@ def validate(root: Path, cpu: dict, workloads: dict, charts: list[dict]) -> dict
 
 def validate_html(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
-    for marker in ("<html", "</html>", "<style>", "<script>", "DeepSeek Harness", "data-chart-index"):
+    for marker in ("<html", "</html>", "<style>", "<script>", "DeepSeek Harness", "data-chart-key"):
         if marker not in text:
             raise SystemExit(f"生成 HTML 缺少 {marker}")
     if re.search(r"\{\{[A-Z_]+\}\}", text):

@@ -1,33 +1,52 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DeepSeek Harness：Agent Runtime 机制与 Host CPU 工作负载研究</title><style>{{CSS}}</style></head><body>
-<nav>{{NAV}}</nav><main>
-<header class="hero wrap" id="overview"><div><div class="eyebrow">研究概览 · W1–W10 / C1–C8</div>
-<h1>DeepSeek Harness：<br>Agent Runtime 机制与 Host CPU 工作负载研究</h1>
-<p>从真实任务、确定性机制实验到 CPU workload decomposition：当 Agent 从一次模型调用变成持续运行的系统，Host CPU 在做什么？</p>
-<div class="flow"><span class="node">真实 Agent 工作负载<br><small>W1–W3</small></span><span class="arrow">→</span><span class="node">确定性机制实验<br><small>W4–W10</small></span><span class="arrow">→</span><span class="node">CPU 工作负载<br><small>C1–C8</small></span></div></div></header>
+<title>DeepSeek Harness：Agent Runtime 新机制与 Host CPU 工作负载研究</title><style>{{CSS}}</style></head><body>
+<nav><div class="nav-inner"><a class="brand" href="#conclusion">DSH · Runtime Research</a><div class="nav-links">{{NAV}}</div></div></nav><main>
+<section class="hero article-section" id="conclusion"><div class="wide-wrap hero-layout"><div class="hero-copy">
+<span class="chapter-kicker">01 · 研究结论</span><h1>Agent 不再只是<br>调用模型</h1>
+<h2>DeepSeek Harness 正在把 Agent 变成持续运行的 Runtime</h2><p>{{HERO_BODY}}</p></div>
+<div class="hero-diagram"><div class="mini-system"><b>传统 LLM</b><span>User</span><i>↓</i><span>Model</span><i>↓</i><span>Answer</span></div>
+<div class="runtime-system"><b>Agent Runtime</b><span class="model-node">Model</span><i>↕</i><span class="loop-node">Agent Loop</span><div class="runtime-branches"><span>Tool<br><small>Process · Code</small></span><span>Session / State<br><small>Context · Policy</small></span></div></div></div></div>
+<div class="wide-wrap"><div class="hero-metrics">{{FINDINGS}}</div></div></section>
 
-<section class="screen findings-screen" id="findings"><div class="wrap"><div class="eyebrow">00 / 关键发现</div><h2>30 秒结果摘要</h2><p class="lead">全部数字在构建时从 W/C JSON 或 fit 自动派生；继续下滑查看机制、数据范围和限制。</p><div class="grid findings">{{FINDINGS}}</div></div></section>
+<section class="article-section" id="why"><div class="article-copy"><span class="chapter-kicker">02 · 为什么需要 Harness</span>
+<h2>模型负责决策，Runtime 负责让任务真正继续</h2><p class="article-lead">{{WHY_HARNESS}}</p>
+<div class="role-split"><div><h3>Model</h3><ul><li>Reasoning</li><li>Planning</li><li>Generation</li><li>Decide tool calls</li></ul></div>
+<div><h3>Harness / Runtime</h3><ul><li>Agent Loop · Model invocation</li><li>Tool dispatch · Filesystem · Process</li><li>Session persistence · Context construction</li><li>Error recovery · Compaction · Code runtime · Policy</li></ul></div></div>
+<div class="task-walkthrough"><span class="task-prompt">运行测试，找到 Bug，修改代码，再验证</span><div class="task-steps">
+<span><b>Model</b>决定先运行测试</span><i>→</i><span><b>Harness</b>执行 pytest 并保存结果</span><i>→</i><span><b>Model</b>读取错误、决定读文件</span><i>→</i><span><b>Harness</b>读写文件并再次验证</span></div></div>
+<blockquote class="insight-callout">模型只负责其中部分决策；执行链的大量工作发生在 Harness 和 Host CPU。</blockquote></div></section>
 
-<section class="screen" id="harness"><div class="wrap"><div class="eyebrow">01 / Harness</div><h2>为什么 Harness 会成为 CPU 工作负载？</h2>
-<p class="lead">模型负责推理与决策；Agent Runtime 负责把意图变成可持续、可恢复、可隔离的执行过程。</p>
-<div class="grid two"><div class="diagram"><h3>传统 LLM 应用</h3><div class="flow"><span class="node">用户</span><span class="arrow">→</span><span class="node">模型 API</span><span class="arrow">→</span><span class="node">回答</span></div></div>
-<div class="diagram"><h3>Agent Runtime</h3><div class="flow"><span class="node">模型</span><span class="arrow">↔</span><span class="node">Loop · Tool · Session<br>Context · Sandbox · Code Runtime</span><span class="arrow">→</span><span class="node">Host CPU</span></div></div></div>
-<div class="note"><b>DeepSeek Harness 采用 everything-is-a-plugin 架构并由 Cordis 驱动。</b>各运行时子系统通过 composition 和 <code>ctx.*</code> service/capability 接口组织；本仓库的 W10 进一步实际验证了 <code>ctx.fs</code> provider 的可替换边界。</div>
-<div class="grid"><div class="card"><span class="tag">证据层</span><strong>W1–W3</strong><p>真实 Agent workload；最终 workspace 可重建，run metadata 为冻结记录。</p></div><div class="card"><span class="tag">证据层</span><strong>W4–W10</strong><p>确定性机制实验；隔离单一 runtime seam。</p></div><div class="card"><span class="tag">证据层</span><strong>C1–C8</strong><p>控制、状态、执行与规模平面的 CPU pilot。</p></div></div></div></section>
+<section class="article-section dark-band" id="deepseek"><div class="wide-wrap"><div class="article-copy section-intro">
+<span class="chapter-kicker">03 · DeepSeek Harness</span><h2>四个 Runtime 机制，四条 Feature → Evidence → CPU 链路</h2>
+<p class="article-lead">这里不把 Feature 当作产品清单。每一节先解释它解决什么问题，再展示机制、W 实验和对应的本地 CPU 工作。</p></div>
+{{FEATURE_STORIES}}</div></section>
 
-<section class="screen" id="real"><div class="wrap"><div class="eyebrow">02 / 从真实任务到机制实验</div><h2>先观察现象，再隔离机制</h2><p class="lead">W2/W3 是同模型、同 prompt、交错运行的 n=5 pilot。这里只展示 hidden-verifier outcome，不用 wall time 排名。</p><div class="grid two">{{REAL_TASKS}}</div><div class="flow method-flow"><span class="node">真实任务发现现象<br><small>W2 / W3</small></span><span class="arrow">→</span><span class="node">确定性事件隔离<br><small>W4–W10</small></span><span class="arrow">→</span><span class="node">抽取本地 CPU workload<br><small>C1–C8</small></span></div></div></section>
+<section class="article-section" id="experiments"><div class="wide-wrap"><div class="article-copy">
+<span class="chapter-kicker">04 · 实验验证</span><h2>从真实任务观察现象，再用确定性实验隔离机制</h2>
+<p class="article-lead">W/C 编号是证据索引，不是故事主线。真实 Agent Task 帮助发现现象；deterministic fixture 再减少模型、网络和协议混杂变量。</p></div>
+<div class="research-timeline"><span><b>真实 Agent Task</b><small>W1–W3</small></span><i>→</i><span><b>观察 failure / context / tool-chain</b><small>不直接归因</small></span><i>→</i><span><b>机制隔离</b><small>W4–W10</small></span><i>→</i><span><b>CPU workload extraction</b><small>C1–C8</small></span></div>
+<div class="task-results">{{REAL_TASKS}}</div>
+<p class="method-note">W3 的 <code>incomplete_turn</code> 发生在真实模型任务中，仍包含 provider protocol、streaming、parser 与 recovery policy 等变量。因此它只用于提出问题；W4 才使用 deterministic malformed event 隔离 recovery semantics。</p></div></section>
 
-<section class="screen" id="new"><div class="wrap"><div class="eyebrow">03 / 关键机制与实测</div><h2>官方架构机制与实验洞察分开陈述</h2><p class="lead">每张卡依次展示机制、W 实测、C 实测/关联、推断边界；数字在构建时从结果 JSON 读取。</p><div class="grid feature-grid">{{FEATURES}}</div></div></section>
+<section class="article-section runtime-section" id="cpu"><div class="wide-wrap"><div class="article-copy">
+<span class="chapter-kicker">05 · CPU 工作负载</span><h2>Agent Runtime 在 Host CPU 上形成四类工作</h2><p class="article-lead">{{CPU_INTRO}}</p></div>
+<div class="runtime-map"><div class="runtime-core">Agent Runtime</div><div class="plane control"><b>Control Plane</b><span>Agent Loop</span><span>Recovery</span><span>Orchestration</span><small>C1</small></div>
+<div class="plane state"><b>State Plane</b><span>Event Log</span><span>Context · Serialization</span><span>Compaction</span><small>C2 · C3 · C8</small></div>
+<div class="plane execution"><b>Execution Plane</b><span>Tool · Process</span><span>Code Runtime</span><span>Filesystem</span><small>C4 · C5 · C6</small></div>
+<div class="plane scale"><b>Scale Plane</b><span>Multi-Agent</span><span>Density · Scheduler</span><small>C7</small></div></div></div></section>
 
-<section class="screen" id="mechanism"><div class="wrap"><div class="eyebrow">04 / 实验映射</div><h2>机制 → 行为实验 → CPU 实验</h2><div class="matrix"><div class="head">机制/工作负载</div><div class="head">行为实验</div><div class="head">CPU 实验</div>{{MAPPING}}</div></div></section>
+<section class="article-section" id="insights"><div class="wide-wrap"><div class="article-copy section-intro">
+<span class="chapter-kicker">06 · 数据洞察</span><h2>不按 C1–C8 报数，而按系统问题组织证据</h2>
+<p class="article-lead">所有曲线由显式 schema adapter 从冻结 JSON 派生。每张图说明测了什么、如何阅读、为什么重要，以及它不能证明什么。</p></div>
+{{STATE_INSIGHT}}{{EXECUTION_INSIGHT}}{{SCALE_INSIGHT}}
+<section class="supporting"><div class="article-copy"><span class="chapter-kicker">Supporting Evidence</span><h3>Control 与 Policy 的两块补充证据</h3><p>它们帮助补全 Runtime 地图，但不与 State、Execution 和 Scale 主线争夺视觉权重。</p></div><div class="support-grid">{{SUPPORTING_CHARTS}}</div></section></div></section>
 
-<section class="screen" id="cpu"><div class="wrap"><div class="eyebrow">05 / CPU 工作负载地图</div><h2>Host CPU 的四个平面</h2><div class="architecture"><div><b>控制平面</b>Agent Loop<br>Recovery<br>Orchestration<br><strong>C1</strong></div><div><b>状态平面</b>Event Log<br>Context<br>Serialization<br>Compaction<br><strong>C2 · C3 · C8</strong></div><div><b>执行平面</b>Tool Dispatch<br>Process<br>Code Runtime<br>Filesystem<br><strong>C4 · C5 · C6</strong></div><div><b>规模平面</b>Multi-Agent<br>Scheduling<br><strong>C7</strong></div></div><p class="lead">Agent runtime 的本地成本来自控制流、状态变换、执行边界和并发规模的叠加，而不只是模型推理。</p></div></section>
-
-<section class="screen" id="data"><div class="wrap"><div class="eyebrow">06 / 核心数据</div><h2>显式 schema adapter 生成的图表</h2><p class="lead">C1–C8 各自指定字段、单位、series 和坐标变换；renderer 不猜测指标。点的细线表示已记录的 n=5 min–max range。</p><div class="grid chart-grid">{{CHARTS}}</div></div></section>
-
-<section class="screen" id="insight"><div class="wrap"><div class="eyebrow">07 / 对通用 CPU 的启示</div><h2>以下是研究方向，不是跨 CPU 排名</h2><div class="grid two"><div class="card"><span class="tag">推断</span><strong>状态工作集值得关注</strong><p>Event log、context derive、serialization 与 compaction 随节点和字节增长，提示 cache/memory working set 是后续硬件实验方向。</p></div><div class="card"><span class="tag">推断</span><strong>执行边界本身有成本</strong><p>Tool dispatch、process lifecycle、policy 与 code runtime 把一次意图切成多个 Host-side execution boundary。</p></div><div class="card"><span class="tag">推断</span><strong>并发改变资源曲线</strong><p>多 Agent 同时增加吞吐、驻留内存和调度压力；单机 n=5 knee 不能直接外推。</p></div><div class="card"><span class="tag">限制</span><strong>机制先于排名</strong><p>报告描述 pinned fixture 下可追溯的机制和成本结构，不声称某类 CPU 或 runtime 普遍更优。</p></div></div></div></section>
-
-<section class="screen" id="evidence"><div class="wrap"><div class="eyebrow">08 / 证据与限制</div><h2>实验环境与 Provenance</h2><div class="status">{{VALIDATION}}</div><div class="grid provenance">{{PROVENANCE}}</div><div class="grid two"><div class="card"><h3>默认构建</h3><p>检查必需 W/C JSON、protocol 元数据、samples、fixture checks、有限数值和八个显式 chart specs。不会声称完成证据重放。</p></div><div class="card"><h3>严格构建</h3><p><code>python3 harness_cpu_report/build.py --verify</code> 额外运行 W1–W10 evidence reproduction 和 C1–C8 result verification；只有成功后页面才显示完整重放 PASS。</p></div></div><p>证据清单：{{EVIDENCE_FILE}}。W1–W3 的 final workspace/verifier outcome 可重建；wall time、calls 和 token counters 是冻结 run metadata。</p></div></section>
-</main><footer class="footer wrap">由 <code>python3 harness_cpu_report/build.py</code> 生成 · 单文件离线 HTML · 无 CDN、网络或本地 fetch</footer>
-<script>{{JS}}</script><script>const REPORT={{DATA}};document.querySelectorAll('[data-chart-index]').forEach(el=>drawChart(el,REPORT.charts[Number(el.dataset.chartIndex)]));</script></body></html>
+<section class="article-section conclusion-band" id="evidence"><div class="wide-wrap"><div class="article-copy">
+<span class="chapter-kicker">07 · 总结与证据边界</span><h2>Host CPU 正从模型调用外围变成 Agent Runtime Platform</h2><p class="article-lead">{{CONCLUSION_BODY}}</p></div>
+<div class="conclusion-planes"><div><b>Control</b><span>Agent Loop · Recovery · Orchestration</span></div><div><b>State</b><span>Session · Event Log · Context · Serialization · Compaction</span></div><div><b>Execution</b><span>Tool · Process · Code Runtime · Policy</span></div><div><b>Scale</b><span>Multi-Agent · Runtime density · Memory · Scheduler</span></div></div>
+<div class="boundaries"><h3>本研究没有证明什么</h3><ul>{{LIMITATIONS}}</ul></div>
+<div class="evidence-summary"><div><span>证据状态</span><b>{{VALIDATION}}</b></div><dl>{{PROVENANCE}}</dl></div>
+<details class="evidence-details"><summary>展开完整 Provenance、W sources 与 C protocol hashes</summary><p>证据清单：<code>{{EVIDENCE_FILE}}</code>。W1–W3 的 final workspace/verifier outcome 可重建；wall time、calls 与 token counters 是冻结 run metadata。</p>{{EVIDENCE_DETAILS}}</details></div></section>
+</main><footer class="footer wide-wrap">由 <code>python3 harness_cpu_report/build.py</code> 生成 · 单文件离线 HTML · 无 CDN、网络或本地 fetch</footer>
+<script>{{JS}}</script><script>const REPORT={{DATA}};const CHARTS=Object.fromEntries(REPORT.charts.map(x=>[x.key,x]));document.querySelectorAll('[data-chart-key]').forEach(el=>drawChart(el,CHARTS[el.dataset.chartKey]));</script></body></html>
