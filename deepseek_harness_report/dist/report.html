@@ -98,13 +98,13 @@
 <p>本报告用 <strong>Executor Collapse</strong> 描述这种 workload 变化：多个模型可见 Tool Round Trip 被折叠为一次 Program Execution。该词是研究中的机制概括，不是 DeepSeek 官方新增 Feature 名称。</p>
 <h3 id="5-3-tool-pipeline-与-code-runtime">5.3 Tool Pipeline 与 Code Runtime</h3>
 <p>Pinned tool execution pipeline 说明 PTC 使用保留的 <code>run_code</code> transport，program 内部 sub-call 仍经过工具执行 pipeline，并记录 code-dispatch 事件。也就是说，PTC 不是绕过 Tool policy，而是改变外层 orchestration 与内部 dispatch 的边界。</p>
-<p>OpenClaw 也不能被写成“物理上不能做 Code Mode”。W8 的 deterministic fixture 同样为 OpenClaw 构造了 code execution：其 provider request 也从 9 降到 2，请求体下降 74.107%。更克制的差异是：DeepSeek Harness 将 PTC 明确提升为 Runtime execution model；本仓库的 OpenClaw code condition 是针对当前 runtime 能力构造的对照。</p>
+<p>OpenClaw 也不能被写成“物理上不能做 Code Mode”。W8 基于 OpenClaw 官方实验性 Code Mode 能力构造 deterministic fixture：其 provider request 也从 9 降到 2，请求体下降 74.107%。更克制的差异是：DeepSeek Harness 将 PTC 明确提升为 Runtime execution model；本仓库的 OpenClaw code condition 是针对当前 Runtime 能力构造的对照，不表示两者的实现、工具面或执行语义完全等价。</p>
 <h3 id="5-4-w8-executor-collapse-实测">5.4 W8：Executor Collapse 实测</h3>
 <p>W8 固定 8 个严格有序、恰好一次的底层 shell operation。Direct condition 让每个操作成为一个 model-visible tool call；Code condition 让一个 program 在本地 dispatch 全部操作。Verifier 检查 markers 数量和顺序，确保 request 减少不是因为漏做工作。</p>
 <div class="table-wrap"><table><thead><tr><th>DSH execution condition</th><th>底层操作</th><th>model-visible calls</th><th>provider requests</th></tr></thead><tbody><tr><td>Direct</td><td>8</td><td>8</td><td>9</td></tr><tr><td>Code Mode / PTC</td><td>8</td><td>1</td><td>2</td></tr></tbody></table></div>
 <p>DSH request body 总量下降 70.554%。这证明 deterministic fixture 下的 executor collapse；它不是实际模型质量或 task latency 提升证明。</p>
 <h3 id="5-5-c5-固定成本与摊薄">5.5 C5：固定成本与摊薄</h3>
-<p>PTC 不会无条件更快。C5 中本地 code worker 有固定启动成本；operation count 增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。定量曲线与当前 fixture 的 crossover 区间统一放在 9.2 节；该区间不是生产推荐阈值。</p>
+<p>PTC 不会无条件更快。C5 中每次 Program 执行都会创建一个 fresh Node Worker 线程，因而存在固定启动成本；operation count 增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。定量曲线与当前 fixture 的 crossover 区间统一放在 9.2 节；该区间不是生产推荐阈值。</p>
 <hr>
 <h2 id="6-机制洞察-recovery-error-semantics">6. 机制洞察：Recovery / Error Semantics</h2>
 <blockquote>“Error as Runtime Policy”不是 DeepSeek 官方 Feature 名称。本章是从 pinned 源码与 W3/W4/W6 归纳出的 Runtime insight。</blockquote>
@@ -157,7 +157,7 @@
 <p align="center"><img src="../figures/data/c4-process-lifecycle.svg" width="940" alt="C4 1000 tiny operations 的 Process lifecycle 对数点图"></p>
 <p align="center"><sub>图 9-4　1000 tiny operations 聚焦图；persistent 是 benchmark control，不代表 OpenClaw implementation。</sub></p>
 <sub>数据来源：`results/c4-shell-lifecycle-pilot.json`；每个主要数据点 n=5；X 为 log scale。</sub>
-<p>PTC 改变的正是 execution granularity。W8 证明底层操作保持不变时，外层 requests 可以折叠；C5 则表明本地 program worker 有固定成本，但重复 orchestration 在高 operation count 下会被摊薄。</p>
+<p>C4 说明操作系统进程执行边界可以形成明显固定成本。C5 观察的是不同边界：PTC 改变 execution granularity，并且每次 Program 都创建 fresh Node Worker 线程。W8 证明底层操作保持不变时，外层 requests 可以折叠；C5 则表明 Worker 线程的固定启动成本会在高 operation count 下被重复 orchestration 的减少所摊薄。C4 与 C5 关注的固定成本不同。</p>
 <p>当前 1024-operation fixture 中 Native 为 3170.871 ms，PTC 为 554.177 ms。两条曲线的相对次序在 64～256 operations 之间翻转；该区间由当前数据推导，不是生产 threshold。</p>
 <p align="center"><img src="../figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随操作数增长的执行时间"></p>
 <p align="center"><sub>图 9-5　低操作数时 PTC 固定启动成本更明显；高操作数时重复 orchestration 逐渐被摊薄。淡色区间为当前 fixture 自动推导的 crossover bracket。</sub></p>
@@ -167,7 +167,7 @@
 <p>W10 证明 policy 不只是静态配置：更换 <code>ctx.fs</code> provider 会改变 outside path 的结果。C6 又观察到允许请求仍有 path/policy overhead。这个结果说明 Runtime abstraction 最终会落成分支、字符串/路径处理和系统调用，但 C6 非完整 sandbox。</p>
 <div class="table-wrap"><table><thead><tr><th>C6 @ 1000 allowed writes</th><th>sandbox / local</th></tr></thead><tbody><tr><td>Wall ns/op ratio</td><td>1.064×</td></tr><tr><td>CPU μs/op ratio</td><td>1.102×</td></tr></tbody></table></div>
 <h3 id="9-4-洞察四-multi-agent-变成-runtime-density-问题">9.4 洞察四：Multi-Agent 变成 Runtime Density 问题</h3>
-<p>单 Agent 更关注 task latency；大量 Agent 更关注 throughput、runtime footprint 和 scheduler/capacity。C7 在固定 placement 下，32 Agents 达到 83.172 Agents/s、并行效率 72.781%，summed child max RSS 为 2.073 GiB，最大单 child RSS 为 71.41 MiB。</p>
+<p>单 Agent 更关注 task latency；大量 Agent 更关注 throughput、runtime footprint 和 scheduler/capacity。C7 在固定 placement 下，32 Agents 达到 83.172 Agents/s、并行效率 72.781%。各 Agent 子进程各自最大 RSS 的累加值为 2.073 GiB，最大单 child RSS 为 71.41 MiB；该累加值不是同一时刻的整机 RSS。</p>
 <p align="center"><img src="../figures/data/c7-agent-scale.svg" width="980" alt="C7 Multi-Agent 吞吐与并行效率上下双面板图"></p>
 <p align="center"><sub>图 9-6　吞吐与效率分成共享 X 的上下两个 panel，RSS 保留在正文而不增加第三 Y 轴。</sub></p>
 <sub>数据来源：`results/c7-agent-scaleout-pilot.json`；每个主要数据点 n=5；固定 topology/placement。</sub>
@@ -184,7 +184,7 @@
 <h3 id="10-3-cpu-c1-c8">10.3 CPU：C1–C8</h3>
 <p>C 系列保留 raw samples、runner/fixture SHA、perf helper SHA、upstream revision 和环境信息。Verifier 从 raw samples 使用 protocol-bound runner logic 重算 committed aggregates、fits、comparisons 与 scaling 值，并检查与当前 pinned logic 一致。它不是 aggregation algorithm 的第二套独立实现；如果 producer 与 verifier共享的公式本身有错，该检查不能单独发现。</p>
 <h3 id="10-4-provenance">10.4 Provenance</h3>
-<div class="table-wrap"><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody><tr><td>报告输入 SHA256</td><td><code>f61a057d29979a0a2dce6b94d1c5c09138dfff9fb91611bb86892a690e2fcf3a</code></td></tr><tr><td>报告生成时 Git 状态</td><td><code>0fc014f9c0d2 + working-tree changes</code></td></tr><tr><td>Pinned DeepSeek Harness</td><td><code>dd6322d604e00eec1ba5e0c8541159906a21094a</code></td></tr><tr><td>Pinned OpenClaw</td><td><code>3c1b351555e0ebc1b022842523191691e89c7684</code></td></tr><tr><td>Node.js</td><td><code>24.15.0</code></td></tr><tr><td>Evidence verification</td><td><code>PASS</code></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody><tr><td>报告输入 SHA256</td><td><code>6cdb7ec69ac2c91b4091227eb329cc4c622549b4860899aee3b6f73b943aefb3</code></td></tr><tr><td>报告生成时 Git 状态</td><td><code>bb2a033f0396 + working-tree changes</code></td></tr><tr><td>Pinned DeepSeek Harness</td><td><code>dd6322d604e00eec1ba5e0c8541159906a21094a</code></td></tr><tr><td>Pinned OpenClaw</td><td><code>3c1b351555e0ebc1b022842523191691e89c7684</code></td></tr><tr><td>Node.js</td><td><code>24.15.0</code></td></tr><tr><td>Evidence verification</td><td><code>PASS</code></td></tr></tbody></table></div>
 <h3 id="10-5-集中限制">10.5 集中限制</h3>
 <ul><li>所有 CPU pilot 来自同一 aarch64 主机，没有跨 CPU comparison。</li><li>每个主要数据点包含 5 个样本；用于机制与趋势观察，不提供总体性能置信结论。</li><li>多数机制实验使用 deterministic mock，去除了真实模型与网络 latency。</li><li>C4 使用 tiny/no-op Tool，突出边界成本，不代表重计算工具。</li><li>C6 是 filesystem capability policy，不是完整 OS/container/VM sandbox。</li><li>C7 使用当前固定 topology、placement 和独立 Runtime process fixture。</li><li>DSH 与 OpenClaw 的工具面是各自 native minimal closure，不是完全 tool-equivalent。</li><li>W3/W4 的结论绑定当前 model/provider protocol、streaming 与 pinned parser/recovery policy。</li></ul>
 <p>验证命令：</p>

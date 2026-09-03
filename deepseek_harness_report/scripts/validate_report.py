@@ -80,7 +80,7 @@ def main() -> None:
         "Everything is a Plugin", "Session Event Log", "Context Management",
         "Programmatic Tool Calling", "OpenClaw 已经具备", "不是第五个官方 Feature",
         "能力 Provider", "模型 Provider 返回的格式异常事件", "Tool / Process 生命周期",
-        "执行 Program 并连续调用 Tool 的本地进程",
+        "Node Worker 线程", "WorkerThreadCodeRuntime",
     )
     for phrase in showcase_requirements:
         if phrase not in showcase:
@@ -114,6 +114,8 @@ def main() -> None:
         "统一 composition 组织起来", "wall-time 分布", "固定 summarizer",
         "三条路径的单次实际耗时分别",
         "可组合 Runtime capability", "filesystem capability",
+        "执行 Program 并连续调用 Tool 的本地进程",
+        "常规 Tool 调用与 PTC 的本地 CPU 成本",
     )
     for phrase in editorial_asides:
         if phrase in showcase:
@@ -169,6 +171,20 @@ def main() -> None:
                 raise ValueError("C8 SVG is missing its color-keyed path legend")
         if benchmark == "C7" and "% 并行效率" not in text:
             raise ValueError("C7 SVG is missing the Chinese parallel-efficiency label")
+        expected_unit_text = {
+            "C4": "单次实际耗时（ms/op）",
+            "C5": "实际耗时（ms）",
+            "C6": "单次实际耗时（μs/op）",
+            "C8": "单次计量 CPU 时间（μs）",
+        }
+        if benchmark in expected_unit_text and expected_unit_text[benchmark] not in text:
+            raise ValueError(f"{benchmark} SVG unit label is missing or incorrect")
+        if benchmark:
+            width, height = (float(value) for value in root.attrib["viewBox"].split()[2:])
+            for circle in root.iter("{http://www.w3.org/2000/svg}circle"):
+                cx, cy = float(circle.attrib["cx"]), float(circle.attrib["cy"])
+                if not (0 <= cx <= width and 0 <= cy <= height):
+                    raise ValueError(f"{benchmark} SVG data point is outside its viewBox")
     sys.path.insert(0, str(ROOT / "harness_cpu_report"))
     from data_loader import load_cpu_results  # noqa: E402
     from derive import build_charts  # noqa: E402

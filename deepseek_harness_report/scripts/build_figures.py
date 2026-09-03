@@ -139,7 +139,7 @@ def data_c5(spec):
     if bracket:
         tx=lambda value:math.log10(float(value)+1);xmin,xmax=tx(min(common)),tx(max(common));sx=lambda value:80+(tx(value)-xmin)/(xmax-xmin)*870
         x1,x2=sx(bracket[0]),sx(bracket[1]);p += [f'<rect x="{x1:.1f}" y="70" width="{x2-x1:.1f}" height="353" fill="{LIGHT_THEME["amber_fill"]}" opacity=".8"/>',f'<line x1="{x1:.1f}" y1="70" x2="{x1:.1f}" y2="423" stroke="{LIGHT_THEME["amber"]}" stroke-dasharray="5 5"/>',f'<line x1="{x2:.1f}" y1="70" x2="{x2:.1f}" y2="423" stroke="{LIGHT_THEME["amber"]}" stroke-dasharray="5 5"/>']
-    p.append(line_panel(spec,spec["series"],0,35,980,450,False,False,y_label="实际耗时（ms）",x_label="操作数 · log(1+x)"))
+    p.append(line_panel(spec,spec["series"],0,35,980,450,False,False,y_label="实际耗时（ms）",x_label="操作数（对数刻度）"))
     p += [svg_text(105,92,"低操作数：PTC 固定启动成本更明显",15,LIGHT_THEME["muted"],anchor="start"),svg_text(925,118,"高操作数：减少重复编排的收益更明显",15,LIGHT_THEME["muted"],anchor="end")]
     if bracket:p.append(svg_text((x1+x2)/2,150,f"{int(bracket[0])}–{int(bracket[1])} 性能反转区间",15,LIGHT_THEME["amber"],weight=700))
     labels={"Native":"常规 Tool 调用","PTC":"PTC / Code Mode"}
@@ -148,8 +148,24 @@ def data_c5(spec):
 
 
 def data_c6(spec):
-    result=data_c4({"series":[{"name":s["name"],"color":s["color"],"points":s["points"]} for s in spec["series"]]})
-    return result.replace('data-benchmark="C4"','data-benchmark="C6"',1)
+    labels={"Local write":"Local 文件写入","Sandbox write":"Sandbox 文件写入"}
+    rows=[(labels.get(s["name"],s["name"]),s["points"][-1]["y"],s["color"]) for s in spec["series"]]
+    p=svg_open(980,280,"C6",len(spec["series"]));left,right=250,110
+    maximum=max(value for _,value,_ in rows)*1.2
+    sx=lambda value:left+float(value)/maximum*(980-left-right)
+    for i in range(5):
+        value=maximum*i/4
+        p += [f'<line x1="{sx(value):.1f}" y1="25" x2="{sx(value):.1f}" y2="215" stroke="{LIGHT_THEME["grid"]}"/>',
+              svg_text(sx(value),247,fmt(value),15,LIGHT_THEME["muted"])]
+    for i,(name,value,color) in enumerate(rows):
+        y=75+i*85
+        p += [svg_text(left-18,y+5,name,17,anchor="end"),
+              f'<line x1="{sx(0):.1f}" y1="{y}" x2="{sx(value):.1f}" y2="{y}" stroke="{color}" stroke-width="2"/>',
+              f'<circle cx="{sx(value):.1f}" cy="{y}" r="8" fill="{color}"/>',
+              svg_text(sx(value)+14,y+5,f'{value:.1f}',16,color,anchor="start",weight=700)]
+    count=int(spec["series"][0]["points"][-1]["x"])
+    p.append(svg_text(490,277,f"单次实际耗时（μs/op） · {count} 次允许写入",17,weight=700))
+    return finish(p)
 
 
 def data_c7(spec, cpu):

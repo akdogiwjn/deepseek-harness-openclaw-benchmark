@@ -93,7 +93,7 @@ def build_c4(item: dict) -> dict:
 
 
 def build_c5(item: dict) -> dict:
-    return nested_lines(item, "C5", "图 5 · Native 与 PTC 本地执行成本",
+    return nested_lines(item, "C5", "图 5 · Native 与 PTC 本地执行时间",
                         [("native", "Native"), ("ptc", "PTC")], "internal_wall_ns", 1 / 1_000_000,
                         "ms", "零延迟 mock；交叉点不是生产推荐阈值。", "log1p")
 

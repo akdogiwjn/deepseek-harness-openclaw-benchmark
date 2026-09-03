@@ -203,7 +203,7 @@ PTC 允许模型生成一个 Program，由本地 code runtime 在同一个外层
 
 Pinned tool execution pipeline 说明 PTC 使用保留的 `run_code` transport，program 内部 sub-call 仍经过工具执行 pipeline，并记录 code-dispatch 事件。也就是说，PTC 不是绕过 Tool policy，而是改变外层 orchestration 与内部 dispatch 的边界。
 
-OpenClaw 也不能被写成“物理上不能做 Code Mode”。W8 的 deterministic fixture 同样为 OpenClaw 构造了 code execution：其 provider request 也从 {{W8_OPENCLAW_DIRECT_REQUESTS}} 降到 {{W8_OPENCLAW_CODE_REQUESTS}}，请求体下降 {{W8_OPENCLAW_BODY_REDUCTION_PCT}}%。更克制的差异是：DeepSeek Harness 将 PTC 明确提升为 Runtime execution model；本仓库的 OpenClaw code condition 是针对当前 runtime 能力构造的对照。
+OpenClaw 也不能被写成“物理上不能做 Code Mode”。W8 基于 OpenClaw 官方实验性 Code Mode 能力构造 deterministic fixture：其 provider request 也从 {{W8_OPENCLAW_DIRECT_REQUESTS}} 降到 {{W8_OPENCLAW_CODE_REQUESTS}}，请求体下降 {{W8_OPENCLAW_BODY_REDUCTION_PCT}}%。更克制的差异是：DeepSeek Harness 将 PTC 明确提升为 Runtime execution model；本仓库的 OpenClaw code condition 是针对当前 Runtime 能力构造的对照，不表示两者的实现、工具面或执行语义完全等价。
 
 ### 5.4 W8：Executor Collapse 实测
 
@@ -218,7 +218,7 @@ DSH request body 总量下降 {{W8_DSH_BODY_REDUCTION_PCT}}%。这证明 determi
 
 ### 5.5 C5：固定成本与摊薄
 
-PTC 不会无条件更快。C5 中本地 code worker 有固定启动成本；operation count 增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。定量曲线与当前 fixture 的 crossover 区间统一放在 9.2 节；该区间不是生产推荐阈值。
+PTC 不会无条件更快。C5 中每次 Program 执行都会创建一个 fresh Node Worker 线程，因而存在固定启动成本；operation count 增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。定量曲线与当前 fixture 的 crossover 区间统一放在 9.2 节；该区间不是生产推荐阈值。
 
 ---
 
@@ -325,7 +325,7 @@ Session 越长，Host CPU 不只是保存更多文本，还要处理 event appen
 
 <sub>数据来源：`results/c4-shell-lifecycle-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；X 为 log scale。</sub>
 
-PTC 改变的正是 execution granularity。W8 证明底层操作保持不变时，外层 requests 可以折叠；C5 则表明本地 program worker 有固定成本，但重复 orchestration 在高 operation count 下会被摊薄。
+C4 说明操作系统进程执行边界可以形成明显固定成本。C5 观察的是不同边界：PTC 改变 execution granularity，并且每次 Program 都创建 fresh Node Worker 线程。W8 证明底层操作保持不变时，外层 requests 可以折叠；C5 则表明 Worker 线程的固定启动成本会在高 operation count 下被重复 orchestration 的减少所摊薄。C4 与 C5 关注的固定成本不同。
 
 当前 {{C5_OPERATION_COUNT}}-operation fixture 中 Native 为 {{C5_NATIVE_SELECTED_MS}} ms，PTC 为 {{C5_PTC_SELECTED_MS}} ms。两条曲线的相对次序在 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} operations 之间翻转；该区间由当前数据推导，不是生产 threshold。
 
@@ -347,7 +347,7 @@ W10 证明 policy 不只是静态配置：更换 `ctx.fs` provider 会改变 out
 
 ### 9.4 洞察四：Multi-Agent 变成 Runtime Density 问题
 
-单 Agent 更关注 task latency；大量 Agent 更关注 throughput、runtime footprint 和 scheduler/capacity。C7 在固定 placement 下，{{C7_AGENT_COUNT}} Agents 达到 {{C7_SELECTED_AGENTS_PER_SECOND}} Agents/s、并行效率 {{C7_SELECTED_EFFICIENCY_PCT}}%，summed child max RSS 为 {{C7_SELECTED_SUM_RSS_GIB}} GiB，最大单 child RSS 为 {{C7_SELECTED_MAX_CHILD_RSS_MIB}} MiB。
+单 Agent 更关注 task latency；大量 Agent 更关注 throughput、runtime footprint 和 scheduler/capacity。C7 在固定 placement 下，{{C7_AGENT_COUNT}} Agents 达到 {{C7_SELECTED_AGENTS_PER_SECOND}} Agents/s、并行效率 {{C7_SELECTED_EFFICIENCY_PCT}}%。各 Agent 子进程各自最大 RSS 的累加值为 {{C7_SELECTED_SUM_RSS_GIB}} GiB，最大单 child RSS 为 {{C7_SELECTED_MAX_CHILD_RSS_MIB}} MiB；该累加值不是同一时刻的整机 RSS。
 
 <p align="center"><img src="figures/data/c7-agent-scale.svg" width="980" alt="C7 Multi-Agent 吞吐与并行效率上下双面板图"></p>
 <p align="center"><sub>图 9-6　吞吐与效率分成共享 X 的上下两个 panel，RSS 保留在正文而不增加第三 Y 轴。</sub></p>

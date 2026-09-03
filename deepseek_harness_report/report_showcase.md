@@ -10,9 +10,9 @@ DeepSeek Harness 是 DeepSeek 推出的开源 Agent Harness。本次调研不评
 
 ### 0.2 最值得关注的四个设计
 
-| DeepSeek Harness 核心设计 | 一句话解释 | 最主要证据 |
+| DeepSeek Harness 核心设计 | 一句话解释 | 对应依据 / 实验 |
 |---|---|---|
-| Everything is a Plugin | Runtime 能力通过插件和稳定的能力接口进行组合，而不是全部固定在 Agent Loop 中 | W10 |
+| Everything is a Plugin | Runtime 能力通过插件和稳定的能力接口进行组合，而不是全部固定在 Agent Loop 中 | 架构源码 + W10（仅直接验证 `ctx.fs` seam） |
 | Session Event Log | Session 被显式建模成执行事件流，Model Context 从这条状态流派生 | W9 |
 | Context Management | Context 计量与 Compaction 被纳入可组合的 Runtime 处理流程 | W5 |
 | Code Mode / PTC | 多次模型可见的 Tool 调用可以合并进一次本地 Program 执行 | W8 |
@@ -53,7 +53,7 @@ Model 位于决策路径；Harness 位于编排中心，一端维护 Session 和
 <p align="center"><img src="figures/architecture/harness-model.svg" width="900" alt="Model 负责决策，Harness 维护状态并连接 Tool、文件系统和进程执行"></p>
 <p align="center"><sub>图 1-1　DeepSeek Harness 的重点变化发生在 Runtime 执行层，而不是模型推理能力本身。</sub></p>
 
-Session、Context、能力 Provider、模型 Provider 和 PTC 都属于这条 Harness 路径。Runtime 的恢复、持久化与进程行为是 Harness 行为，不等同于模型能力。
+Runtime 的恢复、持久化与进程行为是 Harness 行为，不等同于模型能力。
 
 ---
 
@@ -255,9 +255,9 @@ Direct 模式逐次向模型暴露 Tool Call/Result；PTC 则把多个 Tool 调�
 | Direct | 8 | 8 | 9 |
 | PTC | 8 | 1 | 2 |
 
-**实验事实。** DSH 的模型请求体总量下降 70.6%；OpenClaw 的构造对照也从 9 次模型请求降到 2 次，请求体总量下降 74.1%。
+**实验事实。** DSH 的模型请求体总量下降 70.6%。本仓库也基于 OpenClaw 官方实验性 Code Mode 能力构造了确定性对照场景：模型请求从 9 次降到 2 次，请求体总量下降 74.1%。该场景不表示 OpenClaw Code Mode 与 DSH PTC 在实现、工具面或执行语义上完全等价。
 
-**实际结论。** 变化来自执行粒度，而不是漏做工作。这不是实际模型质量或端到端任务延迟提升的证明；常规 Tool 调用与 PTC 的本地 CPU 成本见第 10.2 节。
+**实际结论。** 变化来自执行粒度，而不是漏做工作。这不是实际模型质量或端到端任务延迟提升的证明；常规 Tool 调用与 PTC 的本地执行时间对比见第 10.2 节。
 
 ---
 
@@ -302,7 +302,7 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 | Context 压缩 | 是 | TokenMeter / Compaction 作为可组合 capability | W5 验证显式加载后的路径；两侧预算与估算方法不等价 |
 | Tool 执行 | 是 | PTC 是明确的 execution model | W8 比较 Direct/Code 两种模式，不作产品完整性排名 |
 | 错误恢复 | 是 | 关注模型 Provider 事件与 Tool 执行边界的结构化处理行为 | W4/W6 只覆盖固定输入 |
-| Sandbox / Policy | 是 | 能力 Provider 可由 composition 替换 | W10 只验证 filesystem seam |
+| 文件系统能力 / Policy | 是 | `ctx.fs` 能力 Provider 可由 composition 替换 | W10 只验证 filesystem seam，不是 `ctx.sandbox` 进程隔离 |
 
 因此，本报告不支持“DSH 全面优于 OpenClaw”。它支持的是：当前 DSH 把 composition、Event Log、Context Management 与 PTC 明确提升为 Runtime 设计中心；两套固定版本 Runtime 在若干固定边界上呈现可观察差异。
 
@@ -312,7 +312,7 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 
 前面的 W 系列回答“Runtime 怎么工作”；C 系列进一步测量这些机制在 Host 侧形成的工作。
 
-| Harness 机制 / 现象 | W 证据 | 形成的 Host 工作 | CPU 证据 |
+| Harness 机制 / 现象 | W 证据 | 形成的 Host 工作 | 对应 C 实验 |
 |---|---|---|---|
 | Capability Seam（能力边界） | W10 | 文件路径处理、Policy 检查 | C6 |
 | Session Event Log | W9 | 事件追加、分叉、持久化与加载 | C2 |
@@ -322,7 +322,7 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 | 错误恢复语义 | W4 / W6 | 可能增加 Agent Loop 与模型请求 | 未单独测量 |
 | 多 Agent 并发扩展 | — | 并发调度和内存占用 | C7 |
 
-这些 CPU 实验用于说明软件机制会形成哪些 Host 工作，不用于处理器排名。当前数据来自单一 aarch64 主机、固定拓扑与确定性测试场景。
+这些 C 系列 Host 侧实验用于说明软件机制会形成哪些本地工作，不用于处理器排名。当前数据来自单一 aarch64 主机、固定拓扑与确定性测试场景。
 
 ---
 
@@ -361,14 +361,14 @@ C4 使用非常短的命令比较三种进程执行方式。**DSH 管理路径**
 <p align="center"><img src="figures/data/c4-process-lifecycle.svg" width="940" alt="C4 不同 Process lifecycle 的单次执行时间"></p>
 <p align="center"><sub>图 10-3　对于执行时间很短的 Tool，反复创建进程和经过 Runtime 管理路径会形成明显的额外开销；复用长期运行进程可以显著减少这部分成本。</sub></p>
 
-这也解释了 PTC 为什么值得关注。这里的**常规 Tool 调用**是 DSH 不使用 PTC 时的正常 Agent Loop 路径，并非 native code；PTC 则先启动一个本地 Program Worker——执行 Program 并连续调用 Tool 的本地进程。PTC 不是让单个 Tool 变快，而是减少重复进入 Model/Harness 编排链路的次数。
+C4 说明，当 Tool 很短时，反复建立执行边界本身就可能成为明显成本。C5 进一步观察另一种执行边界：这里的**常规 Tool 调用**是 DSH 不使用 PTC 时的正常 Agent Loop 路径，并非 native code；PTC 每次执行 Program 时则会创建一个新的 Node Worker 线程（`WorkerThreadCodeRuntime`）。Program 在该线程中运行，并通过 Runtime 提供的 bindings 连续调用多个 Tool。PTC 不是让单个 Tool 变快，而是减少多个 Tool 操作之间反复进入 Model/Harness 编排链路的次数。C4 的操作系统进程成本不等同于 C5 的 Worker 线程成本。
 
 PTC 每次都要先启动 Program Worker，因此存在固定启动成本。在当前测试中，64 次操作时常规 Tool 调用约需 138 ms，PTC 约需 159 ms，常规调用仍然更快；到 256 次操作时，常规调用约需 479 ms，PTC 约需 277 ms，PTC 已经更快。因此，两种方式的性能反转发生在 64～256 次操作之间。这个区间只属于当前固定微基准，不是生产环境切换到 PTC 的阈值。
 
 <p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 常规 Tool 调用与 PTC 随操作数增长的执行时间"></p>
 <p align="center"><sub>图 10-4　PTC 有固定启动成本；随着连续 Tool 操作增加，减少重复 Agent/Runtime 编排所节省的时间开始超过这部分成本。</sub></p>
 
-### 10.3 Sandbox / Policy 也会产生实际 CPU 工作
+### 10.3 文件系统策略检查也会产生实际 CPU 工作
 
 W10 中，换成 `fs-sandbox` 后，Harness 会检查路径是否位于允许范围内。这样的检查需要路径规范化、确认目标路径是否在允许范围内，并执行最终策略判断，因此也会消耗 CPU。
 
@@ -391,7 +391,7 @@ C7 中，32 个独立 Agent 进程达到约 83.17 Agents/s，并行效率约为 
 
 DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能”，而是一套更显式的 Agent Runtime 组织方式：
 
-1. Everything is a Plugin 把 Runtime 能力组织为可组合、可替换的边界；
+1. Everything is a Plugin 在架构上把 Runtime 能力组织为可组合插件和显式能力边界；W10 直接验证了其中 `ctx.fs` 一处；
 2. Session Event Log 把 Agent 的执行过程保存为结构化事件流，模型 Context 可以从日志派生；
 3. Context Management 把 Context 大小计量和压缩放进 Runtime；
 4. PTC 把多次模型可见的 Tool 调用合并进一次本地 Program 执行；
@@ -399,4 +399,4 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 
 这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把组合、状态和执行机制放进统一的 Runtime 组织方式，并使这些边界成为可以单独观察和验证的架构对象。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
 
-**因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把组合、状态和执行边界提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**
+**因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把组合、状态和执行边界提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host 侧工作负载。**
