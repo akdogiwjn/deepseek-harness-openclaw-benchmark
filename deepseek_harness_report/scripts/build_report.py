@@ -108,6 +108,30 @@ def build_metrics(data: dict) -> dict:
         "committed prefix 保持一致；dangling call 未重发；Fork 成功；Replay 未访问 live provider"
         if w9_all_verified else "W9 Resume/Fork/Replay 检查未全部通过"
     )
+    w4_completion_fact = (
+        f'在第 {w4["deepseek_harness"]["provider_requests"]} 次 request 后完成'
+        if w4["deepseek_harness"]["runtime_completed"] else
+        f'在第 {w4["deepseek_harness"]["provider_requests"]} 次 request 后仍未完成'
+    )
+    w5_completion_fact = (
+        "最终任务正常完成" if w5d["runtime_completed"] else "最终任务未完成"
+    )
+    w9_resume_facts = (
+        "committed prefix 保持不变；dangling call 未被自动重新 dispatch"
+        if (w9["crash_resume"]["checks"]["committed_prefix_byte_identical"] and
+            w9["crash_resume"]["checks"]["dangling_call_not_dispatched"]) else
+        "committed prefix 或 dangling call 检查未通过"
+    )
+    w9_fork_fact = (
+        "Parent 与 Child 在分叉边界的 derived messages 一致"
+        if w9["fork"]["checks"]["derive_messages_equal_at_boundary"] else
+        "Parent 与 Child 在分叉边界的 derived messages 不一致"
+    )
+    w9_replay_fact = (
+        "Replay 过程中未访问 live provider"
+        if w9["llm_replay"]["checks"]["provider_not_contacted_during_replay"] else
+        "Replay 过程中访问了 live provider"
+    )
     return {
         "meta": {"host_machine": c1["host"]["machine"],
                  "cpu_samples_per_point": next(iter(c1["aggregates"].values()))["samples"]},
@@ -125,10 +149,12 @@ def build_metrics(data: dict) -> dict:
         "w4": {"dsh_requests": w4["deepseek_harness"]["provider_requests"],
                "dsh_completed": w4["deepseek_harness"]["runtime_completed"],
                "openclaw_requests": w4["openclaw"]["provider_requests"],
-               "openclaw_error": w4["openclaw"]["runtime_error_kind"], "summary": w4_summary},
+               "openclaw_error": w4["openclaw"]["runtime_error_kind"],
+               "completion_fact": w4_completion_fact, "summary": w4_summary},
         "w5": {"dsh_tool_calls": w5d["tool_calls"], "dsh_compactions": w5d["compaction_requests"],
                "dsh_completed": w5d["runtime_completed"], "openclaw_compactions": w5o["compaction_requests"],
                "dsh_boundaries_reduced": w5_boundaries_reduced, "summary": w5_summary,
+               "completion_fact": w5_completion_fact,
                "boundaries": w5d["compaction_boundaries"]},
         "w6": {"dsh_invalid_completed": w6["scenarios"]["missing_required_argument"]["deepseek_harness"]["runtime_completed"],
                "openclaw_invalid_completed": w6["scenarios"]["missing_required_argument"]["openclaw"]["runtime_completed"],
@@ -159,10 +185,14 @@ def build_metrics(data: dict) -> dict:
                "synthetic_error": w9["crash_resume"]["synthetic_error_code"],
                "fork_equal": w9["fork"]["checks"]["derive_messages_equal_at_boundary"],
                "provider_not_contacted": w9["llm_replay"]["checks"]["provider_not_contacted_during_replay"],
+               "resume_facts": w9_resume_facts, "fork_fact": w9_fork_fact,
+               "replay_fact": w9_replay_fact,
                "summary": w9_summary},
         "w10": {"local_outside": w10["local_a"]["outside"],
                 "sandbox_error": w10["sandbox_b"]["tool_results"][-1]["error_code"],
                 "swap_restored": w10["checks"]["a_equals_a_prime"],
+                "restored_result": ("切回 local 后恢复原有行为" if w10["checks"]["a_equals_a_prime"] else
+                                    "切回 local 后未恢复原有行为"),
                 "summary": ("local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 "
                             "local 后原行为恢复" if
                             w10["local_a"]["outside"] == "OUTSIDE_CHANGED" and

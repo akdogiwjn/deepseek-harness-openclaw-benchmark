@@ -159,7 +159,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 |---|---|---|
 | fs-local | 成功 | `OUTSIDE_CHANGED` |
 | fs-sandbox | 成功 | `FS_SANDBOX_DENIED` |
-| 再切回 fs-local | 成功 | 行为恢复：是 |
+| 再切回 fs-local | 成功 | 切回 local 后恢复原有行为 |
 
 **实际结论。** 当前 pinned revision 中，`ctx.fs` 的 Provider replacement 会改变真实 filesystem policy。W10 只直接证明这一条 seam，不泛化为所有 capability 均已验证。Policy 对 Host CPU 的成本统一在第 10 章讨论。
 
@@ -194,9 +194,9 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 
 **测试方法。** W9-A 在 `tool/call` 已持久化、`tool/result` 尚未出现时终止进程；W9-B 从 closed-turn boundary 创建 child；W9-C 禁用 live LLM provider，使用记录的 model stream replay。
 
-**实验事实。** Crash/Resume 中 committed prefix 保持不变：是；dangling call 未自动 dispatch：是；Runtime 注入 `TOOL_OUTCOME_UNKNOWN`，关闭 interrupted turn，再从新 turn 继续。对有外部副作用的 Tool，这避免了在结果未知时盲目重复执行。
+**实验事实。** Crash/Resume 中，committed prefix 保持不变；dangling call 未被自动重新 dispatch。Runtime 注入 `TOOL_OUTCOME_UNKNOWN`，关闭 interrupted turn，再从新 turn 继续。对有外部副作用的 Tool，这避免了在结果未知时盲目重复执行。
 
-Fork 中 Parent 与 Child 在稳定边界的 derived messages 相等：是，之后可以独立追加。Replay 未访问 live provider：是，但只重建记录的 model stream/execution projection，不重放外部副作用。
+Parent 与 Child 在分叉边界的 derived messages 一致，之后可以独立追加。Replay 过程中未访问 live provider，但只重建记录的 model stream/execution projection，不重放外部副作用。
 
 **实际结论。** W9 验证的是当前 DSH API 的具体 semantics。OpenClaw 也存在 Session/Transcript persistence，但本仓库没有完全对等的 OpenClaw W9，不能做有/没有式判断。Event Log 的 Host 状态成本见第 10.1 节。
 
@@ -221,7 +221,7 @@ Fork 中 Parent 与 Child 在稳定边界的 derived messages 相等：是，之
 
 **测试方法。** 使用 deterministic tool chain、较大 Tool Result 与固定 summarizer，记录 Agent Request、Compaction Request 和 boundary 前后 body bytes。
 
-W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction，最终完成：是。
+W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction；最终任务正常完成。
 
 | Boundary | 压缩前 Agent body | 压缩后 Agent body | 下降 |
 |---|---:|---:|---:|
@@ -285,7 +285,7 @@ W6 固定普通 Tool Failure
 
 **W4 测试目的。** 固定 empty-name + truncated-arguments Tool Call，只观察 malformed provider event 的处理。
 
-**W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在 2 次 request 后完成：是；当前 pinned OpenClaw fixture 在 1 次 request 后以 `incomplete_turn` 终止。
+**W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在第 2 次 request 后完成；当前 pinned OpenClaw fixture 在 1 次 request 后以 `incomplete_turn` 终止。
 
 **W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。测试分别固定 missing required argument 与 child exit 17；两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行。
 
@@ -388,8 +388,8 @@ W10 证明替换 `ctx.fs` provider 会改变 outside-path policy。C6 在 1000 �
 
 | 项目 | 值 |
 |---|---|
-| 报告输入 SHA256 | `fb29e2691861c16c2c7ebddcb8f451fe84e866ea96fab4f8e4a844000872cd1d` |
-| 生成时 Git 状态 | `bf41a6e12d66 + working-tree changes` |
+| 报告输入 SHA256 | `544353649a35b60565668e691ac5c043ced4ee118b8185e0296ed04400a4a764` |
+| 生成时 Git 状态 | `c0a61d428e2b + working-tree changes` |
 | DeepSeek Harness | `dd6322d604e00eec1ba5e0c8541159906a21094a` |
 | OpenClaw | `3c1b351555e0ebc1b022842523191691e89c7684` |
 | Node.js | `24.15.0` |

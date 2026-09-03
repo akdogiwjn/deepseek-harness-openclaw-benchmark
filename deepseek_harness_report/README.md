@@ -29,10 +29,17 @@ python3 deepseek_harness_report/scripts/build_report.py --verify
 python3 deepseek_harness_report/scripts/validate_report.py
 ```
 
-主要输出：
+报告正文的维护关系如下。Template 是人工维护的 source of truth，生成的 Markdown 是构建产物：
 
-- `report.md`：正文 source of truth 的生成发布版；
-- `report_showcase.md`：适合技术分享、内部评审和首次阅读的生成展示版；
+| 文件 | 作用 | 是否人工编辑 |
+|---|---|---|
+| `report.template.md` | 技术详细版正文源模板 | 是 |
+| `report.md` | 技术详细版自动生成结果 | 否 |
+| `report_showcase.template.md` | 技术展示版正文源模板 | 是 |
+| `report_showcase.md` | 技术展示版自动生成结果 | 否 |
+
+其他主要输出：
+
 - `generated/metrics.json`：从 W/C JSON 自动提取的定量数据；
 - `generated/provenance.json`：输入指纹、pinned revisions 与实验环境；
 - `figures/architecture/`：人工精修、纳入报告输入指纹的静态机制图；

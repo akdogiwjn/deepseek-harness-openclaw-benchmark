@@ -159,7 +159,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 |---|---|---|
 | fs-local | 成功 | `{{W10_LOCAL_OUTSIDE}}` |
 | fs-sandbox | 成功 | `{{W10_SANDBOX_ERROR}}` |
-| 再切回 fs-local | 成功 | 行为恢复：{{W10_SWAP_RESTORED}} |
+| 再切回 fs-local | 成功 | {{W10_RESTORED_RESULT}} |
 
 **实际结论。** 当前 pinned revision 中，`ctx.fs` 的 Provider replacement 会改变真实 filesystem policy。W10 只直接证明这一条 seam，不泛化为所有 capability 均已验证。Policy 对 Host CPU 的成本统一在第 10 章讨论。
 
@@ -194,9 +194,9 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 
 **测试方法。** W9-A 在 `tool/call` 已持久化、`tool/result` 尚未出现时终止进程；W9-B 从 closed-turn boundary 创建 child；W9-C 禁用 live LLM provider，使用记录的 model stream replay。
 
-**实验事实。** Crash/Resume 中 committed prefix 保持不变：{{W9_PREFIX_IDENTICAL}}；dangling call 未自动 dispatch：{{W9_DANGLING_NOT_DISPATCHED}}；Runtime 注入 `{{W9_SYNTHETIC_ERROR}}`，关闭 interrupted turn，再从新 turn 继续。对有外部副作用的 Tool，这避免了在结果未知时盲目重复执行。
+**实验事实。** Crash/Resume 中，{{W9_RESUME_FACTS}}。Runtime 注入 `{{W9_SYNTHETIC_ERROR}}`，关闭 interrupted turn，再从新 turn 继续。对有外部副作用的 Tool，这避免了在结果未知时盲目重复执行。
 
-Fork 中 Parent 与 Child 在稳定边界的 derived messages 相等：{{W9_FORK_EQUAL}}，之后可以独立追加。Replay 未访问 live provider：{{W9_PROVIDER_NOT_CONTACTED}}，但只重建记录的 model stream/execution projection，不重放外部副作用。
+{{W9_FORK_FACT}}，之后可以独立追加。{{W9_REPLAY_FACT}}，但只重建记录的 model stream/execution projection，不重放外部副作用。
 
 **实际结论。** W9 验证的是当前 DSH API 的具体 semantics。OpenClaw 也存在 Session/Transcript persistence，但本仓库没有完全对等的 OpenClaw W9，不能做有/没有式判断。Event Log 的 Host 状态成本见第 10.1 节。
 
@@ -221,7 +221,7 @@ Fork 中 Parent 与 Child 在稳定边界的 derived messages 相等：{{W9_FORK
 
 **测试方法。** 使用 deterministic tool chain、较大 Tool Result 与固定 summarizer，记录 Agent Request、Compaction Request 和 boundary 前后 body bytes。
 
-W5 的 DSH fixture 包含 {{W5_DSH_TOOL_CALLS}} 次 Tool Call、{{W5_DSH_COMPACTIONS}} 次 Compaction，最终完成：{{W5_DSH_COMPLETED}}。
+W5 的 DSH fixture 包含 {{W5_DSH_TOOL_CALLS}} 次 Tool Call、{{W5_DSH_COMPACTIONS}} 次 Compaction；{{W5_COMPLETION_FACT}}。
 
 | Boundary | 压缩前 Agent body | 压缩后 Agent body | 下降 |
 |---|---:|---:|---:|
@@ -283,7 +283,7 @@ W6 固定普通 Tool Failure
 
 **W4 测试目的。** 固定 empty-name + truncated-arguments Tool Call，只观察 malformed provider event 的处理。
 
-**W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在 {{W4_DSH_REQUESTS}} 次 request 后完成：{{W4_DSH_COMPLETED}}；当前 pinned OpenClaw fixture 在 {{W4_OPENCLAW_REQUESTS}} 次 request 后以 `{{W4_OPENCLAW_ERROR}}` 终止。
+**W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并{{W4_COMPLETION_FACT}}；当前 pinned OpenClaw fixture 在 {{W4_OPENCLAW_REQUESTS}} 次 request 后以 `{{W4_OPENCLAW_ERROR}}` 终止。
 
 **W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。测试分别固定 missing required argument 与 child exit {{W6_CHILD_EXIT_CODE}}；{{W6_SUMMARY}}。
 

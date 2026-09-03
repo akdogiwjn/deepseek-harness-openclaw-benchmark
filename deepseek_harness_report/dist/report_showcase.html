@@ -66,7 +66,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox</code></pre>
 <p align="center"><sub>图 3-2　Consumer 与 Provider 分离后，替换实现可以改变 Policy，而不改上层 Tool 调用。</sub></p>
 <p><strong>测试目的。</strong> 验证架构文档中的 <code>ctx.fs</code> 是否真的是可替换 Provider Boundary。</p>
 <p><strong>测试方法。</strong> 保持 Agent Loop、<code>tool-fs</code> 和 scripted calls 不变，只执行 <code>fs-local → fs-sandbox → fs-local</code>。</p>
-<div class="table-wrap"><table><thead><tr><th>Provider</th><th>workspace 内写入</th><th>workspace 外写入</th></tr></thead><tbody><tr><td>fs-local</td><td>成功</td><td><code>OUTSIDE_CHANGED</code></td></tr><tr><td>fs-sandbox</td><td>成功</td><td><code>FS_SANDBOX_DENIED</code></td></tr><tr><td>再切回 fs-local</td><td>成功</td><td>行为恢复：是</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Provider</th><th>workspace 内写入</th><th>workspace 外写入</th></tr></thead><tbody><tr><td>fs-local</td><td>成功</td><td><code>OUTSIDE_CHANGED</code></td></tr><tr><td>fs-sandbox</td><td>成功</td><td><code>FS_SANDBOX_DENIED</code></td></tr><tr><td>再切回 fs-local</td><td>成功</td><td>切回 local 后恢复原有行为</td></tr></tbody></table></div>
 <p><strong>实际结论。</strong> 当前 pinned revision 中，<code>ctx.fs</code> 的 Provider replacement 会改变真实 filesystem policy。W10 只直接证明这一条 seam，不泛化为所有 capability 均已验证。Policy 对 Host CPU 的成本统一在第 10 章讨论。</p>
 <hr>
 <h2 id="4-session-event-log-把-session-建模成执行状态">4. Session Event Log：把 Session 建模成执行状态</h2>
@@ -82,8 +82,8 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox</code></pre>
 <h3 id="4-3-w9-resume-fork-replay">4.3 W9：Resume、Fork、Replay</h3>
 <p><strong>测试目的。</strong> 验证 Event Log 是否真的形成可持久化、可分支、可重放的执行状态，而不只是概念模型。</p>
 <p><strong>测试方法。</strong> W9-A 在 <code>tool/call</code> 已持久化、<code>tool/result</code> 尚未出现时终止进程；W9-B 从 closed-turn boundary 创建 child；W9-C 禁用 live LLM provider，使用记录的 model stream replay。</p>
-<p><strong>实验事实。</strong> Crash/Resume 中 committed prefix 保持不变：是；dangling call 未自动 dispatch：是；Runtime 注入 <code>TOOL_OUTCOME_UNKNOWN</code>，关闭 interrupted turn，再从新 turn 继续。对有外部副作用的 Tool，这避免了在结果未知时盲目重复执行。</p>
-<p>Fork 中 Parent 与 Child 在稳定边界的 derived messages 相等：是，之后可以独立追加。Replay 未访问 live provider：是，但只重建记录的 model stream/execution projection，不重放外部副作用。</p>
+<p><strong>实验事实。</strong> Crash/Resume 中，committed prefix 保持不变；dangling call 未被自动重新 dispatch。Runtime 注入 <code>TOOL_OUTCOME_UNKNOWN</code>，关闭 interrupted turn，再从新 turn 继续。对有外部副作用的 Tool，这避免了在结果未知时盲目重复执行。</p>
+<p>Parent 与 Child 在分叉边界的 derived messages 一致，之后可以独立追加。Replay 过程中未访问 live provider，但只重建记录的 model stream/execution projection，不重放外部副作用。</p>
 <p><strong>实际结论。</strong> W9 验证的是当前 DSH API 的具体 semantics。OpenClaw 也存在 Session/Transcript persistence，但本仓库没有完全对等的 OpenClaw W9，不能做有/没有式判断。Event Log 的 Host 状态成本见第 10.1 节。</p>
 <hr>
 <h2 id="5-context-management-把长-context-治理放进-runtime">5. Context Management：把长 Context 治理放进 Runtime</h2>
@@ -96,7 +96,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox</code></pre>
 <h3 id="5-2-w5-压缩能否触发并继续">5.2 W5：压缩能否触发并继续</h3>
 <p><strong>测试目的。</strong> 验证 Context 增长后 Compaction 是否真实触发，以及压缩后 Agent 能否继续执行。</p>
 <p><strong>测试方法。</strong> 使用 deterministic tool chain、较大 Tool Result 与固定 summarizer，记录 Agent Request、Compaction Request 和 boundary 前后 body bytes。</p>
-<p>W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction，最终完成：是。</p>
+<p>W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction；最终任务正常完成。</p>
 <div class="table-wrap"><table><thead><tr><th>Boundary</th><th>压缩前 Agent body</th><th>压缩后 Agent body</th><th>下降</th></tr></thead><tbody><tr><td>第 4 次 Agent request 后</td><td>19,823 B</td><td>15,718 B</td><td>4,105 B</td></tr><tr><td>第 6 次 Agent request 后</td><td>20,162 B</td><td>15,718 B</td><td>4,444 B</td></tr><tr><td>第 8 次 Agent request 后</td><td>20,162 B</td><td>15,718 B</td><td>4,444 B</td></tr></tbody></table></div>
 <p><strong>实际结论。</strong> 三个 boundary 后 body 均缩小，任务继续完成。OpenClaw 在校准 fixture 中也记录到 3 次 Compaction，因此 W5 不是证明 DSH“有而 OpenClaw 没有”，而是观察两种 Runtime 的 Context shaping 路径。TokenMeter/pressure 的 CPU 数据见第 10.1 节。</p>
 <hr>
@@ -127,7 +127,7 @@ W6 固定普通 Tool Failure
 <p align="center"><sub>图 7-1　错误能否形成 model-visible observation，决定当前 Turn 是否有机会进入下一 Step。</sub></p>
 <h3 id="7-1-w4-与-w6-为什么不重复">7.1 W4 与 W6 为什么不重复</h3>
 <p><strong>W4 测试目的。</strong> 固定 empty-name + truncated-arguments Tool Call，只观察 malformed provider event 的处理。</p>
-<p><strong>W4 实验事实。</strong> DSH 将其落为结构化 tool-dispatch error，并在 2 次 request 后完成：是；当前 pinned OpenClaw fixture 在 1 次 request 后以 <code>incomplete_turn</code> 终止。</p>
+<p><strong>W4 实验事实。</strong> DSH 将其落为结构化 tool-dispatch error，并在第 2 次 request 后完成；当前 pinned OpenClaw fixture 在 1 次 request 后以 <code>incomplete_turn</code> 终止。</p>
 <p><strong>W6 测试目的。</strong> 检查 normal Tool Error 是否也存在同样差异。测试分别固定 missing required argument 与 child exit 17；两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行。</p>
 <p><strong>实际结论。</strong> malformed provider event 与 valid Tool Failure 位于不同错误边界，不能合并成一个“Runtime 稳定性”指标。W4 只能证明两套 pinned Runtime 对固定输入的 semantics 不同，不能外推为 DSH 全面更可靠。</p>
 <hr>
@@ -173,7 +173,7 @@ W6 固定普通 Tool Failure
 <div class="table-wrap"><table><thead><tr><th>类型</th><th>可以复查什么</th><th>不能自动重建什么</th></tr></thead><tbody><tr><td>W1–W3 Real Workload</td><td>frozen workspace、diff、hidden verifier outcome</td><td>完整 reasoning/provider transcript 与所有 runtime metadata</td></tr><tr><td>W4–W10 Mechanism</td><td>deterministic request、runtime artifact、机制 summary</td><td>真实模型 workload 的总体分布</td></tr><tr><td>C1–C8 CPU Pilot</td><td>raw samples、protocol binding、aggregate/fit 一致性</td><td>跨机器、跨 ISA 的普遍性能结论</td></tr></tbody></table></div>
 <p>本报告严格模式从 frozen evidence 重建 W1–W3 outcome、W4–W10 summary，并用 protocol-bound runner logic 从 C raw samples 重算 aggregate/fit。它验证 committed result 与当前 pinned logic 一致，不是对 aggregation formula 的第二套独立实现。</p>
 <h3 id="11-2-provenance">11.2 Provenance</h3>
-<div class="table-wrap"><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody><tr><td>报告输入 SHA256</td><td><code>fb29e2691861c16c2c7ebddcb8f451fe84e866ea96fab4f8e4a844000872cd1d</code></td></tr><tr><td>生成时 Git 状态</td><td><code>bf41a6e12d66 + working-tree changes</code></td></tr><tr><td>DeepSeek Harness</td><td><code>dd6322d604e00eec1ba5e0c8541159906a21094a</code></td></tr><tr><td>OpenClaw</td><td><code>3c1b351555e0ebc1b022842523191691e89c7684</code></td></tr><tr><td>Node.js</td><td><code>24.15.0</code></td></tr><tr><td>Host architecture</td><td><code>aarch64</code></td></tr><tr><td>perf mode</td><td><code>user-kernel</code></td></tr><tr><td>Evidence verification</td><td><code>PASS</code></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody><tr><td>报告输入 SHA256</td><td><code>544353649a35b60565668e691ac5c043ced4ee118b8185e0296ed04400a4a764</code></td></tr><tr><td>生成时 Git 状态</td><td><code>c0a61d428e2b + working-tree changes</code></td></tr><tr><td>DeepSeek Harness</td><td><code>dd6322d604e00eec1ba5e0c8541159906a21094a</code></td></tr><tr><td>OpenClaw</td><td><code>3c1b351555e0ebc1b022842523191691e89c7684</code></td></tr><tr><td>Node.js</td><td><code>24.15.0</code></td></tr><tr><td>Host architecture</td><td><code>aarch64</code></td></tr><tr><td>perf mode</td><td><code>user-kernel</code></td></tr><tr><td>Evidence verification</td><td><code>PASS</code></td></tr></tbody></table></div>
 <h3 id="11-3-本报告明确不声称什么">11.3 本报告明确不声称什么</h3>
 <ul><li>不声称 DeepSeek 首次发明 Plugin、Session persistence、Compaction 或 code execution；</li><li>不声称 DSH 全面优于 OpenClaw；</li><li>不把 W3 的 5/5 vs 2/5 外推为普遍可靠性排名；</li><li>不声称 PTC 永远更快或 64～256 是生产阈值；</li><li>不把 Replay model stream 等同于重复外部副作用；</li><li>不把 C1–C8 用作 ARM/x86 或 CPU 厂商排名。</li></ul>
 <hr>

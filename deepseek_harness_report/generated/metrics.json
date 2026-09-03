@@ -28,6 +28,7 @@
     "dsh_completed": true,
     "openclaw_requests": 1,
     "openclaw_error": "incomplete_turn",
+    "completion_fact": "在第 2 次 request 后完成",
     "summary": "DSH 将错误结构化后继续并完成；OpenClaw pinned fixture 以 `incomplete_turn` 结束"
   },
   "w5": {
@@ -37,6 +38,7 @@
     "openclaw_compactions": 3,
     "dsh_boundaries_reduced": true,
     "summary": "DSH 与 OpenClaw 在 calibrated fixture 中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降",
+    "completion_fact": "最终任务正常完成",
     "boundaries": [
       {
         "compaction_request": 5,
@@ -101,12 +103,16 @@
     "synthetic_error": "TOOL_OUTCOME_UNKNOWN",
     "fork_equal": true,
     "provider_not_contacted": true,
+    "resume_facts": "committed prefix 保持不变；dangling call 未被自动重新 dispatch",
+    "fork_fact": "Parent 与 Child 在分叉边界的 derived messages 一致",
+    "replay_fact": "Replay 过程中未访问 live provider",
     "summary": "committed prefix 保持一致；dangling call 未重发；Fork 成功；Replay 未访问 live provider"
   },
   "w10": {
     "local_outside": "OUTSIDE_CHANGED",
     "sandbox_error": "FS_SANDBOX_DENIED",
     "swap_restored": true,
+    "restored_result": "切回 local 后恢复原有行为",
     "summary": "local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复"
   },
   "c1": {
