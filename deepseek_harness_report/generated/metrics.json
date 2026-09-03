@@ -29,7 +29,7 @@
     "openclaw_requests": 1,
     "openclaw_error": "incomplete_turn",
     "completion_fact": "在第 2 次 request 后完成",
-    "summary": "DSH 将错误结构化后继续并完成；OpenClaw pinned fixture 以 `incomplete_turn` 结束"
+    "summary": "DSH 将错误结构化后继续并完成；OpenClaw 固定版本测试场景以 `incomplete_turn` 结束"
   },
   "w5": {
     "dsh_tool_calls": 8,
@@ -37,7 +37,7 @@
     "dsh_completed": true,
     "openclaw_compactions": 3,
     "dsh_boundaries_reduced": true,
-    "summary": "DSH 与 OpenClaw 在 calibrated fixture 中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降",
+    "summary": "DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降",
     "completion_fact": "最终任务正常完成",
     "boundaries": [
       {

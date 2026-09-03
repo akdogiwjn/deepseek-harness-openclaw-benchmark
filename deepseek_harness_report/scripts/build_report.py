@@ -85,15 +85,15 @@ def build_metrics(data: dict) -> dict:
                            w9["fork"]["checks"]["derive_messages_equal_at_boundary"],
                            w9["llm_replay"]["checks"]["provider_not_contacted_during_replay"]))
     w4_summary = (
-        f'DSH 将错误结构化后继续并完成；OpenClaw pinned fixture 以 '
+        f'DSH 将错误结构化后继续并完成；OpenClaw 固定版本测试场景以 '
         f'`{w4["openclaw"]["runtime_error_kind"]}` 结束'
         if w4["deepseek_harness"]["runtime_completed"] else
-        "DSH 未完成固定 Recovery fixture；详见 W4 机制结果"
+        "DSH 未完成固定 Recovery 测试场景；详见 W4 机制结果"
     )
     w5_counts = (f'均记录到 {w5d["compaction_requests"]} 次 Compaction'
                  if w5d["compaction_requests"] == w5o["compaction_requests"] else
                  f'分别记录到 {w5d["compaction_requests"]} 次与 {w5o["compaction_requests"]} 次 Compaction')
-    w5_summary = (f'DSH 与 OpenClaw 在 calibrated fixture 中{w5_counts}；DSH '
+    w5_summary = (f'DSH 与 OpenClaw 在校准后的固定测试场景中{w5_counts}；DSH '
                   f'{len(w5d["compaction_boundaries"])} 个 boundary 后 request body '
                   f'{"均下降" if w5_boundaries_reduced else "未全部下降"}')
     w7_summary = (

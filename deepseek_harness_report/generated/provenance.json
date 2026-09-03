@@ -1,6 +1,6 @@
 {
-  "report_input_sha256": "544353649a35b60565668e691ac5c043ced4ee118b8185e0296ed04400a4a764",
-  "git_status_at_generation": "c0a61d428e2b + working-tree changes",
+  "report_input_sha256": "0cb44eae65783c01e32864d3bb3e2ddb90c37dd7d77c798f4d15b8bd35cc4302",
+  "git_status_at_generation": "19661fc3cbab + working-tree changes",
   "deepseek_harness_commit": "dd6322d604e00eec1ba5e0c8541159906a21094a",
   "openclaw_commit": "3c1b351555e0ebc1b022842523191691e89c7684",
   "node_version": "24.15.0",

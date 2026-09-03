@@ -91,6 +91,16 @@ def main() -> None:
                 "showcase exposes boolean assertions instead of human-readable summaries: "
                 f"{assertion_dump}"
             )
+    editorial_asides = (
+        "面向第一次接触本项目的技术读者", "这一章只建立实验地图", "第一次看这张图",
+        "这张图主要看", "下面这张图主要看", "下面这张图左右采用相同起点与终点",
+        "因此不再增加一张独立 C1 图", "RSS 不增加第三个图轴", "不被包装成新的",
+        "deterministic mechanism tests", "white-box mechanism tests", "calibrated fixture",
+        "pinned Runtime", "先建立这个边界",
+    )
+    for phrase in editorial_asides:
+        if phrase in showcase:
+            raise ValueError(f"showcase contains an editorial aside: {phrase}")
     metrics = json.loads((REPORT_ROOT / "generated" / "metrics.json").read_text(encoding="utf-8"))
     provenance = json.loads((REPORT_ROOT / "generated" / "provenance.json").read_text(encoding="utf-8"))
     data = load_inputs()

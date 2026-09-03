@@ -1,12 +1,10 @@
-# DeepSeek Harness 技术展示版：从 Runtime 设计到可验证机制
-
-> 面向第一次接触本项目的技术读者：先理解 Harness 负责什么，再看 DeepSeek Harness 如何组织状态与执行，最后用 W1–W10 和 C1–C8 说明这些机制如何被验证。
+# DeepSeek Harness 核心设计与机制验证
 
 ## 0. 一页看懂 DeepSeek Harness
 
 ### 0.1 这份调研想解决什么问题
 
-DeepSeek Harness 是 DeepSeek 推出的开源 Agent Harness。本次调研不评价 DeepSeek 模型本身，而是研究 Harness 如何组织 Agent 的状态、工具、Context 和执行过程。我们选择 OpenClaw 作为参照，通过真实 Agent 任务与确定性机制实验，观察两套 pinned Runtime 的可见差异，再进一步拆解这些机制给 Host CPU 带来的本地工作。
+DeepSeek Harness 是 DeepSeek 推出的开源 Agent Harness。本次调研不评价 DeepSeek 模型本身，而是研究 Harness 如何组织 Agent 的状态、工具、Context 和执行过程。我们选择 OpenClaw 作为参照，通过真实 Agent 任务与确定性机制实验，观察两套固定版本 Runtime 的可见差异，再进一步拆解这些机制给 Host CPU 带来的本地工作。
 
 这里的“核心设计”或“值得关注的新机制”，是指 DeepSeek Harness 当前版本重点采用、显式建模或提升为一等 Runtime 能力的设计，并不表示这些概念均由 DeepSeek 在整个 Agent 生态中首次发明。OpenClaw 已经具备 Session、Transcript、Context Compaction 和 Sandbox 等能力；本报告关注的是 DSH 如何重新组织这些能力、显式暴露哪些边界，以及这种组织如何改变状态与执行模型。
 
@@ -50,18 +48,18 @@ Harness：读取 / 写入文件，重新测试，保存 Session
 | 生成代码、文本或参数 | Session、Context 与持久化 |
 | 根据观察调整计划 | Filesystem、Process、Code Runtime 与 Policy |
 
-下面这张图主要看 Model 与 Harness 的职责边界：Model 位于决策路径，Harness 位于编排中心，并连接状态平面和执行平面。
+Model 位于决策路径；Harness 位于编排中心，并连接状态平面和执行平面。
 
 <p align="center"><img src="figures/architecture/harness-model.svg" width="900" alt="Model 决策、Harness 编排并连接状态与执行平面"></p>
 <p align="center"><sub>图 1-1　DeepSeek Harness 的重点变化发生在 Runtime 执行层，而不是模型推理能力本身。</sub></p>
 
-后文出现的 Session、Context、Provider 和 PTC 都属于这条 Harness 路径。先建立这个边界，可以避免把 Runtime 的恢复、持久化或进程行为误认为“模型能力”。
+Session、Context、Provider 和 PTC 都属于这条 Harness 路径。Runtime 的恢复、持久化与进程行为是 Harness 行为，不等同于模型能力。
 
 ---
 
 ## 2. 这次我们做了哪些实验
 
-### 2.1 为什么分成三层
+### 2.1 为什么分成四层
 
 ```text
 真实 Agent 任务 W1–W3
@@ -70,11 +68,11 @@ Harness：读取 / 写入文件，重新测试，保存 Session
         ↓ 隔离具体 Runtime 机制
 DSH 白盒实验 W9–W10
         ↓ 验证显式 API / capability seam
-CPU Microbenchmark C1–C8
+CPU 微基准实验 C1–C8
         ↓ 拆解 Host CPU 工作
 ```
 
-真实任务接近实际使用，但模型输出、网络与执行路径会引入大量变量，因此适合发现现象，不适合单独解释原因。W4–W8 使用 deterministic provider 或固定输入隔离单个机制；W9–W10 直接验证 DSH 的 Session 和 filesystem capability。确认机制后，C1–C8 再去掉真实模型网络延迟，测量 Host 侧工作。
+真实任务接近实际使用，但模型输出、网络与执行路径会引入大量变量，因此适合发现现象，不适合单独解释原因。W4–W8 使用固定输入和脚本化 provider 隔离单个机制；W9–W10 直接验证 DSH 的 Session 和 filesystem capability。确认机制后，C1–C8 再去掉真实模型网络延迟，测量 Host 侧工作。
 
 ### 2.2 Harness 行为实验 W1–W10
 
@@ -83,36 +81,34 @@ CPU Microbenchmark C1–C8
 | W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 | 两侧均完成任务，并通过外部 verifier |
 | W2 | Python Bug Fix | 小型真实 Coding Task | 是否具备读代码、修改、测试和验证闭环 | DSH 4/5；OpenClaw 5/5 |
 | W3 | Multi-module Feature | 更长的真实执行链 | 是否出现值得进一步隔离的稳定性现象 | DSH 5/5；OpenClaw 2/5，观察到 `incomplete_turn` |
-| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | DSH 将错误结构化后继续并完成；OpenClaw pinned fixture 以 `incomplete_turn` 结束 |
-| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH 与 OpenClaw 在 calibrated fixture 中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降 |
+| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | DSH 将错误结构化后继续并完成；OpenClaw 固定版本测试场景以 `incomplete_turn` 结束 |
+| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降 |
 | W6 | Tool Failure | 固定 invalid args / exit 17 | 普通 Tool Failure 与 malformed event 是否同一边界 | 两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行 |
 | W7 | Long Tool Chain | 连续 20 次 Tool Call | Context、request body 与 Tool state 如何累积 | 两侧均完成 20-step Tool Chain；历史 marker 与 Tool Call/Result pairing 均验证通过；最终 request 分别保留 DSH 20、OpenClaw 20 个 Tool Result |
 | W8 | Direct vs PTC | 相同 8 个底层操作 | request 下降是否来自编排折叠，而非漏做工作 | DSH provider requests 9→2，底层操作仍为 8 |
 | W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | committed prefix 保持一致；dangling call 未重发；Fork 成功；Replay 未访问 live provider |
 | W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复 |
 
-W1–W3 是真实 Agent workload；W4–W8 是 deterministic mechanism tests；W9–W10 是 DSH white-box mechanism tests。W9/W10 没有完全对等的 OpenClaw fixture，不能用于两套 Runtime 排名。
+W1–W3 为真实 Agent 任务；W4–W8 为确定性机制实验；W9–W10 为 DSH 白盒机制实验。W9/W10 没有完全对等的 OpenClaw 实验，因此不用于两套 Runtime 排名。
 
 ### 2.3 为什么 W3 之后需要 W4
 
 W1 只验证最基础的 exact edit。W2 是 `Retry-After` parser Bug：Agent 需要运行测试、阅读代码、修改实现并再次验证，DSH 完成 4/5，OpenClaw 完成 5/5。样本数只有 5，wall-time 分布也不用于性能排名。
 
-W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补充测试，执行链更长。DSH 完成 5/5，OpenClaw 完成 2/5；部分失败表现为 `incomplete_turn`。这只能说明真实任务里观察到了差异，不能说明差异一定来自某个 Harness Feature。因此 W4 固定 malformed provider event，只观察 Recovery Path。
+W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补充测试，执行链更长。DSH 完成 5/5，OpenClaw 完成 2/5；部分失败表现为 `incomplete_turn`。这只能说明真实任务里观察到了差异，不能说明差异一定来自某个 Harness 机制。因此 W4 固定格式异常的 provider event（malformed provider event），只观察恢复路径。
 
 ### 2.4 CPU 实验 C1–C8
 
 | 实验 | 测什么 | 对应 Runtime 工作 |
 |---|---|---|
-| C1 | Agent Loop 随 Tool Step 增长 | Control Plane |
-| C2 | Event append、derive、fork、persist、load | State Plane |
-| C3 | Context JSON encode/decode 与 SSE parsing | State / Serialization |
-| C4 | Managed、one-shot 与 persistent process | Process / Tool Boundary |
-| C5 | Native Tool Calling 与 PTC | Execution Granularity |
+| C1 | Agent Loop 随 Tool Step 增长 | 控制面 |
+| C2 | Event append、derive、fork、persist、load | 状态面 |
+| C3 | Context JSON 编解码与 SSE parsing | 状态处理 / 序列化 |
+| C4 | Managed、one-shot 与 persistent process | 进程 / Tool 边界 |
+| C5 | Native Tool Calling 与 PTC | 执行粒度 |
 | C6 | Local FS 与 Sandbox FS Policy | Capability / Policy |
-| C7 | 1→32 个独立 Agent | Multi-Agent Scale |
-| C8 | TokenMeter / Context Pressure | Context Management |
-
-这一章只建立实验地图，具体数字集中在第 10 章，避免 CPU 抢占 Harness 机制主线。
+| C7 | 1→32 个独立 Agent | 多 Agent 扩展 |
+| C8 | TokenMeter / Context Pressure | Context 管理 |
 
 ---
 
@@ -131,7 +127,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 
 ### 3.2 Profile、Bundle、Patch 与 Cordis
 
-第一次看这张图只需要沿垂直方向阅读：Profile 选择有序 Bundle，Patch 覆盖配置，最终形成 Plugin Tree，并注册 `ctx.*` services。
+Profile 选择有序 Bundle，随后应用 Patch，最终由 Cordis 形成运行中的 Plugin Tree，并注册 `ctx.*` services。
 
 <p align="center"><img src="figures/architecture/composition-tree.svg" width="900" alt="Profile、Bundle、Patch 和 Cordis Plugin Tree 的组合关系"></p>
 <p align="center"><sub>图 3-1　Everything is a Plugin 不只是源码拆模块；Runtime 在启动阶段由 composition 形成。</sub></p>
@@ -146,7 +142,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 
 ### 3.3 `ctx.fs` 与 W10
 
-这张图主要看中间的 `ctx.fs`：面向模型的 `tool-fs` 不变，下面的 Provider 可以换成 local 或 sandbox。
+`tool-fs` 通过稳定的 `ctx.fs` capability 使用底层 provider；上层 Tool 不变时，provider 可以在 local 和 sandbox 实现之间替换。
 
 <p align="center"><img src="figures/architecture/capability-seam.svg" width="900" alt="tool-fs 通过 ctx.fs 使用 local 或 sandbox Provider"></p>
 <p align="center"><sub>图 3-2　Consumer 与 Provider 分离后，替换实现可以改变 Policy，而不改上层 Tool 调用。</sub></p>
@@ -161,7 +157,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 | fs-sandbox | 成功 | `FS_SANDBOX_DENIED` |
 | 再切回 fs-local | 成功 | 切回 local 后恢复原有行为 |
 
-**实际结论。** 当前 pinned revision 中，`ctx.fs` 的 Provider replacement 会改变真实 filesystem policy。W10 只直接证明这一条 seam，不泛化为所有 capability 均已验证。Policy 对 Host CPU 的成本统一在第 10 章讨论。
+**实际结论。** 当前固定版本中，`ctx.fs` 的 Provider replacement 会改变真实 filesystem policy。W10 只直接证明这一条 seam，不泛化为所有 capability 均已验证。Policy 对 Host CPU 的成本统一在第 10 章讨论。
 
 ---
 
@@ -183,7 +179,7 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox
 
 **Step** 是一次 Model Request 以及由它产生的 Tool Calls；**Turn** 是一次输入触发的整段执行，可以包含多个 Step。例如第一步运行测试并获得错误，第二步读取源码或提交修改，二者属于同一个 Turn 中的不同 Step。
 
-下面这张图先看 Turn 内的 Step，再沿箭头进入 Event Log，最后看同一条日志如何支撑 Context、Resume、Fork 和 Replay。
+Turn 由一个或多个 Step 构成；各 Step 产生的 typed events 进入同一条 Session Event Log，并支撑 Context 派生、Resume、Fork 和 Replay。
 
 <p align="center"><img src="figures/architecture/event-log.svg" width="940" alt="Turn、Step、typed events 与 Session Event Log 派生能力"></p>
 <p align="center"><sub>图 4-1　Model Context 是 durable event stream 的 projection；恢复、分叉和重放依赖明确的日志边界。</sub></p>
@@ -210,7 +206,7 @@ Parent 与 Child 在分叉边界的 derived messages 一致，之后可以独立
 
 **TokenMeter** 评估当前 model-visible surface 的压力。**Compaction** 在达到策略边界后生成更小的 Context 表示。`sdk-minimal` 默认没有 automatic compaction；W5 显式加载 `token-meter + compaction-basic`。
 
-下面这张图主要看 pressure check 的两条分支，以及 TokenMeter/Compaction 是可选 composition，而非 minimal profile 的隐含能力。
+Pressure check 根据 TokenMeter 的计量结果选择继续执行或触发 Compaction；TokenMeter 与 Compaction 是显式加载的可选 composition，而非 minimal profile 的隐含能力。
 
 <p align="center"><img src="figures/architecture/context-management.svg" width="900" alt="Session projection、TokenMeter、Pressure Check 与 Compaction 路径"></p>
 <p align="center"><sub>图 5-1　Context Management 把计量、策略判断和压缩结果放入 Runtime lifecycle。</sub></p>
@@ -219,9 +215,9 @@ Parent 与 Child 在分叉边界的 derived messages 一致，之后可以独立
 
 **测试目的。** 验证 Context 增长后 Compaction 是否真实触发，以及压缩后 Agent 能否继续执行。
 
-**测试方法。** 使用 deterministic tool chain、较大 Tool Result 与固定 summarizer，记录 Agent Request、Compaction Request 和 boundary 前后 body bytes。
+**测试方法。** 使用确定性 Tool Chain、较大 Tool Result 与固定 summarizer，记录 Agent Request、Compaction Request 和 boundary 前后 body bytes。
 
-W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction；最终任务正常完成。
+W5 的 DSH 固定测试场景（fixture）包含 8 次 Tool Call、3 次 Compaction；最终任务正常完成。
 
 | Boundary | 压缩前 Agent body | 压缩后 Agent body | 下降 |
 |---|---:|---:|---:|
@@ -229,7 +225,7 @@ W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction；最终任务正�
 | 第 6 次 Agent request 后 | 20,162 B | 15,718 B | 4,444 B |
 | 第 8 次 Agent request 后 | 20,162 B | 15,718 B | 4,444 B |
 
-**实际结论。** 三个 boundary 后 body 均缩小，任务继续完成。OpenClaw 在校准 fixture 中也记录到 3 次 Compaction，因此 W5 不是证明 DSH“有而 OpenClaw 没有”，而是观察两种 Runtime 的 Context shaping 路径。TokenMeter/pressure 的 CPU 数据见第 10.1 节。
+**实际结论。** 三个 boundary 后 body 均缩小，任务继续完成。OpenClaw 在校准后的固定测试场景中也记录到 3 次 Compaction，因此 W5 不是证明 DSH“有而 OpenClaw 没有”，而是观察两种 Runtime 的 Context shaping 路径。TokenMeter/pressure 的 CPU 数据见第 10.1 节。
 
 ---
 
@@ -239,7 +235,7 @@ W5 的 DSH fixture 包含 8 次 Tool Call、3 次 Compaction；最终任务正�
 
 Direct Tool Calling 中，每个 Tool 都经过 Model Request、Tool Call、Runtime Dispatch、Tool Result、Context 重建和下一次 Model Request。**Programmatic Tool Calling（PTC）** 则让模型生成一个 Program，由本地 Runtime 在单个外层调用内连续调用多个 Tool，再把 Program Result 返回模型。
 
-下面这张图左右采用相同起点与终点。需要关注的不是右侧 Tool 变少，而是多个 Tool 被包进一个 model-visible Program boundary。
+Direct 模式逐次向模型暴露 Tool Call/Result；PTC 则把多个 Tool 调用封装在一个 Program execution boundary 内。底层 Tool 工作保持不变，变化的是模型可见的编排粒度。
 
 <p align="center"><img src="figures/architecture/ptc.svg" width="900" alt="Direct Tool Calling 与 PTC 的对称执行边界"></p>
 <p align="center"><sub>图 6-1　PTC 不减少底层 Tool 工作，减少的是模型层逐次暴露的 orchestration boundary。</sub></p>
@@ -276,7 +272,7 @@ W6 固定普通 Tool Failure
         ↓ 区分 provider event 与 tool execution boundary
 ```
 
-下面这张图主要看固定 malformed event 穿过两套 pinned Runtime boundary 后的不同结果，而不是看一张普遍可靠性排名图。
+在相同的 malformed provider event 下，DSH 和当前固定版本 OpenClaw 进入了不同的 Runtime 处理路径。
 
 <p align="center"><img src="figures/architecture/recovery-boundary.svg" width="900" alt="同一 malformed provider event 在两套 Runtime 中的不同 Recovery 结果"></p>
 <p align="center"><sub>图 7-1　错误能否形成 model-visible observation，决定当前 Turn 是否有机会进入下一 Step。</sub></p>
@@ -285,11 +281,11 @@ W6 固定普通 Tool Failure
 
 **W4 测试目的。** 固定 empty-name + truncated-arguments Tool Call，只观察 malformed provider event 的处理。
 
-**W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在第 2 次 request 后完成；当前 pinned OpenClaw fixture 在 1 次 request 后以 `incomplete_turn` 终止。
+**W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在第 2 次 request 后完成；当前固定版本 OpenClaw 的测试场景在 1 次 request 后以 `incomplete_turn` 终止。
 
 **W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。测试分别固定 missing required argument 与 child exit 17；两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行。
 
-**实际结论。** malformed provider event 与 valid Tool Failure 位于不同错误边界，不能合并成一个“Runtime 稳定性”指标。W4 只能证明两套 pinned Runtime 对固定输入的 semantics 不同，不能外推为 DSH 全面更可靠。
+**实际结论。** malformed provider event 与 valid Tool Failure 位于不同错误边界，不能合并成一个“Runtime 稳定性”指标。W4 只能证明两套固定版本 Runtime 对固定输入的 semantics 不同，不能外推为 DSH 全面更可靠。
 
 ---
 
@@ -299,38 +295,37 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 
 | 维度 | 两边都有相关能力吗 | DSH 值得关注的设计 | 当前实验实际验证 |
 |---|---|---|---|
-| Plugin / extensibility | 是，各有扩展路径 | everything-is-a-plugin + Cordis composition + `ctx.*` seam | W10 直接验证 `ctx.fs`，不代表所有 seam |
-| Session persistence | 是 | typed append-only Event Log 作为核心 Session state | W9 验证 DSH Resume/Fork/Replay；无对等 OpenClaw W9 |
-| Context Compaction | 是 | TokenMeter / Compaction 作为可组合 capability | W5 验证显式加载后的路径；预算与 estimator 不等价 |
-| Tool execution | 是 | PTC 是明确的 execution model | W8 比较 direct/code condition，不作产品完整性排名 |
-| Recovery | 是 | 关注 provider/tool boundary 的结构化 semantics | W4/W6 只覆盖固定 stimulus |
+| 插件与扩展机制 | 是，各有扩展路径 | everything-is-a-plugin + Cordis composition + `ctx.*` seam | W10 直接验证 `ctx.fs`，不代表所有 seam |
+| Session 持久化 | 是 | typed append-only Event Log 作为核心 Session state | W9 验证 DSH Resume/Fork/Replay；无对等 OpenClaw W9 |
+| Context 压缩 | 是 | TokenMeter / Compaction 作为可组合 capability | W5 验证显式加载后的路径；预算与 estimator 不等价 |
+| Tool 执行 | 是 | PTC 是明确的 execution model | W8 比较 direct/code condition，不作产品完整性排名 |
+| 错误恢复 | 是 | 关注 provider/tool boundary 的结构化 semantics | W4/W6 只覆盖固定 stimulus |
 | Sandbox / Policy | 是 | capability/provider 可由 composition 替换 | W10 只验证 filesystem seam |
 
-因此，本报告不支持“DSH 全面优于 OpenClaw”。它支持的是：当前 DSH 把 composition、Event Log、Context Management 与 PTC 明确提升为 Runtime 设计中心；两套 pinned Runtime 在若干固定边界上呈现可观察差异。
+因此，本报告不支持“DSH 全面优于 OpenClaw”。它支持的是：当前 DSH 把 composition、Event Log、Context Management 与 PTC 明确提升为 Runtime 设计中心；两套固定版本 Runtime 在若干固定边界上呈现可观察差异。
 
 ---
 
-## 9. 从 Harness 设计到 Host CPU Workload
+## 9. 从 Harness 设计到 Host CPU 工作
 
-前面的 W 系列回答“Runtime 怎么工作”；下面的 C 系列回答“这些机制最终给 Host CPU 增加什么工作”。这张图是一张证据矩阵：前四行是 DSH 核心设计，后两行是补充机制或 scale workload。
+前面的 W 系列回答“Runtime 怎么工作”；C 系列进一步测量这些机制在 Host 侧形成的工作。
 
-<p align="center"><img src="figures/architecture/feature-to-cpu.svg" width="980" alt="Harness 机制、W 证据、Host Workload 与 C 证据矩阵"></p>
-<p align="center"><sub>图 9-1　CPU 实验由已验证机制推导而来；Multi-Agent Scale 不被包装成新的 DSH Feature。</sub></p>
+| Harness 机制 / 现象 | W 证据 | 形成的 Host 工作 | CPU 证据 |
+|---|---|---|---|
+| Capability Seam | W10 | 文件路径处理、Policy 检查 | C6 |
+| Session Event Log | W9 | append、fork、persist、load | C2 |
+| Context Management | W5 | Context 序列化、pressure accounting | C3 / C8 |
+| PTC / Code Mode | W8 | Process、Code Runtime、编排粒度 | C4 / C5 |
+| Recovery Semantics | W4 / W6 | Agent Loop 控制流 | C1（辅助证据） |
+| Multi-Agent Scale | — | 调度、内存与 Runtime 密度 | C7 |
 
-| Runtime Plane | 主要工作 | CPU 实验 |
-|---|---|---|
-| Control | Agent Loop、Recovery、Orchestration | C1 |
-| State | Session、Context、Serialization、Pressure | C2 / C3 / C8 |
-| Execution | Process、Code Runtime、Filesystem Policy | C4 / C5 / C6 |
-| Scale | Multi-Agent Runtime Density | C7 |
-
-CPU 分析用于说明软件机制会形成 Host workload，不是处理器排名。当前数据来自单一 aarch64 主机、固定 topology 与 deterministic fixture。
+CPU 分析用于说明软件机制会形成 Host workload，不是处理器排名。当前数据来自单一 aarch64 主机、固定拓扑与确定性测试场景。
 
 ---
 
 ## 10. CPU 数据得到的主要观察
 
-**Control Plane。** C1 使用 deterministic in-process LLM 和 no-op Tool，观察 Agent Loop 随 Tool Step 增长的本地 CPU 成本。Cold fixture 从 0 增长到 256 steps 时，内部 CPU 时间从 8.413 ms 增长到 466.23 ms。由于同一 append-only Session 的 Context 也随 step 增长，这表示 control-plane 与 growing-state 的组合成本，而不是纯 `while` loop overhead；因此不再增加一张独立 C1 图。
+**控制面（Control Plane）。** C1 使用确定性的进程内 LLM 和 no-op Tool，观察 Agent Loop 随 Tool Step 增长的本地 CPU 成本。Cold 测试从 0 增长到 256 steps 时，内部 CPU 时间从 8.413 ms 增长到 466.23 ms。由于同一 append-only Session 的 Context 也随 step 增长，这表示控制面与 growing-state 的组合成本，而不是纯 `while` loop overhead。
 
 ### 10.1 长生命周期 Agent 会形成扩大的状态工作集
 
@@ -345,7 +340,7 @@ C2 把 Session append、derive、fork、persist 和 load 的 slope 分开；C3 �
 <p align="center"><img src="figures/data/c8-context-pressure.svg" width="980" alt="C8 TokenMeter Context Pressure 的 Cold 与 Warm 结果"></p>
 <p align="center"><sub>图 10-3　Cold/Repeat 边际 slope 比为 16.035×；Incremental 使用 effective surface，不使用 initial surface。</sub></p>
 
-**研究推断。** Long-lived Agent 更像 growing-state workload：即使没有新 event，Warm Repeat 仍随 surface 增长。但这些 slope 是当前 fixture 的 mechanism cost，不等于生产端到端 latency；C8 也不是 tokenizer benchmark。
+**研究推断。** Long-lived Agent 更像 growing-state workload：即使没有新 event，Warm Repeat 仍随 surface 增长。但这些 slope 是当前固定测试场景的机制成本，不等于生产端到端 latency；C8 也不是 tokenizer benchmark。
 
 ### 10.2 Tiny Tool 下，Runtime Boundary 可能比 Tool 更显著
 
@@ -355,9 +350,9 @@ C4 比较 managed、raw one-shot 与 persistent process；C5 比较 Native Agent
 <p align="center"><sub>图 10-4　1000 次微操作下，managed=3.913 ms/op、one-shot=2.76 ms/op、persistent control=0.064 ms/op。</sub></p>
 
 <p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随操作数增长的执行时间"></p>
-<p align="center"><sub>图 10-5　PTC 有固定 worker cost；当前 crossover bracket 为 64～256 operations，不是生产 threshold。</sub></p>
+<p align="center"><sub>图 10-5　PTC 有固定 worker cost；当前 crossover 位于 64～256 次操作之间，不是生产阈值。</sub></p>
 
-在 1024 operations 点，Native=3170.871 ms，PTC=554.177 ms。真实 provider latency、Program 生成质量与 Tool 计算都可能改变 crossover；当前结论只描述本地 execution granularity。
+在 1024 次操作点，Native=3170.871 ms，PTC=554.177 ms。真实 provider latency、Program 生成质量与 Tool 计算都可能改变 crossover；当前结论只描述本地执行粒度。
 
 ### 10.3 Policy 也是 Runtime 工作
 
@@ -366,9 +361,9 @@ W10 证明替换 `ctx.fs` provider 会改变 outside-path policy。C6 在 1000 �
 ### 10.4 多 Agent 变成 Runtime Density 问题
 
 <p align="center"><img src="figures/data/c7-agent-scale.svg" width="980" alt="C7 Multi-Agent 吞吐与并行效率"></p>
-<p align="center"><sub>图 10-6　32 Agents 达到 83.172 Agents/s，并行效率 72.781%；RSS 不增加第三个图轴。</sub></p>
+<p align="center"><sub>图 10-6　32 Agents 时吞吐达到 83.172 Agents/s，并行效率为 72.781%。</sub></p>
 
-该点 summed child max RSS=2.073 GiB，最大单 child RSS=71.41 MiB。Scale Plane 同时关联 core、memory capacity 与 scheduler；固定单机结果不支持 ARM/x86、厂商或生产部署排名。
+该点 summed child max RSS=2.073 GiB，最大单 child RSS=71.41 MiB。规模面同时关联 core、memory capacity 与 scheduler；固定单机结果不支持 ARM/x86、厂商或生产部署排名。
 
 ---
 
@@ -378,18 +373,18 @@ W10 证明替换 `ctx.fs` provider 会改变 outside-path policy。C6 在 1000 �
 
 | 类型 | 可以复查什么 | 不能自动重建什么 |
 |---|---|---|
-| W1–W3 Real Workload | frozen workspace、diff、hidden verifier outcome | 完整 reasoning/provider transcript 与所有 runtime metadata |
-| W4–W10 Mechanism | deterministic request、runtime artifact、机制 summary | 真实模型 workload 的总体分布 |
+| W1–W3 真实任务 | frozen workspace、diff、hidden verifier outcome | 完整 reasoning/provider transcript 与所有 runtime metadata |
+| W4–W10 机制实验 | 固定 request、runtime artifact、机制 summary | 真实模型 workload 的总体分布 |
 | C1–C8 CPU Pilot | raw samples、protocol binding、aggregate/fit 一致性 | 跨机器、跨 ISA 的普遍性能结论 |
 
-本报告严格模式从 frozen evidence 重建 W1–W3 outcome、W4–W10 summary，并用 protocol-bound runner logic 从 C raw samples 重算 aggregate/fit。它验证 committed result 与当前 pinned logic 一致，不是对 aggregation formula 的第二套独立实现。
+本报告严格模式从 frozen evidence 重建 W1–W3 outcome、W4–W10 summary，并用 protocol-bound runner logic 从 C raw samples 重算 aggregate/fit。它验证 committed result 与当前固定版本逻辑一致，不是对 aggregation formula 的第二套独立实现。
 
 ### 11.2 Provenance
 
 | 项目 | 值 |
 |---|---|
-| 报告输入 SHA256 | `544353649a35b60565668e691ac5c043ced4ee118b8185e0296ed04400a4a764` |
-| 生成时 Git 状态 | `c0a61d428e2b + working-tree changes` |
+| 报告输入 SHA256 | `0cb44eae65783c01e32864d3bb3e2ddb90c37dd7d77c798f4d15b8bd35cc4302` |
+| 生成时 Git 状态 | `19661fc3cbab + working-tree changes` |
 | DeepSeek Harness | `dd6322d604e00eec1ba5e0c8541159906a21094a` |
 | OpenClaw | `3c1b351555e0ebc1b022842523191691e89c7684` |
 | Node.js | `24.15.0` |
@@ -418,6 +413,6 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 4. PTC 把多次模型可见 Tool Round Trip 改为一次 Program Execution boundary；
 5. W4/W6 进一步表明，Recovery 取决于错误在哪一层被结构化。
 
-这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成 Control、State、Execution 与 Scale 四类 Host workload。
+这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
 
 **因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把 composition、state 和 execution boundary 提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**
