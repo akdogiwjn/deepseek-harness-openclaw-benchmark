@@ -2,7 +2,8 @@
 
 本目录是一份 Markdown-first 中文技术调研报告。`report.template.md` 是人工维护的正文
 模板，所有定量数字使用 placeholder；构建器从仓库现有 `results/*.json` 注入数据并生成
-唯一发布正文 `report.md`、静态 SVG 和附属离线 HTML。不要直接维护 `report.md` 或 HTML
+唯一发布正文 `report.md`、数据 SVG 和附属离线 HTML。架构 SVG 是人工维护的静态资产，
+不会在构建时被重写。不要直接维护 `report.md` 或 HTML
 中的实验数字。
 
 ```bash
@@ -26,7 +27,8 @@ python3 deepseek_harness_report/scripts/validate_report.py
 - `report.md`：正文 source of truth 的生成发布版；
 - `generated/metrics.json`：从 W/C JSON 自动提取的定量数据；
 - `generated/provenance.json`：输入指纹、pinned revisions 与实验环境；
-- `figures/`：从 explicit C adapters 和固定架构描述生成的 SVG；
+- `figures/architecture/`：人工精修、纳入报告输入指纹的静态机制图；
+- `figures/data/`：从 explicit C adapters 与结果 JSON 自动生成的数据图；
 - `dist/report.html`：由 `report.md` 转换的单文件、无 CDN 正文页面（SVG 使用相对路径）。
 
 本报告不修改 `results/`、`evidence/` 或任何 benchmark logic。

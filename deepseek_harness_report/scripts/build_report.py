@@ -155,6 +155,7 @@ def report_input_paths() -> list[Path]:
     paths.append(ROOT / "evidence" / "manifest.json")
     paths.append(REPORT_ROOT / "report.template.md")
     paths.extend((REPORT_ROOT / "scripts").glob("*.py"))
+    paths.extend((REPORT_ROOT / "figures" / "architecture").glob("*.svg"))
     return sorted(paths, key=lambda path: path.relative_to(ROOT).as_posix())
 
 

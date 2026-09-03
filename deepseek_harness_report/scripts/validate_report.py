@@ -13,6 +13,10 @@ from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORT_ROOT = ROOT / "deepseek_harness_report"
+ARCHITECTURE_FIGURES = {
+    "harness-model.svg", "composition-tree.svg", "capability-seam.svg", "event-log.svg",
+    "context-management.svg", "ptc.svg", "recovery-boundary.svg", "feature-to-cpu.svg",
+}
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_report import RESULT_FILES, input_fingerprint, load_inputs, source_revision  # noqa: E402
@@ -83,6 +87,9 @@ def main() -> None:
     if not (ROOT / "evidence" / "manifest.json").is_file(): raise ValueError("evidence manifest missing")
     forbidden = {"#0b151c", "#101c23"}
     expected_series = {"C2": 1, "C3": 3, "C4": 3, "C5": 2, "C6": 2, "C7": 2, "C8": 3}
+    architecture_paths = REPORT_ROOT / "figures" / "architecture"
+    if {path.name for path in architecture_paths.glob("*.svg")} != ARCHITECTURE_FIGURES:
+        raise ValueError("curated architecture SVG set differs from the required report assets")
     for path in (REPORT_ROOT / "figures").rglob("*.svg"):
         text = path.read_text(encoding="utf-8")
         root = ElementTree.fromstring(text)
@@ -96,7 +103,6 @@ def main() -> None:
             raise ValueError(f"{benchmark} SVG series count mismatch")
     sys.path.insert(0, str(ROOT / "harness_cpu_report"))
     from data_loader import load_cpu_results  # noqa: E402
-    from data_loader import load_workload_results  # noqa: E402
     from derive import build_charts  # noqa: E402
     cpu_results = load_cpu_results()
     c8 = next(item for item in build_charts(cpu_results) if item["key"] == "C8")
@@ -104,12 +110,10 @@ def main() -> None:
     initial_x = [float(key) for key in sorted(data["c8_incremental"]["aggregates"], key=float)]
     if effective_x == initial_x or effective_x != [110.5, 200.5, 1100.5, 5020.5, 10010.5]:
         raise ValueError("C8 Incremental no longer uses effective_surface_nodes")
-    from build_figures import build_figure_sets  # noqa: E402
-    expected_arch, expected_data = build_figure_sets(cpu_results, load_workload_results())
-    for directory, expected in (("architecture", expected_arch), ("data", expected_data)):
-        for name, content in expected.items():
-            if (REPORT_ROOT / "figures" / directory / name).read_text(encoding="utf-8") != content:
-                raise ValueError(f"generated SVG differs from JSON/source-derived output: {name}")
+    from build_figures import build_data_figures  # noqa: E402
+    for name, content in build_data_figures(cpu_results).items():
+        if (REPORT_ROOT / "figures" / "data" / name).read_text(encoding="utf-8") != content:
+            raise ValueError(f"generated data SVG differs from JSON/source-derived output: {name}")
     print(f"report validation PASS: {len(set(figures))} unique figures, {len(RESULT_FILES)} result inputs")
 
 
