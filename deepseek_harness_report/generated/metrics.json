@@ -113,6 +113,8 @@
     "operation_count": 1024,
     "native_selected_ms": 3170.871052,
     "ptc_selected_ms": 554.176657,
+    "crossover_low": 64,
+    "crossover_high": 256,
     "series_ms": {
       "native": {
         "0": 9.67814,

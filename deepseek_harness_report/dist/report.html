@@ -68,10 +68,7 @@
 <h3 id="3-4-与-openclaw-的证据边界">3.4 与 OpenClaw 的证据边界</h3>
 <p>两者都有 Session 与 Context 管理，OpenClaw 也有持久化、resume 和 compaction 路径。本报告不写成“OpenClaw 没有状态系统”。当前可支持的差异是：DSH 把 typed append-only Session Event Log 作为显式 Runtime abstraction，并围绕其 API 建模 Resume、Fork 和 Replay。本仓库没有实现完全对等的 OpenClaw W9，因此不做有/没有式结论。</p>
 <h3 id="3-5-state-plane-cpu-延伸">3.5 State Plane CPU 延伸</h3>
-<p>Durable state 带来能力，也带来 state-management workload。C2 将 append、deriveMessages、fork prefix、JSONL write 与 warm load 的 event-count slope 分开；C8 则观察长期 surface 上的 pressure accounting。当前 C2 append slope 为 20.716 μs/event，deriveMessages slope 为 0.109 μs/event，但这些值只属于固定 event shape。</p>
-<p align="center"><img src="../figures/data/c2-session-cost.svg" width="940" alt="Session Event Log 操作的每事件 CPU slope 对数点图"></p>
-<p align="center"><sub>图 3-2　C2 使用 log X 的 lollipop，使 deriveMessages 等低 slope 操作仍保持可见。</sub></p>
-<sub>数据来源：`results/c2-session-count-pilot.json`；每个主要数据点 n=5；指标为当前 benchmark 定义的 scoped internal CPU timing。</sub>
+<p>Durable state 带来能力，也带来 Host-side append、projection、fork、persist 与 load 等 state-management workload。C2 将这些操作的 event-count slope 分开，C8 则观察长期 surface 上的 pressure accounting；定量结果统一放在 9.1 节讨论。</p>
 <p>W9 不是 DSH 与 OpenClaw 的等价 Session 性能 benchmark，也没有证明 Event Log 在所有规模下都更快。它证明当前 DSH API 的具体 Resume/Fork/Replay semantics 可以从冻结证据重建。</p>
 <hr>
 <h2 id="4-新特性三-context-management-compaction">4. 新特性三：Context Management / Compaction</h2>
@@ -89,12 +86,7 @@
 <h3 id="4-4-openclaw-对照">4.4 OpenClaw 对照</h3>
 <p>OpenClaw 有自己的 context/compaction path。W5 通过校准不同有效预算，让两边在相同 tool-chain ordinal 附近触发压缩，以便观察 request envelope 与 context shaping；它没有把 estimator、prompt format 或 threshold 差异解释为架构优劣。两边都完成了校准 fixture，且都记录到 3 次 compaction。</p>
 <h3 id="4-5-c8-context-pressure-的-cpu-延伸">4.5 C8：Context Pressure 的 CPU 延伸</h3>
-<p>C8 不是 tokenizer benchmark；它测量 pinned DSH TokenMeter/context-pressure accounting。Cold Replay 需要从 durable history 重建 meter state；Warm Repeat 在没有新 Session event 时仍重新处理当前 surface；Incremental 包含 append one text turn 加 measure。当前 cold/repeat per-surface-node slope 比为 16.035×。</p>
-<p align="center"><img src="../figures/data/c8-context-pressure.svg" width="980" alt="C8 Cold、Incremental 与 Repeat 的双面板 Context Pressure 图"></p>
-<p align="center"><sub>图 4-2　Panel A 用 log Y 展示 Cold 与 Warm 数量级；Panel B 展开 Incremental 与 Repeat。Incremental X 始终使用 effective_surface_nodes。</sub></p>
-<sub>数据来源：`results/c8-token-meter-*-pilot.json`；每个主要数据点 n=5；slope ratio 不等于端到端 latency ratio。</sub>
-<p>Warm Repeat 成本仍随 surface 增长，说明长期 Agent 会持续产生 state traversal/pricing/clone 一类 Host 工作。Incremental 与 Repeat 接近，则提示少量新增 event 不是当前 steady-state 成本的主要部分。Shape 实验还单独覆盖 text、tool call/result 与 schema surface，避免把所有节点当作完全同质。</p>
-<p>上述 slope 是当前固定 fixture 的 mechanism cost，不是 production model latency，也不能说明真实任务中应该在什么阈值 compact。Cold/Repeat 比值不是“冷启动端到端永远慢 16.035 倍”。</p>
+<p>C8 不是 tokenizer benchmark；它测量 pinned DSH TokenMeter/context-pressure accounting。Cold Replay 需要从 durable history 重建 meter state；Warm Repeat 在没有新 Session event 时仍重新处理当前 surface；Incremental 包含 append one text turn 加 measure。三种窗口的定量图与 slope 统一放在 9.1 节；其中 Incremental 始终使用 effective surface，而不是 initial surface 作为横轴。</p>
 <hr>
 <h2 id="5-新特性四-programmatic-tool-calling-code-mode">5. 新特性四：Programmatic Tool Calling / Code Mode</h2>
 <h3 id="5-1-direct-tool-calling-的-round-trip">5.1 Direct Tool Calling 的 Round Trip</h3>
@@ -112,11 +104,7 @@
 <div class="table-wrap"><table><thead><tr><th>DSH execution condition</th><th>底层操作</th><th>model-visible calls</th><th>provider requests</th></tr></thead><tbody><tr><td>Direct</td><td>8</td><td>8</td><td>9</td></tr><tr><td>Code Mode / PTC</td><td>8</td><td>1</td><td>2</td></tr></tbody></table></div>
 <p>DSH request body 总量下降 70.554%。这证明 deterministic fixture 下的 executor collapse；它不是实际模型质量或 task latency 提升证明。</p>
 <h3 id="5-5-c5-固定成本与摊薄">5.5 C5：固定成本与摊薄</h3>
-<p>PTC 不会无条件更快。C5 中本地 code worker 有固定启动成本，小 operation count 下高于 Native；操作数增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。当前 1024-operation fixture 中 Native 为 3170.871 ms，PTC 为 554.177 ms。</p>
-<p align="center"><img src="../figures/data/c5-native-vs-ptc.svg" width="980" alt="Native Agent Loop 与 PTC 随操作数增长的本地执行成本"></p>
-<p align="center"><sub>图 5-2　PTC 有本地 worker 固定成本；当前 deterministic fixture 的 crossover 位于 64～256 operations 之间，不是生产阈值。</sub></p>
-<sub>数据来源：`results/c5-code-mode-cpu-pilot.json`；每个主要数据点 n=5；不含真实 provider latency。</sub>
-<p>C5 的 crossover 不是生产推荐阈值。真实模型 latency、provider scheduling、Program 生成质量和实际 Tool 计算都可能改变结果。当前结论只描述本地 orchestration 粒度如何转移 CPU 工作。</p>
+<p>PTC 不会无条件更快。C5 中本地 code worker 有固定启动成本；operation count 增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。定量曲线与当前 fixture 的 crossover 区间统一放在 9.2 节；该区间不是生产推荐阈值。</p>
 <hr>
 <h2 id="6-机制洞察-recovery-error-semantics">6. 机制洞察：Recovery / Error Semantics</h2>
 <blockquote>“Error as Runtime Policy”不是 DeepSeek 官方 Feature 名称。本章是从 pinned 源码与 W3/W4/W6 归纳出的 Runtime insight。</blockquote>
@@ -155,12 +143,14 @@
 <p align="center"><img src="../figures/data/c2-session-cost.svg" width="940" alt="C2 Session 状态操作的 CPU slope 对数点图"></p>
 <p align="center"><sub>图 9-1　C2 的 log X lollipop 同时保留高成本操作与 deriveMessages 的可见性。</sub></p>
 <sub>数据来源：`results/c2-session-count-pilot.json`；每个主要数据点 n=5；指标为 scoped internal CPU timing。</sub>
+<p>当前固定 event shape 下，append slope 为 20.716 μs/event，deriveMessages slope 为 0.109 μs/event。这些 slope 用于刻画机制成本，不代表任意 Session 内容分布。</p>
 <p align="center"><img src="../figures/data/c3-context-serialization.svg" width="980" alt="C3 Context Bytes 与 JSON、SSE 处理 CPU 时间"></p>
 <p align="center"><sub>图 9-2　C3 固定消息形状，仅扩大 Context Bytes；最大 16 MiB 点只标注 SSE + JSON 组合成本。</sub></p>
 <sub>数据来源：`results/c3-context-json-pilot.json`；每个主要数据点 n=5；不含网络、TLS 与模型计算。</sub>
 <p align="center"><img src="../figures/data/c8-context-pressure.svg" width="980" alt="C8 Context Pressure 的 Cold 与 Warm 双面板数据图"></p>
 <p align="center"><sub>图 9-3　上图展示 Cold ≫ Warm 的数量级，下图展开 Incremental ≈ Repeat；Incremental 使用 effective surface。</sub></p>
 <sub>数据来源：`results/c8-token-meter-*-pilot.json`；每个主要数据点 n=5；内部测量窗口不等于端到端 latency。</sub>
+<p>当前 cold/repeat per-surface-node slope 比为 16.035×。Warm Repeat 成本仍随 surface 增长，说明长期 Agent 会持续产生 state traversal/pricing/clone 一类 Host 工作；Incremental 与 Repeat 接近，则提示少量新增 event 不是当前 steady-state 成本的主要部分。Shape 实验另行覆盖 text、tool call/result 与 schema surface，避免把所有节点当作完全同质。上述 slope 是固定 fixture 的 mechanism cost；Cold/Repeat 比值不是端到端 latency 倍率。</p>
 <blockquote><strong>推断：</strong> Long-lived Agent 是一种 growing-state workload。这个结论描述当前机制趋势，不把 microbenchmark slope 直接等同为生产 latency。</blockquote>
 <h3 id="9-2-洞察二-tool-execution-granularity-很重要">9.2 洞察二：Tool execution granularity 很重要</h3>
 <p>当 Tool 很短时，每次 process creation、pipe、wait、result wrapping、Agent Loop 与 provider boundary 都可能占据显著比例。C4 在 1000 tiny operation 下记录 DSH managed=3.913 ms/op、raw one-shot=2.76 ms/op、persistent control=0.064 ms/op。Persistent 把 process lifecycle 移出每次 operation，因此成本显著下降；它只是 control，不代表 OpenClaw 实现。</p>
@@ -168,8 +158,9 @@
 <p align="center"><sub>图 9-4　1000 tiny operations 聚焦图；persistent 是 benchmark control，不代表 OpenClaw implementation。</sub></p>
 <sub>数据来源：`results/c4-shell-lifecycle-pilot.json`；每个主要数据点 n=5；X 为 log scale。</sub>
 <p>PTC 改变的正是 execution granularity。W8 证明底层操作保持不变时，外层 requests 可以折叠；C5 则表明本地 program worker 有固定成本，但重复 orchestration 在高 operation count 下会被摊薄。</p>
-<p align="center"><img src="../figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随 Operations 增长的 Wall Time"></p>
-<p align="center"><sub>图 9-5　左侧更受 PTC fixed cost 支配，右侧重复 orchestration 被摊薄；背景不是生产 threshold。</sub></p>
+<p>当前 1024-operation fixture 中 Native 为 3170.871 ms，PTC 为 554.177 ms。两条曲线的相对次序在 64～256 operations 之间翻转；该区间由当前数据推导，不是生产 threshold。</p>
+<p align="center"><img src="../figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随操作数增长的执行时间"></p>
+<p align="center"><sub>图 9-5　低操作数时 PTC 固定启动成本更明显；高操作数时重复 orchestration 逐渐被摊薄。淡色区间为当前 fixture 自动推导的 crossover bracket。</sub></p>
 <sub>数据来源：`results/c5-code-mode-cpu-pilot.json`；每个主要数据点 n=5；使用 deterministic mock。</sub>
 <blockquote><strong>工作负载洞察：</strong> Agent Runtime 的优化方向可能从“让单次 Tool 更快”扩展到“减少不必要的 execution boundaries”；这不是 universal optimization conclusion。</blockquote>
 <h3 id="9-3-洞察三-capability-policy-也是可执行工作">9.3 洞察三：Capability / Policy 也是可执行工作</h3>
@@ -193,7 +184,7 @@
 <h3 id="10-3-cpu-c1-c8">10.3 CPU：C1–C8</h3>
 <p>C 系列保留 raw samples、runner/fixture SHA、perf helper SHA、upstream revision 和环境信息。Verifier 从 raw samples 使用 protocol-bound runner logic 重算 committed aggregates、fits、comparisons 与 scaling 值，并检查与当前 pinned logic 一致。它不是 aggregation algorithm 的第二套独立实现；如果 producer 与 verifier共享的公式本身有错，该检查不能单独发现。</p>
 <h3 id="10-4-provenance">10.4 Provenance</h3>
-<div class="table-wrap"><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody><tr><td>报告输入 SHA256</td><td><code>9015ebfe52386804dabb507183ff0c63b2983cd75263300a49a771045a77073c</code></td></tr><tr><td>报告生成时 Git 状态</td><td><code>570099d9e52f + working-tree changes</code></td></tr><tr><td>Pinned DeepSeek Harness</td><td><code>dd6322d604e00eec1ba5e0c8541159906a21094a</code></td></tr><tr><td>Pinned OpenClaw</td><td><code>3c1b351555e0ebc1b022842523191691e89c7684</code></td></tr><tr><td>Node.js</td><td><code>24.15.0</code></td></tr><tr><td>Evidence verification</td><td><code>PASS</code></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>值</th></tr></thead><tbody><tr><td>报告输入 SHA256</td><td><code>7cd29eb01d959928eee2fc71c637894fc829a3497441660419c700dd078999d1</code></td></tr><tr><td>报告生成时 Git 状态</td><td><code>6eb431c394b0 + working-tree changes</code></td></tr><tr><td>Pinned DeepSeek Harness</td><td><code>dd6322d604e00eec1ba5e0c8541159906a21094a</code></td></tr><tr><td>Pinned OpenClaw</td><td><code>3c1b351555e0ebc1b022842523191691e89c7684</code></td></tr><tr><td>Node.js</td><td><code>24.15.0</code></td></tr><tr><td>Evidence verification</td><td><code>PASS</code></td></tr></tbody></table></div>
 <h3 id="10-5-集中限制">10.5 集中限制</h3>
 <ul><li>所有 CPU pilot 来自同一 aarch64 主机，没有跨 CPU comparison。</li><li>每个主要数据点包含 5 个样本；用于机制与趋势观察，不提供总体性能置信结论。</li><li>多数机制实验使用 deterministic mock，去除了真实模型与网络 latency。</li><li>C4 使用 tiny/no-op Tool，突出边界成本，不代表重计算工具。</li><li>C6 是 filesystem capability policy，不是完整 OS/container/VM sandbox。</li><li>C7 使用当前固定 topology、placement 和独立 Runtime process fixture。</li><li>DSH 与 OpenClaw 的工具面是各自 native minimal closure，不是完全 tool-equivalent。</li><li>W3/W4 的结论绑定当前 model/provider protocol、streaming 与 pinned parser/recovery policy。</li></ul>
 <p>验证命令：</p>

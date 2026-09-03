@@ -143,12 +143,7 @@ Shared Prefix
 
 ### 3.5 State Plane CPU 延伸
 
-Durable state 带来能力，也带来 state-management workload。C2 将 append、deriveMessages、fork prefix、JSONL write 与 warm load 的 event-count slope 分开；C8 则观察长期 surface 上的 pressure accounting。当前 C2 append slope 为 {{C2_APPEND_CPU_US}} μs/event，deriveMessages slope 为 {{C2_DERIVE_MESSAGES_CPU_US}} μs/event，但这些值只属于固定 event shape。
-
-<p align="center"><img src="figures/data/c2-session-cost.svg" width="940" alt="Session Event Log 操作的每事件 CPU slope 对数点图"></p>
-<p align="center"><sub>图 3-2　C2 使用 log X 的 lollipop，使 deriveMessages 等低 slope 操作仍保持可见。</sub></p>
-
-<sub>数据来源：`results/c2-session-count-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；指标为当前 benchmark 定义的 scoped internal CPU timing。</sub>
+Durable state 带来能力，也带来 Host-side append、projection、fork、persist 与 load 等 state-management workload。C2 将这些操作的 event-count slope 分开，C8 则观察长期 surface 上的 pressure accounting；定量结果统一放在 9.1 节讨论。
 
 W9 不是 DSH 与 OpenClaw 的等价 Session 性能 benchmark，也没有证明 Event Log 在所有规模下都更快。它证明当前 DSH API 的具体 Resume/Fork/Replay semantics 可以从冻结证据重建。
 
@@ -185,16 +180,7 @@ OpenClaw 有自己的 context/compaction path。W5 通过校准不同有效预�
 
 ### 4.5 C8：Context Pressure 的 CPU 延伸
 
-C8 不是 tokenizer benchmark；它测量 pinned DSH TokenMeter/context-pressure accounting。Cold Replay 需要从 durable history 重建 meter state；Warm Repeat 在没有新 Session event 时仍重新处理当前 surface；Incremental 包含 append one text turn 加 measure。当前 cold/repeat per-surface-node slope 比为 {{C8_COLD_REPEAT_RATIO}}×。
-
-<p align="center"><img src="figures/data/c8-context-pressure.svg" width="980" alt="C8 Cold、Incremental 与 Repeat 的双面板 Context Pressure 图"></p>
-<p align="center"><sub>图 4-2　Panel A 用 log Y 展示 Cold 与 Warm 数量级；Panel B 展开 Incremental 与 Repeat。Incremental X 始终使用 effective_surface_nodes。</sub></p>
-
-<sub>数据来源：`results/c8-token-meter-*-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；slope ratio 不等于端到端 latency ratio。</sub>
-
-Warm Repeat 成本仍随 surface 增长，说明长期 Agent 会持续产生 state traversal/pricing/clone 一类 Host 工作。Incremental 与 Repeat 接近，则提示少量新增 event 不是当前 steady-state 成本的主要部分。Shape 实验还单独覆盖 text、tool call/result 与 schema surface，避免把所有节点当作完全同质。
-
-上述 slope 是当前固定 fixture 的 mechanism cost，不是 production model latency，也不能说明真实任务中应该在什么阈值 compact。Cold/Repeat 比值不是“冷启动端到端永远慢 {{C8_COLD_REPEAT_RATIO}} 倍”。
+C8 不是 tokenizer benchmark；它测量 pinned DSH TokenMeter/context-pressure accounting。Cold Replay 需要从 durable history 重建 meter state；Warm Repeat 在没有新 Session event 时仍重新处理当前 surface；Incremental 包含 append one text turn 加 measure。三种窗口的定量图与 slope 统一放在 9.1 节；其中 Incremental 始终使用 effective surface，而不是 initial surface 作为横轴。
 
 ---
 
@@ -232,14 +218,7 @@ DSH request body 总量下降 {{W8_DSH_BODY_REDUCTION_PCT}}%。这证明 determi
 
 ### 5.5 C5：固定成本与摊薄
 
-PTC 不会无条件更快。C5 中本地 code worker 有固定启动成本，小 operation count 下高于 Native；操作数增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。当前 {{C5_OPERATION_COUNT}}-operation fixture 中 Native 为 {{C5_NATIVE_SELECTED_MS}} ms，PTC 为 {{C5_PTC_SELECTED_MS}} ms。
-
-<p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="Native Agent Loop 与 PTC 随操作数增长的本地执行成本"></p>
-<p align="center"><sub>图 5-2　PTC 有本地 worker 固定成本；当前 deterministic fixture 的 crossover 位于 64～256 operations 之间，不是生产阈值。</sub></p>
-
-<sub>数据来源：`results/c5-code-mode-cpu-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；不含真实 provider latency。</sub>
-
-C5 的 crossover 不是生产推荐阈值。真实模型 latency、provider scheduling、Program 生成质量和实际 Tool 计算都可能改变结果。当前结论只描述本地 orchestration 粒度如何转移 CPU 工作。
+PTC 不会无条件更快。C5 中本地 code worker 有固定启动成本；operation count 增大后，Native 重复 Agent Loop/provider-boundary 工作增长更快，PTC 固定成本逐渐被摊薄。定量曲线与当前 fixture 的 crossover 区间统一放在 9.2 节；该区间不是生产推荐阈值。
 
 ---
 
@@ -321,6 +300,8 @@ Session 越长，Host CPU 不只是保存更多文本，还要处理 event appen
 
 <sub>数据来源：`results/c2-session-count-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；指标为 scoped internal CPU timing。</sub>
 
+当前固定 event shape 下，append slope 为 {{C2_APPEND_CPU_US}} μs/event，deriveMessages slope 为 {{C2_DERIVE_MESSAGES_CPU_US}} μs/event。这些 slope 用于刻画机制成本，不代表任意 Session 内容分布。
+
 <p align="center"><img src="figures/data/c3-context-serialization.svg" width="980" alt="C3 Context Bytes 与 JSON、SSE 处理 CPU 时间"></p>
 <p align="center"><sub>图 9-2　C3 固定消息形状，仅扩大 Context Bytes；最大 16 MiB 点只标注 SSE + JSON 组合成本。</sub></p>
 
@@ -330,6 +311,8 @@ Session 越长，Host CPU 不只是保存更多文本，还要处理 event appen
 <p align="center"><sub>图 9-3　上图展示 Cold ≫ Warm 的数量级，下图展开 Incremental ≈ Repeat；Incremental 使用 effective surface。</sub></p>
 
 <sub>数据来源：`results/c8-token-meter-*-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；内部测量窗口不等于端到端 latency。</sub>
+
+当前 cold/repeat per-surface-node slope 比为 {{C8_COLD_REPEAT_RATIO}}×。Warm Repeat 成本仍随 surface 增长，说明长期 Agent 会持续产生 state traversal/pricing/clone 一类 Host 工作；Incremental 与 Repeat 接近，则提示少量新增 event 不是当前 steady-state 成本的主要部分。Shape 实验另行覆盖 text、tool call/result 与 schema surface，避免把所有节点当作完全同质。上述 slope 是固定 fixture 的 mechanism cost；Cold/Repeat 比值不是端到端 latency 倍率。
 
 > **推断：** Long-lived Agent 是一种 growing-state workload。这个结论描述当前机制趋势，不把 microbenchmark slope 直接等同为生产 latency。
 
@@ -344,8 +327,10 @@ Session 越长，Host CPU 不只是保存更多文本，还要处理 event appen
 
 PTC 改变的正是 execution granularity。W8 证明底层操作保持不变时，外层 requests 可以折叠；C5 则表明本地 program worker 有固定成本，但重复 orchestration 在高 operation count 下会被摊薄。
 
-<p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随 Operations 增长的 Wall Time"></p>
-<p align="center"><sub>图 9-5　左侧更受 PTC fixed cost 支配，右侧重复 orchestration 被摊薄；背景不是生产 threshold。</sub></p>
+当前 {{C5_OPERATION_COUNT}}-operation fixture 中 Native 为 {{C5_NATIVE_SELECTED_MS}} ms，PTC 为 {{C5_PTC_SELECTED_MS}} ms。两条曲线的相对次序在 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} operations 之间翻转；该区间由当前数据推导，不是生产 threshold。
+
+<p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随操作数增长的执行时间"></p>
+<p align="center"><sub>图 9-5　低操作数时 PTC 固定启动成本更明显；高操作数时重复 orchestration 逐渐被摊薄。淡色区间为当前 fixture 自动推导的 crossover bracket。</sub></p>
 
 <sub>数据来源：`results/c5-code-mode-cpu-pilot.json`；每个主要数据点 n={{META_CPU_SAMPLES_PER_POINT}}；使用 deterministic mock。</sub>
 

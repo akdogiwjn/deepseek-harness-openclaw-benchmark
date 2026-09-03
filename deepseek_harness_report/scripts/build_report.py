@@ -50,6 +50,18 @@ def build_metrics(data: dict) -> dict:
     max_context = str(16 * 1024 * 1024)
     c4_count = max(c4["aggregates"]["dsh-managed"], key=int)
     c5_count = max(c5["aggregates"]["native"], key=int)
+    c5_counts = sorted(set(c5["aggregates"]["native"]) & set(c5["aggregates"]["ptc"]), key=int)
+    c5_crossover = None
+    for low, high in zip(c5_counts, c5_counts[1:]):
+        low_delta = (c5["aggregates"]["native"][low]["internal_wall_ns"]["median"] -
+                     c5["aggregates"]["ptc"][low]["internal_wall_ns"]["median"])
+        high_delta = (c5["aggregates"]["native"][high]["internal_wall_ns"]["median"] -
+                      c5["aggregates"]["ptc"][high]["internal_wall_ns"]["median"])
+        if low_delta * high_delta <= 0:
+            c5_crossover = (int(low), int(high))
+            break
+    if c5_crossover is None:
+        raise ValueError("C5 Native/PTC series have no measured crossover bracket")
     c6_count = max(c6["aggregates"]["local-write"], key=int)
     c7_agents = max(c7["aggregates"], key=int)
     child_exit = int(re.search(r"exits (\d+)", w6["scenarios"]["nonzero_child_exit"]["stimulus"]).group(1))
@@ -108,6 +120,7 @@ def build_metrics(data: dict) -> dict:
         "c5": {"operation_count": int(c5_count),
                "native_selected_ms": c5["aggregates"]["native"][c5_count]["internal_wall_ns"]["median"] / 1_000_000,
                "ptc_selected_ms": c5["aggregates"]["ptc"][c5_count]["internal_wall_ns"]["median"] / 1_000_000,
+               "crossover_low": c5_crossover[0], "crossover_high": c5_crossover[1],
                "series_ms": {mode: {count: row["internal_wall_ns"]["median"] / 1_000_000
                                      for count, row in values.items()}
                              for mode, values in c5["aggregates"].items()}},

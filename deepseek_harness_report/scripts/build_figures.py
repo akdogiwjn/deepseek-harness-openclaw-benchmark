@@ -92,12 +92,12 @@ def architecture_harness_model() -> str:
 
 def architecture_composition_tree() -> str:
     p = svg_open(980, 570)
-    nodes = [(350, 25, 280, 62, "Profile", "named composition"),
-             (280, 125, 420, 78, "Ordered Bundles", "base · sdk · profile bundles"),
-             (260, 245, 460, 82, "Patch Layers", "profile → home → CLI --patch"),
-             (300, 370, 380, 72, "Cordis Plugin Tree", "mounted runtime composition")]
-    for x, y, w, h, title, sub in nodes:
-        p += [svg_rect(x, y, w, h, LIGHT_THEME["blue_fill"], LIGHT_THEME["blue"]),
+    nodes = [(350, 25, 280, 62, "Profile", "named composition", LIGHT_THEME["blue_fill"], LIGHT_THEME["blue"]),
+             (280, 125, 420, 78, "Ordered Bundles", "base · sdk · profile bundles", LIGHT_THEME["teal_fill"], LIGHT_THEME["teal"]),
+             (260, 245, 460, 82, "Patch Layers", "profile → home → CLI --patch", LIGHT_THEME["amber_fill"], LIGHT_THEME["amber"]),
+             (300, 370, 380, 72, "Cordis Plugin Tree", "mounted runtime composition", LIGHT_THEME["purple_fill"], LIGHT_THEME["purple"])]
+    for x, y, w, h, title, sub, fill, stroke in nodes:
+        p += [svg_rect(x, y, w, h, fill, stroke),
               svg_text(x+w/2, y+29, title, 21, weight=750), svg_text(x+w/2, y+54, sub, 15, LIGHT_THEME["muted"])]
     p += [svg_arrow(490, 90, 490, 120), svg_arrow(490, 207, 490, 240), svg_arrow(490, 332, 490, 365),
           svg_rect(90, 490, 800, 58, LIGHT_THEME["teal_fill"], LIGHT_THEME["teal"]),
@@ -147,7 +147,9 @@ def architecture_event_log() -> str:
           svg_arrow(430,460,250,515),svg_arrow(470,460,430,515,True),svg_arrow(510,460,590,515,True),svg_arrow(550,460,750,515,True)]
     outputs=[(125,"deriveMessages()","Model Context",LIGHT_THEME["blue"]),(345,"Resume","repair / continue",LIGHT_THEME["teal"]),(565,"Fork","shared prefix",LIGHT_THEME["purple"]),(745,"Replay","recorded stream",LIGHT_THEME["amber"])]
     for x,title,sub,color in outputs:
-        p += [svg_rect(x,520,180,82,LIGHT_THEME["bg"],color),svg_text(x+90,552,title,17,weight=750,mono="(" in title),svg_text(x+90,580,sub,15,LIGHT_THEME["muted"])]
+        p += [svg_rect(x,520,180,82,LIGHT_THEME["bg"],LIGHT_THEME["border"],10,1.2),
+              f'<circle cx="{x+22}" cy="547" r="6" fill="{color}"/>',
+              svg_text(x+100,552,title,17,weight=750,mono="(" in title),svg_text(x+90,580,sub,15,LIGHT_THEME["muted"])]
     p.append(svg_text(930,630,"同一 durable stream 提供可追踪性",15,LIGHT_THEME["muted"],anchor="end"))
     return finish(p)
 
@@ -170,15 +172,17 @@ def architecture_ptc(w8: dict) -> str:
     d=w8["deepseek_harness"]
     p=svg_open(980,610)
     p += [svg_text(245,38,"Direct",21,weight=780),svg_text(735,38,"PTC / Code Mode",21,weight=780)]
-    direct=[("Model Request 1",70),("Tool",175),("Model Request 2",280),("Tool · …",385)]
+    direct=[("Model Request 1",60),("Tool 1",145),("Model Request 2",230),("Tool 2",315),("Model Request N+1",465)]
     for title,y in direct:
-        p += [svg_rect(110,y,270,62,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(245,y+39,title,18,weight=700)]
-    for y in [135,240,345]:p.append(svg_arrow(245,y,245,y+34))
-    p += [svg_rect(600,70,270,62,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(735,109,"Model Request",18,weight=700),svg_arrow(735,137,735,176),
-          svg_rect(600,180,270,62,LIGHT_THEME["purple_fill"],LIGHT_THEME["purple"]),svg_text(735,219,"Program",19,weight=750),svg_arrow(735,247,735,278),
-          svg_rect(580,282,310,145,LIGHT_THEME["panel"],LIGHT_THEME["purple"]),svg_multiline_text(735,327,["Tool · Tool · Tool","Tool · …"],18,weight=700),svg_arrow(735,432,735,470),
-          svg_rect(600,475,270,62,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(735,514,"Model Request",18,weight=700),
-          svg_badge(105,525,f'{d["direct"]["provider_requests"]} requests · {d["direct"]["model_visible_tool_calls"]} calls',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),
+        fill,stroke=(LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]) if "Request" in title else (LIGHT_THEME["panel"],LIGHT_THEME["slate"])
+        p += [svg_rect(110,y,270,58,fill,stroke),svg_text(245,y+37,title,18,weight=700)]
+    for y1,y2 in [(123,140),(208,225),(293,310)]:p.append(svg_arrow(245,y1,245,y2))
+    p += [svg_arrow(245,378,245,405),svg_text(245,430,"…",24,LIGHT_THEME["muted"]),svg_arrow(245,438,245,460),
+          svg_rect(600,60,270,58,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(735,97,"Model Request 1",18,weight=700),svg_arrow(735,123,735,155),
+          svg_rect(600,160,270,58,LIGHT_THEME["purple_fill"],LIGHT_THEME["purple"]),svg_text(735,197,"Program",19,weight=750),svg_arrow(735,223,735,255),
+          svg_rect(580,260,310,125,LIGHT_THEME["panel"],LIGHT_THEME["purple"]),svg_multiline_text(735,305,["Tool · Tool · Tool","Tool · …"],18,weight=700),svg_arrow(735,390,735,460),
+          svg_rect(600,465,270,58,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(735,502,"Model Request 2",18,weight=700),
+          svg_badge(105,555,f'{d["direct"]["provider_requests"]} requests · {d["direct"]["model_visible_tool_calls"]} calls',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),
           svg_badge(595,555,f'{d["code"]["provider_requests"]} requests · {d["code"]["model_visible_tool_calls"]} call',LIGHT_THEME["purple_fill"],LIGHT_THEME["purple"],280)]
     return finish(p)
 
@@ -198,16 +202,20 @@ def architecture_recovery(w4: dict) -> str:
 
 
 def architecture_feature_to_cpu() -> str:
-    p=svg_open(1100,620)
-    headers=[("DeepSeek Design / Insight",25,250),("W Evidence",300,150),("Host Workload",485,330),("C Evidence",855,180)]
+    p=svg_open(1100,660)
+    headers=[("机制 / Workload 来源",25,250),("W 证据",300,150),("Host 工作负载",485,330),("C 证据",855,180)]
     for title,x,w in headers:p += [svg_rect(x,20,w,55,LIGHT_THEME["panel2"],LIGHT_THEME["border"],8),svg_text(x+w/2,54,title,17,weight=750)]
     rows=[("Capability Seam","W10","path / policy execution","C6",False),("Session Event Log","W9","state append / copy / persistence","C2",False),("Context Management","W5","surface traversal / serialization","C3 / C8",False),("PTC / Code Mode","W8","code runtime / reduced orchestration","C5",False),("Recovery Semantics","W4 / W6","Agent control-flow work","C1 reference",True),("Multi-Agent execution","—","Runtime density","C7",False)]
+    p += [svg_text(25,104,"DeepSeek 核心设计",16,LIGHT_THEME["blue"],anchor="start",weight=750),
+          f'<line x1="170" y1="99" x2="1035" y2="99" stroke="{LIGHT_THEME["grid"]}"/>',
+          svg_text(25,442,"补充 Runtime 洞察",16,LIGHT_THEME["purple"],anchor="start",weight=750),
+          f'<line x1="190" y1="437" x2="1035" y2="437" stroke="{LIGHT_THEME["grid"]}"/>']
     for i,(feature,w,work,c,dashed) in enumerate(rows):
-        y=95+i*82; fill=LIGHT_THEME["bg"] if i%2==0 else LIGHT_THEME["panel"]
+        y=(115+i*75) if i<4 else (455+(i-4)*75); fill=LIGHT_THEME["bg"] if i%2==0 else LIGHT_THEME["panel"]
         for x,width in [(25,250),(300,150),(485,330),(855,180)]:p.append(svg_rect(x,y,width,62,fill,LIGHT_THEME["border"],7,1.2))
         p += [svg_text(150,y+38,feature,17,weight=700),svg_text(375,y+38,w,17,LIGHT_THEME["blue"],weight=750),svg_text(650,y+38,work,16),svg_text(945,y+38,c,17,LIGHT_THEME["teal"],weight=750)]
         p += [svg_arrow(277,y+31,294,y+31),svg_arrow(452,y+31,479,y+31),svg_arrow(817,y+31,849,y+31,dashed)]
-    p += [svg_text(25,600,"实线：direct mapping　　虚线：indirect / supporting evidence",15,LIGHT_THEME["muted"],anchor="start")]
+    p += [svg_text(25,640,"实线：direct mapping　　虚线：indirect / supporting evidence",15,LIGHT_THEME["muted"],anchor="start")]
     return finish(p)
 
 
@@ -250,11 +258,11 @@ def data_c2(spec):
     for tick in [.1,.3,1,3,10,30]:p += [f'<line x1="{sx(tick)}" y1="{top}" x2="{sx(tick)}" y2="{390}" stroke="{LIGHT_THEME["grid"]}"/>',svg_text(sx(tick),420,fmt(tick),15,LIGHT_THEME["muted"])]
     for i,pt in enumerate(pts):
         y=65+i*62;p += [svg_text(left-18,y+5,pt["x"],16,anchor="end"),f'<line x1="{sx(minimum)}" y1="{y}" x2="{sx(pt["y"])}" y2="{y}" stroke="{LIGHT_THEME["teal"]}" stroke-width="2"/>',f'<circle cx="{sx(pt["y"])}" cy="{y}" r="7" fill="{LIGHT_THEME["teal"]}"/>',svg_text(sx(pt["y"])+13,y+5,fmt(pt["y"]),15,LIGHT_THEME["teal"],anchor="start",weight=700)]
-    p.append(svg_text(490,447,"CPU slope (μs/event) · log scale",17,weight=700));return finish(p)
+    p.append(svg_text(490,447,"每事件 CPU slope（μs/event）· 对数刻度",17,weight=700));return finish(p)
 
 
 def data_c3(spec):
-    p=svg_open(980,500,"C3",len(spec["series"]));p.append(line_panel(spec,spec["series"],0,40,980,445,True,False,y_label="Internal CPU Time (ms)",x_label="Context Bytes · log scale"))
+    p=svg_open(980,500,"C3",len(spec["series"]));p.append(line_panel(spec,spec["series"],0,40,980,445,True,False,y_label="内部 CPU 时间（ms）",x_label="Context 大小（Bytes）· 对数刻度"))
     x=spec["series"][2]["points"][-1];mib=x["x"]/(1024*1024);p += [svg_badge(690,55,f'{mib:g} MiB · SSE+JSON {x["y"]:.1f} ms',LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],250)]
     for i,s in enumerate(spec["series"]):p += [f'<circle cx="{100+i*210}" cy="30" r="6" fill="{s["color"]}"/>',svg_text(115+i*210,35,s["name"],16,anchor="start")]
     return finish(p)
@@ -264,12 +272,21 @@ def data_c4(spec):
     rows=[(s["name"],s["points"][-1]["y"],s["color"]) for s in spec["series"]];p=svg_open(980,330,"C4",len(spec["series"]));left,right=230,130;minimum=.04;maximum=6;sx=lambda v:left+(math.log10(v)-math.log10(minimum))/(math.log10(maximum)-math.log10(minimum))*(980-left-right)
     for tick in [.05,.1,.3,1,3]:p += [f'<line x1="{sx(tick)}" y1="25" x2="{sx(tick)}" y2="270" stroke="{LIGHT_THEME["grid"]}"/>',svg_text(sx(tick),305,fmt(tick),15,LIGHT_THEME["muted"])]
     for i,(name,value,color) in enumerate(rows):y=70+i*75;p += [svg_text(left-18,y+5,name,17,anchor="end"),f'<line x1="{sx(minimum)}" y1="{y}" x2="{sx(value)}" y2="{y}" stroke="{color}" stroke-width="2"/>',f'<circle cx="{sx(value)}" cy="{y}" r="8" fill="{color}"/>',svg_text(sx(value)+14,y+5,f'{value:.3f}',16,color,anchor="start",weight=700)]
-    count=int(spec["series"][0]["points"][-1]["x"]);p.append(svg_text(490,327,f"Wall Time (ms/op) · log scale · {count} tiny operations",17,weight=700));return finish(p)
+    count=int(spec["series"][0]["points"][-1]["x"]);p.append(svg_text(490,327,f"执行时间（Wall Time, ms/op）· 对数刻度 · {count} 次微操作",17,weight=700));return finish(p)
 
 
 def data_c5(spec):
-    p=svg_open(980,500,"C5",len(spec["series"]));p += [f'<rect x="80" y="42" width="390" height="385" fill="{LIGHT_THEME["blue_fill"]}" opacity=".45"/>',f'<rect x="470" y="42" width="480" height="385" fill="{LIGHT_THEME["purple_fill"]}" opacity=".45"/>',svg_text(105,70,"PTC fixed-cost dominated",15,LIGHT_THEME["muted"],anchor="start"),svg_text(925,70,"orchestration amortized",15,LIGHT_THEME["muted"],anchor="end")]
-    p.append(line_panel(spec,spec["series"],0,35,980,450,False,False,y_label="Wall Time (ms)",x_label="Operations · log(1+x)"))
+    p=svg_open(980,500,"C5",len(spec["series"]));series_maps=[{point["x"]:point["y"] for point in series["points"]} for series in spec["series"]]
+    common=sorted(set(series_maps[0]) & set(series_maps[1])); bracket=None
+    for low,high in zip(common,common[1:]):
+        if (series_maps[0][low]-series_maps[1][low])*(series_maps[0][high]-series_maps[1][high]) <= 0:
+            bracket=(low,high);break
+    if bracket:
+        tx=lambda value:math.log10(float(value)+1);xmin,xmax=tx(min(common)),tx(max(common));sx=lambda value:80+(tx(value)-xmin)/(xmax-xmin)*870
+        x1,x2=sx(bracket[0]),sx(bracket[1]);p += [f'<rect x="{x1:.1f}" y="70" width="{x2-x1:.1f}" height="353" fill="{LIGHT_THEME["amber_fill"]}" opacity=".8"/>',f'<line x1="{x1:.1f}" y1="70" x2="{x1:.1f}" y2="423" stroke="{LIGHT_THEME["amber"]}" stroke-dasharray="5 5"/>',f'<line x1="{x2:.1f}" y1="70" x2="{x2:.1f}" y2="423" stroke="{LIGHT_THEME["amber"]}" stroke-dasharray="5 5"/>']
+    p.append(line_panel(spec,spec["series"],0,35,980,450,False,False,y_label="执行时间（Wall Time, ms）",x_label="操作数 · log(1+x)"))
+    p += [svg_text(105,92,"低操作数：PTC 固定启动成本更明显",15,LIGHT_THEME["muted"],anchor="start"),svg_text(925,118,"高操作数：重复 orchestration 逐渐摊薄",15,LIGHT_THEME["muted"],anchor="end")]
+    if bracket:p.append(svg_text((x1+x2)/2,150,f"{fmt(bracket[0])}–{fmt(bracket[1])} 当前 fixture crossover 区间",15,LIGHT_THEME["amber"],weight=700))
     for i,s in enumerate(spec["series"]):p += [f'<circle cx="{120+i*160}" cy="25" r="6" fill="{s["color"]}"/>',svg_text(135+i*160,30,s["name"],16,anchor="start")]
     return finish(p)
 
@@ -281,16 +298,16 @@ def data_c6(spec):
 
 def data_c7(spec, cpu):
     p=svg_open(980,650,"C7",len(spec["series"]));throughput=[spec["series"][0]];efficiency=[spec["series"][1]]
-    p.append(line_panel(spec,throughput,0,30,980,285,False,False,y_label="Agents/s",x_label=""));p.append(line_panel(spec,efficiency,0,325,980,285,False,False,y_label="Parallel Efficiency (%)",x_label="Agents"))
+    p.append(line_panel(spec,throughput,0,30,980,285,False,False,y_label="吞吐（Agents/s）",x_label=""));p.append(line_panel(spec,efficiency,0,325,980,285,False,False,y_label="并行效率（%）",x_label="Agent 数"))
     d=cpu["C7"]["data"];last=max(d["aggregates"],key=int);p += [svg_badge(650,45,f'{last} Agents · {d["aggregates"][last]["agents_per_second"]["median"]:.2f} Agents/s',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),svg_badge(690,355,f'{d["scaling"][last]["parallel_efficiency"]*100:.1f}% efficiency',LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],240)]
     return finish(p)
 
 
 def data_c8(spec, cpu):
-    p=svg_open(980,760,"C8",len(spec["series"]));p += [svg_text(25,28,"Panel A · Cold 与 Warm 的完整数量级",17,anchor="start",weight=750),line_panel(spec,spec["series"],0,35,980,330,True,True,spec.get("xTicks"),"CPU / window (μs) · log","Surface Nodes · log"),svg_text(25,400,"Panel B · Warm detail",17,anchor="start",weight=750),line_panel(spec,spec["series"][1:],0,410,980,330,True,False,spec.get("xTicks"),"CPU / window (μs)","Surface Nodes · log")]
-    d=cpu["C8"]["data"];slopes=[("Cold",d["cold"]),("Incremental",d["incremental"]),("Repeat",d["repeat"])];x=390
-    for name,data in slopes:
-        slope=data["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"];p.append(svg_badge(x,5,f'{name} slope {slope:.3f}',width=190));x+=195
+    p=svg_open(980,800,"C8",len(spec["series"]));p += [svg_text(25,28,"Panel A · Cold 与 Warm 的完整数量级",17,anchor="start",weight=750),line_panel(spec,spec["series"],0,75,980,330,True,True,spec.get("xTicks"),"每测量窗口 CPU（μs）· 对数刻度","Surface 节点数 · 对数刻度"),svg_text(25,440,"Panel B · Warm 细节",17,anchor="start",weight=750),line_panel(spec,spec["series"][1:],0,450,980,330,True,False,spec.get("xTicks"),"每测量窗口 CPU（μs）","Surface 节点数 · 对数刻度")]
+    d=cpu["C8"]["data"];slopes=[("Cold",d["cold"],"μs/node"),("Incremental",d["incremental"],"μs/effective-node"),("Repeat",d["repeat"],"μs/node")];x=50
+    for name,data,unit in slopes:
+        slope=data["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"];p.append(svg_badge(x,40,f'{name} {slope:.3f} {unit}',width=275));x+=292.5
     return finish(p)
 
 

@@ -42,6 +42,8 @@ def main() -> None:
     figures = [path for path, _ in figure_pairs]
     if not figures or any(not (REPORT_ROOT / path).is_file() for path in figures):
         raise ValueError("referenced report figure missing")
+    if len(figures) != len(set(figures)):
+        raise ValueError("report repeats a figure instead of referencing its canonical discussion")
     if any(not alt.strip() for _, alt in figure_pairs):
         raise ValueError("report figure missing alt text")
     if len(set(figures)) > 16:
