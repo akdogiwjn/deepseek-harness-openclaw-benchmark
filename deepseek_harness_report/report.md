@@ -384,8 +384,8 @@ C 系列保留 raw samples、runner/fixture SHA、perf helper SHA、upstream rev
 
 | 项目 | 值 |
 |---|---|
-| 报告输入 SHA256 | `c86d01bafc33f2b19f642a72d55f0069ef5b0bd687b82f579801690555366582` |
-| 报告生成时 Git 状态 | `4c6f24322d87 + working-tree changes` |
+| 报告输入 SHA256 | `f61a057d29979a0a2dce6b94d1c5c09138dfff9fb91611bb86892a690e2fcf3a` |
+| 报告生成时 Git 状态 | `0fc014f9c0d2 + working-tree changes` |
 | Pinned DeepSeek Harness | `dd6322d604e00eec1ba5e0c8541159906a21094a` |
 | Pinned OpenClaw | `3c1b351555e0ebc1b022842523191691e89c7684` |
 | Node.js | `24.15.0` |

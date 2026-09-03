@@ -79,6 +79,8 @@ def main() -> None:
         "## 2. 这次我们做了哪些实验", "Harness 行为实验 W1–W10", "CPU 实验 C1–C8",
         "Everything is a Plugin", "Session Event Log", "Context Management",
         "Programmatic Tool Calling", "OpenClaw 已经具备", "不是第五个官方 Feature",
+        "能力 Provider", "模型 Provider 返回的格式异常事件", "Tool / Process 生命周期",
+        "执行 Program 并连续调用 Tool 的本地进程",
     )
     for phrase in showcase_requirements:
         if phrase not in showcase:
@@ -107,6 +109,11 @@ def main() -> None:
         "个 Context 节点时", "% efficiency", "状态平面和执行平面",
         "lifecycle event", "automatic compaction", "Runtime lifecycle",
         "更容易替换、观察和验证",
+        "provider event", "脚本化 provider", "底层 provider", "provider/tool boundary",
+        "Runtime 能力通过 composition", "Program Execution", "Runtime semantics",
+        "统一 composition 组织起来", "wall-time 分布", "固定 summarizer",
+        "三条路径的单次实际耗时分别",
+        "可组合 Runtime capability", "filesystem capability",
     )
     for phrase in editorial_asides:
         if phrase in showcase:

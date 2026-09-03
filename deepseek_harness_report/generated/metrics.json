@@ -115,7 +115,7 @@
     "sandbox_error": "FS_SANDBOX_DENIED",
     "swap_restored": true,
     "restored_result": "切回 local 后恢复原有行为",
-    "summary": "local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复"
+    "summary": "本地文件系统能力 Provider 允许 workspace 外写入，Sandbox 文件系统能力 Provider 拒绝；切回本地实现后原行为恢复"
   },
   "c1": {
     "initial_steps": 0,

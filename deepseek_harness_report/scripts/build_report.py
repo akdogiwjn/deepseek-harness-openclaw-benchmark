@@ -206,12 +206,12 @@ def build_metrics(data: dict) -> dict:
                 "swap_restored": w10["checks"]["a_equals_a_prime"],
                 "restored_result": ("切回 local 后恢复原有行为" if w10["checks"]["a_equals_a_prime"] else
                                     "切回 local 后未恢复原有行为"),
-                "summary": ("local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 "
-                            "local 后原行为恢复" if
+                "summary": ("本地文件系统能力 Provider 允许 workspace 外写入，Sandbox 文件系统能力 "
+                            "Provider 拒绝；切回本地实现后原行为恢复" if
                             w10["local_a"]["outside"] == "OUTSIDE_CHANGED" and
                             w10["sandbox_b"]["tool_results"][-1]["error_code"] == "FS_SANDBOX_DENIED" and
                             w10["checks"]["a_equals_a_prime"] else
-                            "切回 local provider 后原行为未恢复")},
+                            "切回本地文件系统能力 Provider 后原行为未恢复")},
         "c1": {"initial_steps": 0, "final_steps": 256,
                "initial_cpu_ms": c1["aggregates"]["0"]["internal_cpu_total_us"]["median"] / 1000,
                "final_cpu_ms": c1["aggregates"]["256"]["internal_cpu_total_us"]["median"] / 1000},
