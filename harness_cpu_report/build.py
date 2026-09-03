@@ -1,37 +1,98 @@
 #!/usr/bin/env python3
-"""Build a portable, offline HTML research story from repository evidence."""
-from pathlib import Path
+"""Build a portable, evidence-aware offline HTML report."""
+
+from __future__ import annotations
+
+import argparse
+import html
 import json
-from data_loader import load_cpu_results, load_evidence_index
-from derive import summary
-from content import FEATURES, MAPPING
+import subprocess
+from pathlib import Path
+
+from content import MAPPING, build_features
+from data_loader import load_cpu_results, load_evidence_index, load_workload_results
+from derive import build_charts
 from validate import validate, validate_html
+
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 
-def card(feature):
-    name, exp, cpu, text = feature
-    return f'<article class="card"><span class="tag">FEATURE</span><strong>{name}</strong><p>{text}</p><p><b>OBSERVED</b> {exp}<br><b>CPU OBSERVED</b> {cpu}</p><span class="evidence">✓ evidence-linked · ✓ derived at build time</span></article>'
 
-def chart(key, title, x, y):
-    s = summary(load_cpu_results()).get(key, {})
-    return f'<article class="chart"><h3>{title}</h3><div class="meta">X = {x} · Y = {y} · {s.get("benchmark", "result unavailable")}</div><div data-chart="{key}"></div><div class="meta">protocol: {s.get("protocol", "not recorded")[:16]}…</div></article>'
+def esc(value) -> str:
+    return html.escape(str(value), quote=True)
 
-def main():
-    validate(ROOT)
+
+def card(feature: dict) -> str:
+    observations = "".join(f"<li>{esc(item)}</li>" for item in feature["observation"])
+    sources = " · ".join(esc(item) for item in feature["sources"])
+    return (
+        '<article class="card feature-card">'
+        f'<span class="tag">{esc(feature["kind"])}</span><strong>{esc(feature["name"])}</strong>'
+        f'<p>{esc(feature["mechanism"])}</p><h4>本仓库实测</h4><ul>{observations}</ul>'
+        f'<p><b>CPU 实测/关联：</b>{esc(feature["cpu"])}</p>'
+        f'<p class="limit"><b>限制：</b>{esc(feature["limit"])}</p>'
+        f'<div class="source">来源：{sources}</div></article>'
+    )
+
+
+def chart(chart_spec: dict, index: int) -> str:
+    scale = {"linear": "线性", "log": "对数", "log1p": "log(1+x)", "category": "分类"}[chart_spec["x"]["scale"]]
+    sources = " · ".join(chart_spec["sources"])
+    return (
+        f'<article class="chart"><h3>{esc(chart_spec["title"])}</h3>'
+        f'<div class="meta">X：{esc(chart_spec["x"]["label"])}（{scale}） · '
+        f'Y：{esc(chart_spec["y"]["label"])}（{esc(chart_spec["y"]["unit"])})</div>'
+        f'<div class="chart-host" data-chart-index="{index}"></div>'
+        f'<p class="chart-note">{esc(chart_spec["note"])}</p>'
+        f'<div class="source">来源：{esc(sources)}</div></article>'
+    )
+
+
+def run_full_verification() -> None:
+    subprocess.run([str(ROOT / "scripts" / "reproduce-evidence.sh")], cwd=ROOT, check=True)
+    subprocess.run([str(ROOT / "scripts" / "cpu" / "verify-cpu-results.py")], cwd=ROOT, check=True)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--verify", action="store_true", help="执行 W evidence 重放与 C result 全量校验")
+    args = parser.parse_args()
+
     cpu = load_cpu_results()
-    report = {"summary": summary(cpu), "results": cpu, "generated_from": "results/c1-c8-*.json"}
-    template = (HERE / "templates" / "index.html").read_text(encoding="utf-8")
-    nav = "".join(f'<a href="#{anchor}">{label}</a>' for anchor, label in [("overview","概览"),("harness","Harness 是什么"),("new","DeepSeek 新特性"),("mechanism","机制验证"),("cpu","CPU 工作负载"),("data","核心数据"),("insight","CPU 架构洞察"),("evidence","证据与限制")])
-    mapping = "".join(f'<div>{a}</div><div>{b}</div><div>{c}</div>' for a,b,c in MAPPING)
-    charts = "".join([chart("C1", "图 1 · Agent Step Scaling", "Tool Steps (log)", "Internal CPU / Wall"), chart("C2", "图 2 · Session State Cost", "Events", "μs / event"), chart("C3", "图 3 · Long Context Serialization", "Context bytes (log)", "CPU time"), chart("C4", "图 4 · Tool Process Lifecycle", "Operations (log)", "Wall / op"), chart("C5", "图 5 · Native vs PTC", "Operation count (log)", "Runtime"), chart("C7", "图 6 · Multi-Agent", "Agents", "Agents/s"), chart("C8", "图 7 · Context Pressure", "Surface nodes", "CPU / node")])
-    evidence = load_evidence_index()
-    html = template.replace("{{NAV}}", nav).replace("{{FEATURES}}", "".join(map(card, FEATURES))).replace("{{MAPPING}}", mapping).replace("{{CHARTS}}", charts).replace("{{EVIDENCE_FILE}}", evidence.get("file", "not found")).replace("{{CSS}}", (HERE / "static" / "style.css").read_text(encoding="utf-8")).replace("{{JS}}", (HERE / "static" / "charts.js").read_text(encoding="utf-8")).replace("{{DATA}}", json.dumps(report, ensure_ascii=False, separators=(",", ":")))
-    out = HERE / "dist" / "index.html"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(html, encoding="utf-8")
-    validate_html(out)
-    print(f"built {out} ({len(html):,} bytes; {len(cpu)} CPU datasets)")
+    workloads = load_workload_results()
+    charts = build_charts(cpu)
+    features = build_features(workloads, cpu)
+    status = validate(ROOT, cpu, workloads, charts)
+    if args.verify:
+        run_full_verification()
+        status["full_replay"] = "PASS"
 
-if __name__ == "__main__": main()
+    evidence = load_evidence_index()
+    report = {"charts": charts, "validation": status, "generated_from": "explicit W2-W10 and C1-C8 adapters"}
+    template = (HERE / "templates" / "index.html").read_text(encoding="utf-8")
+    nav_items = [("overview", "概览"), ("harness", "Harness"), ("new", "关键机制"),
+                 ("mechanism", "实验映射"), ("cpu", "CPU 工作负载"), ("data", "核心数据"),
+                 ("insight", "CPU 启示"), ("evidence", "证据与限制")]
+    nav = "".join(f'<a href="#{anchor}">{label}</a>' for anchor, label in nav_items)
+    mapping = "".join(f"<div>{esc(a)}</div><div>{esc(b)}</div><div>{esc(c)}</div>" for a, b, c in MAPPING)
+    validation = (f"输入与 schema 校验：{status['input_validation']} · 完整证据重放：{status['full_replay']} · "
+                  f"CPU samples：{status['cpu_samples']} · W summaries：{status['workload_summaries']}")
+    html_text = (template.replace("{{NAV}}", nav)
+                 .replace("{{FEATURES}}", "".join(card(item) for item in features))
+                 .replace("{{MAPPING}}", mapping)
+                 .replace("{{CHARTS}}", "".join(chart(item, index) for index, item in enumerate(charts)))
+                 .replace("{{VALIDATION}}", esc(validation))
+                 .replace("{{EVIDENCE_FILE}}", esc(evidence["file"]))
+                 .replace("{{CSS}}", (HERE / "static" / "style.css").read_text(encoding="utf-8"))
+                 .replace("{{JS}}", (HERE / "static" / "charts.js").read_text(encoding="utf-8"))
+                 .replace("{{DATA}}", json.dumps(report, ensure_ascii=False, separators=(",", ":"))))
+    output = HERE / "dist" / "index.html"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(html_text, encoding="utf-8")
+    validate_html(output)
+    print(f"已构建 {output}（{len(html_text):,} bytes；8 个显式 chart adapters；完整重放={status['full_replay']}）")
+
+
+if __name__ == "__main__":
+    main()
