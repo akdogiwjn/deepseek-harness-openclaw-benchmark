@@ -1,4 +1,4 @@
-# DeepSeek Harness 新型 Agent Harness 机制调研
+# DeepSeek Harness 新特性与运行时机制调研
 
 本目录是一份 Markdown-first 中文技术调研报告。`report.template.md` 是人工维护的正文
 模板，所有定量数字使用 placeholder；构建器从仓库现有 `results/*.json` 注入数据并生成

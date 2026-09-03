@@ -9,6 +9,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORT_ROOT = ROOT / "deepseek_harness_report"
@@ -35,11 +36,19 @@ def main() -> None:
         raise ValueError("report.md contains unresolved placeholders")
     if "report.md" not in (REPORT_ROOT / "README.md").read_text(encoding="utf-8"):
         raise ValueError("README does not identify report.md")
-    figures = re.findall(r"!\[[^]]*\]\((figures/[^)]+)\)", report)
+    markdown_figures = re.findall(r"!\[([^]]*)\]\((figures/[^)]+)\)", report)
+    html_figures = re.findall(r'<img\s+src="(figures/[^"]+)"[^>]*alt="([^"]+)"', report)
+    figure_pairs = [(path, alt) for alt, path in markdown_figures] + html_figures
+    figures = [path for path, _ in figure_pairs]
     if not figures or any(not (REPORT_ROOT / path).is_file() for path in figures):
         raise ValueError("referenced report figure missing")
-    if len(set(figures)) > 10:
+    if any(not alt.strip() for _, alt in figure_pairs):
+        raise ValueError("report figure missing alt text")
+    if len(set(figures)) > 16:
         raise ValueError("report uses too many figures")
+    captioned = re.findall(r'<p align="center"><sub>图\s*[0-9]', report)
+    if len(captioned) < len(figure_pairs):
+        raise ValueError("each major figure must have a Chinese caption")
     for number in range(12):
         if f"## {number}." not in report:
             raise ValueError(f"missing report chapter {number}")
@@ -70,6 +79,35 @@ def main() -> None:
     pinned = {provenance["deepseek_harness_commit"], provenance["openclaw_commit"]}
     if any(len(value) != 40 for value in pinned): raise ValueError("pinned revision is not a full SHA")
     if not (ROOT / "evidence" / "manifest.json").is_file(): raise ValueError("evidence manifest missing")
+    forbidden = {"#0b151c", "#101c23"}
+    expected_series = {"C2": 1, "C3": 3, "C4": 3, "C5": 2, "C6": 2, "C7": 2, "C8": 3}
+    for path in (REPORT_ROOT / "figures").rglob("*.svg"):
+        text = path.read_text(encoding="utf-8")
+        root = ElementTree.fromstring(text)
+        if "viewBox" not in root.attrib: raise ValueError(f"SVG missing viewBox: {path}")
+        if any(color in text.lower() for color in forbidden): raise ValueError(f"legacy dark color in {path}")
+        for node in root.iter("{http://www.w3.org/2000/svg}text"):
+            size = node.attrib.get("font-size")
+            if size and float(size) < 14: raise ValueError(f"SVG text below 14px in {path}: {size}")
+        benchmark = root.attrib.get("data-benchmark")
+        if benchmark and int(root.attrib.get("data-series-count", -1)) != expected_series[benchmark]:
+            raise ValueError(f"{benchmark} SVG series count mismatch")
+    sys.path.insert(0, str(ROOT / "harness_cpu_report"))
+    from data_loader import load_cpu_results  # noqa: E402
+    from data_loader import load_workload_results  # noqa: E402
+    from derive import build_charts  # noqa: E402
+    cpu_results = load_cpu_results()
+    c8 = next(item for item in build_charts(cpu_results) if item["key"] == "C8")
+    effective_x = [point["x"] for point in c8["series"][1]["points"]]
+    initial_x = [float(key) for key in sorted(data["c8_incremental"]["aggregates"], key=float)]
+    if effective_x == initial_x or effective_x != [110.5, 200.5, 1100.5, 5020.5, 10010.5]:
+        raise ValueError("C8 Incremental no longer uses effective_surface_nodes")
+    from build_figures import build_figure_sets  # noqa: E402
+    expected_arch, expected_data = build_figure_sets(cpu_results, load_workload_results())
+    for directory, expected in (("architecture", expected_arch), ("data", expected_data)):
+        for name, content in expected.items():
+            if (REPORT_ROOT / "figures" / directory / name).read_text(encoding="utf-8") != content:
+                raise ValueError(f"generated SVG differs from JSON/source-derived output: {name}")
     print(f"report validation PASS: {len(set(figures))} unique figures, {len(RESULT_FILES)} result inputs")
 
 

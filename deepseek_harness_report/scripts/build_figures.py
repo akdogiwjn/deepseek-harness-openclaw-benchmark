@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate static SVG figures from the existing explicit C-series adapters."""
+"""Generate light technical-report SVGs from pinned report data and adapters."""
 
 from __future__ import annotations
 
@@ -12,144 +12,301 @@ ROOT = Path(__file__).resolve().parents[2]
 REPORT_ROOT = ROOT / "deepseek_harness_report"
 sys.path.insert(0, str(ROOT / "harness_cpu_report"))
 
-from data_loader import load_cpu_results  # noqa: E402
+from data_loader import load_cpu_results, load_workload_results  # noqa: E402
 from derive import build_charts  # noqa: E402
 
-DATA_NAMES = {
-    "C2": "c2-session-cost.svg", "C3": "c3-context-serialization.svg",
-    "C4": "c4-process-lifecycle.svg", "C5": "c5-native-vs-ptc.svg",
-    "C6": "c6-fs-policy.svg", "C7": "c7-agent-scale.svg",
-    "C8": "c8-context-pressure.svg",
+LIGHT_THEME = {
+    "bg": "#FFFFFF", "panel": "#F8FAFC", "panel2": "#F3F6F9",
+    "text": "#17212B", "muted": "#667085", "border": "#D7DEE7", "grid": "#E8EDF3",
+    "blue": "#2563EB", "blue_fill": "#EFF6FF", "teal": "#0F766E", "teal_fill": "#ECFDF5",
+    "purple": "#7C5CE7", "purple_fill": "#F5F3FF", "amber": "#B7791F", "amber_fill": "#FFFBEB",
+    "success": "#2E7D32", "success_fill": "#F0FDF4", "error": "#C2413A", "error_fill": "#FEF2F2",
+    "slate": "#64748B",
 }
-
-BG, PANEL, TEXT, MUTED, GRID = "#0b151c", "#101c23", "#f2f7f5", "#a2b2b9", "#29404a"
+FONT = "'Noto Sans CJK SC','PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif"
+MONO = "ui-monospace,SFMono-Regular,Consolas,monospace"
 
 
 def esc(value) -> str:
     return html.escape(str(value), quote=True)
 
 
+def svg_open(width: int, height: int, benchmark: str | None = None, series_count: int | None = None) -> list[str]:
+    metadata = ((f' data-benchmark="{benchmark}" data-series-count="{series_count}"')
+                if benchmark is not None else "")
+    return [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" role="img"{metadata}>',
+            f'<rect width="{width}" height="{height}" fill="{LIGHT_THEME["bg"]}"/>',
+            '<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/></marker></defs>']
+
+
+def svg_text(x, y, value, size=17, fill=None, anchor="middle", weight=400, mono=False) -> str:
+    family = MONO if mono else FONT
+    return (f'<text x="{x}" y="{y}" fill="{fill or LIGHT_THEME["text"]}" font-size="{size}" '
+            f'font-weight="{weight}" text-anchor="{anchor}" font-family="{family}">{esc(value)}</text>')
+
+
+def svg_multiline_text(x, y, lines, size=18, fill=None, anchor="middle", weight=400, line_height=1.35, mono=False) -> str:
+    family = MONO if mono else FONT
+    spans = "".join(f'<tspan x="{x}" dy="{0 if i == 0 else size * line_height}">{esc(line)}</tspan>'
+                    for i, line in enumerate(lines[:2]))
+    return (f'<text x="{x}" y="{y}" fill="{fill or LIGHT_THEME["text"]}" font-size="{size}" '
+            f'font-weight="{weight}" text-anchor="{anchor}" font-family="{family}">{spans}</text>')
+
+
+def svg_rect(x, y, width, height, fill=None, stroke=None, rx=10, stroke_width=1.8) -> str:
+    return (f'<rect x="{x}" y="{y}" width="{width}" height="{height}" rx="{rx}" '
+            f'fill="{fill or LIGHT_THEME["panel"]}" stroke="{stroke or LIGHT_THEME["border"]}" stroke-width="{stroke_width}"/>')
+
+
+def svg_arrow(x1, y1, x2, y2, dashed=False, color=None) -> str:
+    dash = ' stroke-dasharray="6 6"' if dashed else ""
+    return (f'<path d="M{x1},{y1} L{x2},{y2}" fill="none" stroke="{color or LIGHT_THEME["slate"]}" '
+            f'stroke-width="2" marker-end="url(#arrow)"{dash}/>' )
+
+
+def svg_badge(x, y, value, fill=None, color=None, width=145) -> str:
+    return svg_rect(x, y, width, 32, fill or LIGHT_THEME["panel2"], color or LIGHT_THEME["border"], 16, 1.4) + svg_text(x + width / 2, y + 22, value, 15, color or LIGHT_THEME["muted"], weight=650)
+
+
+def finish(parts: list[str]) -> str:
+    return "".join(parts) + "</svg>\n"
+
+
+def architecture_harness_model() -> str:
+    p = svg_open(980, 540)
+    p += [svg_rect(390, 30, 200, 82, LIGHT_THEME["blue_fill"], LIGHT_THEME["blue"]),
+          svg_text(490, 64, "Model", 22, weight=750), svg_text(490, 91, "推理 / 决策", 16, LIGHT_THEME["muted"]),
+          svg_rect(315, 190, 350, 150, LIGHT_THEME["panel"], LIGHT_THEME["blue"]),
+          svg_text(490, 226, "Harness", 22, weight=780), svg_text(490, 263, "Agent Loop · Context Assembly", 17),
+          svg_text(490, 295, "Recovery · Policy", 17), svg_arrow(490, 188, 490, 118),
+          svg_text(610, 150, "request / response", 15, LIGHT_THEME["muted"]),
+          svg_rect(35, 222, 150, 72, LIGHT_THEME["panel2"], LIGHT_THEME["slate"]), svg_text(110, 265, "User", 21, weight=700),
+          svg_arrow(190, 258, 308, 258),
+          svg_rect(135, 420, 300, 95, LIGHT_THEME["teal_fill"], LIGHT_THEME["teal"]),
+          svg_text(285, 454, "State", 21, weight=750), svg_text(285, 483, "Session · Event Log · Context", 16),
+          svg_rect(545, 400, 330, 115, LIGHT_THEME["purple_fill"], LIGHT_THEME["purple"]),
+          svg_text(710, 434, "Execution", 21, weight=750), svg_text(710, 463, "Tool · Process · Filesystem", 16),
+          svg_text(710, 491, "Code Runtime", 16), svg_arrow(420, 345, 310, 414), svg_arrow(565, 345, 680, 394)]
+    return finish(p)
+
+
+def architecture_composition_tree() -> str:
+    p = svg_open(980, 570)
+    nodes = [(350, 25, 280, 62, "Profile", "named composition"),
+             (280, 125, 420, 78, "Ordered Bundles", "base · sdk · profile bundles"),
+             (260, 245, 460, 82, "Patch Layers", "profile → home → CLI --patch"),
+             (300, 370, 380, 72, "Cordis Plugin Tree", "mounted runtime composition")]
+    for x, y, w, h, title, sub in nodes:
+        p += [svg_rect(x, y, w, h, LIGHT_THEME["blue_fill"], LIGHT_THEME["blue"]),
+              svg_text(x+w/2, y+29, title, 21, weight=750), svg_text(x+w/2, y+54, sub, 15, LIGHT_THEME["muted"])]
+    p += [svg_arrow(490, 90, 490, 120), svg_arrow(490, 207, 490, 240), svg_arrow(490, 332, 490, 365),
+          svg_rect(90, 490, 800, 58, LIGHT_THEME["teal_fill"], LIGHT_THEME["teal"]),
+          svg_text(490, 526, "ctx.llm · ctx.sessions · ctx.fs · ctx.tools · ctx.agentLoop · …", 18, mono=True),
+          svg_arrow(490, 447, 490, 485)]
+    return finish(p)
+
+
+def architecture_capability_seam(w10: dict) -> str:
+    allowed = w10["local_a"]["outside"] == "OUTSIDE_CHANGED"
+    denied = w10["sandbox_b"]["tool_results"][-1]["error_code"] == "FS_SANDBOX_DENIED"
+    restored = w10["checks"]["a_equals_a_prime"]
+    p = svg_open(980, 560)
+    layers = [(350, 25, 280, 70, "Consumer", "tool-fs", LIGHT_THEME["blue_fill"], LIGHT_THEME["blue"]),
+              (350, 145, 280, 70, "Capability / Service", "ctx.fs", LIGHT_THEME["teal_fill"], LIGHT_THEME["teal"])]
+    for x,y,w,h,title,sub,fill,stroke in layers:
+        p += [svg_rect(x,y,w,h,fill,stroke), svg_text(490,y+29,title,17,LIGHT_THEME["muted"]), svg_text(490,y+55,sub,21,weight=750,mono=sub.startswith("ctx"))]
+    p += [svg_arrow(490, 100, 490, 140), svg_arrow(490, 220, 285, 285), svg_arrow(490, 220, 695, 285),
+          svg_rect(145, 290, 280, 72, LIGHT_THEME["blue_fill"], LIGHT_THEME["blue"]), svg_text(285,318,"Provider",16,LIGHT_THEME["muted"]), svg_text(285,345,"fs-local",20,weight=750,mono=True),
+          svg_rect(555, 290, 280, 72, LIGHT_THEME["panel2"], LIGHT_THEME["slate"]), svg_text(695,318,"Provider",16,LIGHT_THEME["muted"]), svg_text(695,345,"fs-sandbox",20,weight=750,mono=True)]
+    p += [svg_text(85, 415, "W10", 17, LIGHT_THEME["amber"], anchor="start", weight=750)]
+    states = [(155,"local", "outside write ✓" if allowed else "N/A", LIGHT_THEME["success_fill"],LIGHT_THEME["success"]),
+              (405,"sandbox", "outside write ✕" if denied else "N/A", LIGHT_THEME["error_fill"],LIGHT_THEME["error"]),
+              (655,"local", "outside write ✓" if restored else "N/A", LIGHT_THEME["success_fill"],LIGHT_THEME["success"])]
+    for i,(x,title,sub,fill,stroke) in enumerate(states):
+        p += [svg_rect(x,435,170,80,fill,stroke),svg_text(x+85,466,title,18,weight=750,mono=True),svg_text(x+85,494,sub,15,stroke)]
+        if i < 2: p.append(svg_arrow(x+175,475,x+240,475))
+    return finish(p)
+
+
+def architecture_event_log() -> str:
+    p = svg_open(980, 650)
+    p += [svg_rect(40,25,900,305,LIGHT_THEME["panel"],LIGHT_THEME["border"]),
+          svg_text(75,58,"Turn",20,anchor="start",weight=780),
+          svg_rect(75,82,830,105,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(100,112,"Step 1",18,anchor="start",weight=750)]
+    labels = ["user/message","assistant/message","tool/call","tool/result","step/end"]
+    xs = [100,260,445,600,755]
+    widths = [135,160,135,135,120]
+    for i,(x,label) in enumerate(zip(xs,labels)):
+        width = widths[i]
+        p += [svg_rect(x,130,width,38,LIGHT_THEME["bg"],LIGHT_THEME["border"],8,1.4),svg_text(x+width/2,155,label,15,mono=True)]
+        if i < len(labels)-1: p.append(svg_arrow(x+width+4,149,xs[i+1]-6,149))
+    p += [svg_rect(75,205,830,78,LIGHT_THEME["teal_fill"],LIGHT_THEME["teal"]),svg_text(100,235,"Step 2",18,anchor="start",weight=750),
+          svg_text(490,260,"Model Request → assistant/message → step/end",16,mono=True),
+          svg_text(490,315,"turn/end",17,LIGHT_THEME["muted"],mono=True),
+          svg_arrow(490,335,490,385),svg_rect(330,390,320,65,LIGHT_THEME["teal_fill"],LIGHT_THEME["teal"]),svg_text(490,430,"Session Event Log",21,weight=780),
+          svg_arrow(430,460,250,515),svg_arrow(470,460,430,515,True),svg_arrow(510,460,590,515,True),svg_arrow(550,460,750,515,True)]
+    outputs=[(125,"deriveMessages()","Model Context",LIGHT_THEME["blue"]),(345,"Resume","repair / continue",LIGHT_THEME["teal"]),(565,"Fork","shared prefix",LIGHT_THEME["purple"]),(745,"Replay","recorded stream",LIGHT_THEME["amber"])]
+    for x,title,sub,color in outputs:
+        p += [svg_rect(x,520,180,82,LIGHT_THEME["bg"],color),svg_text(x+90,552,title,17,weight=750,mono="(" in title),svg_text(x+90,580,sub,15,LIGHT_THEME["muted"])]
+    p.append(svg_text(930,630,"同一 durable stream 提供可追踪性",15,LIGHT_THEME["muted"],anchor="end"))
+    return finish(p)
+
+
+def architecture_context_management() -> str:
+    p=svg_open(980,590)
+    labels=[("Durable Session",40),("Context Projection",145),("Current Surface",250),("TokenMeter",355),("Pressure check",460)]
+    for title,y in labels:
+        p += [svg_rect(330,y,320,62,LIGHT_THEME["teal_fill"],LIGHT_THEME["teal"]),svg_text(490,y+39,title,19,weight=750,mono=title=="TokenMeter")]
+        if y<460:p.append(svg_arrow(490,y+67,490,y+98))
+    p += [svg_arrow(325,491,205,491),svg_arrow(655,491,775,491),
+          svg_rect(30,455,170,72,LIGHT_THEME["success_fill"],LIGHT_THEME["success"]),svg_text(115,483,"below budget",17,weight=750),svg_text(115,508,"Continue",16,LIGHT_THEME["success"]),
+          svg_rect(780,430,170,72,LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"]),svg_text(865,458,"over budget",17,weight=750),svg_text(865,483,"Compaction",16,LIGHT_THEME["amber"]),
+          svg_arrow(865,507,865,545),svg_rect(690,545,260,38,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],8),svg_text(820,570,"Smaller Model Context",16,weight=700),
+          svg_badge(35,35,"optional composition",LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],190),svg_text(130,90,"token-meter + compaction-basic",15,LIGHT_THEME["muted"],mono=True)]
+    return finish(p)
+
+
+def architecture_ptc(w8: dict) -> str:
+    d=w8["deepseek_harness"]
+    p=svg_open(980,610)
+    p += [svg_text(245,38,"Direct",21,weight=780),svg_text(735,38,"PTC / Code Mode",21,weight=780)]
+    direct=[("Model Request 1",70),("Tool",175),("Model Request 2",280),("Tool · …",385)]
+    for title,y in direct:
+        p += [svg_rect(110,y,270,62,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(245,y+39,title,18,weight=700)]
+    for y in [135,240,345]:p.append(svg_arrow(245,y,245,y+34))
+    p += [svg_rect(600,70,270,62,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(735,109,"Model Request",18,weight=700),svg_arrow(735,137,735,176),
+          svg_rect(600,180,270,62,LIGHT_THEME["purple_fill"],LIGHT_THEME["purple"]),svg_text(735,219,"Program",19,weight=750),svg_arrow(735,247,735,278),
+          svg_rect(580,282,310,145,LIGHT_THEME["panel"],LIGHT_THEME["purple"]),svg_multiline_text(735,327,["Tool · Tool · Tool","Tool · …"],18,weight=700),svg_arrow(735,432,735,470),
+          svg_rect(600,475,270,62,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(735,514,"Model Request",18,weight=700),
+          svg_badge(105,525,f'{d["direct"]["provider_requests"]} requests · {d["direct"]["model_visible_tool_calls"]} calls',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),
+          svg_badge(595,555,f'{d["code"]["provider_requests"]} requests · {d["code"]["model_visible_tool_calls"]} call',LIGHT_THEME["purple_fill"],LIGHT_THEME["purple"],280)]
+    return finish(p)
+
+
+def architecture_recovery(w4: dict) -> str:
+    p=svg_open(980,470)
+    p += [svg_rect(320,25,340,65,LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"]),svg_text(490,65,"Fixed malformed provider event",19,weight=750),
+          svg_arrow(490,95,490,140),svg_rect(350,145,280,60,LIGHT_THEME["panel"],LIGHT_THEME["slate"]),svg_text(490,182,"Runtime boundary",20,weight=750),
+          svg_arrow(430,210,255,265),svg_arrow(550,210,725,265),
+          svg_text(255,255,"DeepSeek Harness",18,LIGHT_THEME["blue"],weight=750),svg_text(725,255,"Pinned OpenClaw",18,LIGHT_THEME["slate"],weight=750),
+          svg_rect(105,275,300,58,LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"]),svg_text(255,311,"structured tool error",18,weight=700),
+          svg_rect(575,275,300,58,LIGHT_THEME["panel2"],LIGHT_THEME["slate"]),svg_text(725,311,w4["openclaw"]["runtime_error_kind"],18,weight=700,mono=True),
+          svg_arrow(255,338,255,375),svg_arrow(725,338,725,375),
+          svg_rect(125,380,260,58,LIGHT_THEME["teal_fill"],LIGHT_THEME["teal"]),svg_text(255,416,"next model step",18,weight=750),
+          svg_rect(595,380,260,58,LIGHT_THEME["error_fill"],LIGHT_THEME["error"]),svg_text(725,416,"terminate",18,weight=750)]
+    return finish(p)
+
+
+def architecture_feature_to_cpu() -> str:
+    p=svg_open(1100,620)
+    headers=[("DeepSeek Design / Insight",25,250),("W Evidence",300,150),("Host Workload",485,330),("C Evidence",855,180)]
+    for title,x,w in headers:p += [svg_rect(x,20,w,55,LIGHT_THEME["panel2"],LIGHT_THEME["border"],8),svg_text(x+w/2,54,title,17,weight=750)]
+    rows=[("Capability Seam","W10","path / policy execution","C6",False),("Session Event Log","W9","state append / copy / persistence","C2",False),("Context Management","W5","surface traversal / serialization","C3 / C8",False),("PTC / Code Mode","W8","code runtime / reduced orchestration","C5",False),("Recovery Semantics","W4 / W6","Agent control-flow work","C1 reference",True),("Multi-Agent execution","—","Runtime density","C7",False)]
+    for i,(feature,w,work,c,dashed) in enumerate(rows):
+        y=95+i*82; fill=LIGHT_THEME["bg"] if i%2==0 else LIGHT_THEME["panel"]
+        for x,width in [(25,250),(300,150),(485,330),(855,180)]:p.append(svg_rect(x,y,width,62,fill,LIGHT_THEME["border"],7,1.2))
+        p += [svg_text(150,y+38,feature,17,weight=700),svg_text(375,y+38,w,17,LIGHT_THEME["blue"],weight=750),svg_text(650,y+38,work,16),svg_text(945,y+38,c,17,LIGHT_THEME["teal"],weight=750)]
+        p += [svg_arrow(277,y+31,294,y+31),svg_arrow(452,y+31,479,y+31),svg_arrow(817,y+31,849,y+31,dashed)]
+    p += [svg_text(25,600,"实线：direct mapping　　虚线：indirect / supporting evidence",15,LIGHT_THEME["muted"],anchor="start")]
+    return finish(p)
+
+
 def fmt(value: float) -> str:
-    if abs(value) >= 1_000_000:
-        return f"{value / 1_000_000:.1f}M"
-    if abs(value) >= 1_000:
-        return f"{value / 1_000:.1f}k"
-    if abs(value) >= 100:
-        return f"{value:.0f}"
-    if abs(value) >= 10:
-        return f"{value:.1f}"
-    return f"{value:.2f}"
+    if abs(value)>=1_000_000:return f"{value/1_000_000:.1f}M"
+    if abs(value)>=1_000:return f"{value/1_000:.1f}k"
+    if abs(value)>=100:return f"{value:.0f}"
+    if abs(value)>=10:return f"{value:.1f}"
+    return f"{value:.3g}"
 
 
-def svg_text(x, y, text, size=14, fill=MUTED, anchor="start", weight=400) -> str:
-    return (f'<text x="{x}" y="{y}" fill="{fill}" font-size="{size}" '
-            f'font-weight="{weight}" text-anchor="{anchor}" '
-            f'font-family="system-ui, sans-serif">{esc(text)}</text>')
+def line_panel(spec, series, x, y, width, height, log_x=False, log_y=False, x_ticks=None, y_label="", x_label=""):
+    left,right,top,bottom=80,30,35,62; plot_w=width-left-right;plot_h=height-top-bottom
+    points=[p for s in series for p in s["points"]]
+    tx=(lambda v:math.log10(float(v)+1)) if spec["x"]["scale"]=="log1p" else ((lambda v:math.log10(float(v))) if log_x else lambda v:float(v))
+    ty=(lambda v:math.log10(max(float(v),1e-9))) if log_y else lambda v:float(v)
+    xmin,xmax=min(tx(p["x"]) for p in points),max(tx(p["x"]) for p in points); ymin=min(ty(p["y"]) for p in points); ymax=max(ty(p.get("high",p["y"])) for p in points)
+    if not log_y:ymin=0
+    sx=lambda v:x+left+(tx(v)-xmin)/(xmax-xmin or 1)*plot_w
+    sy=lambda v:y+top+plot_h-(ty(v)-ymin)/(ymax-ymin or 1)*plot_h
+    parts=[]
+    for i in range(5):
+        yy=y+top+i*plot_h/4; val=ymax-i*(ymax-ymin)/4
+        parts += [f'<line x1="{x+left}" y1="{yy}" x2="{x+width-right}" y2="{yy}" stroke="{LIGHT_THEME["grid"]}"/>',svg_text(x+left-10,yy+5,fmt(10**val if log_y else val),15,LIGHT_THEME["muted"],"end")]
+    ticks=x_ticks or sorted({p["x"] for p in points});stride=max(1,math.ceil(len(ticks)/7))
+    for i,v in enumerate(ticks):
+        if i%stride and i!=len(ticks)-1:continue
+        parts.append(svg_text(sx(v),y+height-28,fmt(float(v)),15,LIGHT_THEME["muted"]))
+    for s in series:
+        coords=[(sx(p["x"]),sy(p["y"])) for p in s["points"]]; path=" ".join(("M" if i==0 else "L")+f"{xx:.1f},{yy:.1f}" for i,(xx,yy) in enumerate(coords))
+        parts.append(f'<path d="{path}" fill="none" stroke="{s["color"]}" stroke-width="3" stroke-linecap="round"/>')
+        for xx,yy in coords:parts.append(f'<circle cx="{xx}" cy="{yy}" r="5" fill="#FFFFFF" stroke="{s["color"]}" stroke-width="2.5"/>')
+    parts += [svg_text(x+left+plot_w/2,y+height-5,x_label,17,weight=700),svg_text(x+8,y+18,y_label,17,anchor="start",weight=700)]
+    return "".join(parts)
 
 
-def render_horizontal(spec: dict) -> str:
-    width, height = 960, 480
-    left, right, top, bottom = 190, 45, 90, 70
-    points = spec["series"][0]["points"]
-    maximum = max(point["y"] for point in points) * 1.1
-    plot_w, slot = width - left - right, (height - top - bottom) / len(points)
-    items = []
-    for tick in range(6):
-        value = maximum * tick / 5
-        x = left + plot_w * tick / 5
-        items.append(f'<line x1="{x}" y1="{top}" x2="{x}" y2="{height-bottom}" stroke="{GRID}"/>')
-        items.append(svg_text(x, height - 35, fmt(value), anchor="middle"))
-    color = spec["series"][0]["color"]
-    for index, point in enumerate(points):
-        y = top + index * slot + slot * .2
-        bar_w = point["y"] / maximum * plot_w
-        items.append(svg_text(left - 15, y + slot * .32, point["x"], anchor="end", size=15))
-        items.append(f'<rect x="{left}" y="{y}" width="{bar_w}" height="{slot*.55}" rx="6" fill="{color}"/>')
-        items.append(svg_text(left + bar_w + 9, y + slot * .32, fmt(point["y"]), fill=TEXT, size=14))
-    items.append(svg_text((left + width - right) / 2, height - 8,
-                          f'{spec["y"]["label"]} ({spec["y"]["unit"]})', anchor="middle", weight=700))
-    return svg_frame(spec, "".join(items), width, height)
+def data_c2(spec):
+    pts=sorted(spec["series"][0]["points"],key=lambda p:p["y"],reverse=True);p=svg_open(980,450,"C2",len(spec["series"]));left,right,top,bottom=210,120,35,60;minimum=.08;maximum=30
+    sx=lambda v:left+(math.log10(v)-math.log10(minimum))/(math.log10(maximum)-math.log10(minimum))*(980-left-right)
+    for tick in [.1,.3,1,3,10,30]:p += [f'<line x1="{sx(tick)}" y1="{top}" x2="{sx(tick)}" y2="{390}" stroke="{LIGHT_THEME["grid"]}"/>',svg_text(sx(tick),420,fmt(tick),15,LIGHT_THEME["muted"])]
+    for i,pt in enumerate(pts):
+        y=65+i*62;p += [svg_text(left-18,y+5,pt["x"],16,anchor="end"),f'<line x1="{sx(minimum)}" y1="{y}" x2="{sx(pt["y"])}" y2="{y}" stroke="{LIGHT_THEME["teal"]}" stroke-width="2"/>',f'<circle cx="{sx(pt["y"])}" cy="{y}" r="7" fill="{LIGHT_THEME["teal"]}"/>',svg_text(sx(pt["y"])+13,y+5,fmt(pt["y"]),15,LIGHT_THEME["teal"],anchor="start",weight=700)]
+    p.append(svg_text(490,447,"CPU slope (μs/event) · log scale",17,weight=700));return finish(p)
 
 
-def render_line(spec: dict) -> str:
-    width, height = 960, 480
-    left, right, top, bottom = 90, 90 if spec.get("rightAxis") else 40, 100, 72
-    all_points = [point for series in spec["series"] for point in series["points"]]
-    transform = (lambda value: math.log10(float(value))) if spec["x"]["scale"] == "log" else (
-        (lambda value: math.log10(float(value) + 1)) if spec["x"]["scale"] == "log1p" else lambda value: float(value))
-    x_values = [transform(point["x"]) for point in all_points]
-    x_min, x_max = min(x_values), max(x_values)
-    left_points = [point for series in spec["series"] if series.get("axis") != "right" for point in series["points"]]
-    right_points = [point for series in spec["series"] if series.get("axis") == "right" for point in series["points"]]
-    y_max = max([point.get("high", point["y"]) for point in left_points] + [0]) or 1
-    r_max = spec.get("rightAxis", {}).get("max") or (max([p["y"] for p in right_points] + [1]))
-    plot_w, plot_h = width - left - right, height - top - bottom
-    sx = lambda value: left + (transform(value) - x_min) / (x_max - x_min or 1) * plot_w
-    sy = lambda value, axis="left": top + plot_h - float(value) / (r_max if axis == "right" else y_max) * plot_h
-    items = []
-    for tick in range(6):
-        y = top + plot_h * tick / 5
-        items.append(f'<line x1="{left}" y1="{y}" x2="{width-right}" y2="{y}" stroke="{GRID}"/>')
-        items.append(svg_text(left - 12, y + 5, fmt(y_max * (1 - tick / 5)), anchor="end"))
-        if right_points:
-            items.append(svg_text(width - right + 12, y + 5, fmt(r_max * (1 - tick / 5))))
-    ticks = spec.get("xTicks") or sorted({point["x"] for point in all_points})
-    stride = max(1, math.ceil(len(ticks) / 7))
-    for index, value in enumerate(ticks):
-        if index % stride and index != len(ticks) - 1:
-            continue
-        items.append(svg_text(sx(value), height - 35, fmt(float(value)), anchor="middle"))
-    for series in spec["series"]:
-        axis = series.get("axis", "left")
-        coords = [(sx(point["x"]), sy(point["y"], axis)) for point in series["points"]]
-        path = " ".join(("M" if index == 0 else "L") + f"{x:.1f},{y:.1f}" for index, (x, y) in enumerate(coords))
-        items.append(f'<path d="{path}" fill="none" stroke="{series["color"]}" stroke-width="4" stroke-linecap="round"/>')
-        for point, (x, y) in zip(series["points"], coords):
-            if "low" in point and "high" in point:
-                items.append(f'<line x1="{x}" y1="{sy(point["low"], axis)}" x2="{x}" y2="{sy(point["high"], axis)}" stroke="{series["color"]}" opacity=".5" stroke-width="2"/>')
-            items.append(f'<circle cx="{x}" cy="{y}" r="6" fill="{series["color"]}" stroke="{BG}" stroke-width="2"/>')
-    legend_x = left
-    for series in spec["series"]:
-        items.append(f'<circle cx="{legend_x}" cy="72" r="6" fill="{series["color"]}"/>')
-        items.append(svg_text(legend_x + 12, 77, series["name"], size=15, fill=TEXT))
-        legend_x += 35 + len(series["name"]) * 10
-    items.append(svg_text((left + width - right) / 2, height - 7, spec["x"]["label"], anchor="middle", weight=700))
-    items.append(svg_text(18, 25, f'{spec["y"]["label"]} ({spec["y"]["unit"]})', weight=700))
-    if right_points:
-        items.append(svg_text(width - 12, 25, f'{spec["rightAxis"]["label"]} ({spec["rightAxis"]["unit"]})', anchor="end", weight=700))
-    return svg_frame(spec, "".join(items), width, height)
+def data_c3(spec):
+    p=svg_open(980,500,"C3",len(spec["series"]));p.append(line_panel(spec,spec["series"],0,40,980,445,True,False,y_label="Internal CPU Time (ms)",x_label="Context Bytes · log scale"))
+    x=spec["series"][2]["points"][-1];mib=x["x"]/(1024*1024);p += [svg_badge(690,55,f'{mib:g} MiB · SSE+JSON {x["y"]:.1f} ms',LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],250)]
+    for i,s in enumerate(spec["series"]):p += [f'<circle cx="{100+i*210}" cy="30" r="6" fill="{s["color"]}"/>',svg_text(115+i*210,35,s["name"],16,anchor="start")]
+    return finish(p)
 
 
-def svg_frame(spec: dict, body: str, width: int, height: int) -> str:
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" role="img" aria-label="{esc(spec["title"])}">'
-            f'<rect width="100%" height="100%" rx="20" fill="{PANEL}"/>'
-            f'{svg_text(28, 42, spec["title"], size=24, fill=TEXT, weight=800)}{body}</svg>\n')
+def data_c4(spec):
+    rows=[(s["name"],s["points"][-1]["y"],s["color"]) for s in spec["series"]];p=svg_open(980,330,"C4",len(spec["series"]));left,right=230,130;minimum=.04;maximum=6;sx=lambda v:left+(math.log10(v)-math.log10(minimum))/(math.log10(maximum)-math.log10(minimum))*(980-left-right)
+    for tick in [.05,.1,.3,1,3]:p += [f'<line x1="{sx(tick)}" y1="25" x2="{sx(tick)}" y2="270" stroke="{LIGHT_THEME["grid"]}"/>',svg_text(sx(tick),305,fmt(tick),15,LIGHT_THEME["muted"])]
+    for i,(name,value,color) in enumerate(rows):y=70+i*75;p += [svg_text(left-18,y+5,name,17,anchor="end"),f'<line x1="{sx(minimum)}" y1="{y}" x2="{sx(value)}" y2="{y}" stroke="{color}" stroke-width="2"/>',f'<circle cx="{sx(value)}" cy="{y}" r="8" fill="{color}"/>',svg_text(sx(value)+14,y+5,f'{value:.3f}',16,color,anchor="start",weight=700)]
+    count=int(spec["series"][0]["points"][-1]["x"]);p.append(svg_text(490,327,f"Wall Time (ms/op) · log scale · {count} tiny operations",17,weight=700));return finish(p)
 
 
-def architecture_figures() -> dict[str, str]:
-    common = 'font-family="system-ui,sans-serif" text-anchor="middle"'
-    return {
-        "harness-model.svg": f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360"><rect width="960" height="360" rx="22" fill="{PANEL}"/><g {common} fill="{TEXT}"><text x="480" y="44" font-size="25" font-weight="800">Model 决策，Harness 执行并维持状态</text><rect x="65" y="120" width="150" height="72" rx="12" fill="#14242c" stroke="#5aa7ff"/><text x="140" y="163" font-size="20">User</text><path d="M220 156H310" stroke="#46c8b3" stroke-width="4"/><rect x="315" y="88" width="220" height="138" rx="16" fill="#14242c" stroke="#46c8b3"/><text x="425" y="145" font-size="23" font-weight="700">Harness</text><text x="425" y="180" font-size="16" fill="{MUTED}">Loop · Context · Policy</text><path d="M540 130H640" stroke="#46c8b3" stroke-width="4"/><path d="M540 185H640" stroke="#46c8b3" stroke-width="4"/><rect x="645" y="80" width="210" height="70" rx="12" fill="#14242c" stroke="#5aa7ff"/><text x="750" y="123" font-size="20">Model</text><rect x="645" y="170" width="210" height="105" rx="12" fill="#14242c" stroke="#a98bff"/><text x="750" y="210" font-size="20">Tool · Process</text><text x="750" y="243" font-size="16" fill="{MUTED}">Session · Filesystem</text></g></svg>''',
-        "capability-seam.svg": f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 390"><rect width="960" height="390" rx="22" fill="{PANEL}"/><g {common} fill="{TEXT}"><text x="480" y="45" font-size="25" font-weight="800">Consumer 与 Provider 分离</text><rect x="355" y="80" width="250" height="58" rx="12" fill="#14242c" stroke="#46c8b3"/><text x="480" y="117" font-size="20">Agent Loop → tool-fs</text><path d="M480 140V195" stroke="#46c8b3" stroke-width="4"/><rect x="380" y="195" width="200" height="58" rx="12" fill="#14242c" stroke="#46c8b3"/><text x="480" y="232" font-size="21">ctx.fs</text><path d="M480 255V285M480 285H250M480 285H710M250 285V310M710 285V310" stroke="#46c8b3" stroke-width="4" fill="none"/><rect x="120" y="310" width="260" height="58" rx="12" fill="#14242c" stroke="#5aa7ff"/><text x="250" y="346" font-size="19">fs-local · outside ✓</text><rect x="580" y="310" width="260" height="58" rx="12" fill="#14242c" stroke="#ed7474"/><text x="710" y="346" font-size="19">fs-sandbox · outside ✕</text></g></svg>''',
-        "event-log.svg": f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420"><rect width="960" height="420" rx="22" fill="{PANEL}"/><g {common} fill="{TEXT}"><text x="480" y="42" font-size="25" font-weight="800">Session Event Log → Model Projection 与恢复语义</text><g font-size="16">{''.join(f'<rect x="{55+i*143}" y="95" width="125" height="55" rx="9" fill="#14242c" stroke="#46c8b3"/><text x="{117+i*143}" y="129">{name}</text>' for i,name in enumerate(["turn/start","user/message","tool/call","tool/result","step/end","turn/end"]))}</g><path d="M480 160V225" stroke="#46c8b3" stroke-width="4"/><rect x="330" y="225" width="300" height="62" rx="12" fill="#14242c" stroke="#5aa7ff"/><text x="480" y="264" font-size="21">deriveMessages() → Context</text><g font-size="19">{''.join(f'<rect x="{100+i*210}" y="330" width="160" height="55" rx="10" fill="#14242c" stroke="#a98bff"/><text x="{180+i*210}" y="365">{name}</text>' for i,name in enumerate(["Resume","Fork","Replay","Traceability"]))}</g></g></svg>''',
-        "ptc.svg": f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 390"><rect width="960" height="390" rx="22" fill="{PANEL}"/><g {common} fill="{TEXT}"><text x="480" y="45" font-size="25" font-weight="800">Executor Collapse：改变模型可见的编排粒度</text><text x="245" y="95" font-size="21" fill="#5aa7ff">Direct Tool Calling</text><text x="715" y="95" font-size="21" fill="#a98bff">Programmatic Tool Calling</text><g font-size="18">{''.join(f'<rect x="{70+i*95}" y="140" width="75" height="52" rx="9" fill="#14242c" stroke="#5aa7ff"/><text x="{107+i*95}" y="173">{name}</text>' for i,name in enumerate(["LLM","Tool","LLM","Tool"]))}<rect x="610" y="132" width="210" height="62" rx="11" fill="#14242c" stroke="#a98bff"/><text x="715" y="170" font-size="20">LLM → Program</text><rect x="575" y="235" width="280" height="86" rx="13" fill="#14242c" stroke="#46c8b3"/><text x="715" y="270" font-size="19">Tool · Tool · Tool · Tool</text><text x="715" y="300" font-size="15" fill="{MUTED}">local code runtime dispatch</text></g><text x="480" y="365" font-size="22" font-weight="800" fill="#46c8b3">底层操作不消失，外层 round trip 被折叠</text></g></svg>''',
-        "feature-to-cpu.svg": f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 410"><rect width="960" height="410" rx="22" fill="{PANEL}"/><g {common} fill="{TEXT}"><text x="480" y="42" font-size="25" font-weight="800">Feature → Runtime Mechanism → Host CPU Workload</text>{''.join(f'<rect x="{45+i*230}" y="90" width="190" height="80" rx="12" fill="#14242c" stroke="{color}"/><text x="{140+i*230}" y="125" font-size="19" font-weight="700">{name}</text><text x="{140+i*230}" y="151" font-size="14" fill="{MUTED}">{sub}</text><path d="M{140+i*230} 175V235" stroke="{color}" stroke-width="4"/>' for i,(name,sub,color) in enumerate([("Control","Loop · Recovery","#5aa7ff"),("State","Event · Context","#46c8b3"),("Execution","Tool · Process","#a98bff"),("Scale","Multi-Agent","#f0b75a")]))}{''.join(f'<rect x="{45+i*230}" y="235" width="190" height="105" rx="12" fill="#14242c" stroke="{color}"/><text x="{140+i*230}" y="275" font-size="17">{line1}</text><text x="{140+i*230}" y="306" font-size="15" fill="{MUTED}">{line2}</text>' for i,(line1,line2,color) in enumerate([("C1","Agent steps","#5aa7ff"),("C2 · C3 · C8","state surface","#46c8b3"),("C4 · C5 · C6","boundaries","#a98bff"),("C7","density","#f0b75a")]))}</g></svg>''',
-    }
+def data_c5(spec):
+    p=svg_open(980,500,"C5",len(spec["series"]));p += [f'<rect x="80" y="42" width="390" height="385" fill="{LIGHT_THEME["blue_fill"]}" opacity=".45"/>',f'<rect x="470" y="42" width="480" height="385" fill="{LIGHT_THEME["purple_fill"]}" opacity=".45"/>',svg_text(105,70,"PTC fixed-cost dominated",15,LIGHT_THEME["muted"],anchor="start"),svg_text(925,70,"orchestration amortized",15,LIGHT_THEME["muted"],anchor="end")]
+    p.append(line_panel(spec,spec["series"],0,35,980,450,False,False,y_label="Wall Time (ms)",x_label="Operations · log(1+x)"))
+    for i,s in enumerate(spec["series"]):p += [f'<circle cx="{120+i*160}" cy="25" r="6" fill="{s["color"]}"/>',svg_text(135+i*160,30,s["name"],16,anchor="start")]
+    return finish(p)
+
+
+def data_c6(spec):
+    result=data_c4({"series":[{"name":s["name"],"color":s["color"],"points":s["points"]} for s in spec["series"]]})
+    return result.replace('data-benchmark="C4"','data-benchmark="C6"',1)
+
+
+def data_c7(spec, cpu):
+    p=svg_open(980,650,"C7",len(spec["series"]));throughput=[spec["series"][0]];efficiency=[spec["series"][1]]
+    p.append(line_panel(spec,throughput,0,30,980,285,False,False,y_label="Agents/s",x_label=""));p.append(line_panel(spec,efficiency,0,325,980,285,False,False,y_label="Parallel Efficiency (%)",x_label="Agents"))
+    d=cpu["C7"]["data"];last=max(d["aggregates"],key=int);p += [svg_badge(650,45,f'{last} Agents · {d["aggregates"][last]["agents_per_second"]["median"]:.2f} Agents/s',LIGHT_THEME["blue_fill"],LIGHT_THEME["blue"],280),svg_badge(690,355,f'{d["scaling"][last]["parallel_efficiency"]*100:.1f}% efficiency',LIGHT_THEME["amber_fill"],LIGHT_THEME["amber"],240)]
+    return finish(p)
+
+
+def data_c8(spec, cpu):
+    p=svg_open(980,760,"C8",len(spec["series"]));p += [svg_text(25,28,"Panel A · Cold 与 Warm 的完整数量级",17,anchor="start",weight=750),line_panel(spec,spec["series"],0,35,980,330,True,True,spec.get("xTicks"),"CPU / window (μs) · log","Surface Nodes · log"),svg_text(25,400,"Panel B · Warm detail",17,anchor="start",weight=750),line_panel(spec,spec["series"][1:],0,410,980,330,True,False,spec.get("xTicks"),"CPU / window (μs)","Surface Nodes · log")]
+    d=cpu["C8"]["data"];slopes=[("Cold",d["cold"]),("Incremental",d["incremental"]),("Repeat",d["repeat"])];x=390
+    for name,data in slopes:
+        slope=data["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"];p.append(svg_badge(x,5,f'{name} slope {slope:.3f}',width=190));x+=195
+    return finish(p)
+
+
+def build_figure_sets(cpu: dict, workloads: dict) -> tuple[dict[str, str], dict[str, str]]:
+    charts={c["key"]:c for c in build_charts(cpu)}
+    architecture={"harness-model.svg":architecture_harness_model(),"composition-tree.svg":architecture_composition_tree(),"capability-seam.svg":architecture_capability_seam(workloads["W10"]["data"]),"event-log.svg":architecture_event_log(),"context-management.svg":architecture_context_management(),"ptc.svg":architecture_ptc(workloads["W8"]["data"]),"recovery-boundary.svg":architecture_recovery(workloads["W4"]["data"]),"feature-to-cpu.svg":architecture_feature_to_cpu()}
+    data={"c2-session-cost.svg":data_c2(charts["C2"]),"c3-context-serialization.svg":data_c3(charts["C3"]),"c4-process-lifecycle.svg":data_c4(charts["C4"]),"c5-native-vs-ptc.svg":data_c5(charts["C5"]),"c6-fs-policy.svg":data_c6(charts["C6"]),"c7-agent-scale.svg":data_c7(charts["C7"],cpu),"c8-context-pressure.svg":data_c8(charts["C8"],cpu)}
+    return architecture, data
 
 
 def main() -> None:
-    data_dir = REPORT_ROOT / "figures" / "data"
-    arch_dir = REPORT_ROOT / "figures" / "architecture"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    arch_dir.mkdir(parents=True, exist_ok=True)
-    charts = {chart["key"]: chart for chart in build_charts(load_cpu_results())}
-    for key, filename in DATA_NAMES.items():
-        renderer = render_horizontal if charts[key]["type"] == "horizontal-bar" else render_line
-        (data_dir / filename).write_text(renderer(charts[key]), encoding="utf-8")
-    for filename, content in architecture_figures().items():
-        (arch_dir / filename).write_text(content + "\n", encoding="utf-8")
-    print(f"generated {len(DATA_NAMES)} data and 5 architecture SVG figures")
+    data_dir=REPORT_ROOT/"figures"/"data";arch_dir=REPORT_ROOT/"figures"/"architecture";data_dir.mkdir(parents=True,exist_ok=True);arch_dir.mkdir(parents=True,exist_ok=True)
+    architecture,data=build_figure_sets(load_cpu_results(),load_workload_results())
+    for name,content in architecture.items():(arch_dir/name).write_text(content,encoding="utf-8")
+    for name,content in data.items():(data_dir/name).write_text(content,encoding="utf-8")
+    print(f"generated {len(data)} data and {len(architecture)} architecture SVG figures")
 
 
-if __name__ == "__main__":
-    main()
+if __name__=="__main__":main()
