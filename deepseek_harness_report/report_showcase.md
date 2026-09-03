@@ -80,16 +80,16 @@ CPU Microbenchmark C1–C8
 
 | 实验 | 测试内容 | 为什么做 | 主要回答的问题 | 主要结果 |
 |---|---|---|---|---|
-| W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 | 两侧均成功并通过 verifier=是 |
+| W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 | 两侧均完成任务，并通过外部 verifier |
 | W2 | Python Bug Fix | 小型真实 Coding Task | 是否具备读代码、修改、测试和验证闭环 | DSH 4/5；OpenClaw 5/5 |
 | W3 | Multi-module Feature | 更长的真实执行链 | 是否出现值得进一步隔离的稳定性现象 | DSH 5/5；OpenClaw 2/5，观察到 `incomplete_turn` |
-| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | DSH completed=是；OpenClaw=`incomplete_turn` |
-| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH/OpenClaw 均触发 3/3 次；DSH boundary 后 body 均缩小=是 |
-| W6 | Tool Failure | 固定 invalid args / exit 17 | 普通 Tool Failure 与 malformed event 是否同一边界 | 两侧在两种 normal Tool Error 后均继续=是 |
-| W7 | Long Tool Chain | 连续 20 次 Tool Call | Context、request body 与 Tool state 如何累积 | 两侧完成=是；历史 markers=是；call/result pairing=是 |
+| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | DSH 将错误结构化后继续并完成；OpenClaw pinned fixture 以 `incomplete_turn` 结束 |
+| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH 与 OpenClaw 在 calibrated fixture 中均记录到 3 次 Compaction；DSH 3 个 boundary 后 request body 均下降 |
+| W6 | Tool Failure | 固定 invalid args / exit 17 | 普通 Tool Failure 与 malformed event 是否同一边界 | 两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行 |
+| W7 | Long Tool Chain | 连续 20 次 Tool Call | Context、request body 与 Tool state 如何累积 | 两侧均完成 20-step Tool Chain；历史 marker 与 Tool Call/Result pairing 均验证通过；最终 request 分别保留 DSH 20、OpenClaw 20 个 Tool Result |
 | W8 | Direct vs PTC | 相同 8 个底层操作 | request 下降是否来自编排折叠，而非漏做工作 | DSH provider requests 9→2，底层操作仍为 8 |
-| W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | prefix=是；dangling 未重发=是；fork=是；无 live provider=是 |
-| W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | outside policy 由 `OUTSIDE_CHANGED` 变为 `FS_SANDBOX_DENIED`，切回恢复=是 |
+| W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | committed prefix 保持一致；dangling call 未重发；Fork 成功；Replay 未访问 live provider |
+| W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复 |
 
 W1–W3 是真实 Agent workload；W4–W8 是 deterministic mechanism tests；W9–W10 是 DSH white-box mechanism tests。W9/W10 没有完全对等的 OpenClaw fixture，不能用于两套 Runtime 排名。
 
@@ -287,7 +287,7 @@ W6 固定普通 Tool Failure
 
 **W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在 2 次 request 后完成：是；当前 pinned OpenClaw fixture 在 1 次 request 后以 `incomplete_turn` 终止。
 
-**W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。missing required argument 与 child exit 17 两个 case 中，两侧都能把 observation 返回模型并继续：invalid args DSH=是、OpenClaw=是；nonzero exit DSH=是、OpenClaw=是。
+**W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。测试分别固定 missing required argument 与 child exit 17；两侧在 invalid args 和 exit 17 两种 Tool Error 后均继续执行。
 
 **实际结论。** malformed provider event 与 valid Tool Failure 位于不同错误边界，不能合并成一个“Runtime 稳定性”指标。W4 只能证明两套 pinned Runtime 对固定输入的 semantics 不同，不能外推为 DSH 全面更可靠。
 
@@ -388,8 +388,8 @@ W10 证明替换 `ctx.fs` provider 会改变 outside-path policy。C6 在 1000 �
 
 | 项目 | 值 |
 |---|---|
-| 报告输入 SHA256 | `b1cdb49bf080191c5aad5e0990e9770b5552adc3b873de4b5ab359d499e2ca18` |
-| 生成时 Git 状态 | `38d9168dba52 + working-tree changes` |
+| 报告输入 SHA256 | `fb29e2691861c16c2c7ebddcb8f451fe84e866ea96fab4f8e4a844000872cd1d` |
+| 生成时 Git 状态 | `bf41a6e12d66 + working-tree changes` |
 | DeepSeek Harness | `dd6322d604e00eec1ba5e0c8541159906a21094a` |
 | OpenClaw | `3c1b351555e0ebc1b022842523191691e89c7684` |
 | Node.js | `24.15.0` |
@@ -418,6 +418,6 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 4. PTC 把多次模型可见 Tool Round Trip 改为一次 Program Execution boundary；
 5. W4/W6 进一步表明，Recovery 取决于错误在哪一层被结构化。
 
-这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的价值在于把它们统一放进 composition、state 和 execution model，并让边界更容易被替换、观察与验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成 Control、State、Execution 与 Scale 四类 Host workload。
+这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成 Control、State、Execution 与 Scale 四类 Host workload。
 
 **因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把 composition、state 和 execution boundary 提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**

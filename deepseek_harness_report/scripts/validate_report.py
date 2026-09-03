@@ -85,6 +85,8 @@ def main() -> None:
             raise ValueError(f"showcase report missing required framing: {phrase}")
     if "新特性五" in showcase:
         raise ValueError("showcase incorrectly presents Recovery as a fifth feature")
+    if "=是" in showcase:
+        raise ValueError("showcase exposes boolean assertions instead of human-readable summaries")
     metrics = json.loads((REPORT_ROOT / "generated" / "metrics.json").read_text(encoding="utf-8"))
     provenance = json.loads((REPORT_ROOT / "generated" / "provenance.json").read_text(encoding="utf-8"))
     data = load_inputs()

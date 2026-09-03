@@ -80,16 +80,16 @@ CPU Microbenchmark C1–C8
 
 | 实验 | 测试内容 | 为什么做 | 主要回答的问题 | 主要结果 |
 |---|---|---|---|---|
-| W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 | 两侧均成功并通过 verifier={{W1_BOTH_VERIFIED}} |
+| W1 | Exact File Edit | 最基础 smoke test | 是否能完成明确、可验证的文件修改 | {{W1_SUMMARY}} |
 | W2 | Python Bug Fix | 小型真实 Coding Task | 是否具备读代码、修改、测试和验证闭环 | DSH {{W2_DSH_SUCCESS}}/{{W2_DSH_TOTAL}}；OpenClaw {{W2_OPENCLAW_SUCCESS}}/{{W2_OPENCLAW_TOTAL}} |
 | W3 | Multi-module Feature | 更长的真实执行链 | 是否出现值得进一步隔离的稳定性现象 | DSH {{W3_DSH_SUCCESS}}/{{W3_DSH_TOTAL}}；OpenClaw {{W3_OPENCLAW_SUCCESS}}/{{W3_OPENCLAW_TOTAL}}，观察到 `incomplete_turn` |
-| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | DSH completed={{W4_DSH_COMPLETED}}；OpenClaw=`{{W4_OPENCLAW_ERROR}}` |
-| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH/OpenClaw 均触发 {{W5_DSH_COMPACTIONS}}/{{W5_OPENCLAW_COMPACTIONS}} 次；DSH boundary 后 body 均缩小={{W5_DSH_BOUNDARIES_REDUCED}} |
-| W6 | Tool Failure | 固定 invalid args / exit {{W6_CHILD_EXIT_CODE}} | 普通 Tool Failure 与 malformed event 是否同一边界 | 两侧在两种 normal Tool Error 后均继续={{W6_ALL_COMPLETED}} |
-| W7 | Long Tool Chain | 连续 {{W7_TOOL_CALLS}} 次 Tool Call | Context、request body 与 Tool state 如何累积 | 两侧完成={{W7_BOTH_COMPLETED}}；历史 markers={{W7_HISTORY_VERIFIED}}；call/result pairing={{W7_PAIRING_VERIFIED}} |
+| W4 | Malformed Tool Call | 固定坏 provider event | 错误被结构化并继续，还是终止 Turn | {{W4_SUMMARY}} |
+| W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | {{W5_SUMMARY}} |
+| W6 | Tool Failure | 固定 invalid args / exit {{W6_CHILD_EXIT_CODE}} | 普通 Tool Failure 与 malformed event 是否同一边界 | {{W6_SUMMARY}} |
+| W7 | Long Tool Chain | 连续 {{W7_TOOL_CALLS}} 次 Tool Call | Context、request body 与 Tool state 如何累积 | {{W7_SUMMARY}} |
 | W8 | Direct vs PTC | 相同 {{W8_OPERATIONS}} 个底层操作 | request 下降是否来自编排折叠，而非漏做工作 | DSH provider requests {{W8_DSH_DIRECT_REQUESTS}}→{{W8_DSH_CODE_REQUESTS}}，底层操作仍为 {{W8_OPERATIONS}} |
-| W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | prefix={{W9_PREFIX_IDENTICAL}}；dangling 未重发={{W9_DANGLING_NOT_DISPATCHED}}；fork={{W9_FORK_EQUAL}}；无 live provider={{W9_PROVIDER_NOT_CONTACTED}} |
-| W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | outside policy 由 `{{W10_LOCAL_OUTSIDE}}` 变为 `{{W10_SANDBOX_ERROR}}`，切回恢复={{W10_SWAP_RESTORED}} |
+| W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | {{W9_SUMMARY}} |
+| W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | {{W10_SUMMARY}} |
 
 W1–W3 是真实 Agent workload；W4–W8 是 deterministic mechanism tests；W9–W10 是 DSH white-box mechanism tests。W9/W10 没有完全对等的 OpenClaw fixture，不能用于两套 Runtime 排名。
 
@@ -285,7 +285,7 @@ W6 固定普通 Tool Failure
 
 **W4 实验事实。** DSH 将其落为结构化 tool-dispatch error，并在 {{W4_DSH_REQUESTS}} 次 request 后完成：{{W4_DSH_COMPLETED}}；当前 pinned OpenClaw fixture 在 {{W4_OPENCLAW_REQUESTS}} 次 request 后以 `{{W4_OPENCLAW_ERROR}}` 终止。
 
-**W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。missing required argument 与 child exit {{W6_CHILD_EXIT_CODE}} 两个 case 中，两侧都能把 observation 返回模型并继续：invalid args DSH={{W6_DSH_INVALID_COMPLETED}}、OpenClaw={{W6_OPENCLAW_INVALID_COMPLETED}}；nonzero exit DSH={{W6_DSH_NONZERO_COMPLETED}}、OpenClaw={{W6_OPENCLAW_NONZERO_COMPLETED}}。
+**W6 测试目的。** 检查 normal Tool Error 是否也存在同样差异。测试分别固定 missing required argument 与 child exit {{W6_CHILD_EXIT_CODE}}；{{W6_SUMMARY}}。
 
 **实际结论。** malformed provider event 与 valid Tool Failure 位于不同错误边界，不能合并成一个“Runtime 稳定性”指标。W4 只能证明两套 pinned Runtime 对固定输入的 semantics 不同，不能外推为 DSH 全面更可靠。
 
@@ -416,6 +416,6 @@ DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能
 4. PTC 把多次模型可见 Tool Round Trip 改为一次 Program Execution boundary；
 5. W4/W6 进一步表明，Recovery 取决于错误在哪一层被结构化。
 
-这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的价值在于把它们统一放进 composition、state 和 execution model，并让边界更容易被替换、观察与验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成 Control、State、Execution 与 Scale 四类 Host workload。
+这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成 Control、State、Execution 与 Scale 四类 Host workload。
 
 **因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把 composition、state 和 execution boundary 提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**
