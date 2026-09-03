@@ -1,22 +1,31 @@
 {
-  "deepseek_harness": {
-    "workspace": "w2-dsh-005",
-    "changed_or_untracked_files": [
-      "retry_parser/parser.py"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "retry_parser/parser.py": "9f541c5de83e73f168db996c0d9fbb47886678ad6c6b53f4b2f68e8a5bcbcdd8"
-    }
+  "schema_version": 2,
+  "baseline": {
+    "template": "workspaces/w2-template",
+    "template_tree_sha256": "3c1d392858985727b32cf875b658be0eaaaae07d5e9248a728ec497ec226f39a",
+    "verifier": "verifiers/verify_w2.py",
+    "verifier_sha256": "524b4a57a2be18b90174bff86ee2f4944f848af228fff568132489f61a72ab2e"
   },
-  "openclaw": {
-    "workspace": "w2-openclaw-004",
-    "changed_or_untracked_files": [
-      "retry_parser/parser.py"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "retry_parser/parser.py": "148cb4252e8551906139630d70ba47ac61b0bd9927115eeb7d7ba7be4c7a523c"
+  "workspaces": {
+    "deepseek_harness": {
+      "workspace": "w2-dsh-005",
+      "changed_or_untracked_files": [
+        "retry_parser/parser.py"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "retry_parser/parser.py": "9f541c5de83e73f168db996c0d9fbb47886678ad6c6b53f4b2f68e8a5bcbcdd8"
+      }
+    },
+    "openclaw": {
+      "workspace": "w2-openclaw-004",
+      "changed_or_untracked_files": [
+        "retry_parser/parser.py"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "retry_parser/parser.py": "148cb4252e8551906139630d70ba47ac61b0bd9927115eeb7d7ba7be4c7a523c"
+      }
     }
   }
 }

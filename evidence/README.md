@@ -1,10 +1,20 @@
 # Frozen benchmark evidence
 
 For W1-W3, this directory retains each normalized pair summary plus the exact
-changed/untracked files needed to reconstruct both final workspaces from the
-committed templates. The reproduction script initializes a fresh Git baseline,
-applies each overlay, reruns the external verifier, checks the changed-file/diff
-metadata, and rebuilds the W2/W3 n=5 aggregates.
+changed/untracked files needed to reconstruct both final workspaces. Each
+workspace manifest cryptographically binds the committed template tree and
+external verifier, including paths and SHA256 values. The reproduction script
+checks that provenance before initializing a fresh Git baseline, applying each
+overlay, rerunning the verifier, checking changed-file/diff metadata, and
+rebuilding the W2/W3 n=5 aggregates.
+
+The W1-W3 evidence has two explicit assurance levels:
+
+- reproducible outcome evidence: baseline tree, final files, changed paths/diff,
+  and external-verifier pass/fail;
+- frozen run metadata: wall time, model/tool-call counts, and native token
+  counters retained in normalized summaries but not derivable without the
+  deliberately omitted provider/runtime transcripts.
 
 For deterministic W4-W10, it contains the minimal redacted input closure used to
 rebuild the committed summaries. It excludes API headers, credentials, server

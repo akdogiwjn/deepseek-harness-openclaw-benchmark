@@ -89,6 +89,8 @@ TRACE_TYPES = {
     "tool/code-dispatch-start", "tool/code-dispatch",
 }
 
+TREE_IGNORES = {".git", ".pytest_cache", "__pycache__"}
+
 
 def sanitize_string(value: str, root: Path) -> str:
     value = value.replace(str(root), "$BENCH_ROOT")
@@ -174,6 +176,24 @@ def git_paths(workspace: Path, *args: str) -> list[str]:
     return [item.decode("utf-8") for item in completed.stdout.split(b"\0") if item]
 
 
+def tree_sha256(root: Path) -> str:
+    """Hash the copied baseline tree, including paths, file bytes, and symlink targets."""
+    digest = hashlib.sha256()
+    for path in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
+        relative = path.relative_to(root)
+        if any(part in TREE_IGNORES for part in relative.parts):
+            continue
+        encoded = relative.as_posix().encode("utf-8")
+        if path.is_symlink():
+            digest.update(b"L\0" + encoded + b"\0" + path.readlink().as_posix().encode("utf-8") + b"\n")
+        elif path.is_file():
+            executable = b"x" if path.stat().st_mode & 0o111 else b"-"
+            digest.update(b"F" + executable + b"\0" + encoded + b"\0" + sha256(path).encode("ascii") + b"\n")
+        elif path.is_dir():
+            digest.update(b"D\0" + encoded + b"\n")
+    return digest.hexdigest()
+
+
 def freeze_workspace_overlay(workspace: Path, target: Path) -> dict[str, Any]:
     changed = git_paths(workspace, "diff", "--name-only", "HEAD")
     untracked = git_paths(workspace, "ls-files", "--others", "--exclude-standard")
@@ -202,6 +222,11 @@ def freeze_workspace_overlay(workspace: Path, target: Path) -> dict[str, Any]:
 
 def freeze_behavioral_groups(root: Path, evidence: Path, refresh: bool) -> None:
     for group, pairs in BEHAVIORAL_PAIRS.items():
+        group_slug = group.lower()
+        template_relative = Path("workspaces") / f"{group_slug}-template"
+        verifier_relative = Path("verifiers") / f"verify_{group_slug}.py"
+        template = root / template_relative
+        verifier = root / verifier_relative
         group_root = evidence / group
         if refresh and group_root.exists():
             shutil.rmtree(group_root)
@@ -213,11 +238,20 @@ def freeze_behavioral_groups(root: Path, evidence: Path, refresh: bool) -> None:
             target.mkdir(parents=True, exist_ok=True)
             copy_json(source_summary, target / "summary.json", root)
             workspace_manifest = {
-                runtime: freeze_workspace_overlay(
-                    root / "workspaces" / workspace_name,
-                    target / "workspaces" / runtime,
-                )
-                for runtime, workspace_name in workspaces.items()
+                "schema_version": 2,
+                "baseline": {
+                    "template": template_relative.as_posix(),
+                    "template_tree_sha256": tree_sha256(template),
+                    "verifier": verifier_relative.as_posix(),
+                    "verifier_sha256": sha256(verifier),
+                },
+                "workspaces": {
+                    runtime: freeze_workspace_overlay(
+                        root / "workspaces" / workspace_name,
+                        target / "workspaces" / runtime,
+                    )
+                    for runtime, workspace_name in workspaces.items()
+                },
             }
             (target / "workspace-manifest.json").write_text(
                 json.dumps(workspace_manifest, ensure_ascii=False, indent=2) + "\n",

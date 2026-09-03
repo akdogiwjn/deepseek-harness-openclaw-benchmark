@@ -45,4 +45,7 @@ normalized pair summaries are frozen under `evidence/W3/`. The repository
 reproduction script rebuilds each workspace, reruns the hidden verifier including
 the added-test requirement, and regenerates the n=5 aggregate. The malformed
 provider fragment remains unavailable, so W4—not these artifacts—owns the
-deterministic malformed-event mechanism claim.
+deterministic malformed-event mechanism claim. The manifest binds the template
+tree and verifier by SHA256. Final correctness and diff state are reproducible;
+wall time and call counts remain frozen run metadata because the provider/runtime
+transcripts were deliberately omitted.

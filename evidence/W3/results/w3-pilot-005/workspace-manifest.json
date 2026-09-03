@@ -1,30 +1,39 @@
 {
-  "deepseek_harness": {
-    "workspace": "w3-dsh-005",
-    "changed_or_untracked_files": [
-      "quota_guard/service.py",
-      "quota_guard/store.py",
-      "tests/test_service.py"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "quota_guard/service.py": "4c7d6ce3149a66a62b2f3d8b3e2fddd4cddd629cc18d3d51ef73e0d1f9a4e799",
-      "quota_guard/store.py": "87c66a650c51efc5ee6da7126399ac8b5ab352dc6d0fef3592e9387d2dbbb349",
-      "tests/test_service.py": "371d7de2e7c66c596aecda0128890bfee40822abf724a0ba27c0e20959cb6409"
-    }
+  "schema_version": 2,
+  "baseline": {
+    "template": "workspaces/w3-template",
+    "template_tree_sha256": "4456fde349b857aeaef226722e14ebf73350f8afc1465555b64597b49dce8fe6",
+    "verifier": "verifiers/verify_w3.py",
+    "verifier_sha256": "1df41e6d0e98a0697caa2af0561e0d9a64ce5ebeeaa130b12a3fa71642ac6539"
   },
-  "openclaw": {
-    "workspace": "w3-openclaw-005",
-    "changed_or_untracked_files": [
-      "quota_guard/service.py",
-      "quota_guard/store.py",
-      "tests/test_service.py"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "quota_guard/service.py": "6edf7267fcabae1cf5387304ad84c3bfb964d30b0714c2d6f3d8042b4c3f2ab6",
-      "quota_guard/store.py": "ca412d529f027562b35de08c69794aef7cf5630c896e9e671ba0008ae20b5327",
-      "tests/test_service.py": "9d15b1f77023e80f13c2a81ab66fdda3db143fdf8fa23231c1836d45d3f32507"
+  "workspaces": {
+    "deepseek_harness": {
+      "workspace": "w3-dsh-005",
+      "changed_or_untracked_files": [
+        "quota_guard/service.py",
+        "quota_guard/store.py",
+        "tests/test_service.py"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "quota_guard/service.py": "4c7d6ce3149a66a62b2f3d8b3e2fddd4cddd629cc18d3d51ef73e0d1f9a4e799",
+        "quota_guard/store.py": "87c66a650c51efc5ee6da7126399ac8b5ab352dc6d0fef3592e9387d2dbbb349",
+        "tests/test_service.py": "371d7de2e7c66c596aecda0128890bfee40822abf724a0ba27c0e20959cb6409"
+      }
+    },
+    "openclaw": {
+      "workspace": "w3-openclaw-005",
+      "changed_or_untracked_files": [
+        "quota_guard/service.py",
+        "quota_guard/store.py",
+        "tests/test_service.py"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "quota_guard/service.py": "6edf7267fcabae1cf5387304ad84c3bfb964d30b0714c2d6f3d8042b4c3f2ab6",
+        "quota_guard/store.py": "ca412d529f027562b35de08c69794aef7cf5630c896e9e671ba0008ae20b5327",
+        "tests/test_service.py": "9d15b1f77023e80f13c2a81ab66fdda3db143fdf8fa23231c1836d45d3f32507"
+      }
     }
   }
 }

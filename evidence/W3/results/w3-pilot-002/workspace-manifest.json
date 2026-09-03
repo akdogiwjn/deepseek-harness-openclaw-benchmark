@@ -1,28 +1,37 @@
 {
-  "deepseek_harness": {
-    "workspace": "w3-dsh-002",
-    "changed_or_untracked_files": [
-      "quota_guard/service.py",
-      "quota_guard/store.py",
-      "tests/test_service.py"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "quota_guard/service.py": "e734a628d142eb393b22e0d8ddd200e3838de41f6d5ff93c3be7fa1ed2284a12",
-      "quota_guard/store.py": "b05e54bb0f0707e87e6b54ff06beeceec486f311fd8af17e0dd0344066b4924a",
-      "tests/test_service.py": "fa1bfdde7347efa31e4783e23d138fe36ae5cdb46326d6bb31f2bbcf25a22497"
-    }
+  "schema_version": 2,
+  "baseline": {
+    "template": "workspaces/w3-template",
+    "template_tree_sha256": "4456fde349b857aeaef226722e14ebf73350f8afc1465555b64597b49dce8fe6",
+    "verifier": "verifiers/verify_w3.py",
+    "verifier_sha256": "1df41e6d0e98a0697caa2af0561e0d9a64ce5ebeeaa130b12a3fa71642ac6539"
   },
-  "openclaw": {
-    "workspace": "w3-openclaw-002",
-    "changed_or_untracked_files": [
-      "quota_guard/service.py",
-      "quota_guard/store.py"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "quota_guard/service.py": "9703153cae9ea37f0b4671f59f5aa1cd84a7aa91e682a6d7dc26f7016d20edc8",
-      "quota_guard/store.py": "bce938d5fcd023a9265a857c3983ae8d08d7675d77e8777dea7ce1a8abdea9bb"
+  "workspaces": {
+    "deepseek_harness": {
+      "workspace": "w3-dsh-002",
+      "changed_or_untracked_files": [
+        "quota_guard/service.py",
+        "quota_guard/store.py",
+        "tests/test_service.py"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "quota_guard/service.py": "e734a628d142eb393b22e0d8ddd200e3838de41f6d5ff93c3be7fa1ed2284a12",
+        "quota_guard/store.py": "b05e54bb0f0707e87e6b54ff06beeceec486f311fd8af17e0dd0344066b4924a",
+        "tests/test_service.py": "fa1bfdde7347efa31e4783e23d138fe36ae5cdb46326d6bb31f2bbcf25a22497"
+      }
+    },
+    "openclaw": {
+      "workspace": "w3-openclaw-002",
+      "changed_or_untracked_files": [
+        "quota_guard/service.py",
+        "quota_guard/store.py"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "quota_guard/service.py": "9703153cae9ea37f0b4671f59f5aa1cd84a7aa91e682a6d7dc26f7016d20edc8",
+        "quota_guard/store.py": "bce938d5fcd023a9265a857c3983ae8d08d7675d77e8777dea7ce1a8abdea9bb"
+      }
     }
   }
 }

@@ -33,4 +33,7 @@ The exact changed files for all ten valid final workspaces and their normalized
 pair summaries are frozen under `evidence/W2/`. The repository reproduction
 script rebuilds each workspace from the committed template, reruns this external
 verifier, and regenerates the n=5 aggregate; model reasoning and provider
-transcripts remain deliberately omitted.
+transcripts remain deliberately omitted. The evidence manifest binds the
+template tree and verifier by SHA256. Final correctness and diff state are
+reproducible outcomes; wall time, interaction/tool counts, and native token
+counters are frozen run metadata rather than transcript-derived evidence.

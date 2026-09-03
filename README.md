@@ -211,8 +211,8 @@ repeat, and surface-shape subtests under `run-c8.py`; see
 validated pilot JSON files by `scripts/cpu/render-c8-report.py`, rather than from
 hand-copied measurements. Every C1-C8 JSON also binds itself to the exact runner,
 fixture, shared perf helper, and pinned upstream revisions through a protocol
-hash. Validate those hashes, every sample invariant, and independently
-recomputed aggregates/fits with:
+hash. Validate those hashes and every sample invariant, then recompute
+aggregates/fits from raw samples using the protocol-bound runner logic with:
 
 ```bash
 scripts/cpu/verify-cpu-results.py
@@ -256,6 +256,13 @@ See `evidence/README.md` for the redaction and omission policy.
 - W2/W3 final-state correctness is publicly reconstructible, but provider
   reasoning/transcripts are intentionally omitted; W3 therefore cannot identify
   the exact malformed streamed field from frozen evidence.
+
+For W1-W3, “reconstructible” specifically means that the frozen manifest binds
+the committed template tree and external verifier by SHA256, then applies the
+frozen final-state overlay. Final files, changed paths/diff, and verifier outcome
+are reproducible outcome evidence. Wall time, model/tool-call counts, and native
+token counters are frozen run metadata copied from normalized summaries; they
+cannot be independently derived without the deliberately omitted transcripts.
 
 ## State
 

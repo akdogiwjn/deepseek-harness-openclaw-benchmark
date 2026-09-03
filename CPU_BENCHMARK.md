@@ -10,16 +10,19 @@ Every C1-C8 result records a protocol block containing SHA256 hashes of its
 runner, fixture/controller, and shared perf helper plus the pinned upstream
 revisions. This prevents a result produced by an older runner from silently
 being presented as current. After generating results, validate all sample
-invariants and independently recompute the committed aggregates, fits,
-comparisons, and scaling values with:
+invariants and recompute the committed aggregates, fits, comparisons, and
+scaling values from raw samples using the protocol-bound runner logic with:
 
 ```bash
 scripts/cpu/verify-cpu-results.py
 ```
 
-The verifier establishes result-to-code provenance and arithmetic consistency;
-it does not turn n=5 same-host pilots into population estimates or eliminate
-OS, thermal, filesystem-cache, JIT, and run-order effects.
+The verifier establishes result-to-code provenance and consistency with the
+current aggregation implementation. Because producer and verifier deliberately
+reuse the same protocol-bound aggregation functions, it does not independently
+prove those formulas correct. It also does not turn n=5 same-host pilots into
+population estimates or eliminate OS, thermal, filesystem-cache, JIT, and
+run-order effects.
 
 ## C1 in-process Agent Loop scaling
 

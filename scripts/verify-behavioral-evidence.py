@@ -14,6 +14,9 @@ from pathlib import Path
 from typing import Any
 
 
+TREE_IGNORES = {".git", ".pytest_cache", "__pycache__"}
+
+
 def load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -23,6 +26,23 @@ def sha256(path: Path) -> str:
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
+    return digest.hexdigest()
+
+
+def tree_sha256(root: Path) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
+        relative = path.relative_to(root)
+        if any(part in TREE_IGNORES for part in relative.parts):
+            continue
+        encoded = relative.as_posix().encode("utf-8")
+        if path.is_symlink():
+            digest.update(b"L\0" + encoded + b"\0" + path.readlink().as_posix().encode("utf-8") + b"\n")
+        elif path.is_file():
+            executable = b"x" if path.stat().st_mode & 0o111 else b"-"
+            digest.update(b"F" + executable + b"\0" + encoded + b"\0" + sha256(path).encode("ascii") + b"\n")
+        elif path.is_dir():
+            digest.update(b"D\0" + encoded + b"\n")
     return digest.hexdigest()
 
 
@@ -68,9 +88,17 @@ def apply_overlay(evidence_dir: Path, workspace: Path, manifest: dict[str, Any])
 
 def verify_pair(root: Path, group: str, pair_dir: Path, scratch: Path) -> None:
     summary = load(pair_dir / "summary.json")
-    manifests = load(pair_dir / "workspace-manifest.json")
-    verifier = root / "verifiers" / f"verify_{group.lower()}.py"
-    template = root / "workspaces" / f"{group.lower()}-template"
+    manifest = load(pair_dir / "workspace-manifest.json")
+    if manifest.get("schema_version") != 2:
+        raise ValueError(f"{group}/{pair_dir.name}: unsupported workspace manifest")
+    baseline = manifest["baseline"]
+    template = root / baseline["template"]
+    verifier = root / baseline["verifier"]
+    if tree_sha256(template) != baseline["template_tree_sha256"]:
+        raise ValueError(f"{group}/{pair_dir.name}: committed template differs from frozen baseline")
+    if sha256(verifier) != baseline["verifier_sha256"]:
+        raise ValueError(f"{group}/{pair_dir.name}: verifier differs from frozen provenance")
+    manifests = manifest["workspaces"]
     for runtime, manifest in manifests.items():
         workspace = scratch / pair_dir.name / runtime
         shutil.copytree(template, workspace, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache"))

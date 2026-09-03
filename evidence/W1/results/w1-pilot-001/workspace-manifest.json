@@ -1,22 +1,31 @@
 {
-  "deepseek_harness": {
-    "workspace": "w1-dsh-001",
-    "changed_or_untracked_files": [
-      "config.yaml"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "config.yaml": "36fb28ba3fb9c7f9ddac444b1206e91eea025aaa467a9855baa47b5e94ae203e"
-    }
+  "schema_version": 2,
+  "baseline": {
+    "template": "workspaces/w1-template",
+    "template_tree_sha256": "feaec4be8fef42759ce6265b1c620569b60a30ef9710084b97e3d5f75d35d53b",
+    "verifier": "verifiers/verify_w1.py",
+    "verifier_sha256": "294995986466e5148514e8d49e93b7555696a2e4cfac4b48c778830bc5c59937"
   },
-  "openclaw": {
-    "workspace": "w1-openclaw-001",
-    "changed_or_untracked_files": [
-      "config.yaml"
-    ],
-    "deleted_files": [],
-    "file_sha256": {
-      "config.yaml": "36fb28ba3fb9c7f9ddac444b1206e91eea025aaa467a9855baa47b5e94ae203e"
+  "workspaces": {
+    "deepseek_harness": {
+      "workspace": "w1-dsh-001",
+      "changed_or_untracked_files": [
+        "config.yaml"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "config.yaml": "36fb28ba3fb9c7f9ddac444b1206e91eea025aaa467a9855baa47b5e94ae203e"
+      }
+    },
+    "openclaw": {
+      "workspace": "w1-openclaw-001",
+      "changed_or_untracked_files": [
+        "config.yaml"
+      ],
+      "deleted_files": [],
+      "file_sha256": {
+        "config.yaml": "36fb28ba3fb9c7f9ddac444b1206e91eea025aaa467a9855baa47b5e94ae203e"
+      }
     }
   }
 }
