@@ -154,6 +154,7 @@ def report_input_paths() -> list[Path]:
     paths = [RESULTS / name for name in RESULT_FILES.values()]
     paths.append(ROOT / "evidence" / "manifest.json")
     paths.append(REPORT_ROOT / "report.template.md")
+    paths.append(REPORT_ROOT / "report_showcase.template.md")
     paths.extend((REPORT_ROOT / "scripts").glob("*.py"))
     paths.extend((REPORT_ROOT / "figures" / "architecture").glob("*.svg"))
     return sorted(paths, key=lambda path: path.relative_to(ROOT).as_posix())
@@ -282,14 +283,25 @@ def markdown_to_html(markdown: str) -> tuple[str, str]:
     return "\n".join(output).replace('src="figures/', 'src="../figures/'), toc_html
 
 
-def html_document(body: str, toc: str) -> str:
+def html_document(body: str, toc: str, title: str) -> str:
     css = """*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:64px}body{margin:0;background:#fff;color:#17212b;font:18px/1.78 'Noto Sans CJK SC','PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif}nav{position:sticky;top:0;z-index:4;padding:14px max(24px,calc((100% - 1380px)/2));display:flex;gap:18px;overflow:auto;background:#fffffff2;border-bottom:1px solid #d7dee7;backdrop-filter:blur(12px)}nav a{color:#667085;text-decoration:none;white-space:nowrap;font-size:13px}nav a:hover{color:#2563eb}main{max-width:1000px;margin:auto;padding:70px 30px}h1{font-size:58px;line-height:1.08;letter-spacing:-.025em}h2{font-size:39px;margin-top:90px;padding-top:20px;border-top:1px solid #d7dee7}h3{font-size:28px;margin-top:52px}h4{font-size:22px}p,li{color:#475467}strong,h1,h2,h3,h4{color:#17212b}code{color:#0f766e;background:#f3f6f9;padding:.12em .32em;border-radius:4px}pre{padding:22px;overflow:auto;background:#f8fafc;border:1px solid #d7dee7;border-radius:12px}pre code{background:none;color:#344054}blockquote{margin:28px 0;padding:18px 24px;border-left:4px solid #2563eb;background:#eff6ff;color:#1e3a5f;font-size:21px}img{display:block;width:min(100%,980px);margin:32px auto}.table-wrap{overflow:auto;margin:28px 0}table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:13px 15px;text-align:left;border:1px solid #d7dee7;vertical-align:top}th{color:#0f766e;background:#f8fafc}hr{border:0;border-top:1px solid #d7dee7;margin:65px 0}a{color:#2563eb}sub{color:#667085}.table-wrap+ p{margin-top:20px}@media(max-width:700px){body{font-size:16px}main{padding:45px 18px}h1{font-size:42px}h2{font-size:32px}nav{padding-left:18px}}"""
-    return f'<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DeepSeek Harness 新特性与运行时机制调研</title><style>{css}</style></head><body><nav>{toc}</nav><main>{body}</main></body></html>\n'
+    return f'<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title><style>{css}</style></head><body><nav>{toc}</nav><main>{body}</main></body></html>\n'
+
+
+def write_report(template_name: str, markdown_name: str, html_name: str,
+                 title: str, metrics: dict, provenance: dict) -> None:
+    report = inject((REPORT_ROOT / template_name).read_text(encoding="utf-8"), metrics, provenance)
+    (REPORT_ROOT / markdown_name).write_text(report, encoding="utf-8")
+    body, toc = markdown_to_html(report)
+    dist = REPORT_ROOT / "dist"; dist.mkdir(parents=True, exist_ok=True)
+    (dist / html_name).write_text(html_document(body, toc, title), encoding="utf-8")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verify", action="store_true", help="重放 W evidence 并验证 C results，不运行 benchmark")
+    parser.add_argument("--showcase", action="store_true",
+                        help="兼容入口；构建器始终同时生成详细版和技术展示版")
     args = parser.parse_args()
     if args.verify:
         subprocess.run([str(ROOT / "scripts" / "reproduce-evidence.sh")], cwd=ROOT, check=True)
@@ -299,13 +311,13 @@ def main() -> None:
     generated = REPORT_ROOT / "generated"; generated.mkdir(parents=True, exist_ok=True)
     (generated / "metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (generated / "provenance.json").write_text(json.dumps(provenance, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    report = inject((REPORT_ROOT / "report.template.md").read_text(encoding="utf-8"), metrics, provenance)
-    (REPORT_ROOT / "report.md").write_text(report, encoding="utf-8")
-    body, toc = markdown_to_html(report)
-    dist = REPORT_ROOT / "dist"; dist.mkdir(parents=True, exist_ok=True)
-    (dist / "report.html").write_text(html_document(body, toc), encoding="utf-8")
+    write_report("report.template.md", "report.md", "report.html",
+                 "DeepSeek Harness 新特性与运行时机制调研", metrics, provenance)
+    write_report("report_showcase.template.md", "report_showcase.md", "report_showcase.html",
+                 "DeepSeek Harness 技术展示版", metrics, provenance)
     subprocess.run([sys.executable, str(REPORT_ROOT / "scripts" / "validate_report.py")], cwd=ROOT, check=True)
-    print(f"built report.md and dist/report.html; evidence={provenance['evidence_verification']}")
+    print("built detailed and showcase Markdown/HTML reports; "
+          f"evidence={provenance['evidence_verification']}")
 
 
 if __name__ == "__main__":

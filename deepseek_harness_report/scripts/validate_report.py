@@ -31,15 +31,11 @@ def finite_numbers(value, path="$" ) -> None:
         raise ValueError(f"non-finite metric at {path}")
 
 
-def main() -> None:
-    report = (REPORT_ROOT / "report.md").read_text(encoding="utf-8")
-    html = (REPORT_ROOT / "dist" / "report.html").read_text(encoding="utf-8")
-    metrics = json.loads((REPORT_ROOT / "generated" / "metrics.json").read_text(encoding="utf-8"))
-    provenance = json.loads((REPORT_ROOT / "generated" / "provenance.json").read_text(encoding="utf-8"))
+def validate_document(report_name: str, html_name: str, chapter_count: int) -> tuple[str, int]:
+    report = (REPORT_ROOT / report_name).read_text(encoding="utf-8")
+    html = (REPORT_ROOT / "dist" / html_name).read_text(encoding="utf-8")
     if re.search(r"\{\{[A-Z0-9_]+\}\}", report):
-        raise ValueError("report.md contains unresolved placeholders")
-    if "report.md" not in (REPORT_ROOT / "README.md").read_text(encoding="utf-8"):
-        raise ValueError("README does not identify report.md")
+        raise ValueError(f"{report_name} contains unresolved placeholders")
     markdown_figures = re.findall(r"!\[([^]]*)\]\((figures/[^)]+)\)", report)
     html_figures = re.findall(r'<img\s+src="(figures/[^"]+)"[^>]*alt="([^"]+)"', report)
     figure_pairs = [(path, alt) for alt, path in markdown_figures] + html_figures
@@ -55,11 +51,42 @@ def main() -> None:
     captioned = re.findall(r'<p align="center"><sub>图\s*[0-9]', report)
     if len(captioned) < len(figure_pairs):
         raise ValueError("each major figure must have a Chinese caption")
-    for number in range(12):
+    for number in range(chapter_count):
         if f"## {number}." not in report:
-            raise ValueError(f"missing report chapter {number}")
+            raise ValueError(f"{report_name} missing chapter {number}")
     if not all(marker in html for marker in ("<!doctype html>", "<nav>", "<table>", "../figures/")):
-        raise ValueError("derived HTML is incomplete")
+        raise ValueError(f"derived HTML is incomplete: {html_name}")
+    return report, len(set(figures))
+
+
+def main() -> None:
+    readme = (REPORT_ROOT / "README.md").read_text(encoding="utf-8")
+    if any(name not in readme for name in ("report.md", "report_showcase.md")):
+        raise ValueError("README does not identify both report editions")
+    reports = {}
+    figure_counts = {}
+    for report_name, html_name, chapter_count in (
+        ("report.md", "report.html", 12),
+        ("report_showcase.md", "report_showcase.html", 13),
+    ):
+        reports[report_name], figure_counts[report_name] = validate_document(
+            report_name, html_name, chapter_count)
+    detailed = reports["report.md"]
+    showcase = reports["report_showcase.md"]
+    if len(showcase) > len(detailed):
+        raise ValueError("showcase report is longer than the detailed edition")
+    showcase_requirements = (
+        "## 2. 这次我们做了哪些实验", "Harness 行为实验 W1–W10", "CPU 实验 C1–C8",
+        "Everything is a Plugin", "Session Event Log", "Context Management",
+        "Programmatic Tool Calling", "OpenClaw 已经具备", "不是第五个官方 Feature",
+    )
+    for phrase in showcase_requirements:
+        if phrase not in showcase:
+            raise ValueError(f"showcase report missing required framing: {phrase}")
+    if "新特性五" in showcase:
+        raise ValueError("showcase incorrectly presents Recovery as a fifth feature")
+    metrics = json.loads((REPORT_ROOT / "generated" / "metrics.json").read_text(encoding="utf-8"))
+    provenance = json.loads((REPORT_ROOT / "generated" / "provenance.json").read_text(encoding="utf-8"))
     data = load_inputs()
     for name in RESULT_FILES.values():
         if not (ROOT / "results" / name).is_file(): raise ValueError(f"missing result {name}")
@@ -75,10 +102,11 @@ def main() -> None:
     protocols = [item.get("protocol") for key, item in data.items() if key.startswith("c")]
     if any(not item or not item.get("protocol_sha256") for item in protocols):
         raise ValueError("C1-C8 protocol provenance incomplete")
-    for number in range(2, 11):
-        if f"W{number}" not in report: raise ValueError(f"W{number} evidence reference absent")
-    for number in range(1, 9):
-        if f"C{number}" not in report: raise ValueError(f"C{number} evidence reference absent")
+    for report_name, report in reports.items():
+        for number in range(1, 11):
+            if f"W{number}" not in report: raise ValueError(f"{report_name}: W{number} reference absent")
+        for number in range(1, 9):
+            if f"C{number}" not in report: raise ValueError(f"{report_name}: C{number} reference absent")
     finite_numbers(metrics)
     if provenance["report_input_sha256"] != input_fingerprint():
         raise ValueError("report input fingerprint mismatch")
@@ -114,7 +142,8 @@ def main() -> None:
     for name, content in build_data_figures(cpu_results).items():
         if (REPORT_ROOT / "figures" / "data" / name).read_text(encoding="utf-8") != content:
             raise ValueError(f"generated data SVG differs from JSON/source-derived output: {name}")
-    print(f"report validation PASS: {len(set(figures))} unique figures, {len(RESULT_FILES)} result inputs")
+    counts = ", ".join(f"{name}={count} figures" for name, count in figure_counts.items())
+    print(f"report validation PASS: {counts}, {len(RESULT_FILES)} result inputs")
 
 
 if __name__ == "__main__":
