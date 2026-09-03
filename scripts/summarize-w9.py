@@ -71,6 +71,11 @@ def main() -> None:
         raise ValueError("W9-B open-turn negative case did not reject")
     if replay.get("provider_requests_after_replay") != replay.get("recorded_model_calls"):
         raise ValueError("W9-C contacted the recording provider during replay")
+    # The carrier requires a non-empty environment variable at startup, but the
+    # replay adapter replaces the provider and the runner points the unused live
+    # endpoint at an unreachable loopback address. Describe the actual guarantee
+    # instead of preserving the historical, overly literal "keyless" label.
+    replay["scenario"] = "W9-C credential-free LLM replay"
     output = {
         "task": "W9 DSH session state semantics",
         "scope": "DSH white-box mechanism cases; not a DSH-versus-OpenClaw comparison",
@@ -80,6 +85,7 @@ def main() -> None:
         "notes": [
             "W9-A uses sdk-minimal only to create the crash, then invokes the official ctx.agents.resume() path because the Python SDK server creates rather than cold-resumes sessions after process restart.",
             "W9-C uses a completed session; LLM replay does not reproduce crash scheduling or external-world rollback.",
+            "W9-C uses no live provider credential; a non-production placeholder satisfies carrier startup validation while the replay adapter owns model output.",
             "Side effects execute independently in fresh recording and replay workspaces.",
         ],
     }

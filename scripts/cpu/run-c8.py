@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 SUBTESTS = ("cold", "incremental", "repeat", "shape")
 
@@ -210,6 +210,7 @@ def main() -> None:
     by_size, fits = aggregate(samples, args.sizes)
     result = {
         "benchmark": "C8 token-meter / context-pressure CPU scaling",
+        "protocol": benchmark_protocol(root, Path(__file__), fixture),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "design": {
             "subtest": args.subtest,

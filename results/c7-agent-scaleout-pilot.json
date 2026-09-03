@@ -1,6 +1,25 @@
 {
   "benchmark": "C7 multi-process DSH Agent scale-out",
-  "created_at": "2026-09-02T02:26:21.215945+00:00",
+  "created_at": "2026-09-02T12:01:58.972615+00:00",
+  "protocol": {
+    "schema_version": 1,
+    "protocol_sha256": "e4372c3bc3c4aa842253abb34c91e5b279dc768114548e0a1bbf6147e3b81e96",
+    "files": {
+      "scripts/cpu/c1-agent-loop.mjs": "98dc810eb4854c86672c99899774f33923653f992416718dbc6e0fd795c06dac",
+      "scripts/cpu/c7-scaleout-controller.mjs": "1befe2ce3fb45626f7f2d731a9dd207566279980778f72918c1ec5289ee9d35e",
+      "scripts/cpu/perf_utils.py": "abaf2a5ac45ec33662df0511aa44c8f8a073253bba5a6332855d07857948aab9",
+      "scripts/cpu/run-c7.py": "c7bb7c46ea95fc286372aaf720fab80b575fef739c7c558644dfc960b1433893"
+    },
+    "source_revisions": {
+      "DSH_REPO_URL": "https://github.com/deepseek-ai/deepseek-harness.git",
+      "DSH_COMMIT": "dd6322d604e00eec1ba5e0c8541159906a21094a",
+      "OPENCLAW_REPO_URL": "https://github.com/openclaw/openclaw.git",
+      "OPENCLAW_COMMIT": "3c1b351555e0ebc1b022842523191691e89c7684",
+      "NODE_VERSION": "24.15.0",
+      "DSH_PNPM_VERSION": "11.7.0",
+      "OPENCLAW_PNPM_VERSION": "12.1.0"
+    }
+  },
   "design": {
     "agents": [
       1,
@@ -15,6 +34,7 @@
     "payload_bytes": 64,
     "topology": "one independent Node/DSH process per Agent",
     "cpu_selection": "first logical CPU for each distinct (socket, core), nested prefixes",
+    "placement": "shared CPU pool (scheduler may migrate within it)",
     "selected_physical_cpu_ids": [
       0,
       2,
@@ -51,11 +71,14 @@
     ],
     "randomization_seed": 20260902,
     "perf_enabled": true,
+    "perf_mode": "user-kernel",
     "perf_descendant_inheritance": true,
     "perf_events": [
       "task-clock",
-      "cycles",
-      "instructions",
+      "cycles:u",
+      "instructions:u",
+      "cycles:k",
+      "instructions:k",
       "branches",
       "branch-misses",
       "cache-references",
@@ -65,16 +88,18 @@
       "page-faults"
     ],
     "observed_perf_event_labels": {
-      "task-clock": "task-clock:u",
-      "cycles": "cycles:u",
-      "instructions": "instructions:u",
-      "branches": "branches:u",
-      "branch-misses": "branch-misses:u",
-      "cache-references": "cache-references:u",
-      "cache-misses": "cache-misses:u",
-      "context-switches": "context-switches:u",
-      "cpu-migrations": "cpu-migrations:u",
-      "page-faults": "page-faults:u"
+      "task-clock": "task-clock",
+      "cycles_u": "cycles:u",
+      "instructions_u": "instructions:u",
+      "cycles_k": "cycles:k",
+      "instructions_k": "instructions:k",
+      "branches": "branches",
+      "branch-misses": "branch-misses",
+      "cache-references": "cache-references",
+      "cache-misses": "cache-misses",
+      "context-switches": "context-switches",
+      "cpu-migrations": "cpu-migrations",
+      "page-faults": "page-faults"
     }
   },
   "host": {
@@ -84,7 +109,7 @@
     "lscpu_parse": "# The following is the parsable format, which can be fed to other\n# programs. Each different item in every column has an unique ID\n# starting usually from zero.\n# CPU,Core,Socket,Node\n0,0,0,0\n1,0,0,0\n2,1,0,0\n3,1,0,0\n4,2,0,0\n5,2,0,0\n6,3,0,0\n7,3,0,0\n8,4,0,0\n9,4,0,0\n10,5,0,0\n11,5,0,0\n12,6,0,0\n13,6,0,0\n14,7,0,0\n15,7,0,0\n16,8,0,0\n17,8,0,0\n18,9,0,0\n19,9,0,0\n20,10,0,0\n21,10,0,0\n22,11,0,0\n23,11,0,0\n24,12,0,0\n25,12,0,0\n26,13,0,0\n27,13,0,0\n28,14,0,0\n29,14,0,0\n30,15,0,0\n31,15,0,0\n32,16,0,0\n33,16,0,0\n34,17,0,0\n35,17,0,0\n36,18,0,0\n37,18,0,0\n38,19,0,0\n39,19,0,0\n40,20,0,0\n41,20,0,0\n42,21,0,0\n43,21,0,0\n44,22,0,0\n45,22,0,0\n46,23,0,0\n47,23,0,0\n48,24,0,0\n49,24,0,0\n50,25,0,0\n51,25,0,0\n52,26,0,0\n53,26,0,0\n54,27,0,0\n55,27,0,0\n56,28,0,0\n57,28,0,0\n58,29,0,0\n59,29,0,0\n60,30,0,0\n61,30,0,0\n62,31,0,0\n63,31,0,0\n64,32,0,1\n65,32,0,1\n66,33,0,1\n67,33,0,1\n68,34,0,1\n69,34,0,1\n70,35,0,1\n71,35,0,1\n72,36,0,1\n73,36,0,1\n74,37,0,1\n75,37,0,1\n76,38,0,1\n77,38,0,1\n78,39,0,1\n79,39,0,1\n80,40,0,1\n81,40,0,1\n82,41,0,1\n83,41,0,1\n84,42,0,1\n85,42,0,1\n86,43,0,1\n87,43,0,1\n88,44,0,1\n89,44,0,1\n90,45,0,1\n91,45,0,1\n92,46,0,1\n93,46,0,1\n94,47,0,1\n95,47,0,1\n96,48,0,1\n97,48,0,1\n98,49,0,1\n99,49,0,1\n100,50,0,1\n101,50,0,1\n102,51,0,1\n103,51,0,1\n104,52,0,1\n105,52,0,1\n106,53,0,1\n107,53,0,1\n108,54,0,1\n109,54,0,1\n110,55,0,1\n111,55,0,1\n112,56,0,1\n113,56,0,1\n114,57,0,1\n115,57,0,1\n116,58,0,1\n117,58,0,1\n118,59,0,1\n119,59,0,1\n120,60,0,1\n121,60,0,1\n122,61,0,1\n123,61,0,1\n124,62,0,1\n125,62,0,1\n126,63,0,1\n127,63,0,1\n128,64,1,2\n129,64,1,2\n130,65,1,2\n131,65,1,2\n132,66,1,2\n133,66,1,2\n134,67,1,2\n135,67,1,2\n136,68,1,2\n137,68,1,2\n138,69,1,2\n139,69,1,2\n140,70,1,2\n141,70,1,2\n142,71,1,2\n143,71,1,2\n144,72,1,2\n145,72,1,2\n146,73,1,2\n147,73,1,2\n148,74,1,2\n149,74,1,2\n150,75,1,2\n151,75,1,2\n152,76,1,2\n153,76,1,2\n154,77,1,2\n155,77,1,2\n156,78,1,2\n157,78,1,2\n158,79,1,2\n159,79,1,2\n160,80,1,2\n161,80,1,2\n162,81,1,2\n163,81,1,2\n164,82,1,2\n165,82,1,2\n166,83,1,2\n167,83,1,2\n168,84,1,2\n169,84,1,2\n170,85,1,2\n171,85,1,2\n172,86,1,2\n173,86,1,2\n174,87,1,2\n175,87,1,2\n176,88,1,2\n177,88,1,2\n178,89,1,2\n179,89,1,2\n180,90,1,2\n181,90,1,2\n182,91,1,2\n183,91,1,2\n184,92,1,2\n185,92,1,2\n186,93,1,2\n187,93,1,2\n188,94,1,2\n189,94,1,2\n190,95,1,2\n191,95,1,2\n192,96,1,3\n193,96,1,3\n194,97,1,3\n195,97,1,3\n196,98,1,3\n197,98,1,3\n198,99,1,3\n199,99,1,3\n200,100,1,3\n201,100,1,3\n202,101,1,3\n203,101,1,3\n204,102,1,3\n205,102,1,3\n206,103,1,3\n207,103,1,3\n208,104,1,3\n209,104,1,3\n210,105,1,3\n211,105,1,3\n212,106,1,3\n213,106,1,3\n214,107,1,3\n215,107,1,3\n216,108,1,3\n217,108,1,3\n218,109,1,3\n219,109,1,3\n220,110,1,3\n221,110,1,3\n222,111,1,3\n223,111,1,3\n224,112,1,3\n225,112,1,3\n226,113,1,3\n227,113,1,3\n228,114,1,3\n229,114,1,3\n230,115,1,3\n231,115,1,3\n232,116,1,3\n233,116,1,3\n234,117,1,3\n235,117,1,3\n236,118,1,3\n237,118,1,3\n238,119,1,3\n239,119,1,3\n240,120,1,3\n241,120,1,3\n242,121,1,3\n243,121,1,3\n244,122,1,3\n245,122,1,3\n246,123,1,3\n247,123,1,3\n248,124,1,3\n249,124,1,3\n250,125,1,3\n251,125,1,3\n252,126,1,3\n253,126,1,3\n254,127,1,3\n255,127,1,3\n",
     "node": "v24.15.0",
     "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64",
-    "perf_event_paranoid": "2"
+    "perf_event_paranoid": "-1"
   },
   "aggregates": {
     "1": {
@@ -92,89 +117,89 @@
       "samples": 5,
       "cpu_binding": "0",
       "wall_ns": {
-        "median": 282019372.0,
-        "min": 274308757.0,
-        "max": 287586909.0
+        "median": 280023233.0,
+        "min": 272715754.0,
+        "max": 286619552.0
       },
       "agents_per_second": {
-        "median": 3.5458557080965347,
-        "min": 3.477209736274887,
-        "max": 3.645527072983674
+        "median": 3.571132256729569,
+        "min": 3.4889455133891216,
+        "max": 3.6668215360965175
       },
       "tool_steps_per_second": {
-        "median": 226.93476531817822,
-        "min": 222.54142312159277,
-        "max": 233.31373267095515
+        "median": 228.55246443069242,
+        "min": 223.29251285690378,
+        "max": 234.67657831017712
       },
       "sum_child_max_rss_kb": {
-        "median": 76784.0,
-        "min": 76684.0,
-        "max": 76788.0
+        "median": 76796.0,
+        "min": 76792.0,
+        "max": 78872.0
       },
       "max_child_max_rss_kb": {
-        "median": 76784.0,
-        "min": 76684.0,
-        "max": 76788.0
+        "median": 76796.0,
+        "min": 76792.0,
+        "max": 78872.0
       },
       "cycles": {
-        "median": 796533286.0,
-        "min": 769785412.0,
-        "max": 817968874.0
+        "median": 899537288.0,
+        "min": 876658706.0,
+        "max": 926280452.0
       },
       "instructions": {
-        "median": 1150745784.0,
-        "min": 1139640515.0,
-        "max": 1152673868.0
+        "median": 1240656866.0,
+        "min": 1230751031.0,
+        "max": 1247463551.0
       },
       "task_clock_ms": {
-        "median": 311.09,
-        "min": 301.8,
-        "max": 318.7
+        "median": 310.58,
+        "min": 302.67,
+        "max": 319.82
       },
       "page_faults": {
-        "median": 12570.0,
-        "min": 12288.0,
-        "max": 12814.0
+        "median": 12861.0,
+        "min": 12762.0,
+        "max": 13076.0
       },
       "ipc": {
-        "median": 1.4446926502955961,
-        "min": 1.4029528561254276,
-        "max": 1.4804652013852402
+        "median": 1.3811858131526384,
+        "min": 1.3467449823717104,
+        "max": 1.4095277735141776
       },
       "cache_mpki": {
-        "median": 7.542988733739559,
-        "min": 7.474440587667019,
-        "max": 7.592783764799727
+        "median": 7.7852903936269,
+        "min": 7.693322732408381,
+        "max": 7.805199230420145
       },
       "branch_mpki": {
-        "median": 10.46221254319266,
-        "min": 10.279377440350126,
-        "max": 10.533661881310877
+        "median": 9.90069723275122,
+        "min": 9.840135170710619,
+        "max": 10.033073102590395
       },
-      "average_user_cpu_cores": {
-        "median": 1.1047004070671125,
-        "min": 1.1002200706264729,
-        "max": 1.1081867429508065
+      "average_cpu_cores_including_controller": {
+        "median": 1.109836874330333,
+        "min": 1.108845891244983,
+        "max": 1.1158345540921089
       },
-      "user_cpu_affinity_utilization": {
-        "median": 1.1047004070671125,
-        "min": 1.1002200706264729,
-        "max": 1.1081867429508065
+      "task_clock_per_worker_core": {
+        "median": 1.109836874330333,
+        "min": 1.108845891244983,
+        "max": 1.1158345540921089
       },
       "instructions_per_agent": {
-        "median": 1150745784.0,
-        "min": 1139640515.0,
-        "max": 1152673868.0
+        "median": 1240656866.0,
+        "min": 1230751031.0,
+        "max": 1247463551.0
       },
       "cycles_per_agent": {
-        "median": 796533286.0,
-        "min": 769785412.0,
-        "max": 817968874.0
+        "median": 899537288.0,
+        "min": 876658706.0,
+        "max": 926280452.0
       },
       "task_clock_ms_per_agent": {
-        "median": 311.09,
-        "min": 301.8,
-        "max": 318.7
+        "median": 310.58,
+        "min": 302.67,
+        "max": 319.82
       }
     },
     "2": {
@@ -182,89 +207,89 @@
       "samples": 5,
       "cpu_binding": "0,2",
       "wall_ns": {
-        "median": 279068282.0,
-        "min": 274390888.0,
-        "max": 280792826.0
+        "median": 278178958.0,
+        "min": 277272245.0,
+        "max": 290572135.0
       },
       "agents_per_second": {
-        "median": 7.16670481384194,
-        "min": 7.122689096052618,
-        "max": 7.28887177915325
+        "median": 7.189616405134425,
+        "min": 6.882972450197263,
+        "max": 7.213127300209943
       },
       "tool_steps_per_second": {
-        "median": 458.66910808588415,
-        "min": 455.85210214736753,
-        "max": 466.487793865808
+        "median": 460.1354499286032,
+        "min": 440.51023681262484,
+        "max": 461.64014721343636
       },
       "sum_child_max_rss_kb": {
-        "median": 151536.0,
-        "min": 147924.0,
-        "max": 154032.0
+        "median": 153576.0,
+        "min": 147616.0,
+        "max": 153592.0
       },
       "max_child_max_rss_kb": {
-        "median": 76776.0,
-        "min": 74740.0,
-        "max": 78828.0
+        "median": 76796.0,
+        "min": 74848.0,
+        "max": 77104.0
       },
       "cycles": {
-        "median": 1508846084.0,
-        "min": 1478252912.0,
-        "max": 1510208498.0
+        "median": 1688829890.0,
+        "min": 1681353690.0,
+        "max": 1735775926.0
       },
       "instructions": {
-        "median": 2179862119.0,
-        "min": 2178610469.0,
-        "max": 2187498719.0
+        "median": 2348792610.0,
+        "min": 2337617588.0,
+        "max": 2358519097.0
       },
       "task_clock_ms": {
-        "median": 583.08,
-        "min": 573.97,
-        "max": 584.88
+        "median": 583.03,
+        "min": 580.43,
+        "max": 599.53
       },
       "page_faults": {
-        "median": 22061.0,
-        "min": 21160.0,
-        "max": 22127.0
+        "median": 22071.0,
+        "min": 21989.0,
+        "max": 22845.0
       },
       "ipc": {
-        "median": 1.4457382226639628,
-        "min": 1.4434179928710744,
-        "max": 1.4797865109837172
+        "median": 1.3902895581114105,
+        "min": 1.3587693328798938,
+        "max": 1.392770807129663
       },
       "cache_mpki": {
-        "median": 7.7431860725866395,
-        "min": 7.686092535670703,
-        "max": 7.848576517957123
+        "median": 7.97184558580504,
+        "min": 7.909034508035859,
+        "max": 8.064274170082413
       },
       "branch_mpki": {
-        "median": 10.473239477400176,
-        "min": 10.442945830943346,
-        "max": 10.504499865720836
+        "median": 10.102212456242835,
+        "min": 10.04837964968289,
+        "max": 10.17166711320296
       },
-      "average_user_cpu_cores": {
-        "median": 2.0905771502748376,
-        "min": 2.0765487790631805,
-        "max": 2.091796867540295
+      "average_cpu_cores_including_controller": {
+        "median": 2.0933577394304286,
+        "min": 2.0632742365333825,
+        "max": 2.0958810263427616
       },
-      "user_cpu_affinity_utilization": {
-        "median": 1.0452885751374188,
-        "min": 1.0382743895315902,
-        "max": 1.0458984337701476
+      "task_clock_per_worker_core": {
+        "median": 1.0466788697152143,
+        "min": 1.0316371182666912,
+        "max": 1.0479405131713808
       },
       "instructions_per_agent": {
-        "median": 1089931059.5,
-        "min": 1089305234.5,
-        "max": 1093749359.5
+        "median": 1174396305.0,
+        "min": 1168808794.0,
+        "max": 1179259548.5
       },
       "cycles_per_agent": {
-        "median": 754423042.0,
-        "min": 739126456.0,
-        "max": 755104249.0
+        "median": 844414945.0,
+        "min": 840676845.0,
+        "max": 867887963.0
       },
       "task_clock_ms_per_agent": {
-        "median": 291.54,
-        "min": 286.985,
-        "max": 292.44
+        "median": 291.515,
+        "min": 290.215,
+        "max": 299.765
       }
     },
     "4": {
@@ -272,89 +297,89 @@
       "samples": 5,
       "cpu_binding": "0,2,4,6",
       "wall_ns": {
-        "median": 281257902.0,
-        "min": 278817079.0,
-        "max": 286534494.0
+        "median": 283591781.0,
+        "min": 282406295.0,
+        "max": 298147608.0
       },
       "agents_per_second": {
-        "median": 14.221822645893162,
-        "min": 13.959924838927071,
-        "max": 14.34632345459727
+        "median": 14.104781125515059,
+        "min": 13.416173374095962,
+        "max": 14.163990218419174
       },
       "tool_steps_per_second": {
-        "median": 910.1966493371624,
-        "min": 893.4351896913325,
-        "max": 918.1647010942253
+        "median": 902.7059920329638,
+        "min": 858.6350959421416,
+        "max": 906.4953739788272
       },
       "sum_child_max_rss_kb": {
-        "median": 301160.0,
-        "min": 292808.0,
-        "max": 309156.0
+        "median": 295408.0,
+        "min": 286764.0,
+        "max": 297908.0
       },
       "max_child_max_rss_kb": {
-        "median": 76892.0,
-        "min": 74740.0,
-        "max": 78884.0
+        "median": 75236.0,
+        "min": 72740.0,
+        "max": 76796.0
       },
       "cycles": {
-        "median": 2913979620.0,
-        "min": 2896387969.0,
-        "max": 2930850347.0
+        "median": 3277519190.0,
+        "min": 3264126936.0,
+        "max": 3371697498.0
       },
       "instructions": {
-        "median": 4251335391.0,
-        "min": 4234174418.0,
-        "max": 4260761361.0
+        "median": 4559398967.0,
+        "min": 4555263315.0,
+        "max": 4565019596.0
       },
       "task_clock_ms": {
-        "median": 1125.54,
-        "min": 1118.91,
-        "max": 1131.13
+        "median": 1131.39,
+        "min": 1126.71,
+        "max": 1164.47
       },
       "page_faults": {
-        "median": 40993.0,
-        "min": 40138.0,
-        "max": 41650.0
+        "median": 41509.0,
+        "min": 41087.0,
+        "max": 41694.0
       },
       "ipc": {
-        "median": 1.4561621276703742,
-        "min": 1.453762852600539,
-        "max": 1.469806296864921
+        "median": 1.391112821218905,
+        "min": 1.3539232385787416,
+        "max": 1.3955533606123214
       },
       "cache_mpki": {
-        "median": 7.807565815581205,
-        "min": 7.780783630439477,
-        "max": 7.875156138204575
+        "median": 7.989222760202464,
+        "min": 7.956542902943031,
+        "max": 8.053012090509325
       },
       "branch_mpki": {
-        "median": 10.506663554397228,
-        "min": 10.473449846902469,
-        "max": 10.59857175136451
+        "median": 10.217957290576516,
+        "min": 10.202738692071497,
+        "max": 10.257173055955487
       },
-      "average_user_cpu_cores": {
-        "median": 3.995899570145544,
-        "min": 3.928113450801494,
-        "max": 4.021682562362284
+      "average_cpu_cores_including_controller": {
+        "median": 3.9867516470796445,
+        "min": 3.9056828522333813,
+        "max": 3.9950120735247197
       },
-      "user_cpu_affinity_utilization": {
-        "median": 0.998974892536386,
-        "min": 0.9820283627003735,
-        "max": 1.005420640590571
+      "task_clock_per_worker_core": {
+        "median": 0.9966879117699111,
+        "min": 0.9764207130583453,
+        "max": 0.9987530183811799
       },
       "instructions_per_agent": {
-        "median": 1062833847.75,
-        "min": 1058543604.5,
-        "max": 1065190340.25
+        "median": 1139849741.75,
+        "min": 1138815828.75,
+        "max": 1141254899.0
       },
       "cycles_per_agent": {
-        "median": 728494905.0,
-        "min": 724096992.25,
-        "max": 732712586.75
+        "median": 819379797.5,
+        "min": 816031734.0,
+        "max": 842924374.5
       },
       "task_clock_ms_per_agent": {
-        "median": 281.385,
-        "min": 279.7275,
-        "max": 282.7825
+        "median": 282.8475,
+        "min": 281.6775,
+        "max": 291.1175
       }
     },
     "8": {
@@ -362,89 +387,89 @@
       "samples": 5,
       "cpu_binding": "0,2,4,6,8,10,12,14",
       "wall_ns": {
-        "median": 290348246.0,
-        "min": 289055768.0,
-        "max": 300879130.0
+        "median": 293143040.0,
+        "min": 287220049.0,
+        "max": 298591423.0
       },
       "agents_per_second": {
-        "median": 27.553119780169087,
-        "min": 26.588750107061266,
-        "max": 27.676320231741578
+        "median": 27.290431319808924,
+        "min": 26.792464162642744,
+        "max": 27.853208812731594
       },
       "tool_steps_per_second": {
-        "median": 1763.3996659308216,
-        "min": 1701.680006851921,
-        "max": 1771.284494831461
+        "median": 1746.5876044677711,
+        "min": 1714.7177064091356,
+        "max": 1782.605364014822
       },
       "sum_child_max_rss_kb": {
-        "median": 604760.0,
-        "min": 550776.0,
-        "max": 610352.0
+        "median": 592412.0,
+        "min": 581572.0,
+        "max": 608516.0
       },
       "max_child_max_rss_kb": {
-        "median": 76820.0,
-        "min": 72740.0,
-        "max": 78852.0
+        "median": 76836.0,
+        "min": 75232.0,
+        "max": 78900.0
       },
       "cycles": {
-        "median": 5813120312.0,
-        "min": 5806054034.0,
-        "max": 5860049532.0
+        "median": 6532189950.0,
+        "min": 6507664962.0,
+        "max": 6546281500.0
       },
       "instructions": {
-        "median": 8381305971.0,
-        "min": 8369103163.0,
-        "max": 8402929896.0
+        "median": 8980142812.0,
+        "min": 8963934884.0,
+        "max": 8989214041.0
       },
       "task_clock_ms": {
-        "median": 2240.27,
-        "min": 2237.75,
-        "max": 2264.16
+        "median": 2255.37,
+        "min": 2246.16,
+        "max": 2259.84
       },
       "page_faults": {
-        "median": 78515.0,
-        "min": 76240.0,
-        "max": 79249.0
+        "median": 79274.0,
+        "min": 79040.0,
+        "max": 80042.0
       },
       "ipc": {
-        "median": 1.4432907208536485,
-        "min": 1.429998264390097,
-        "max": 1.4455110930103867
+        "median": 1.3744617686568552,
+        "min": 1.3705278456156402,
+        "max": 1.3799331810161495
       },
       "cache_mpki": {
-        "median": 7.819826435972505,
-        "min": 7.770122525887696,
-        "max": 7.827944252095485
+        "median": 8.035857685679254,
+        "min": 8.02274390377479,
+        "max": 8.068532952988818
       },
       "branch_mpki": {
-        "median": 10.575064860326687,
-        "min": 10.520054572781707,
-        "max": 10.617945458615349
+        "median": 10.219447395084401,
+        "min": 10.189378881059167,
+        "max": 10.25402193690296
       },
-      "average_user_cpu_cores": {
-        "median": 7.742633306625864,
-        "min": 7.5251480553004795,
-        "max": 7.749819405091408
+      "average_cpu_cores_including_controller": {
+        "median": 7.683450372896454,
+        "min": 7.553364987312444,
+        "max": 7.820345438350649
       },
-      "user_cpu_affinity_utilization": {
-        "median": 0.967829163328233,
-        "min": 0.9406435069125599,
-        "max": 0.968727425636426
+      "task_clock_per_worker_core": {
+        "median": 0.9604312966120567,
+        "min": 0.9441706234140556,
+        "max": 0.9775431797938311
       },
       "instructions_per_agent": {
-        "median": 1047663246.375,
-        "min": 1046137895.375,
-        "max": 1050366237.0
+        "median": 1122517851.5,
+        "min": 1120491860.5,
+        "max": 1123651755.125
       },
       "cycles_per_agent": {
-        "median": 726640039.0,
-        "min": 725756754.25,
-        "max": 732506191.5
+        "median": 816523743.75,
+        "min": 813458120.25,
+        "max": 818285187.5
       },
       "task_clock_ms_per_agent": {
-        "median": 280.03375,
-        "min": 279.71875,
-        "max": 283.02
+        "median": 281.92125,
+        "min": 280.77,
+        "max": 282.48
       }
     },
     "16": {
@@ -452,89 +477,89 @@
       "samples": 5,
       "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
       "wall_ns": {
-        "median": 332909447.0,
-        "min": 318816295.0,
-        "max": 352171960.0
+        "median": 361190647.0,
+        "min": 344426410.0,
+        "max": 361841216.0
       },
       "agents_per_second": {
-        "median": 48.061117352431275,
-        "min": 45.43235071866596,
-        "max": 50.18564060535237
+        "median": 44.29793554427228,
+        "min": 44.21829048905252,
+        "max": 46.454045147118656
       },
       "tool_steps_per_second": {
-        "median": 3075.9115105556016,
-        "min": 2907.6704459946213,
-        "max": 3211.8809987425516
+        "median": 2835.067874833426,
+        "min": 2829.9705912993613,
+        "max": 2973.058889415594
       },
       "sum_child_max_rss_kb": {
-        "median": 1095576.0,
-        "min": 1057376.0,
-        "max": 1136964.0
+        "median": 1089328.0,
+        "min": 1078592.0,
+        "max": 1111476.0
       },
       "max_child_max_rss_kb": {
-        "median": 73184.0,
-        "min": 71136.0,
-        "max": 74768.0
+        "median": 74744.0,
+        "min": 72584.0,
+        "max": 74776.0
       },
       "cycles": {
-        "median": 11721253300.0,
-        "min": 11648969949.0,
-        "max": 11890317003.0
+        "median": 13419490072.0,
+        "min": 13321146402.0,
+        "max": 13509940004.0
       },
       "instructions": {
-        "median": 16629584326.0,
-        "min": 16604840161.0,
-        "max": 16750969542.0
+        "median": 18063409427.0,
+        "min": 17895202967.0,
+        "max": 18147866372.0
       },
       "task_clock_ms": {
-        "median": 4540.82,
-        "min": 4503.68,
-        "max": 4612.55
+        "median": 4637.06,
+        "min": 4602.33,
+        "max": 4669.05
       },
       "page_faults": {
-        "median": 150525.0,
-        "min": 148415.0,
-        "max": 152221.0
+        "median": 153234.0,
+        "min": 150592.0,
+        "max": 153976.0
       },
       "ipc": {
-        "median": 1.4166437441463704,
-        "min": 1.40437053262983,
-        "max": 1.428768866506413
+        "median": 1.34558302581678,
+        "min": 1.3370458656109365,
+        "max": 1.3539513659584472
       },
       "cache_mpki": {
-        "median": 7.78736193649342,
-        "min": 7.766842103630486,
-        "max": 7.819559402020792
+        "median": 8.148078189942108,
+        "min": 8.093861622794629,
+        "max": 8.171500158733572
       },
       "branch_mpki": {
-        "median": 10.560960909011719,
-        "min": 10.540681452514749,
-        "max": 10.644391028045206
+        "median": 10.178135159454799,
+        "min": 10.155883569011682,
+        "max": 10.239103816698275
       },
-      "average_user_cpu_cores": {
-        "median": 13.639805181016685,
-        "min": 13.015772181294615,
-        "max": 14.213796694425547
+      "average_cpu_cores_including_controller": {
+        "median": 12.838780643496403,
+        "min": 12.829867198679745,
+        "max": 13.419325190539253
       },
-      "user_cpu_affinity_utilization": {
-        "median": 0.8524878238135428,
-        "min": 0.8134857613309134,
-        "max": 0.8883622934015967
+      "task_clock_per_worker_core": {
+        "median": 0.8024237902185252,
+        "min": 0.801866699917484,
+        "max": 0.8387078244087033
       },
       "instructions_per_agent": {
-        "median": 1039349020.375,
-        "min": 1037802510.0625,
-        "max": 1046935596.375
+        "median": 1128963089.1875,
+        "min": 1118450185.4375,
+        "max": 1134241648.25
       },
       "cycles_per_agent": {
-        "median": 732578331.25,
-        "min": 728060621.8125,
-        "max": 743144812.6875
+        "median": 838718129.5,
+        "min": 832571650.125,
+        "max": 844371250.25
       },
       "task_clock_ms_per_agent": {
-        "median": 283.80125,
-        "min": 281.48,
-        "max": 288.284375
+        "median": 289.81625,
+        "min": 287.645625,
+        "max": 291.815625
       }
     },
     "32": {
@@ -542,89 +567,89 @@
       "samples": 5,
       "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
       "wall_ns": {
-        "median": 365909408.0,
-        "min": 354863037.0,
-        "max": 376244779.0
+        "median": 384745293.0,
+        "min": 365374943.0,
+        "max": 392180294.0
       },
       "agents_per_second": {
-        "median": 87.45334036341585,
-        "min": 85.05101408995233,
-        "max": 90.17563584679573
+        "median": 83.17190770674354,
+        "min": 81.59512471577678,
+        "max": 87.58126580125118
       },
       "tool_steps_per_second": {
-        "median": 5597.013783258614,
-        "min": 5443.264901756949,
-        "max": 5771.240694194927
+        "median": 5323.0020932315865,
+        "min": 5222.087981809714,
+        "max": 5605.201011280075
       },
       "sum_child_max_rss_kb": {
-        "median": 2139672.0,
-        "min": 2090808.0,
-        "max": 2212280.0
+        "median": 2173228.0,
+        "min": 2140244.0,
+        "max": 2238128.0
       },
       "max_child_max_rss_kb": {
-        "median": 72692.0,
-        "min": 70656.0,
-        "max": 74736.0
+        "median": 73124.0,
+        "min": 72660.0,
+        "max": 76816.0
       },
       "cycles": {
-        "median": 23975296565.0,
-        "min": 23812456677.0,
-        "max": 24023694136.0
+        "median": 27469754430.0,
+        "min": 27323829552.0,
+        "max": 27674543384.0
       },
       "instructions": {
-        "median": 33232473459.0,
-        "min": 33182342545.0,
-        "max": 33384110981.0
+        "median": 36389932318.0,
+        "min": 36213442468.0,
+        "max": 36455627916.0
       },
       "task_clock_ms": {
-        "median": 9322.3,
-        "min": 9255.02,
-        "max": 9325.43
+        "median": 9498.09,
+        "min": 9443.08,
+        "max": 9569.16
       },
       "page_faults": {
-        "median": 295149.0,
-        "min": 294324.0,
-        "max": 296423.0
+        "median": 300525.0,
+        "min": 298926.0,
+        "max": 303677.0
       },
       "ipc": {
-        "median": 1.388358230810809,
-        "min": 1.3861131339461286,
-        "max": 1.3934867365890138
+        "median": 1.3216290625092046,
+        "min": 1.3172982625280376,
+        "max": 1.3253428623203116
       },
       "cache_mpki": {
-        "median": 7.765387749327638,
-        "min": 7.745673926951891,
-        "max": 7.778426613923743
+        "median": 8.137487673564108,
+        "min": 8.11367784931349,
+        "max": 8.196595829250906
       },
       "branch_mpki": {
-        "median": 10.542680539373595,
-        "min": 10.506348849595565,
-        "max": 10.565215479165998
+        "median": 10.143832136209035,
+        "min": 10.100405899140362,
+        "max": 10.150284296237482
       },
-      "average_user_cpu_cores": {
-        "median": 25.477071089683488,
-        "min": 24.785539947652005,
-        "max": 26.080541039837858
+      "average_cpu_cores_including_controller": {
+        "median": 24.686695777198242,
+        "min": 24.294642402404847,
+        "max": 25.84490310820247
       },
-      "user_cpu_affinity_utilization": {
-        "median": 0.796158471552609,
-        "min": 0.7745481233641252,
-        "max": 0.815016907494933
+      "task_clock_per_worker_core": {
+        "median": 0.7714592430374451,
+        "min": 0.7592075750751515,
+        "max": 0.8076532221313272
       },
       "instructions_per_agent": {
-        "median": 1038514795.59375,
-        "min": 1036948204.53125,
-        "max": 1043253468.15625
+        "median": 1137185384.9375,
+        "min": 1131670077.125,
+        "max": 1139238372.375
       },
       "cycles_per_agent": {
-        "median": 749228017.65625,
-        "min": 744139271.15625,
-        "max": 750740441.75
+        "median": 858429825.9375,
+        "min": 853869673.5,
+        "max": 864829480.75
       },
       "task_clock_ms_per_agent": {
-        "median": 291.321875,
-        "min": 289.219375,
-        "max": 291.4196875
+        "median": 296.8153125,
+        "min": 295.09625,
+        "max": 299.03625
       }
     }
   },
@@ -636,28 +661,28 @@
     },
     "2": {
       "agents": 2,
-      "throughput_speedup": 2.0211495909090806,
-      "parallel_efficiency": 1.0105747954545403
+      "throughput_speedup": 2.0132596297955794,
+      "parallel_efficiency": 1.0066298148977897
     },
     "4": {
       "agents": 4,
-      "throughput_speedup": 4.010829491290168,
-      "parallel_efficiency": 1.002707372822542
+      "throughput_speedup": 3.9496664115241056,
+      "parallel_efficiency": 0.9874166028810264
     },
     "8": {
       "agents": 8,
-      "throughput_speedup": 7.770513537044064,
-      "parallel_efficiency": 0.971314192130508
+      "throughput_speedup": 7.641954808137352,
+      "parallel_efficiency": 0.955244351017169
     },
     "16": {
       "agents": 16,
-      "throughput_speedup": 13.55416613335097,
-      "parallel_efficiency": 0.8471353833344356
+      "throughput_speedup": 12.404451126332738,
+      "parallel_efficiency": 0.7752781953957961
     },
     "32": {
       "agents": 32,
-      "throughput_speedup": 24.66353612859279,
-      "parallel_efficiency": 0.7707355040185246
+      "throughput_speedup": 23.290066490819942,
+      "parallel_efficiency": 0.7278145778381232
     }
   },
   "samples": [
@@ -669,26 +694,32 @@
         "payload_bytes": 64,
         "total_tool_steps": 128,
         "total_provider_requests": 130,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 274390888,
-          "controller_cpu_user_us": 6952,
-          "controller_cpu_system_us": 1032,
-          "controller_cpu_total_us": 7984,
-          "agents_per_second": 7.28887177915325,
-          "tool_steps_per_second": 466.487793865808
+          "wall_ns": 290572135,
+          "controller_cpu_user_us": 9500,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 9500,
+          "agents_per_second": 6.882972450197263,
+          "tool_steps_per_second": 440.51023681262484
         },
         "memory": {
-          "controller_max_rss_kb": 46512,
-          "sum_child_max_rss_kb": 152972,
-          "max_child_max_rss_kb": 76836
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 153592,
+          "max_child_max_rss_kb": 76796
         },
         "child_internal_wall_ns": [
-          136608236,
-          132271927
+          132815020,
+          141918082
         ],
         "child_internal_cpu_us": [
-          136347,
-          133265
+          133234,
+          142354
         ],
         "checks": {
           "agent_count_exact": true,
@@ -700,39 +731,48 @@
         }
       },
       "perf": {
-        "task-clock": 573.97,
-        "cycles": 1478252912.0,
-        "instructions": 2187498719.0,
-        "branches": 446830144.0,
-        "branch-misses": 22978580.0,
-        "cache-references": 881152965.0,
-        "cache-misses": 16834015.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 22061.0
+        "task-clock": 599.53,
+        "cycles_u": 1504149481.0,
+        "instructions_u": 2189723385.0,
+        "cycles_k": 231626445.0,
+        "instructions_k": 168795712.0,
+        "branches": 478850533.0,
+        "branch-misses": 23826261.0,
+        "cache-references": 930481351.0,
+        "cache-misses": 18841232.0,
+        "context-switches": 507.0,
+        "cpu-migrations": 11.0,
+        "page-faults": 22845.0,
+        "cycles": 1735775926.0,
+        "cycles_kernel_ratio": 0.13344259563143634,
+        "instructions": 2358519097.0,
+        "instructions_kernel_ratio": 0.0715685161144998
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2",
-        "ipc": 1.4797865109837172,
-        "cache_mpki": 7.695554220802266,
-        "branch_mpki": 10.504499865720836,
-        "average_user_cpu_cores": 2.091796867540295,
-        "user_cpu_affinity_utilization": 1.0458984337701476,
-        "instructions_per_agent": 1093749359.5,
-        "cycles_per_agent": 739126456.0,
-        "task_clock_ms_per_agent": 286.985
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3587693328798938,
+        "cache_mpki": 7.988585729055897,
+        "branch_mpki": 10.102212456242835,
+        "average_cpu_cores_including_controller": 2.0632742365333825,
+        "task_clock_per_worker_core": 1.0316371182666912,
+        "instructions_per_agent": 1179259548.5,
+        "cycles_per_agent": 867887963.0,
+        "task_clock_ms_per_agent": 299.765
       },
       "sample_index": 1
     },
@@ -744,30 +784,38 @@
         "payload_bytes": 64,
         "total_tool_steps": 256,
         "total_provider_requests": 260,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 280014545,
-          "controller_cpu_user_us": 4268,
-          "controller_cpu_system_us": 7226,
-          "controller_cpu_total_us": 11494,
-          "agents_per_second": 14.28497223242457,
-          "tool_steps_per_second": 914.2382228751725
+          "wall_ns": 298147608,
+          "controller_cpu_user_us": 9236,
+          "controller_cpu_system_us": 5823,
+          "controller_cpu_total_us": 15059,
+          "agents_per_second": 13.416173374095962,
+          "tool_steps_per_second": 858.6350959421416
         },
         "memory": {
           "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 309156,
-          "max_child_max_rss_kb": 78884
+          "sum_child_max_rss_kb": 295408,
+          "max_child_max_rss_kb": 76796
         },
         "child_internal_wall_ns": [
-          134919323,
-          137302036,
-          134689199,
-          134017540
+          140356251,
+          146093119,
+          133772913,
+          134256229
         ],
         "child_internal_cpu_us": [
-          135587,
-          136951,
-          134334,
-          134621
+          139855,
+          143604,
+          133392,
+          134010
         ],
         "checks": {
           "agent_count_exact": true,
@@ -779,39 +827,48 @@
         }
       },
       "perf": {
-        "task-clock": 1118.91,
-        "cycles": 2896387969.0,
-        "instructions": 4257129275.0,
-        "branches": 871647321.0,
-        "branch-misses": 44728225.0,
-        "cache-references": 1728238092.0,
-        "cache-misses": 33237817.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 41101.0
+        "task-clock": 1164.47,
+        "cycles_u": 2944944496.0,
+        "instructions_u": 4252621124.0,
+        "cycles_k": 426753002.0,
+        "instructions_k": 312398472.0,
+        "branches": 928604930.0,
+        "branch-misses": 46824196.0,
+        "cache-references": 1811353670.0,
+        "cache-misses": 36762158.0,
+        "context-switches": 1029.0,
+        "cpu-migrations": 102.0,
+        "page-faults": 41552.0,
+        "cycles": 3371697498.0,
+        "cycles_kernel_ratio": 0.12656918429163302,
+        "instructions": 4565019596.0,
+        "instructions_kernel_ratio": 0.06843310645889285
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6",
-        "ipc": 1.469806296864921,
-        "cache_mpki": 7.807565815581205,
-        "branch_mpki": 10.506663554397228,
-        "average_user_cpu_cores": 3.995899570145544,
-        "user_cpu_affinity_utilization": 0.998974892536386,
-        "instructions_per_agent": 1064282318.75,
-        "cycles_per_agent": 724096992.25,
-        "task_clock_ms_per_agent": 279.7275
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3539232385787416,
+        "cache_mpki": 8.053012090509325,
+        "branch_mpki": 10.257173055955487,
+        "average_cpu_cores_including_controller": 3.9056828522333813,
+        "task_clock_per_worker_core": 0.9764207130583453,
+        "instructions_per_agent": 1141254899.0,
+        "cycles_per_agent": 842924374.5,
+        "task_clock_ms_per_agent": 291.1175
       },
       "sample_index": 2
     },
@@ -823,54 +880,74 @@
         "payload_bytes": 64,
         "total_tool_steps": 1024,
         "total_provider_requests": 1040,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 328775821,
-          "controller_cpu_user_us": 18930,
-          "controller_cpu_system_us": 9652,
-          "controller_cpu_total_us": 28582,
-          "agents_per_second": 48.66537919769958,
-          "tool_steps_per_second": 3114.584268652773
+          "wall_ns": 361328648,
+          "controller_cpu_user_us": 14614,
+          "controller_cpu_system_us": 19556,
+          "controller_cpu_total_us": 34170,
+          "agents_per_second": 44.2810169870616,
+          "tool_steps_per_second": 2833.9850871719423
         },
         "memory": {
-          "controller_max_rss_kb": 44464,
-          "sum_child_max_rss_kb": 1057376,
-          "max_child_max_rss_kb": 71136
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 1089328,
+          "max_child_max_rss_kb": 74776
         },
         "child_internal_wall_ns": [
-          166018727,
-          144717617,
-          139332503,
-          140621541,
-          135201786,
-          112994373,
-          136808189,
-          130242039,
-          135794145,
-          138437201,
-          138984388,
-          133151768,
-          139130780,
-          120809120,
-          113858095,
-          114613786
+          137408031,
+          161553246,
+          135030420,
+          136687882,
+          133391668,
+          136294616,
+          135940531,
+          140335790,
+          137475173,
+          139996986,
+          139315537,
+          140951679,
+          142441069,
+          110140904,
+          110723462,
+          103212701
         ],
         "child_internal_cpu_us": [
-          142512,
-          141000,
-          139547,
-          145152,
-          138610,
-          139206,
-          138741,
-          137626,
-          137985,
-          140520,
-          138973,
-          139517,
-          140399,
-          140797,
-          142419,
-          142416
+          138264,
+          154116,
+          140567,
+          137323,
+          137180,
+          136978,
+          136850,
+          142503,
+          138744,
+          138632,
+          140088,
+          139618,
+          140093,
+          139451,
+          139357,
+          141275
         ],
         "checks": {
           "agent_count_exact": true,
@@ -882,39 +959,48 @@
         }
       },
       "perf": {
-        "task-clock": 4612.55,
-        "cycles": 11890317003.0,
-        "instructions": 16750969542.0,
-        "branches": 3435374649.0,
-        "branch-misses": 177174776.0,
-        "cache-references": 6803679467.0,
-        "cache-misses": 130291272.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 150640.0
+        "task-clock": 4669.05,
+        "cycles_u": 11844425611.0,
+        "instructions_u": 16796498033.0,
+        "cycles_k": 1665514393.0,
+        "instructions_k": 1266911394.0,
+        "branches": 3680315479.0,
+        "branch-misses": 183449883.0,
+        "cache-references": 7188538241.0,
+        "cache-misses": 147605153.0,
+        "context-switches": 4755.0,
+        "cpu-migrations": 1272.0,
+        "page-faults": 153976.0,
+        "cycles": 13509940004.0,
+        "cycles_kernel_ratio": 0.12328066538466324,
+        "instructions": 18063409427.0,
+        "instructions_kernel_ratio": 0.07013689188190043
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
-        "ipc": 1.4087908285181654,
-        "cache_mpki": 7.778133180489547,
-        "branch_mpki": 10.576986338358898,
-        "average_user_cpu_cores": 14.029468426146824,
-        "user_cpu_affinity_utilization": 0.8768417766341765,
-        "instructions_per_agent": 1046935596.375,
-        "cycles_per_agent": 743144812.6875,
-        "task_clock_ms_per_agent": 288.284375
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3370458656109365,
+        "cache_mpki": 8.171500158733572,
+        "branch_mpki": 10.155883569011682,
+        "average_cpu_cores_including_controller": 12.921892647714998,
+        "task_clock_per_worker_core": 0.8076182904821874,
+        "instructions_per_agent": 1128963089.1875,
+        "cycles_per_agent": 844371250.25,
+        "task_clock_ms_per_agent": 291.815625
       },
       "sample_index": 3
     },
@@ -926,54 +1012,74 @@
         "payload_bytes": 64,
         "total_tool_steps": 1024,
         "total_provider_requests": 1040,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 332909447,
-          "controller_cpu_user_us": 27576,
-          "controller_cpu_system_us": 819,
-          "controller_cpu_total_us": 28395,
-          "agents_per_second": 48.061117352431275,
-          "tool_steps_per_second": 3075.9115105556016
+          "wall_ns": 361190647,
+          "controller_cpu_user_us": 28424,
+          "controller_cpu_system_us": 1032,
+          "controller_cpu_total_us": 29456,
+          "agents_per_second": 44.29793554427228,
+          "tool_steps_per_second": 2835.067874833426
         },
         "memory": {
-          "controller_max_rss_kb": 44452,
-          "sum_child_max_rss_kb": 1095576,
-          "max_child_max_rss_kb": 73188
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 1087720,
+          "max_child_max_rss_kb": 72584
         },
         "child_internal_wall_ns": [
-          112823381,
-          151070594,
-          116064566,
-          147829900,
-          137509238,
-          136835559,
-          135340159,
-          155280791,
-          125536975,
-          147028258,
-          135512941,
-          128789189,
-          138677404,
-          111022077,
-          111789607,
-          110936185
+          135088570,
+          117299860,
+          149847679,
+          122350768,
+          167340055,
+          132116900,
+          131388490,
+          130272495,
+          133655151,
+          124437847,
+          138315704,
+          137176859,
+          137303420,
+          126291011,
+          123653396,
+          106849359
         ],
         "child_internal_cpu_us": [
-          140200,
-          144261,
-          140840,
-          144831,
-          140901,
-          138502,
-          136925,
-          140492,
-          141649,
-          141885,
-          137760,
-          142842,
-          137072,
-          139304,
-          141651,
-          137734
+          138094,
+          138322,
+          140114,
+          139635,
+          143661,
+          139056,
+          138602,
+          139001,
+          138745,
+          136315,
+          138726,
+          139009,
+          140133,
+          141833,
+          140134,
+          142010
         ],
         "checks": {
           "agent_count_exact": true,
@@ -985,39 +1091,48 @@
         }
       },
       "perf": {
-        "task-clock": 4540.82,
-        "cycles": 11721253300.0,
-        "instructions": 16604840161.0,
-        "branches": 3404811034.0,
-        "branch-misses": 175129661.0,
-        "cache-references": 6755596628.0,
-        "cache-misses": 129842534.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 150525.0
+        "task-clock": 4637.06,
+        "cycles_u": 11933439734.0,
+        "instructions_u": 16841919445.0,
+        "cycles_k": 1486050338.0,
+        "instructions_k": 1215118611.0,
+        "branches": 3681163746.0,
+        "branch-misses": 184244336.0,
+        "cache-references": 7196900200.0,
+        "cache-misses": 146882441.0,
+        "context-switches": 4924.0,
+        "cpu-migrations": 1591.0,
+        "page-faults": 151306.0,
+        "cycles": 13419490072.0,
+        "cycles_kernel_ratio": 0.11073821210991243,
+        "instructions": 18057038056.0,
+        "instructions_kernel_ratio": 0.067293351613458
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
-        "ipc": 1.4166437441463704,
-        "cache_mpki": 7.819559402020792,
-        "branch_mpki": 10.546904354510396,
-        "average_user_cpu_cores": 13.639805181016685,
-        "user_cpu_affinity_utilization": 0.8524878238135428,
-        "instructions_per_agent": 1037802510.0625,
-        "cycles_per_agent": 732578331.25,
-        "task_clock_ms_per_agent": 283.80125
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.34558302581678,
+        "cache_mpki": 8.13435960784243,
+        "branch_mpki": 10.203463903028062,
+        "average_cpu_cores_including_controller": 12.8382615621827,
+        "task_clock_per_worker_core": 0.8023913476364187,
+        "instructions_per_agent": 1128564878.5,
+        "cycles_per_agent": 838718129.5,
+        "task_clock_ms_per_agent": 289.81625
       },
       "sample_index": 4
     },
@@ -1029,30 +1144,38 @@
         "payload_bytes": 64,
         "total_tool_steps": 256,
         "total_provider_requests": 260,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 284415705,
-          "controller_cpu_user_us": 6720,
-          "controller_cpu_system_us": 5116,
-          "controller_cpu_total_us": 11836,
-          "agents_per_second": 14.063920977922088,
-          "tool_steps_per_second": 900.0909425870136
+          "wall_ns": 290214280,
+          "controller_cpu_user_us": 7671,
+          "controller_cpu_system_us": 3941,
+          "controller_cpu_total_us": 11612,
+          "agents_per_second": 13.782919296734812,
+          "tool_steps_per_second": 882.106834991028
         },
         "memory": {
           "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 299776,
-          "max_child_max_rss_kb": 76892
+          "sum_child_max_rss_kb": 286764,
+          "max_child_max_rss_kb": 72740
         },
         "child_internal_wall_ns": [
-          140004472,
-          136385123,
-          133981330,
-          135588762
+          135432225,
+          134961108,
+          140036327,
+          134548462
         ],
         "child_internal_cpu_us": [
-          139858,
-          136757,
-          134850,
-          136027
+          135499,
+          135054,
+          141324,
+          134138
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1064,39 +1187,48 @@
         }
       },
       "perf": {
-        "task-clock": 1125.62,
-        "cycles": 2918851423.0,
-        "instructions": 4251335391.0,
-        "branches": 870011890.0,
-        "branch-misses": 44526148.0,
-        "cache-references": 1727202183.0,
-        "cache-misses": 33479930.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 40138.0
+        "task-clock": 1134.58,
+        "cycles_u": 2922333105.0,
+        "instructions_u": 4251428859.0,
+        "cycles_k": 364100502.0,
+        "instructions_k": 308189044.0,
+        "branches": 927507460.0,
+        "branch-misses": 46520590.0,
+        "cache-references": 1815244264.0,
+        "cache-misses": 36634990.0,
+        "context-switches": 1047.0,
+        "cpu-migrations": 116.0,
+        "page-faults": 41509.0,
+        "cycles": 3286433607.0,
+        "cycles_kernel_ratio": 0.11078894191700006,
+        "instructions": 4559617903.0,
+        "instructions_kernel_ratio": 0.06759098033131834
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6",
-        "ipc": 1.4565096933335753,
-        "cache_mpki": 7.875156138204575,
-        "branch_mpki": 10.473449846902469,
-        "average_user_cpu_cores": 3.957657682792165,
-        "user_cpu_affinity_utilization": 0.9894144206980412,
-        "instructions_per_agent": 1062833847.75,
-        "cycles_per_agent": 729712855.75,
-        "task_clock_ms_per_agent": 281.405
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3874060602618465,
+        "cache_mpki": 8.034662285165608,
+        "branch_mpki": 10.202738692071497,
+        "average_cpu_cores_including_controller": 3.909456143922346,
+        "task_clock_per_worker_core": 0.9773640359805865,
+        "instructions_per_agent": 1139904475.75,
+        "cycles_per_agent": 821608401.75,
+        "task_clock_ms_per_agent": 283.645
       },
       "sample_index": 5
     },
@@ -1108,26 +1240,32 @@
         "payload_bytes": 64,
         "total_tool_steps": 128,
         "total_provider_requests": 130,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 279068282,
-          "controller_cpu_user_us": 7120,
-          "controller_cpu_system_us": 1214,
-          "controller_cpu_total_us": 8334,
-          "agents_per_second": 7.16670481384194,
-          "tool_steps_per_second": 458.66910808588415
+          "wall_ns": 277981365,
+          "controller_cpu_user_us": 2020,
+          "controller_cpu_system_us": 6445,
+          "controller_cpu_total_us": 8465,
+          "agents_per_second": 7.194726883940583,
+          "tool_steps_per_second": 460.4625205721973
         },
         "memory": {
-          "controller_max_rss_kb": 47052,
-          "sum_child_max_rss_kb": 154032,
-          "max_child_max_rss_kb": 78828
+          "controller_max_rss_kb": 44444,
+          "sum_child_max_rss_kb": 147616,
+          "max_child_max_rss_kb": 74848
         },
         "child_internal_wall_ns": [
-          137950865,
-          135042215
+          133621620,
+          138541177
         ],
         "child_internal_cpu_us": [
-          138401,
-          134769
+          133384,
+          138855
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1139,39 +1277,48 @@
         }
       },
       "perf": {
-        "task-clock": 583.59,
-        "cycles": 1508846084.0,
-        "instructions": 2178610469.0,
-        "branches": 444986479.0,
-        "branch-misses": 22779923.0,
-        "cache-references": 880209842.0,
-        "cache-misses": 16980251.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 22127.0
+        "task-clock": 582.35,
+        "cycles_u": 1497884608.0,
+        "instructions_u": 2183749642.0,
+        "cycles_k": 189082328.0,
+        "instructions_k": 161622874.0,
+        "branches": 476162542.0,
+        "branch-misses": 23843010.0,
+        "cache-references": 928983541.0,
+        "cache-misses": 18913727.0,
+        "context-switches": 505.0,
+        "cpu-migrations": 12.0,
+        "page-faults": 22007.0,
+        "cycles": 1686966936.0,
+        "cycles_kernel_ratio": 0.11208419321384969,
+        "instructions": 2345372516.0,
+        "instructions_kernel_ratio": 0.06891138737979481
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2",
-        "ipc": 1.4438917873083734,
-        "cache_mpki": 7.7940739024329,
-        "branch_mpki": 10.456170721724371,
-        "average_user_cpu_cores": 2.091208631155009,
-        "user_cpu_affinity_utilization": 1.0456043155775046,
-        "instructions_per_agent": 1089305234.5,
-        "cycles_per_agent": 754423042.0,
-        "task_clock_ms_per_agent": 291.795
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3902895581114105,
+        "cache_mpki": 8.064274170082413,
+        "branch_mpki": 10.165979961538868,
+        "average_cpu_cores_including_controller": 2.0949246004313995,
+        "task_clock_per_worker_core": 1.0474623002156997,
+        "instructions_per_agent": 1172686258.0,
+        "cycles_per_agent": 843483468.0,
+        "task_clock_ms_per_agent": 291.175
       },
       "sample_index": 6
     },
@@ -1183,86 +1330,122 @@
         "payload_bytes": 64,
         "total_tool_steps": 2048,
         "total_provider_requests": 2080,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 373686914,
-          "controller_cpu_user_us": 38106,
-          "controller_cpu_system_us": 11507,
-          "controller_cpu_total_us": 49613,
-          "agents_per_second": 85.63318329097282,
-          "tool_steps_per_second": 5480.523730622261
+          "wall_ns": 384745293,
+          "controller_cpu_user_us": 30432,
+          "controller_cpu_system_us": 19985,
+          "controller_cpu_total_us": 50417,
+          "agents_per_second": 83.17190770674354,
+          "tool_steps_per_second": 5323.0020932315865
         },
         "memory": {
-          "controller_max_rss_kb": 44452,
-          "sum_child_max_rss_kb": 2139672,
-          "max_child_max_rss_kb": 70656
+          "controller_max_rss_kb": 48552,
+          "sum_child_max_rss_kb": 2173228,
+          "max_child_max_rss_kb": 73124
         },
         "child_internal_wall_ns": [
-          122022026,
-          135410450,
-          148458647,
-          143413599,
-          136192761,
-          142664538,
-          135956807,
-          112026970,
-          140026613,
-          124960027,
-          138482232,
-          150700569,
-          136118619,
-          112410155,
-          104940843,
-          125878800,
-          107404837,
-          116467310,
-          105274288,
-          110732942,
-          112412385,
-          106447794,
-          119066017,
-          110817314,
-          108672374,
-          122127208,
-          110723702,
-          107850393,
-          110528570,
-          104650739,
-          102175986,
-          106568255
+          146006097,
+          134284609,
+          116330437,
+          124828802,
+          144733380,
+          145654703,
+          136190035,
+          136656861,
+          146191460,
+          165890706,
+          118291914,
+          118943002,
+          149751088,
+          122495980,
+          119179436,
+          111661784,
+          127933113,
+          124448497,
+          111386951,
+          120033047,
+          112584587,
+          105409240,
+          114759517,
+          112721709,
+          115001399,
+          113703512,
+          113494660,
+          114165819,
+          109232582,
+          111635704,
+          103725577,
+          100163200
         ],
         "child_internal_cpu_us": [
-          145990,
-          143823,
-          145681,
-          146199,
-          142984,
-          148078,
-          148482,
-          139225,
-          147888,
-          142472,
-          140091,
-          144425,
-          141047,
-          145282,
-          141195,
-          147386,
-          142542,
-          142212,
-          145534,
-          145575,
-          143962,
-          146807,
-          148241,
-          147464,
-          147399,
-          148240,
-          146094,
-          145180,
-          145947,
-          146230,
-          146076,
-          146441
+          143936,
+          139500,
+          140904,
+          141275,
+          143173,
+          143295,
+          144666,
+          144193,
+          144222,
+          145991,
+          145188,
+          144234,
+          146737,
+          150460,
+          144902,
+          145352,
+          148828,
+          147691,
+          147708,
+          144533,
+          146141,
+          145434,
+          142939,
+          145105,
+          145867,
+          150736,
+          145067,
+          147745,
+          146062,
+          147189,
+          147616,
+          145128
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1274,39 +1457,48 @@
         }
       },
       "perf": {
-        "task-clock": 9303.05,
-        "cycles": 23926524951.0,
-        "instructions": 33217068992.0,
-        "branches": 6813756485.0,
-        "branch-misses": 350498575.0,
-        "cache-references": 13501982220.0,
-        "cache-misses": 258233098.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 294479.0
+        "task-clock": 9498.09,
+        "cycles_u": 24319295258.0,
+        "instructions_u": 33705136804.0,
+        "cycles_k": 3145467145.0,
+        "instructions_k": 2587705273.0,
+        "branches": 7399322116.0,
+        "branch-misses": 368382665.0,
+        "cache-references": 14447497070.0,
+        "cache-misses": 297477758.0,
+        "context-switches": 10977.0,
+        "cpu-migrations": 4139.0,
+        "page-faults": 300525.0,
+        "cycles": 27464762403.0,
+        "cycles_kernel_ratio": 0.11452737507230057,
+        "instructions": 36292842077.0,
+        "instructions_kernel_ratio": 0.07130070628003851
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
-        "ipc": 1.3882947507014263,
-        "cache_mpki": 7.7741084880846305,
-        "branch_mpki": 10.551761056474131,
-        "average_user_cpu_cores": 24.895305806721396,
-        "user_cpu_affinity_utilization": 0.7779783064600436,
-        "instructions_per_agent": 1038033406.0,
-        "cycles_per_agent": 747703904.71875,
-        "task_clock_ms_per_agent": 290.7203125
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3214329526854272,
+        "cache_mpki": 8.196595829250906,
+        "branch_mpki": 10.150284296237482,
+        "average_cpu_cores_including_controller": 24.686695777198242,
+        "task_clock_per_worker_core": 0.7714592430374451,
+        "instructions_per_agent": 1134151314.90625,
+        "cycles_per_agent": 858273825.09375,
+        "task_clock_ms_per_agent": 296.8153125
       },
       "sample_index": 7
     },
@@ -1318,24 +1510,29 @@
         "payload_bytes": 64,
         "total_tool_steps": 64,
         "total_provider_requests": 65,
+        "placement": "shared",
+        "cpu_binding": [
+          0
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 283905028,
-          "controller_cpu_user_us": 6409,
-          "controller_cpu_system_us": 0,
-          "controller_cpu_total_us": 6409,
-          "agents_per_second": 3.522304649003962,
-          "tool_steps_per_second": 225.42749753625355
+          "wall_ns": 280023233,
+          "controller_cpu_user_us": 5073,
+          "controller_cpu_system_us": 863,
+          "controller_cpu_total_us": 5936,
+          "agents_per_second": 3.571132256729569,
+          "tool_steps_per_second": 228.55246443069242
         },
         "memory": {
-          "controller_max_rss_kb": 46048,
-          "sum_child_max_rss_kb": 76788,
-          "max_child_max_rss_kb": 76788
+          "controller_max_rss_kb": 44464,
+          "sum_child_max_rss_kb": 76796,
+          "max_child_max_rss_kb": 76796
         },
         "child_internal_wall_ns": [
-          136829769
+          139501919
         ],
         "child_internal_cpu_us": [
-          137527
+          139235
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1347,39 +1544,48 @@
         }
       },
       "perf": {
-        "task-clock": 313.63,
-        "cycles": 799611327.0,
-        "instructions": 1151955664.0,
-        "branches": 234469017.0,
-        "branch-misses": 12012575.0,
-        "cache-references": 460509791.0,
-        "cache-misses": 8699813.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12570.0
+        "task-clock": 310.58,
+        "cycles_u": 788653078.0,
+        "instructions_u": 1137932160.0,
+        "cycles_k": 110884210.0,
+        "instructions_k": 92818871.0,
+        "branches": 248655729.0,
+        "branch-misses": 12181366.0,
+        "cache-references": 485658972.0,
+        "cache-misses": 9606257.0,
+        "context-switches": 265.0,
+        "cpu-migrations": 1.0,
+        "page-faults": 12861.0,
+        "cycles": 899537288.0,
+        "cycles_kernel_ratio": 0.12326805289699119,
+        "instructions": 1230751031.0,
+        "instructions_kernel_ratio": 0.07541644789408265
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0",
-        "ipc": 1.440644504526885,
-        "cache_mpki": 7.552211662201611,
-        "branch_mpki": 10.427983797820886,
-        "average_user_cpu_cores": 1.1047004070671125,
-        "user_cpu_affinity_utilization": 1.1047004070671125,
-        "instructions_per_agent": 1151955664.0,
-        "cycles_per_agent": 799611327.0,
-        "task_clock_ms_per_agent": 313.63
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3682045729715209,
+        "cache_mpki": 7.805199230420145,
+        "branch_mpki": 9.89750623251763,
+        "average_cpu_cores_including_controller": 1.1091222562950696,
+        "task_clock_per_worker_core": 1.1091222562950696,
+        "instructions_per_agent": 1230751031.0,
+        "cycles_per_agent": 899537288.0,
+        "task_clock_ms_per_agent": 310.58
       },
       "sample_index": 8
     },
@@ -1391,54 +1597,74 @@
         "payload_bytes": 64,
         "total_tool_steps": 1024,
         "total_provider_requests": 1040,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 318816295,
-          "controller_cpu_user_us": 11925,
-          "controller_cpu_system_us": 15911,
-          "controller_cpu_total_us": 27836,
-          "agents_per_second": 50.18564060535237,
-          "tool_steps_per_second": 3211.8809987425516
+          "wall_ns": 344426410,
+          "controller_cpu_user_us": 19716,
+          "controller_cpu_system_us": 7886,
+          "controller_cpu_total_us": 27602,
+          "agents_per_second": 46.454045147118656,
+          "tool_steps_per_second": 2973.058889415594
         },
         "memory": {
-          "controller_max_rss_kb": 44444,
-          "sum_child_max_rss_kb": 1116564,
-          "max_child_max_rss_kb": 73184
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 1111476,
+          "max_child_max_rss_kb": 74744
         },
         "child_internal_wall_ns": [
-          135774415,
-          131908722,
-          129791393,
-          139153700,
-          136462874,
-          138505312,
-          138797666,
-          134913303,
-          149094177,
-          140667232,
-          133261190,
-          146039015,
-          138798996,
-          115312585,
-          112746110,
-          115150253
+          132861410,
+          137816566,
+          137434152,
+          137853767,
+          147675180,
+          136267676,
+          146908050,
+          148961037,
+          138366324,
+          145165285,
+          140599765,
+          134107857,
+          133214805,
+          107903063,
+          112284503,
+          114645594
         ],
         "child_internal_cpu_us": [
-          138877,
-          137215,
-          140782,
-          139043,
-          137841,
-          138839,
-          138033,
-          139723,
-          139846,
-          140329,
-          139032,
-          143472,
-          139745,
-          140184,
-          139094,
-          138715
+          137901,
+          142521,
+          138700,
+          138344,
+          137755,
+          136760,
+          147381,
+          139306,
+          139022,
+          141503,
+          139136,
+          138982,
+          138780,
+          138066,
+          139701,
+          142037
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1450,39 +1676,48 @@
         }
       },
       "perf": {
-        "task-clock": 4531.59,
-        "cycles": 11719932593.0,
-        "instructions": 16629584326.0,
-        "branches": 3410107625.0,
-        "branch-misses": 175624390.0,
-        "cache-references": 6756233038.0,
-        "cache-misses": 129500592.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 150456.0
+        "task-clock": 4621.97,
+        "cycles_u": 11892313303.0,
+        "instructions_u": 16893521441.0,
+        "cycles_k": 1488443986.0,
+        "instructions_k": 1223373168.0,
+        "branches": 3694191670.0,
+        "branch-misses": 184396202.0,
+        "cache-references": 7209659855.0,
+        "cache-misses": 146635638.0,
+        "context-switches": 4720.0,
+        "cpu-migrations": 1308.0,
+        "page-faults": 153939.0,
+        "cycles": 13380757289.0,
+        "cycles_kernel_ratio": 0.11123764924901629,
+        "instructions": 18116894609.0,
+        "instructions_kernel_ratio": 0.06752664815924138
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
-        "ipc": 1.4189146732748619,
-        "cache_mpki": 7.78736193649342,
-        "branch_mpki": 10.560960909011719,
-        "average_user_cpu_cores": 14.213796694425547,
-        "user_cpu_affinity_utilization": 0.8883622934015967,
-        "instructions_per_agent": 1039349020.375,
-        "cycles_per_agent": 732495787.0625,
-        "task_clock_ms_per_agent": 283.224375
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3539513659584472,
+        "cache_mpki": 8.093861622794629,
+        "branch_mpki": 10.178135159454799,
+        "average_cpu_cores_including_controller": 13.419325190539253,
+        "task_clock_per_worker_core": 0.8387078244087033,
+        "instructions_per_agent": 1132305913.0625,
+        "cycles_per_agent": 836297330.5625,
+        "task_clock_ms_per_agent": 288.873125
       },
       "sample_index": 9
     },
@@ -1494,26 +1729,32 @@
         "payload_bytes": 64,
         "total_tool_steps": 128,
         "total_provider_requests": 130,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 279769632,
-          "controller_cpu_user_us": 6684,
-          "controller_cpu_system_us": 1721,
-          "controller_cpu_total_us": 8405,
-          "agents_per_second": 7.148738716573784,
-          "tool_steps_per_second": 457.5192778607222
+          "wall_ns": 277272245,
+          "controller_cpu_user_us": 4609,
+          "controller_cpu_system_us": 4183,
+          "controller_cpu_total_us": 8792,
+          "agents_per_second": 7.213127300209943,
+          "tool_steps_per_second": 461.64014721343636
         },
         "memory": {
-          "controller_max_rss_kb": 46500,
-          "sum_child_max_rss_kb": 147924,
-          "max_child_max_rss_kb": 74740
+          "controller_max_rss_kb": 44460,
+          "sum_child_max_rss_kb": 151852,
+          "max_child_max_rss_kb": 77104
         },
         "child_internal_wall_ns": [
-          135505371,
-          138451881
+          137665744,
+          133872414
         ],
         "child_internal_cpu_us": [
-          136482,
-          138805
+          137400,
+          133647
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1525,39 +1766,48 @@
         }
       },
       "perf": {
-        "task-clock": 584.88,
-        "cycles": 1509301271.0,
-        "instructions": 2182054537.0,
-        "branches": 445675249.0,
-        "branch-misses": 22875914.0,
-        "cache-references": 879639858.0,
-        "cache-misses": 17126022.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 22120.0
+        "task-clock": 580.43,
+        "cycles_u": 1493929152.0,
+        "instructions_u": 2175786996.0,
+        "cycles_k": 187424538.0,
+        "instructions_k": 161830592.0,
+        "branches": 474343042.0,
+        "branch-misses": 23489269.0,
+        "cache-references": 926795863.0,
+        "cache-misses": 18559345.0,
+        "context-switches": 494.0,
+        "cpu-migrations": 16.0,
+        "page-faults": 22071.0,
+        "cycles": 1681353690.0,
+        "cycles_kernel_ratio": 0.11147240411980182,
+        "instructions": 2337617588.0,
+        "instructions_kernel_ratio": 0.06922885626406401
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2",
-        "ipc": 1.4457382226639628,
-        "cache_mpki": 7.848576517957123,
-        "branch_mpki": 10.483658227649514,
-        "average_user_cpu_cores": 2.0905771502748376,
-        "user_cpu_affinity_utilization": 1.0452885751374188,
-        "instructions_per_agent": 1091027268.5,
-        "cycles_per_agent": 754650635.5,
-        "task_clock_ms_per_agent": 292.44
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.390318766303121,
+        "cache_mpki": 7.939427344863047,
+        "branch_mpki": 10.04837964968289,
+        "average_cpu_cores_including_controller": 2.0933577394304286,
+        "task_clock_per_worker_core": 1.0466788697152143,
+        "instructions_per_agent": 1168808794.0,
+        "cycles_per_agent": 840676845.0,
+        "task_clock_ms_per_agent": 290.215
       },
       "sample_index": 10
     },
@@ -1569,26 +1819,32 @@
         "payload_bytes": 64,
         "total_tool_steps": 128,
         "total_provider_requests": 130,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 280792826,
-          "controller_cpu_user_us": 8394,
-          "controller_cpu_system_us": 0,
-          "controller_cpu_total_us": 8394,
-          "agents_per_second": 7.122689096052618,
-          "tool_steps_per_second": 455.85210214736753
+          "wall_ns": 281794767,
+          "controller_cpu_user_us": 7238,
+          "controller_cpu_system_us": 1221,
+          "controller_cpu_total_us": 8459,
+          "agents_per_second": 7.097363876881362,
+          "tool_steps_per_second": 454.23128812040716
         },
         "memory": {
-          "controller_max_rss_kb": 46936,
-          "sum_child_max_rss_kb": 151536,
-          "max_child_max_rss_kb": 76776
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 153576,
+          "max_child_max_rss_kb": 76792
         },
         "child_internal_wall_ns": [
-          134831872,
-          138558143
+          134236088,
+          139562950
         ],
         "child_internal_cpu_us": [
-          135265,
-          138401
+          135255,
+          139566
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1600,39 +1856,48 @@
         }
       },
       "perf": {
-        "task-clock": 583.08,
-        "cycles": 1510208498.0,
-        "instructions": 2179862119.0,
-        "branches": 445040602.0,
-        "branch-misses": 22830218.0,
-        "cache-references": 880599108.0,
-        "cache-misses": 16879078.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 21160.0
+        "task-clock": 586.79,
+        "cycles_u": 1507714445.0,
+        "instructions_u": 2184088107.0,
+        "cycles_k": 192220637.0,
+        "instructions_k": 164704503.0,
+        "branches": 476679384.0,
+        "branch-misses": 23623723.0,
+        "cache-references": 929721862.0,
+        "cache-misses": 18724212.0,
+        "context-switches": 495.0,
+        "cpu-migrations": 8.0,
+        "page-faults": 22573.0,
+        "cycles": 1699935082.0,
+        "cycles_kernel_ratio": 0.11307528095358173,
+        "instructions": 2348792610.0,
+        "instructions_kernel_ratio": 0.0701230505829972
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2",
-        "ipc": 1.4434179928710744,
-        "cache_mpki": 7.7431860725866395,
-        "branch_mpki": 10.473239477400176,
-        "average_user_cpu_cores": 2.0765487790631805,
-        "user_cpu_affinity_utilization": 1.0382743895315902,
-        "instructions_per_agent": 1089931059.5,
-        "cycles_per_agent": 755104249.0,
-        "task_clock_ms_per_agent": 291.54
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3816954746510726,
+        "cache_mpki": 7.97184558580504,
+        "branch_mpki": 10.05781561957486,
+        "average_cpu_cores_including_controller": 2.082331074657607,
+        "task_clock_per_worker_core": 1.0411655373288036,
+        "instructions_per_agent": 1174396305.0,
+        "cycles_per_agent": 849967541.0,
+        "task_clock_ms_per_agent": 293.395
       },
       "sample_index": 11
     },
@@ -1644,24 +1909,29 @@
         "payload_bytes": 64,
         "total_tool_steps": 64,
         "total_provider_requests": 65,
+        "placement": "shared",
+        "cpu_binding": [
+          0
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 274308757,
-          "controller_cpu_user_us": 6044,
+          "wall_ns": 280255356,
+          "controller_cpu_user_us": 5914,
           "controller_cpu_system_us": 0,
-          "controller_cpu_total_us": 6044,
-          "agents_per_second": 3.645527072983674,
-          "tool_steps_per_second": 233.31373267095515
+          "controller_cpu_total_us": 5914,
+          "agents_per_second": 3.5681744473065486,
+          "tool_steps_per_second": 228.3631646276191
         },
         "memory": {
-          "controller_max_rss_kb": 46184,
-          "sum_child_max_rss_kb": 76684,
-          "max_child_max_rss_kb": 76684
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 76796,
+          "max_child_max_rss_kb": 76796
         },
         "child_internal_wall_ns": [
-          135961128
+          137224938
         ],
         "child_internal_cpu_us": [
-          136284
+          138205
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1673,39 +1943,48 @@
         }
       },
       "perf": {
-        "task-clock": 301.8,
-        "cycles": 769785412.0,
-        "instructions": 1139640515.0,
-        "branches": 231922891.0,
-        "branch-misses": 11714795.0,
-        "cache-references": 458737710.0,
-        "cache-misses": 8653044.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12814.0
+        "task-clock": 310.76,
+        "cycles_u": 790438562.0,
+        "instructions_u": 1150078165.0,
+        "cycles_k": 109675556.0,
+        "instructions_k": 93146685.0,
+        "branches": 251341814.0,
+        "branch-misses": 12460772.0,
+        "cache-references": 487466857.0,
+        "cache-misses": 9564530.0,
+        "context-switches": 256.0,
+        "cpu-migrations": 1.0,
+        "page-faults": 12800.0,
+        "cycles": 900114118.0,
+        "cycles_kernel_ratio": 0.12184627905147467,
+        "instructions": 1243224850.0,
+        "instructions_kernel_ratio": 0.07492344204670619
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0",
-        "ipc": 1.4804652013852402,
-        "cache_mpki": 7.592783764799727,
-        "branch_mpki": 10.279377440350126,
-        "average_user_cpu_cores": 1.1002200706264729,
-        "user_cpu_affinity_utilization": 1.1002200706264729,
-        "instructions_per_agent": 1139640515.0,
-        "cycles_per_agent": 769785412.0,
-        "task_clock_ms_per_agent": 301.8
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3811858131526384,
+        "cache_mpki": 7.693322732408381,
+        "branch_mpki": 10.022943154651388,
+        "average_cpu_cores_including_controller": 1.108845891244983,
+        "task_clock_per_worker_core": 1.108845891244983,
+        "instructions_per_agent": 1243224850.0,
+        "cycles_per_agent": 900114118.0,
+        "task_clock_ms_per_agent": 310.76
       },
       "sample_index": 12
     },
@@ -1717,86 +1996,122 @@
         "payload_bytes": 64,
         "total_tool_steps": 2048,
         "total_provider_requests": 2080,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 354863037,
-          "controller_cpu_user_us": 35062,
-          "controller_cpu_system_us": 15171,
-          "controller_cpu_total_us": 50233,
-          "agents_per_second": 90.17563584679573,
-          "tool_steps_per_second": 5771.240694194927
+          "wall_ns": 391386823,
+          "controller_cpu_user_us": 18767,
+          "controller_cpu_system_us": 30401,
+          "controller_cpu_total_us": 49168,
+          "agents_per_second": 81.76054511676803,
+          "tool_steps_per_second": 5232.674887473154
         },
         "memory": {
           "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 2178712,
-          "max_child_max_rss_kb": 73188
+          "sum_child_max_rss_kb": 2140244,
+          "max_child_max_rss_kb": 72660
         },
         "child_internal_wall_ns": [
-          139034380,
-          136353682,
-          125880130,
-          133951609,
-          123593268,
-          135387959,
-          145075842,
-          121413449,
-          140555060,
-          127908247,
-          137089253,
-          166871969,
-          145046941,
-          127432201,
-          117336212,
-          119130137,
-          116743554,
-          134482947,
-          118994536,
-          118222275,
-          122753927,
-          120920592,
-          139381413,
-          120856041,
-          117038238,
-          111209739,
-          112439655,
-          112339694,
-          116728064,
-          113776604,
-          108449151,
-          109021289
+          119647912,
+          135521666,
+          151539152,
+          144725950,
+          160147708,
+          140882918,
+          121825611,
+          154547342,
+          140606654,
+          119377818,
+          143104328,
+          141785000,
+          141703869,
+          121781931,
+          115997453,
+          121318445,
+          116691072,
+          122493750,
+          119965217,
+          135649528,
+          113449888,
+          118488817,
+          116212206,
+          123553985,
+          116327228,
+          106382144,
+          101791192,
+          113955015,
+          113982085,
+          115692378,
+          111717895,
+          110018892
         ],
         "child_internal_cpu_us": [
-          142374,
-          140754,
-          137814,
-          141410,
-          144450,
-          141935,
-          142410,
-          140294,
-          141965,
-          141947,
-          139865,
-          146746,
-          139503,
-          141647,
-          143984,
-          143973,
-          140987,
-          146175,
-          142829,
-          144986,
-          141283,
-          148230,
-          147169,
-          145503,
-          143484,
-          144235,
-          144001,
-          144329,
-          148888,
-          145336,
-          148256,
-          145779
+          140226,
+          141597,
+          144643,
+          146036,
+          149681,
+          141433,
+          141773,
+          146761,
+          150391,
+          143077,
+          146383,
+          144043,
+          146795,
+          144178,
+          144218,
+          142858,
+          144670,
+          144888,
+          146723,
+          149239,
+          143526,
+          145453,
+          147936,
+          148437,
+          146159,
+          148005,
+          144219,
+          146187,
+          150881,
+          146163,
+          147046,
+          148127
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1808,39 +2123,48 @@
         }
       },
       "perf": {
-        "task-clock": 9255.02,
-        "cycles": 23812456677.0,
-        "instructions": 33182342545.0,
-        "branches": 6805864369.0,
-        "branch-misses": 349830837.0,
-        "cache-references": 13490230300.0,
-        "cache-misses": 257221964.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 296423.0
+        "task-clock": 9569.16,
+        "cycles_u": 24538087833.0,
+        "instructions_u": 33912083035.0,
+        "cycles_k": 3136455551.0,
+        "instructions_k": 2543544881.0,
+        "branches": 7435185202.0,
+        "branch-misses": 369799770.0,
+        "cache-references": 14508585566.0,
+        "cache-misses": 298793447.0,
+        "context-switches": 10780.0,
+        "cpu-migrations": 3784.0,
+        "page-faults": 299590.0,
+        "cycles": 27674543384.0,
+        "cycles_kernel_ratio": 0.11333359714304582,
+        "instructions": 36455627916.0,
+        "instructions_kernel_ratio": 0.06977097985695822
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
-        "ipc": 1.3934867365890138,
-        "cache_mpki": 7.751772306345468,
-        "branch_mpki": 10.542680539373595,
-        "average_user_cpu_cores": 26.080541039837858,
-        "user_cpu_affinity_utilization": 0.815016907494933,
-        "instructions_per_agent": 1036948204.53125,
-        "cycles_per_agent": 744139271.15625,
-        "task_clock_ms_per_agent": 289.219375
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3172982625280376,
+        "cache_mpki": 8.196085599964734,
+        "branch_mpki": 10.143832136209035,
+        "average_cpu_cores_including_controller": 24.44936680967412,
+        "task_clock_per_worker_core": 0.7640427128023163,
+        "instructions_per_agent": 1139238372.375,
+        "cycles_per_agent": 864829480.75,
+        "task_clock_ms_per_agent": 299.03625
       },
       "sample_index": 13
     },
@@ -1852,24 +2176,29 @@
         "payload_bytes": 64,
         "total_tool_steps": 64,
         "total_provider_requests": 65,
+        "placement": "shared",
+        "cpu_binding": [
+          0
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 287586909,
-          "controller_cpu_user_us": 1999,
-          "controller_cpu_system_us": 4954,
-          "controller_cpu_total_us": 6953,
-          "agents_per_second": 3.477209736274887,
-          "tool_steps_per_second": 222.54142312159277
+          "wall_ns": 286619552,
+          "controller_cpu_user_us": 6108,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 6108,
+          "agents_per_second": 3.4889455133891216,
+          "tool_steps_per_second": 223.29251285690378
         },
         "memory": {
-          "controller_max_rss_kb": 45956,
-          "sum_child_max_rss_kb": 76788,
-          "max_child_max_rss_kb": 76788
+          "controller_max_rss_kb": 44464,
+          "sum_child_max_rss_kb": 76792,
+          "max_child_max_rss_kb": 76792
         },
         "child_internal_wall_ns": [
-          141740107
+          139984666
         ],
         "child_internal_cpu_us": [
-          142042
+          140869
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1881,39 +2210,48 @@
         }
       },
       "perf": {
-        "task-clock": 318.7,
-        "cycles": 817968874.0,
-        "instructions": 1147571768.0,
-        "branches": 233602302.0,
-        "branch-misses": 12046667.0,
-        "cache-references": 458937932.0,
-        "cache-misses": 8577457.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12740.0
+        "task-clock": 319.82,
+        "cycles_u": 813228725.0,
+        "instructions_u": 1152551829.0,
+        "cycles_k": 113051727.0,
+        "instructions_k": 94911722.0,
+        "branches": 252143712.0,
+        "branch-misses": 12515893.0,
+        "cache-references": 487439434.0,
+        "cache-misses": 9711866.0,
+        "context-switches": 259.0,
+        "cpu-migrations": 1.0,
+        "page-faults": 12976.0,
+        "cycles": 926280452.0,
+        "cycles_kernel_ratio": 0.12204913399165634,
+        "instructions": 1247463551.0,
+        "instructions_kernel_ratio": 0.07608376366901962
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0",
-        "ipc": 1.4029528561254276,
-        "cache_mpki": 7.474440587667019,
-        "branch_mpki": 10.497528203395118,
-        "average_user_cpu_cores": 1.1081867429508065,
-        "user_cpu_affinity_utilization": 1.1081867429508065,
-        "instructions_per_agent": 1147571768.0,
-        "cycles_per_agent": 817968874.0,
-        "task_clock_ms_per_agent": 318.7
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3467449823717104,
+        "cache_mpki": 7.7852903936269,
+        "branch_mpki": 10.033073102590395,
+        "average_cpu_cores_including_controller": 1.1158345540921089,
+        "task_clock_per_worker_core": 1.1158345540921089,
+        "instructions_per_agent": 1247463551.0,
+        "cycles_per_agent": 926280452.0,
+        "task_clock_ms_per_agent": 319.82
       },
       "sample_index": 14
     },
@@ -1925,30 +2263,38 @@
         "payload_bytes": 64,
         "total_tool_steps": 256,
         "total_provider_requests": 260,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 278817079,
-          "controller_cpu_user_us": 8534,
-          "controller_cpu_system_us": 3371,
-          "controller_cpu_total_us": 11905,
-          "agents_per_second": 14.34632345459727,
-          "tool_steps_per_second": 918.1647010942253
+          "wall_ns": 283200646,
+          "controller_cpu_user_us": 11907,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 11907,
+          "agents_per_second": 14.124261566832725,
+          "tool_steps_per_second": 903.9527402772944
         },
         "memory": {
-          "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 301160,
-          "max_child_max_rss_kb": 76804
+          "controller_max_rss_kb": 44444,
+          "sum_child_max_rss_kb": 297908,
+          "max_child_max_rss_kb": 75232
         },
         "child_internal_wall_ns": [
-          134434686,
-          135457240,
-          140321846,
-          134162183
+          134083156,
+          139263516,
+          135510755,
+          134097546
         ],
         "child_internal_cpu_us": [
-          135523,
-          135928,
-          137985,
-          133871
+          133736,
+          138924,
+          135940,
+          133748
         ],
         "checks": {
           "agent_count_exact": true,
@@ -1960,39 +2306,48 @@
         }
       },
       "perf": {
-        "task-clock": 1120.38,
-        "cycles": 2907763042.0,
-        "instructions": 4234174418.0,
-        "branches": 866098273.0,
-        "branch-misses": 44455514.0,
-        "cache-references": 1717086895.0,
-        "cache-misses": 32945195.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 40993.0
+        "task-clock": 1131.39,
+        "cycles_u": 2913874500.0,
+        "instructions_u": 4250091482.0,
+        "cycles_k": 363644690.0,
+        "instructions_k": 309307485.0,
+        "branches": 927690649.0,
+        "branch-misses": 46522471.0,
+        "cache-references": 1813702403.0,
+        "cache-misses": 36426054.0,
+        "context-switches": 982.0,
+        "cpu-migrations": 60.0,
+        "page-faults": 41694.0,
+        "cycles": 3277519190.0,
+        "cycles_kernel_ratio": 0.1109512008684837,
+        "instructions": 4559398967.0,
+        "instructions_kernel_ratio": 0.06783953043782844
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6",
-        "ipc": 1.4561621276703742,
-        "cache_mpki": 7.780783630439477,
-        "branch_mpki": 10.499216520465975,
-        "average_user_cpu_cores": 4.018333468015423,
-        "user_cpu_affinity_utilization": 1.0045833670038558,
-        "instructions_per_agent": 1058543604.5,
-        "cycles_per_agent": 726940760.5,
-        "task_clock_ms_per_agent": 280.095
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.391112821218905,
+        "cache_mpki": 7.989222760202464,
+        "branch_mpki": 10.203641167776752,
+        "average_cpu_cores_including_controller": 3.9950120735247197,
+        "task_clock_per_worker_core": 0.9987530183811799,
+        "instructions_per_agent": 1139849741.75,
+        "cycles_per_agent": 819379797.5,
+        "task_clock_ms_per_agent": 282.8475
       },
       "sample_index": 15
     },
@@ -2004,38 +2359,50 @@
         "payload_bytes": 64,
         "total_tool_steps": 512,
         "total_provider_requests": 520,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 291729054,
-          "controller_cpu_user_us": 9147,
-          "controller_cpu_system_us": 8226,
-          "controller_cpu_total_us": 17373,
-          "agents_per_second": 27.422705727486438,
-          "tool_steps_per_second": 1755.053166559132
+          "wall_ns": 293143040,
+          "controller_cpu_user_us": 0,
+          "controller_cpu_system_us": 17563,
+          "controller_cpu_total_us": 17563,
+          "agents_per_second": 27.290431319808924,
+          "tool_steps_per_second": 1746.5876044677711
         },
         "memory": {
           "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 604760,
-          "max_child_max_rss_kb": 76820
+          "sum_child_max_rss_kb": 590408,
+          "max_child_max_rss_kb": 76836
         },
         "child_internal_wall_ns": [
-          139946361,
-          136097739,
-          135855116,
-          136652497,
-          135559112,
-          136823959,
-          139192381,
-          137244785
+          135379904,
+          135315334,
+          136364197,
+          141354474,
+          134449282,
+          136192175,
+          136065543,
+          134398481
         ],
         "child_internal_cpu_us": [
-          140238,
-          136977,
-          135525,
-          136711,
-          136405,
-          136475,
-          138325,
-          136248
+          135016,
+          136072,
+          135971,
+          141975,
+          135302,
+          136811,
+          135699,
+          134045
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2047,39 +2414,48 @@
         }
       },
       "perf": {
-        "task-clock": 2237.75,
-        "cycles": 5813120312.0,
-        "instructions": 8402929896.0,
-        "branches": 1721942726.0,
-        "branch-misses": 88911342.0,
-        "cache-references": 3405473307.0,
-        "cache-misses": 65305722.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 78515.0
+        "task-clock": 2252.35,
+        "cycles_u": 5809515382.0,
+        "instructions_u": 8379587010.0,
+        "cycles_k": 715394482.0,
+        "instructions_k": 588652142.0,
+        "branches": 1826522415.0,
+        "branch-misses": 91960521.0,
+        "cache-references": 3570299024.0,
+        "cache-misses": 72333071.0,
+        "context-switches": 2034.0,
+        "cpu-migrations": 151.0,
+        "page-faults": 79045.0,
+        "cycles": 6524909864.0,
+        "cycles_kernel_ratio": 0.1096405156409989,
+        "instructions": 8968239152.0,
+        "instructions_kernel_ratio": 0.06563742692663645
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14",
-        "ipc": 1.4455110930103867,
-        "cache_mpki": 7.771779939647851,
-        "branch_mpki": 10.58099295131856,
-        "average_user_cpu_cores": 7.670644967710346,
-        "user_cpu_affinity_utilization": 0.9588306209637932,
-        "instructions_per_agent": 1050366237.0,
-        "cycles_per_agent": 726640039.0,
-        "task_clock_ms_per_agent": 279.71875
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3744617686568552,
+        "cache_mpki": 8.065470799122151,
+        "branch_mpki": 10.25402193690296,
+        "average_cpu_cores_including_controller": 7.683450372896454,
+        "task_clock_per_worker_core": 0.9604312966120567,
+        "instructions_per_agent": 1121029894.0,
+        "cycles_per_agent": 815613733.0,
+        "task_clock_ms_per_agent": 281.54375
       },
       "sample_index": 16
     },
@@ -2091,86 +2467,122 @@
         "payload_bytes": 64,
         "total_tool_steps": 2048,
         "total_provider_requests": 2080,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 376244779,
-          "controller_cpu_user_us": 23429,
-          "controller_cpu_system_us": 26129,
-          "controller_cpu_total_us": 49558,
-          "agents_per_second": 85.05101408995233,
-          "tool_steps_per_second": 5443.264901756949
+          "wall_ns": 383020090,
+          "controller_cpu_user_us": 20667,
+          "controller_cpu_system_us": 31584,
+          "controller_cpu_total_us": 52251,
+          "agents_per_second": 83.54653146261857,
+          "tool_steps_per_second": 5346.978013607589
         },
         "memory": {
-          "controller_max_rss_kb": 44464,
-          "sum_child_max_rss_kb": 2136148,
-          "max_child_max_rss_kb": 72692
+          "controller_max_rss_kb": 44488,
+          "sum_child_max_rss_kb": 2204928,
+          "max_child_max_rss_kb": 73188
         },
         "child_internal_wall_ns": [
-          125400583,
-          137085282,
-          116028025,
-          172978993,
-          146251918,
-          150552496,
-          140541850,
-          139366974,
-          135933757,
-          157656054,
-          142267783,
-          133669886,
-          140763803,
-          112502647,
-          114207340,
-          111349311,
-          119347660,
-          111092977,
-          106015979,
-          118049503,
-          119081926,
-          107543589,
-          106028218,
-          108147477,
-          107112063,
-          107643011,
-          110708462,
-          112569967,
-          118946775,
-          110649051,
-          100430262,
-          106562596
+          138072551,
+          154765005,
+          140651205,
+          140802027,
+          116848104,
+          140790377,
+          134343430,
+          137349191,
+          151571122,
+          149323102,
+          132028039,
+          147164693,
+          142585041,
+          128101646,
+          115525437,
+          122331869,
+          122042804,
+          120680496,
+          113506880,
+          120097548,
+          115910381,
+          126299302,
+          120381532,
+          120159289,
+          128594433,
+          116626172,
+          116431209,
+          109863690,
+          128245158,
+          113626911,
+          106694668,
+          108497872
         ],
         "child_internal_cpu_us": [
-          140474,
-          146201,
-          147018,
-          149181,
-          142586,
-          141258,
-          144752,
-          142138,
-          143260,
-          146835,
-          147699,
-          144802,
-          149407,
-          146199,
-          148263,
-          143815,
-          146434,
-          142736,
-          143741,
-          145020,
-          144393,
-          148024,
-          147787,
-          144435,
-          142915,
-          144453,
-          144007,
-          147098,
-          148627,
-          146793,
-          144447,
-          143914
+          139835,
+          145048,
+          141739,
+          139954,
+          132179,
+          144240,
+          144523,
+          145069,
+          146286,
+          147629,
+          144626,
+          146228,
+          140052,
+          144823,
+          141476,
+          144733,
+          145503,
+          148013,
+          143202,
+          145163,
+          140091,
+          148835,
+          146107,
+          146491,
+          147600,
+          144742,
+          145494,
+          143506,
+          145011,
+          143706,
+          147221,
+          145026
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2182,39 +2594,48 @@
         }
       },
       "perf": {
-        "task-clock": 9325.43,
-        "cycles": 23976698667.0,
-        "instructions": 33288246942.0,
-        "branches": 6829146930.0,
-        "branch-misses": 350378125.0,
-        "cache-references": 13527713210.0,
-        "cache-misses": 258496145.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 294324.0
+        "task-clock": 9496.45,
+        "cycles_u": 24351456250.0,
+        "instructions_u": 33861445955.0,
+        "cycles_k": 3118298180.0,
+        "instructions_k": 2528486363.0,
+        "branches": 7421350519.0,
+        "branch-misses": 368589061.0,
+        "cache-references": 14477580288.0,
+        "cache-misses": 296023553.0,
+        "context-switches": 10215.0,
+        "cpu-migrations": 3401.0,
+        "page-faults": 301071.0,
+        "cycles": 27469754430.0,
+        "cycles_kernel_ratio": 0.11351751206754418,
+        "instructions": 36389932318.0,
+        "instructions_kernel_ratio": 0.06948312903976751
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
-        "ipc": 1.388358230810809,
-        "cache_mpki": 7.765387749327638,
-        "branch_mpki": 10.525580563328663,
-        "average_user_cpu_cores": 24.785539947652005,
-        "user_cpu_affinity_utilization": 0.7745481233641252,
-        "instructions_per_agent": 1040257716.9375,
-        "cycles_per_agent": 749271833.34375,
-        "task_clock_ms_per_agent": 291.4196875
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3247272526855276,
+        "cache_mpki": 8.134765143643158,
+        "branch_mpki": 10.128874595836505,
+        "average_cpu_cores_including_controller": 24.79360808463076,
+        "task_clock_per_worker_core": 0.7748002526447112,
+        "instructions_per_agent": 1137185384.9375,
+        "cycles_per_agent": 858429825.9375,
+        "task_clock_ms_per_agent": 296.7640625
       },
       "sample_index": 17
     },
@@ -2226,38 +2647,50 @@
         "payload_bytes": 64,
         "total_tool_steps": 512,
         "total_provider_requests": 520,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 289055768,
-          "controller_cpu_user_us": 10632,
-          "controller_cpu_system_us": 7472,
-          "controller_cpu_total_us": 18104,
-          "agents_per_second": 27.676320231741578,
-          "tool_steps_per_second": 1771.284494831461
+          "wall_ns": 298591423,
+          "controller_cpu_user_us": 10274,
+          "controller_cpu_system_us": 8465,
+          "controller_cpu_total_us": 18739,
+          "agents_per_second": 26.792464162642744,
+          "tool_steps_per_second": 1714.7177064091356
         },
         "memory": {
-          "controller_max_rss_kb": 44452,
-          "sum_child_max_rss_kb": 610352,
-          "max_child_max_rss_kb": 76828
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 581572,
+          "max_child_max_rss_kb": 75288
         },
         "child_internal_wall_ns": [
-          136581026,
-          134857482,
-          140335467,
-          134101261,
-          136615336,
-          135741694,
-          136273502,
-          138287479
+          135293943,
+          135429685,
+          138632188,
+          135625068,
+          136667812,
+          135744118,
+          141642828,
+          135815910
         ],
         "child_internal_cpu_us": [
-          136219,
-          134526,
-          140444,
-          133775,
-          137296,
-          135606,
-          135954,
-          137823
+          135974,
+          135844,
+          136852,
+          136849,
+          136753,
+          135769,
+          143772,
+          136967
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2269,39 +2702,48 @@
         }
       },
       "perf": {
-        "task-clock": 2240.13,
-        "cycles": 5806054034.0,
-        "instructions": 8388124741.0,
-        "branches": 1718721002.0,
-        "branch-misses": 89064651.0,
-        "cache-references": 3399146786.0,
-        "cache-misses": 65176757.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 79249.0
+        "task-clock": 2255.37,
+        "cycles_u": 5811857425.0,
+        "instructions_u": 8391822904.0,
+        "cycles_k": 720332525.0,
+        "instructions_k": 594288327.0,
+        "branches": 1830260609.0,
+        "branch-misses": 91562892.0,
+        "cache-references": 3585312469.0,
+        "cache-misses": 72211111.0,
+        "context-switches": 2106.0,
+        "cpu-migrations": 280.0,
+        "page-faults": 79040.0,
+        "cycles": 6532189950.0,
+        "cycles_kernel_ratio": 0.1102742771587651,
+        "instructions": 8986111231.0,
+        "instructions_kernel_ratio": 0.06613409423976893
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14",
-        "ipc": 1.4447204059554917,
-        "cache_mpki": 7.770122525887696,
-        "branch_mpki": 10.617945458615349,
-        "average_user_cpu_cores": 7.749819405091408,
-        "user_cpu_affinity_utilization": 0.968727425636426,
-        "instructions_per_agent": 1048515592.625,
-        "cycles_per_agent": 725756754.25,
-        "task_clock_ms_per_agent": 280.01625
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.375665940486008,
+        "cache_mpki": 8.035857685679254,
+        "branch_mpki": 10.189378881059167,
+        "average_cpu_cores_including_controller": 7.553364987312444,
+        "task_clock_per_worker_core": 0.9441706234140556,
+        "instructions_per_agent": 1123263903.875,
+        "cycles_per_agent": 816523743.75,
+        "task_clock_ms_per_agent": 281.92125
       },
       "sample_index": 18
     },
@@ -2313,30 +2755,38 @@
         "payload_bytes": 64,
         "total_tool_steps": 256,
         "total_provider_requests": 260,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 281257902,
-          "controller_cpu_user_us": 8991,
-          "controller_cpu_system_us": 3171,
-          "controller_cpu_total_us": 12162,
-          "agents_per_second": 14.221822645893162,
-          "tool_steps_per_second": 910.1966493371624
+          "wall_ns": 283591781,
+          "controller_cpu_user_us": 12145,
+          "controller_cpu_system_us": 67,
+          "controller_cpu_total_us": 12212,
+          "agents_per_second": 14.104781125515059,
+          "tool_steps_per_second": 902.7059920329638
         },
         "memory": {
           "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 303576,
-          "max_child_max_rss_kb": 77280
+          "sum_child_max_rss_kb": 293708,
+          "max_child_max_rss_kb": 75236
         },
         "child_internal_wall_ns": [
-          138749105,
-          135087575,
-          136076949,
-          134291765
+          131571472,
+          143892109,
+          134704325,
+          131059606
         ],
         "child_internal_cpu_us": [
-          138388,
-          134787,
-          135689,
-          135644
+          134906,
+          140155,
+          134889,
+          132120
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2348,39 +2798,48 @@
         }
       },
       "perf": {
-        "task-clock": 1131.13,
-        "cycles": 2930850347.0,
-        "instructions": 4260761361.0,
-        "branches": 872538176.0,
-        "branch-misses": 45157985.0,
-        "cache-references": 1722262680.0,
-        "cache-misses": 33228168.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 41650.0
+        "task-clock": 1130.61,
+        "cycles_u": 2919410609.0,
+        "instructions_u": 4256177823.0,
+        "cycles_k": 356180015.0,
+        "instructions_k": 302523805.0,
+        "branches": 927449417.0,
+        "branch-misses": 46740817.0,
+        "cache-references": 1809760096.0,
+        "cache-misses": 36375457.0,
+        "context-switches": 1002.0,
+        "cpu-migrations": 77.0,
+        "page-faults": 41232.0,
+        "cycles": 3275590624.0,
+        "cycles_kernel_ratio": 0.10873764639277463,
+        "instructions": 4558701628.0,
+        "instructions_kernel_ratio": 0.066361834944816
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6",
-        "ipc": 1.453762852600539,
-        "cache_mpki": 7.798645637408183,
-        "branch_mpki": 10.59857175136451,
-        "average_user_cpu_cores": 4.021682562362284,
-        "user_cpu_affinity_utilization": 1.005420640590571,
-        "instructions_per_agent": 1065190340.25,
-        "cycles_per_agent": 732712586.75,
-        "task_clock_ms_per_agent": 282.7825
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3917189756860167,
+        "cache_mpki": 7.979345868257381,
+        "branch_mpki": 10.253098538608722,
+        "average_cpu_cores_including_controller": 3.9867516470796445,
+        "task_clock_per_worker_core": 0.9966879117699111,
+        "instructions_per_agent": 1139675407.0,
+        "cycles_per_agent": 818897656.0,
+        "task_clock_ms_per_agent": 282.6525
       },
       "sample_index": 19
     },
@@ -2392,54 +2851,74 @@
         "payload_bytes": 64,
         "total_tool_steps": 1024,
         "total_provider_requests": 1040,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 335985650,
-          "controller_cpu_user_us": 18355,
-          "controller_cpu_system_us": 8838,
-          "controller_cpu_total_us": 27193,
-          "agents_per_second": 47.621081436067286,
-          "tool_steps_per_second": 3047.7492119083063
+          "wall_ns": 361841216,
+          "controller_cpu_user_us": 20192,
+          "controller_cpu_system_us": 8083,
+          "controller_cpu_total_us": 28275,
+          "agents_per_second": 44.21829048905252,
+          "tool_steps_per_second": 2829.9705912993613
         },
         "memory": {
-          "controller_max_rss_kb": 42368,
-          "sum_child_max_rss_kb": 1136964,
-          "max_child_max_rss_kb": 74768
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 1096316,
+          "max_child_max_rss_kb": 74748
         },
         "child_internal_wall_ns": [
-          135643203,
-          130402461,
-          135956007,
-          132919865,
-          132240337,
-          134662370,
-          158393534,
-          137670730,
-          136989691,
-          143487579,
-          137993795,
-          134728540,
-          136972361,
-          109192541,
-          109139651,
-          109119210
+          129492135,
+          146383552,
+          137365101,
+          137324980,
+          136803623,
+          142639092,
+          138734719,
+          116970306,
+          136845104,
+          141333114,
+          139969966,
+          133258095,
+          135079080,
+          107066333,
+          115535587,
+          105421341
         ],
         "child_internal_cpu_us": [
-          137081,
-          136212,
-          136684,
-          135848,
-          139216,
-          138383,
-          139990,
-          137826,
-          137135,
-          145390,
-          138284,
-          138992,
-          138211,
-          138298,
-          139508,
-          137151
+          139569,
+          138626,
+          138117,
+          137772,
+          137493,
+          144668,
+          139568,
+          136405,
+          137418,
+          141548,
+          138435,
+          138365,
+          137845,
+          141486,
+          139919,
+          138950
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2451,39 +2930,48 @@
         }
       },
       "perf": {
-        "task-clock": 4503.68,
-        "cycles": 11648969949.0,
-        "instructions": 16643685590.0,
-        "branches": 3413090657.0,
-        "branch-misses": 175435788.0,
-        "cache-references": 6754681199.0,
-        "cache-misses": 129268878.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 152221.0
+        "task-clock": 4645.6,
+        "cycles_u": 11921839354.0,
+        "instructions_u": 16898204081.0,
+        "cycles_k": 1519328184.0,
+        "instructions_k": 1249662291.0,
+        "branches": 3698838690.0,
+        "branch-misses": 184365866.0,
+        "cache-references": 7220127724.0,
+        "cache-misses": 148102730.0,
+        "context-switches": 4917.0,
+        "cpu-migrations": 1338.0,
+        "page-faults": 153234.0,
+        "cycles": 13441167538.0,
+        "cycles_kernel_ratio": 0.11303543235397175,
+        "instructions": 18147866372.0,
+        "instructions_kernel_ratio": 0.06886001171620265
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
-        "ipc": 1.428768866506413,
-        "cache_mpki": 7.766842103630486,
-        "branch_mpki": 10.540681452514749,
-        "average_user_cpu_cores": 13.404382002624219,
-        "user_cpu_affinity_utilization": 0.8377738751640137,
-        "instructions_per_agent": 1040230349.375,
-        "cycles_per_agent": 728060621.8125,
-        "task_clock_ms_per_agent": 281.48
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3501703866642183,
+        "cache_mpki": 8.160889383035402,
+        "branch_mpki": 10.15909320802883,
+        "average_cpu_cores_including_controller": 12.838780643496403,
+        "task_clock_per_worker_core": 0.8024237902185252,
+        "instructions_per_agent": 1134241648.25,
+        "cycles_per_agent": 840072971.125,
+        "task_clock_ms_per_agent": 290.35
       },
       "sample_index": 20
     },
@@ -2495,86 +2983,122 @@
         "payload_bytes": 64,
         "total_tool_steps": 2048,
         "total_provider_requests": 2080,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 365909408,
-          "controller_cpu_user_us": 32038,
-          "controller_cpu_system_us": 18416,
-          "controller_cpu_total_us": 50454,
-          "agents_per_second": 87.45334036341585,
-          "tool_steps_per_second": 5597.013783258614
+          "wall_ns": 365374943,
+          "controller_cpu_user_us": 34599,
+          "controller_cpu_system_us": 15818,
+          "controller_cpu_total_us": 50417,
+          "agents_per_second": 87.58126580125118,
+          "tool_steps_per_second": 5605.201011280075
         },
         "memory": {
-          "controller_max_rss_kb": 44452,
-          "sum_child_max_rss_kb": 2212280,
-          "max_child_max_rss_kb": 74736
+          "controller_max_rss_kb": 44444,
+          "sum_child_max_rss_kb": 2238128,
+          "max_child_max_rss_kb": 76816
         },
         "child_internal_wall_ns": [
-          120364504,
-          132410579,
-          134917283,
-          135903537,
-          140885755,
-          131727760,
-          139107040,
-          134624849,
-          139777309,
-          139561476,
-          138709455,
-          141569954,
-          156392017,
-          110755483,
-          118021472,
-          114978080,
-          121740373,
-          122566015,
-          114041278,
-          115342785,
-          120966702,
-          123625918,
-          116000094,
-          119862478,
-          118551969,
-          113175555,
-          119175788,
-          126172093,
-          112845502,
-          113381409,
-          119016705,
-          113643222
+          132473995,
+          139717023,
+          142197505,
+          144553788,
+          160835107,
+          140830107,
+          130303045,
+          137156438,
+          140811067,
+          147022221,
+          137823947,
+          163450062,
+          144796030,
+          132492815,
+          133936795,
+          125116566,
+          122132475,
+          119207796,
+          118522657,
+          124614489,
+          120643906,
+          120198930,
+          127674450,
+          125659723,
+          116770244,
+          123781408,
+          117884379,
+          119560311,
+          117053197,
+          115143171,
+          116055473,
+          113857904
         ],
         "child_internal_cpu_us": [
-          143041,
-          142470,
-          142543,
-          140989,
-          142154,
-          141403,
-          139299,
-          140143,
-          141638,
-          139880,
-          144214,
-          140565,
-          145119,
-          144503,
-          145536,
-          146241,
-          150916,
-          144907,
-          149556,
-          148129,
-          146488,
-          148728,
-          145791,
-          149962,
-          148060,
-          149443,
-          145714,
-          148910,
-          144495,
-          147274,
-          146358,
-          147241
+          141353,
+          143102,
+          142484,
+          143208,
+          149612,
+          141172,
+          141640,
+          139305,
+          146461,
+          141920,
+          142464,
+          141787,
+          141125,
+          146526,
+          144530,
+          145107,
+          145011,
+          143207,
+          146085,
+          142329,
+          144846,
+          143837,
+          143308,
+          146935,
+          143865,
+          145975,
+          144986,
+          143048,
+          148140,
+          143474,
+          146571,
+          147680
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2586,39 +3110,48 @@
         }
       },
       "perf": {
-        "task-clock": 9322.3,
-        "cycles": 24023694136.0,
-        "instructions": 33384110981.0,
-        "branches": 6849840999.0,
-        "branch-misses": 350745116.0,
-        "cache-references": 13550067181.0,
-        "cache-misses": 258582438.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 295149.0
+        "task-clock": 9443.08,
+        "cycles_u": 24223244571.0,
+        "instructions_u": 33727465106.0,
+        "cycles_k": 3100584981.0,
+        "instructions_k": 2485977362.0,
+        "branches": 7385576241.0,
+        "branch-misses": 367459273.0,
+        "cache-references": 14415412652.0,
+        "cache-misses": 293824206.0,
+        "context-switches": 9899.0,
+        "cpu-migrations": 3040.0,
+        "page-faults": 303677.0,
+        "cycles": 27323829552.0,
+        "cycles_kernel_ratio": 0.11347549124105295,
+        "instructions": 36213442468.0,
+        "instructions_kernel_ratio": 0.06864791614872663
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
-        "ipc": 1.3896327014492422,
-        "cache_mpki": 7.745673926951891,
-        "branch_mpki": 10.506348849595565,
-        "average_user_cpu_cores": 25.477071089683488,
-        "user_cpu_affinity_utilization": 0.796158471552609,
-        "instructions_per_agent": 1043253468.15625,
-        "cycles_per_agent": 750740441.75,
-        "task_clock_ms_per_agent": 291.321875
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3253428623203116,
+        "cache_mpki": 8.11367784931349,
+        "branch_mpki": 10.147040655544009,
+        "average_cpu_cores_including_controller": 25.84490310820247,
+        "task_clock_per_worker_core": 0.8076532221313272,
+        "instructions_per_agent": 1131670077.125,
+        "cycles_per_agent": 853869673.5,
+        "task_clock_ms_per_agent": 295.09625
       },
       "sample_index": 21
     },
@@ -2630,38 +3163,50 @@
         "payload_bytes": 64,
         "total_tool_steps": 512,
         "total_provider_requests": 520,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 290348246,
-          "controller_cpu_user_us": 10408,
-          "controller_cpu_system_us": 6986,
-          "controller_cpu_total_us": 17394,
-          "agents_per_second": 27.553119780169087,
-          "tool_steps_per_second": 1763.3996659308216
+          "wall_ns": 287220049,
+          "controller_cpu_user_us": 12232,
+          "controller_cpu_system_us": 5614,
+          "controller_cpu_total_us": 17846,
+          "agents_per_second": 27.853208812731594,
+          "tool_steps_per_second": 1782.605364014822
         },
         "memory": {
-          "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 596436,
-          "max_child_max_rss_kb": 76780
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 592412,
+          "max_child_max_rss_kb": 75232
         },
         "child_internal_wall_ns": [
-          137104543,
-          135683513,
-          136152520,
-          136502445,
-          141936999,
-          134909573,
-          136010148,
-          136599916
+          134600564,
+          136588401,
+          140022827,
+          137335321,
+          136471889,
+          136257056,
+          136069383,
+          135686568
         ],
         "child_internal_cpu_us": [
-          136716,
-          136302,
-          135825,
-          137204,
-          142092,
-          135789,
-          135632,
-          136590
+          134264,
+          136220,
+          140064,
+          136974,
+          136214,
+          136581,
+          136580,
+          135341
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2673,39 +3218,48 @@
         }
       },
       "perf": {
-        "task-clock": 2248.06,
-        "cycles": 5824079123.0,
-        "instructions": 8369103163.0,
-        "branches": 1715078454.0,
-        "branch-misses": 88043422.0,
-        "cache-references": 3397576073.0,
-        "cache-misses": 65512873.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 78136.0
+        "task-clock": 2246.16,
+        "cycles_u": 5789840092.0,
+        "instructions_u": 8390423667.0,
+        "cycles_k": 717824870.0,
+        "instructions_k": 589719145.0,
+        "branches": 1830029082.0,
+        "branch-misses": 91604558.0,
+        "cache-references": 3581508635.0,
+        "cache-misses": 72045386.0,
+        "context-switches": 1953.0,
+        "cpu-migrations": 158.0,
+        "page-faults": 79274.0,
+        "cycles": 6507664962.0,
+        "cycles_kernel_ratio": 0.110304521543683,
+        "instructions": 8980142812.0,
+        "instructions_kernel_ratio": 0.06566923904728654
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14",
-        "ipc": 1.436983081144861,
-        "cache_mpki": 7.827944252095485,
-        "branch_mpki": 10.520054572781707,
-        "average_user_cpu_cores": 7.742633306625864,
-        "user_cpu_affinity_utilization": 0.967829163328233,
-        "instructions_per_agent": 1046137895.375,
-        "cycles_per_agent": 728009890.375,
-        "task_clock_ms_per_agent": 281.0075
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3799331810161495,
+        "cache_mpki": 8.02274390377479,
+        "branch_mpki": 10.200790780029747,
+        "average_cpu_cores_including_controller": 7.820345438350649,
+        "task_clock_per_worker_core": 0.9775431797938311,
+        "instructions_per_agent": 1122517851.5,
+        "cycles_per_agent": 813458120.25,
+        "task_clock_ms_per_agent": 280.77
       },
       "sample_index": 22
     },
@@ -2717,24 +3271,29 @@
         "payload_bytes": 64,
         "total_tool_steps": 64,
         "total_provider_requests": 65,
+        "placement": "shared",
+        "cpu_binding": [
+          0
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 282019372,
-          "controller_cpu_user_us": 5213,
-          "controller_cpu_system_us": 930,
-          "controller_cpu_total_us": 6143,
-          "agents_per_second": 3.5458557080965347,
-          "tool_steps_per_second": 226.93476531817822
+          "wall_ns": 272715754,
+          "controller_cpu_user_us": 434,
+          "controller_cpu_system_us": 5469,
+          "controller_cpu_total_us": 5903,
+          "agents_per_second": 3.6668215360965175,
+          "tool_steps_per_second": 234.67657831017712
         },
         "memory": {
-          "controller_max_rss_kb": 46180,
-          "sum_child_max_rss_kb": 76784,
-          "max_child_max_rss_kb": 76784
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 78844,
+          "max_child_max_rss_kb": 78844
         },
         "child_internal_wall_ns": [
-          134879002
+          135196742
         ],
         "child_internal_cpu_us": [
-          135410
+          135794
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2746,39 +3305,48 @@
         }
       },
       "perf": {
-        "task-clock": 311.09,
-        "cycles": 796533286.0,
-        "instructions": 1150745784.0,
-        "branches": 234265876.0,
-        "branch-misses": 12121567.0,
-        "cache-references": 458812375.0,
-        "cache-misses": 8635273.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12557.0
+        "task-clock": 302.67,
+        "cycles_u": 767927254.0,
+        "instructions_u": 1142984911.0,
+        "cycles_k": 108731452.0,
+        "instructions_k": 92689883.0,
+        "branches": 249663245.0,
+        "branch-misses": 12159207.0,
+        "cache-references": 487205184.0,
+        "cache-misses": 9555790.0,
+        "context-switches": 255.0,
+        "cpu-migrations": 1.0,
+        "page-faults": 12762.0,
+        "cycles": 876658706.0,
+        "cycles_kernel_ratio": 0.12402939850573959,
+        "instructions": 1235674794.0,
+        "instructions_kernel_ratio": 0.07501155113794447
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0",
-        "ipc": 1.4446926502955961,
-        "cache_mpki": 7.504066597562264,
-        "branch_mpki": 10.533661881310877,
-        "average_user_cpu_cores": 1.1030802522317509,
-        "user_cpu_affinity_utilization": 1.1030802522317509,
-        "instructions_per_agent": 1150745784.0,
-        "cycles_per_agent": 796533286.0,
-        "task_clock_ms_per_agent": 311.09
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.4095277735141776,
+        "cache_mpki": 7.733256392701007,
+        "branch_mpki": 9.840135170710619,
+        "average_cpu_cores_including_controller": 1.109836874330333,
+        "task_clock_per_worker_core": 1.109836874330333,
+        "instructions_per_agent": 1235674794.0,
+        "cycles_per_agent": 876658706.0,
+        "task_clock_ms_per_agent": 302.67
       },
       "sample_index": 23
     },
@@ -2790,38 +3358,50 @@
         "payload_bytes": 64,
         "total_tool_steps": 512,
         "total_provider_requests": 520,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 289203460,
-          "controller_cpu_user_us": 12072,
-          "controller_cpu_system_us": 5595,
-          "controller_cpu_total_us": 17667,
-          "agents_per_second": 27.662186337604673,
-          "tool_steps_per_second": 1770.379925606699
+          "wall_ns": 289555752,
+          "controller_cpu_user_us": 12339,
+          "controller_cpu_system_us": 5052,
+          "controller_cpu_total_us": 17391,
+          "agents_per_second": 27.628530757005993,
+          "tool_steps_per_second": 1768.2259684483836
         },
         "memory": {
-          "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 605268,
-          "max_child_max_rss_kb": 78852
+          "controller_max_rss_kb": 42364,
+          "sum_child_max_rss_kb": 608516,
+          "max_child_max_rss_kb": 76916
         },
         "child_internal_wall_ns": [
-          136090519,
-          136213651,
-          135464860,
-          136021768,
-          138157947,
-          136343832,
-          141720026,
-          139567476
+          136661501,
+          136473729,
+          136838534,
+          136856854,
+          140650975,
+          138259142,
+          137922109,
+          135819550
         ],
         "child_internal_cpu_us": [
-          136686,
-          136850,
-          135757,
-          135687,
-          138234,
-          136703,
-          143626,
-          139591
+          136303,
+          136091,
+          136445,
+          136504,
+          140369,
+          138875,
+          137915,
+          137329
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2833,39 +3413,48 @@
         }
       },
       "perf": {
-        "task-clock": 2240.27,
-        "cycles": 5807080895.0,
-        "instructions": 8381305971.0,
-        "branches": 1716960216.0,
-        "branch-misses": 88437524.0,
-        "cache-references": 3405801630.0,
-        "cache-misses": 65540358.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 79096.0
+        "task-clock": 2257.56,
+        "cycles_u": 5822843875.0,
+        "instructions_u": 8373645109.0,
+        "cycles_k": 717654308.0,
+        "instructions_k": 590289775.0,
+        "branches": 1825788687.0,
+        "branch-misses": 91606461.0,
+        "cache-references": 3577627305.0,
+        "cache-misses": 72325804.0,
+        "context-switches": 1976.0,
+        "cpu-migrations": 107.0,
+        "page-faults": 80042.0,
+        "cycles": 6540498183.0,
+        "cycles_kernel_ratio": 0.1097247163626343,
+        "instructions": 8963934884.0,
+        "instructions_kernel_ratio": 0.06585163576473833
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14",
-        "ipc": 1.4432907208536485,
-        "cache_mpki": 7.819826435972505,
-        "branch_mpki": 10.55175939239076,
-        "average_user_cpu_cores": 7.746345773318203,
-        "user_cpu_affinity_utilization": 0.9682932216647754,
-        "instructions_per_agent": 1047663246.375,
-        "cycles_per_agent": 725885111.875,
-        "task_clock_ms_per_agent": 280.03375
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3705278456156402,
+        "cache_mpki": 8.068532952988818,
+        "branch_mpki": 10.219447395084401,
+        "average_cpu_cores_including_controller": 7.796633236973307,
+        "task_clock_per_worker_core": 0.9745791546216633,
+        "instructions_per_agent": 1120491860.5,
+        "cycles_per_agent": 817562272.875,
+        "task_clock_ms_per_agent": 282.195
       },
       "sample_index": 24
     },
@@ -2877,24 +3466,29 @@
         "payload_bytes": 64,
         "total_tool_steps": 64,
         "total_provider_requests": 65,
+        "placement": "shared",
+        "cpu_binding": [
+          0
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 278499444,
-          "controller_cpu_user_us": 6020,
-          "controller_cpu_system_us": 0,
-          "controller_cpu_total_us": 6020,
-          "agents_per_second": 3.5906714413404717,
-          "tool_steps_per_second": 229.8029722457902
+          "wall_ns": 278608424,
+          "controller_cpu_user_us": 5736,
+          "controller_cpu_system_us": 214,
+          "controller_cpu_total_us": 5950,
+          "agents_per_second": 3.589266920371367,
+          "tool_steps_per_second": 229.71308290376749
         },
         "memory": {
-          "controller_max_rss_kb": 46484,
-          "sum_child_max_rss_kb": 76776,
-          "max_child_max_rss_kb": 76776
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 78872,
+          "max_child_max_rss_kb": 78872
         },
         "child_internal_wall_ns": [
-          135770835
+          137095507
         ],
         "child_internal_cpu_us": [
-          135516
+          137613
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2906,39 +3500,48 @@
         }
       },
       "perf": {
-        "task-clock": 307.95,
-        "cycles": 790773262.0,
-        "instructions": 1152673868.0,
-        "branches": 234808200.0,
-        "branch-misses": 12059519.0,
-        "cache-references": 461028590.0,
-        "cache-misses": 8694606.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12288.0
+        "task-clock": 309.26,
+        "cycles_u": 783210090.0,
+        "instructions_u": 1145928000.0,
+        "cycles_k": 112462218.0,
+        "instructions_k": 94728866.0,
+        "branches": 250757194.0,
+        "branch-misses": 12283368.0,
+        "cache-references": 488665372.0,
+        "cache-misses": 9678394.0,
+        "context-switches": 249.0,
+        "cpu-migrations": 2.0,
+        "page-faults": 13076.0,
+        "cycles": 895672308.0,
+        "cycles_kernel_ratio": 0.125561789725445,
+        "instructions": 1240656866.0,
+        "instructions_kernel_ratio": 0.07635379982655091
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0",
-        "ipc": 1.45765407530939,
-        "cache_mpki": 7.542988733739559,
-        "branch_mpki": 10.46221254319266,
-        "average_user_cpu_cores": 1.1057472703607982,
-        "user_cpu_affinity_utilization": 1.1057472703607982,
-        "instructions_per_agent": 1152673868.0,
-        "cycles_per_agent": 790773262.0,
-        "task_clock_ms_per_agent": 307.95
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3851682751812842,
+        "cache_mpki": 7.801024010131098,
+        "branch_mpki": 9.90069723275122,
+        "average_cpu_cores_including_controller": 1.1100166877940487,
+        "task_clock_per_worker_core": 1.1100166877940487,
+        "instructions_per_agent": 1240656866.0,
+        "cycles_per_agent": 895672308.0,
+        "task_clock_ms_per_agent": 309.26
       },
       "sample_index": 25
     },
@@ -2950,30 +3553,38 @@
         "payload_bytes": 64,
         "total_tool_steps": 256,
         "total_provider_requests": 260,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 286534494,
-          "controller_cpu_user_us": 11944,
+          "wall_ns": 282406295,
+          "controller_cpu_user_us": 11515,
           "controller_cpu_system_us": 0,
-          "controller_cpu_total_us": 11944,
-          "agents_per_second": 13.959924838927071,
-          "tool_steps_per_second": 893.4351896913325
+          "controller_cpu_total_us": 11515,
+          "agents_per_second": 14.163990218419174,
+          "tool_steps_per_second": 906.4953739788272
         },
         "memory": {
-          "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 292808,
-          "max_child_max_rss_kb": 74740
+          "controller_max_rss_kb": 44452,
+          "sum_child_max_rss_kb": 296800,
+          "max_child_max_rss_kb": 75532
         },
         "child_internal_wall_ns": [
-          131696319,
-          133774207,
-          136364463,
-          136596796
+          134125887,
+          135513236,
+          135524696,
+          139053964
         ],
         "child_internal_cpu_us": [
-          135573,
-          133627,
-          139237,
-          134823
+          134530,
+          135176,
+          135198,
+          139552
         ],
         "checks": {
           "agent_count_exact": true,
@@ -2985,39 +3596,48 @@
         }
       },
       "perf": {
-        "task-clock": 1125.54,
-        "cycles": 2913979620.0,
-        "instructions": 4242833800.0,
-        "branches": 868235700.0,
-        "branch-misses": 44862740.0,
-        "cache-references": 1719760057.0,
-        "cache-misses": 33341174.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 40532.0
+        "task-clock": 1126.71,
+        "cycles_u": 2906514060.0,
+        "instructions_u": 4253588532.0,
+        "cycles_k": 357612876.0,
+        "instructions_k": 301674783.0,
+        "branches": 927134211.0,
+        "branch-misses": 46545486.0,
+        "cache-references": 1813559657.0,
+        "cache-misses": 36244148.0,
+        "context-switches": 968.0,
+        "cpu-migrations": 48.0,
+        "page-faults": 41087.0,
+        "cycles": 3264126936.0,
+        "cycles_kernel_ratio": 0.10955850768421219,
+        "instructions": 4555263315.0,
+        "instructions_kernel_ratio": 0.0662255422220307
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6",
-        "ipc": 1.456027273107696,
-        "cache_mpki": 7.85823239175666,
-        "branch_mpki": 10.57376793783438,
-        "average_user_cpu_cores": 3.928113450801494,
-        "user_cpu_affinity_utilization": 0.9820283627003735,
-        "instructions_per_agent": 1060708450.0,
-        "cycles_per_agent": 728494905.0,
-        "task_clock_ms_per_agent": 281.385
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3955533606123214,
+        "cache_mpki": 7.956542902943031,
+        "branch_mpki": 10.217957290576516,
+        "average_cpu_cores_including_controller": 3.989677354748767,
+        "task_clock_per_worker_core": 0.9974193386871918,
+        "instructions_per_agent": 1138815828.75,
+        "cycles_per_agent": 816031734.0,
+        "task_clock_ms_per_agent": 281.6775
       },
       "sample_index": 26
     },
@@ -3029,54 +3649,74 @@
         "payload_bytes": 64,
         "total_tool_steps": 1024,
         "total_provider_requests": 1040,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 352171960,
-          "controller_cpu_user_us": 26489,
-          "controller_cpu_system_us": 1521,
-          "controller_cpu_total_us": 28010,
-          "agents_per_second": 45.43235071866596,
-          "tool_steps_per_second": 2907.6704459946213
+          "wall_ns": 358720003,
+          "controller_cpu_user_us": 20877,
+          "controller_cpu_system_us": 7042,
+          "controller_cpu_total_us": 27919,
+          "agents_per_second": 44.6030326332262,
+          "tool_steps_per_second": 2854.5940885264768
         },
         "memory": {
-          "controller_max_rss_kb": 44452,
-          "sum_child_max_rss_kb": 1063660,
-          "max_child_max_rss_kb": 71148
+          "controller_max_rss_kb": 42368,
+          "sum_child_max_rss_kb": 1078592,
+          "max_child_max_rss_kb": 72696
         },
         "child_internal_wall_ns": [
-          144053508,
-          151906275,
-          129664101,
-          112909792,
-          120357174,
-          143270157,
-          120507906,
-          142784120,
-          143962566,
-          137627640,
-          135185626,
-          157211917,
-          128482255,
-          109331613,
-          99974566,
-          118247905
+          128318429,
+          127709610,
+          135544516,
+          142877035,
+          125166777,
+          141720810,
+          130405667,
+          147470507,
+          134377310,
+          126436043,
+          134661614,
+          145633863,
+          136619030,
+          116579910,
+          100830838,
+          105499111
         ],
         "child_internal_cpu_us": [
-          142592,
-          142008,
-          140770,
-          141760,
-          135615,
-          144181,
-          140795,
-          140856,
-          142630,
-          140235,
-          141151,
-          140857,
-          139234,
-          140630,
-          141358,
-          139542
+          141801,
+          139521,
+          138939,
+          144209,
+          138257,
+          139337,
+          140566,
+          144989,
+          138923,
+          141270,
+          140084,
+          140544,
+          140875,
+          140328,
+          141491,
+          140211
         ],
         "checks": {
           "agent_count_exact": true,
@@ -3088,39 +3728,48 @@
         }
       },
       "perf": {
-        "task-clock": 4583.79,
-        "cycles": 11836632736.0,
-        "instructions": 16623018220.0,
-        "branches": 3408260302.0,
-        "branch-misses": 176941906.0,
-        "cache-references": 6757243504.0,
-        "cache-misses": 129751583.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 148415.0
+        "task-clock": 4602.33,
+        "cycles_u": 11819956927.0,
+        "instructions_u": 16677315351.0,
+        "cycles_k": 1501189475.0,
+        "instructions_k": 1217887616.0,
+        "branches": 3646810864.0,
+        "branch-misses": 183230841.0,
+        "cache-references": 7141515904.0,
+        "cache-misses": 145811513.0,
+        "context-switches": 5048.0,
+        "cpu-migrations": 1757.0,
+        "page-faults": 150592.0,
+        "cycles": 13321146402.0,
+        "cycles_kernel_ratio": 0.11269221354512068,
+        "instructions": 17895202967.0,
+        "instructions_kernel_ratio": 0.06805665284969774
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30",
-        "ipc": 1.40437053262983,
-        "cache_mpki": 7.805536953805974,
-        "branch_mpki": 10.644391028045206,
-        "average_user_cpu_cores": 13.015772181294615,
-        "user_cpu_affinity_utilization": 0.8134857613309134,
-        "instructions_per_agent": 1038938638.75,
-        "cycles_per_agent": 739789546.0,
-        "task_clock_ms_per_agent": 286.486875
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.343368087622944,
+        "cache_mpki": 8.148078189942108,
+        "branch_mpki": 10.239103816698275,
+        "average_cpu_cores_including_controller": 12.829867198679745,
+        "task_clock_per_worker_core": 0.801866699917484,
+        "instructions_per_agent": 1118450185.4375,
+        "cycles_per_agent": 832571650.125,
+        "task_clock_ms_per_agent": 287.645625
       },
       "sample_index": 27
     },
@@ -3132,38 +3781,50 @@
         "payload_bytes": 64,
         "total_tool_steps": 512,
         "total_provider_requests": 520,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 300879130,
-          "controller_cpu_user_us": 18200,
-          "controller_cpu_system_us": 0,
-          "controller_cpu_total_us": 18200,
-          "agents_per_second": 26.588750107061266,
-          "tool_steps_per_second": 1701.680006851921
+          "wall_ns": 294225425,
+          "controller_cpu_user_us": 12510,
+          "controller_cpu_system_us": 5864,
+          "controller_cpu_total_us": 18374,
+          "agents_per_second": 27.190036347130775,
+          "tool_steps_per_second": 1740.1623262163696
         },
         "memory": {
-          "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 550776,
-          "max_child_max_rss_kb": 72740
+          "controller_max_rss_kb": 44444,
+          "sum_child_max_rss_kb": 600760,
+          "max_child_max_rss_kb": 78900
         },
         "child_internal_wall_ns": [
-          120084841,
-          139987063,
-          141390421,
-          130913729,
-          127450031,
-          151803134,
-          141087137,
-          137268185
+          136442818,
+          141734480,
+          135648978,
+          134814456,
+          136205685,
+          136386477,
+          137344920,
+          136287176
         ],
         "child_internal_cpu_us": [
-          137509,
-          142432,
-          140040,
-          138167,
-          137660,
-          138755,
-          139055,
-          137274
+          136863,
+          142212,
+          135310,
+          135695,
+          136515,
+          136688,
+          138120,
+          136638
         ],
         "checks": {
           "agent_count_exact": true,
@@ -3175,39 +3836,48 @@
         }
       },
       "perf": {
-        "task-clock": 2264.16,
-        "cycles": 5860049532.0,
-        "instructions": 8379860660.0,
-        "branches": 1716977284.0,
-        "branch-misses": 88617570.0,
-        "cache-references": 3406413700.0,
-        "cache-misses": 65596671.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 76240.0
+        "task-clock": 2259.84,
+        "cycles_u": 5829145059.0,
+        "instructions_u": 8400243839.0,
+        "cycles_k": 717136441.0,
+        "instructions_k": 588970202.0,
+        "branches": 1831583077.0,
+        "branch-misses": 92100245.0,
+        "cache-references": 3582444522.0,
+        "cache-misses": 72231976.0,
+        "context-switches": 2037.0,
+        "cpu-migrations": 191.0,
+        "page-faults": 79700.0,
+        "cycles": 6546281500.0,
+        "cycles_kernel_ratio": 0.10954867140986833,
+        "instructions": 8989214041.0,
+        "instructions_kernel_ratio": 0.06551965492352214
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14",
-        "ipc": 1.429998264390097,
-        "cache_mpki": 7.827895195574768,
-        "branch_mpki": 10.575064860326687,
-        "average_user_cpu_cores": 7.5251480553004795,
-        "user_cpu_affinity_utilization": 0.9406435069125599,
-        "instructions_per_agent": 1047482582.5,
-        "cycles_per_agent": 732506191.5,
-        "task_clock_ms_per_agent": 283.02
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.373178657379766,
+        "cache_mpki": 8.035405061059665,
+        "branch_mpki": 10.245639338425894,
+        "average_cpu_cores_including_controller": 7.6806414673375025,
+        "task_clock_per_worker_core": 0.9600801834171878,
+        "instructions_per_agent": 1123651755.125,
+        "cycles_per_agent": 818285187.5,
+        "task_clock_ms_per_agent": 282.48
       },
       "sample_index": 28
     },
@@ -3219,26 +3889,32 @@
         "payload_bytes": 64,
         "total_tool_steps": 128,
         "total_provider_requests": 130,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 276989764,
-          "controller_cpu_user_us": 2307,
-          "controller_cpu_system_us": 5752,
-          "controller_cpu_total_us": 8059,
-          "agents_per_second": 7.220483425517486,
-          "tool_steps_per_second": 462.1109392331191
+          "wall_ns": 278178958,
+          "controller_cpu_user_us": 8190,
+          "controller_cpu_system_us": 0,
+          "controller_cpu_total_us": 8190,
+          "agents_per_second": 7.189616405134425,
+          "tool_steps_per_second": 460.1354499286032
         },
         "memory": {
-          "controller_max_rss_kb": 46512,
-          "sum_child_max_rss_kb": 149516,
-          "max_child_max_rss_kb": 74772
+          "controller_max_rss_kb": 44456,
+          "sum_child_max_rss_kb": 153592,
+          "max_child_max_rss_kb": 76796
         },
         "child_internal_wall_ns": [
-          136237561,
-          135517091
+          136872584,
+          132702768
         ],
         "child_internal_cpu_us": [
-          136700,
-          135960
+          137277,
+          133264
         ],
         "checks": {
           "agent_count_exact": true,
@@ -3250,39 +3926,48 @@
         }
       },
       "perf": {
-        "task-clock": 578.51,
-        "cycles": 1494511360.0,
-        "instructions": 2179420287.0,
-        "branches": 445110791.0,
-        "branch-misses": 22759568.0,
-        "cache-references": 879998345.0,
-        "cache-misses": 16751226.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 21800.0
+        "task-clock": 583.03,
+        "cycles_u": 1498439041.0,
+        "instructions_u": 2190305955.0,
+        "cycles_k": 190390849.0,
+        "instructions_k": 161847014.0,
+        "branches": 477702557.0,
+        "branch-misses": 23925317.0,
+        "cache-references": 929286490.0,
+        "cache-misses": 18603259.0,
+        "context-switches": 492.0,
+        "cpu-migrations": 8.0,
+        "page-faults": 21989.0,
+        "cycles": 1688829890.0,
+        "cycles_kernel_ratio": 0.11273536199670176,
+        "instructions": 2352152969.0,
+        "instructions_kernel_ratio": 0.06880803082667197
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2",
-        "ipc": 1.4582828510584223,
-        "cache_mpki": 7.686092535670703,
-        "branch_mpki": 10.442945830943346,
-        "average_user_cpu_cores": 2.0885609332480604,
-        "user_cpu_affinity_utilization": 1.0442804666240302,
-        "instructions_per_agent": 1089710143.5,
-        "cycles_per_agent": 747255680.0,
-        "task_clock_ms_per_agent": 289.255
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.392770807129663,
+        "cache_mpki": 7.909034508035859,
+        "branch_mpki": 10.17166711320296,
+        "average_cpu_cores_including_controller": 2.0958810263427616,
+        "task_clock_per_worker_core": 1.0479405131713808,
+        "instructions_per_agent": 1176076484.5,
+        "cycles_per_agent": 844414945.0,
+        "task_clock_ms_per_agent": 291.515
       },
       "sample_index": 29
     },
@@ -3294,86 +3979,122 @@
         "payload_bytes": 64,
         "total_tool_steps": 2048,
         "total_provider_requests": 2080,
+        "placement": "shared",
+        "cpu_binding": [
+          0,
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62
+        ],
+        "hard_pin": false,
         "timing": {
-          "wall_ns": 362458331,
-          "controller_cpu_user_us": 24425,
-          "controller_cpu_system_us": 23932,
-          "controller_cpu_total_us": 48357,
-          "agents_per_second": 88.2860104545369,
-          "tool_steps_per_second": 5650.304669090362
+          "wall_ns": 392180294,
+          "controller_cpu_user_us": 17090,
+          "controller_cpu_system_us": 30603,
+          "controller_cpu_total_us": 47693,
+          "agents_per_second": 81.59512471577678,
+          "tool_steps_per_second": 5222.087981809714
         },
         "memory": {
           "controller_max_rss_kb": 44456,
-          "sum_child_max_rss_kb": 2090808,
-          "max_child_max_rss_kb": 71136
+          "sum_child_max_rss_kb": 2151072,
+          "max_child_max_rss_kb": 72664
         },
         "child_internal_wall_ns": [
-          172373385,
-          135304958,
-          127181597,
-          126592139,
-          110520150,
-          136441053,
-          124178866,
-          135703034,
-          137679841,
-          145782811,
-          134883872,
-          129707172,
-          154117275,
-          109963282,
-          115402127,
-          107330586,
-          117892210,
-          123975714,
-          115382246,
-          108248299,
-          109971452,
-          109337294,
-          114740997,
-          118992816,
-          118227725,
-          112937522,
-          105754045,
-          109319933,
-          111217779,
-          114691187,
-          107269695,
-          111891928
+          153039452,
+          129001328,
+          140447722,
+          127521229,
+          131966758,
+          130355137,
+          126895849,
+          143805308,
+          118327304,
+          152458254,
+          149346062,
+          139405578,
+          132929371,
+          112411854,
+          109577866,
+          129457065,
+          112510876,
+          118189752,
+          118029600,
+          118380265,
+          100086768,
+          112782279,
+          109818769,
+          103278031,
+          118825231,
+          100969120,
+          114274800,
+          110642540,
+          114028816,
+          115193902,
+          108933727,
+          106502965
         ],
         "child_internal_cpu_us": [
-          147075,
-          143153,
-          140463,
-          146389,
-          139543,
-          140162,
-          144206,
-          146116,
-          141438,
-          147165,
-          144049,
-          141654,
-          146323,
-          143891,
-          142585,
-          145846,
-          144591,
-          144092,
-          144688,
-          145422,
-          145470,
-          146120,
-          144934,
-          148168,
-          146619,
-          141883,
-          148250,
-          145707,
-          146840,
-          147404,
-          148359,
-          147965
+          151528,
+          144139,
+          142878,
+          140353,
+          143589,
+          143622,
+          145715,
+          144281,
+          142555,
+          145521,
+          144084,
+          143258,
+          141081,
+          144175,
+          144412,
+          162913,
+          144836,
+          147769,
+          145039,
+          146713,
+          146012,
+          143898,
+          147955,
+          145759,
+          147594,
+          146203,
+          146617,
+          146768,
+          145592,
+          147451,
+          145560,
+          147175
         ],
         "checks": {
           "agent_count_exact": true,
@@ -3385,39 +4106,48 @@
         }
       },
       "perf": {
-        "task-clock": 9325.37,
-        "cycles": 23975296565.0,
-        "instructions": 33232473459.0,
-        "branches": 6817543389.0,
-        "branch-misses": 351108243.0,
-        "cache-references": 13503352295.0,
-        "cache-misses": 258496356.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 295864.0
+        "task-clock": 9527.88,
+        "cycles_u": 24418471628.0,
+        "instructions_u": 33908605586.0,
+        "cycles_k": 3138147904.0,
+        "instructions_k": 2511023652.0,
+        "branches": 7428366535.0,
+        "branch-misses": 367853038.0,
+        "cache-references": 14499252865.0,
+        "cache-misses": 296364284.0,
+        "context-switches": 10756.0,
+        "cpu-migrations": 4038.0,
+        "page-faults": 298926.0,
+        "cycles": 27556619532.0,
+        "cycles_kernel_ratio": 0.1138800026017647,
+        "instructions": 36419629238.0,
+        "instructions_kernel_ratio": 0.06894698558270919
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
       "derived": {
         "cpu_binding": "0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62",
-        "ipc": 1.3861131339461286,
-        "cache_mpki": 7.778426613923743,
-        "branch_mpki": 10.565215479165998,
-        "average_user_cpu_cores": 25.72811604101328,
-        "user_cpu_affinity_utilization": 0.804003626281665,
-        "instructions_per_agent": 1038514795.59375,
-        "cycles_per_agent": 749228017.65625,
-        "task_clock_ms_per_agent": 291.4178125
+        "pin_mode": "shared_cpuset",
+        "ipc": 1.3216290625092046,
+        "cache_mpki": 8.137487673564108,
+        "branch_mpki": 10.100405899140362,
+        "average_cpu_cores_including_controller": 24.294642402404847,
+        "task_clock_per_worker_core": 0.7592075750751515,
+        "instructions_per_agent": 1138113413.6875,
+        "cycles_per_agent": 861144360.375,
+        "task_clock_ms_per_agent": 297.74625
       },
       "sample_index": 30
     }
@@ -3428,6 +4158,8 @@
     "Process startup, DSH composition, the measured turn, and teardown are all inside batch wall/perf scope.",
     "sum_child_max_rss_kb sums per-process maxima and is not a synchronized aggregate peak.",
     "CPU sets use one thread per physical core and nested prefixes but do not spread across NUMA nodes.",
-    "A :u event label excludes kernel execution and makes scheduling counters non-interpretable."
+    "Controller placement is identical across modes; only child cpusets differ (shared pool vs per-Agent pin).",
+    "Perf task-clock includes the unbound controller, so task_clock_per_worker_core is a capacity ratio, not worker-cpuset utilization and may exceed one.",
+    "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields."
   ]
 }

@@ -11,33 +11,34 @@ controller starts all Agents concurrently and validates every child result.
 - Work per Agent: 64 no-op tool steps, 65 provider requests, 64-byte payload/result.
 - Repetitions: 5 per point, randomly interleaved with seed 20260902.
 - Scope: process launch, DSH composition, measured turn, and process exit.
-- CPU selection: first logical CPU for each distinct `(socket, core)` pair;
-  nested prefixes produce `0`, `0,2`, ..., `0,2,...,62` on this SMT2 host.
-- Placement: all selected cores are on socket 0 / NUMA node 0.
+- CPU selection: the controller is unbound; worker processes receive nested
+  prefixes `0`, `0,2`, ..., `0,2,...,62`, one logical thread per physical core.
+- Placement: all selected worker cores are on socket 0 / NUMA node 0.
 - Runtime: pinned Node 24.15.0 and DSH revision.
 - Host: ARM64 HiSilicon, 256 logical CPUs, 128 physical cores, 2 sockets,
   4 NUMA nodes.
-- PMU: Linux perf 6.6 with descendant inheritance; labels carried `:u`.
+- PMU: Linux perf 6.6 with descendant inheritance and user+kernel counting
+  (`perf_event_paranoid=-1`).
 
 Every batch verifies child count and stderr, every C1 semantic invariant,
 per-child tool steps and provider requests, and total tool invocations.
 
 ## Median observations
 
-| Agents | Batch wall (ms) | Agents/s | Throughput speedup | Parallel efficiency | Avg user CPU cores | Sum child max RSS (MiB) | User instructions/Agent (M) |
+| Agents | Batch wall (ms) | Agents/s | Throughput speedup | Parallel efficiency | Avg CPU cores | Sum child max RSS (MiB) | Instructions/Agent (M) |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | 282.0 | 3.55 | 1.00x | 100.0% | 1.10 | 75.0 | 1,150.7 |
-| 2 | 279.1 | 7.17 | 2.02x | 101.1% | 2.09 | 148.0 | 1,089.9 |
-| 4 | 281.3 | 14.22 | 4.01x | 100.3% | 4.00 | 294.1 | 1,062.8 |
-| 8 | 290.3 | 27.55 | 7.77x | 97.1% | 7.74 | 590.6 | 1,047.7 |
-| 16 | 332.9 | 48.06 | 13.55x | 84.7% | 13.64 | 1,069.9 | 1,039.3 |
-| 32 | 365.9 | 87.45 | 24.66x | 77.1% | 25.48 | 2,089.5 | 1,038.5 |
+| 1 | 280.0 | 3.57 | 1.00x | 100.0% | 1.11 | 75.0 | 1,240.7 |
+| 2 | 278.2 | 7.19 | 2.01x | 100.7% | 2.09 | 150.0 | 1,174.4 |
+| 4 | 283.6 | 14.10 | 3.95x | 98.7% | 3.99 | 288.5 | 1,139.8 |
+| 8 | 293.1 | 27.29 | 7.64x | 95.5% | 7.68 | 578.5 | 1,122.5 |
+| 16 | 361.2 | 44.30 | 12.40x | 77.5% | 12.84 | 1,063.8 | 1,129.0 |
+| 32 | 384.7 | 83.17 | 23.29x | 72.8% | 24.69 | 2,122.3 | 1,137.2 |
 
-Throughput remains effectively linear through four Agents and retains 97%
+Throughput remains effectively linear through four Agents and retains 95.5%
 parallel efficiency at eight. The knee appears between eight and sixteen on
-this placement: batch wall rises from 290 to 333 ms, then to 366 ms at 32.
-Despite declining efficiency, 32 Agents still deliver 24.66 times the one-Agent
-throughput, or about 5,597 no-op tool steps per second.
+this placement: batch wall rises from 293 to 361 ms, then to 385 ms at 32.
+Despite declining efficiency, 32 Agents still deliver 23.29 times the one-Agent
+throughput, or about 5,323 no-op tool steps per second.
 
 The experiment deliberately chooses different physical cores rather than SMT
 siblings. It does not spread work across NUMA nodes, so the 16/32-Agent decline
@@ -49,18 +50,20 @@ them.
 Perf covers controller and descendants, but its scope begins before the
 controller's own spawn-to-completion timer. Consequently `task-clock / batch
 wall` slightly exceeds one core at N=1 and is only an approximate average at
-larger N. `:u` also excludes kernel work and makes scheduling counters
-non-interpretable. The apparent decline in instructions per Agent partly
+larger N. It includes user and kernel work in this rerun. The apparent decline
+in instructions per Agent partly
 amortizes fixed controller/runtime startup counters and should not be read as
 individual Agents doing less semantic work.
 
 `sum_child_max_rss_kb` is the sum of each child's independently observed peak,
 not a synchronized system-wide peak. It grows from about 75 MiB at one Agent to
-2.04 GiB at 32, providing a capacity estimate rather than an exact concurrent
+2.07 GiB at 32, providing a capacity estimate rather than an exact concurrent
 resident-set trace.
 
 This is a same-host n=5 scale-out pilot with a zero-latency mock model and no-op
 tools. Real provider concurrency limits, network latency, shared-process Agent
 topologies, shell/filesystem tools, cross-NUMA placement, SMT placement, and
 sustained steady-state service load remain separate experiments. Complete
-samples and topology metadata are in `results/c7-agent-scaleout-pilot.json`.
+samples and topology metadata are in `results/c7-agent-scaleout-pilot.json`;
+`scripts/cpu/verify-cpu-results.py` checks protocol hashes, sample invariants,
+aggregates, and scaling calculations.

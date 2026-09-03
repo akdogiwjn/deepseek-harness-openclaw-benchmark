@@ -200,7 +200,9 @@ def main() -> None:
         "All table values are generated from the corresponding",
         "`results/c8-token-meter-*-pilot.json` files by",
         "`scripts/cpu/render-c8-report.py`; the generator validates sample counts, fixture",
-        "checks, and aggregate medians before writing this report.",
+        "checks, and aggregate medians before writing this report. Run",
+        "`scripts/cpu/verify-cpu-results.py` to additionally verify protocol hashes and",
+        "recompute every C8 aggregate and linear fit from the committed samples.",
         "",
     ]
     args.output.parent.mkdir(parents=True, exist_ok=True)

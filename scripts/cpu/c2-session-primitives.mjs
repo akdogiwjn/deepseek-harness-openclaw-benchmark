@@ -101,6 +101,7 @@ const checks = {
   derived_message_count_exact: derive.value.length === turns,
   derived_payloads_exact: derive.value.every(message =>
     message.content.some(block => block.type === 'text' && block.text === payload)),
+  fork_prefix_exact: JSON.stringify(child.events.slice(0, eventCount)) === JSON.stringify(parent.events),
   fork_seed_exact: child.header.seedLength === eventCount
     && child.events.length === eventCount + 1
     && child.events.at(-1)?.type === 'session/end-seed',

@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 OPERATIONS = [
     "derive_messages", "assemble_wire_request", "json_encode_request",
@@ -194,6 +194,7 @@ def main() -> None:
     aggregates, fits = aggregate(samples, args.sizes)
     result = {
         "benchmark": "C3 fixed-shape context-byte scaling",
+        "protocol": benchmark_protocol(root, Path(__file__), fixture),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "design": {
             "context_bytes": args.sizes,

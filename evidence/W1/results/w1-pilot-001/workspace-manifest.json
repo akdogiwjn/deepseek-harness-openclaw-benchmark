@@ -1,0 +1,22 @@
+{
+  "deepseek_harness": {
+    "workspace": "w1-dsh-001",
+    "changed_or_untracked_files": [
+      "config.yaml"
+    ],
+    "deleted_files": [],
+    "file_sha256": {
+      "config.yaml": "36fb28ba3fb9c7f9ddac444b1206e91eea025aaa467a9855baa47b5e94ae203e"
+    }
+  },
+  "openclaw": {
+    "workspace": "w1-openclaw-001",
+    "changed_or_untracked_files": [
+      "config.yaml"
+    ],
+    "deleted_files": [],
+    "file_sha256": {
+      "config.yaml": "36fb28ba3fb9c7f9ddac444b1206e91eea025aaa467a9855baa47b5e94ae203e"
+    }
+  }
+}

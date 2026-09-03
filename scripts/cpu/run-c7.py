@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 
 def parse_counts(raw: str) -> list[int]:
@@ -129,6 +129,7 @@ def main() -> None:
               f"agents/s={sample['fixture']['timing']['agents_per_second']:.2f}", flush=True)
     aggregates, scaling = summarize(samples, args.agents)
     result = {"benchmark": "C7 multi-process DSH Agent scale-out", "created_at": datetime.now(timezone.utc).isoformat(),
+              "protocol": benchmark_protocol(root, Path(__file__), controller, root / "scripts/cpu/c1-agent-loop.mjs"),
               "design": {"agents": args.agents, "repeats": args.repeats, "tool_steps_per_agent": args.tool_steps,
                          "payload_bytes": args.payload_bytes, "topology": "one independent Node/DSH process per Agent",
 "cpu_selection": "first logical CPU for each distinct (socket, core), nested prefixes",

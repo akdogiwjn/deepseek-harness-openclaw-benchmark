@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 
 def parse_steps(raw: str) -> list[int]:
@@ -251,6 +251,7 @@ def main() -> None:
     aggregates, fits = aggregate(samples, args.steps)
     result = {
         "benchmark": "C1-warm fixed-context Agent Loop scaling" if args.warm_turns > 0 else "C1 in-process deterministic Agent Loop scaling",
+        "protocol": benchmark_protocol(root, Path(__file__), fixture),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "design": {
             "steps": args.steps,

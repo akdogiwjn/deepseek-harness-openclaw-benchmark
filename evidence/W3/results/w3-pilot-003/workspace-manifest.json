@@ -1,0 +1,28 @@
+{
+  "deepseek_harness": {
+    "workspace": "w3-dsh-003",
+    "changed_or_untracked_files": [
+      "quota_guard/service.py",
+      "quota_guard/store.py",
+      "tests/test_service.py"
+    ],
+    "deleted_files": [],
+    "file_sha256": {
+      "quota_guard/service.py": "ccb6f9cefe6e0fc257afa5db85c4f650000620e1f2c7519ca3699e3acac24d5b",
+      "quota_guard/store.py": "781bf79fd81628a2fdcd1e3a10ef40d3d45a0e14e0c36d2b601a0d7427e261e3",
+      "tests/test_service.py": "a887693fd04f2baacb785daf4497a947c5b6ffc738c418fb5faaed5a3c55fadc"
+    }
+  },
+  "openclaw": {
+    "workspace": "w3-openclaw-003",
+    "changed_or_untracked_files": [
+      "quota_guard/service.py",
+      "quota_guard/store.py"
+    ],
+    "deleted_files": [],
+    "file_sha256": {
+      "quota_guard/service.py": "a1031b88f082d6b9cd4c0038f2a69cea40809f5458536b783e3f25c5bac85f4d",
+      "quota_guard/store.py": "33fa1b1789a6ab72708e078a39422cbf0f305227c175778dad3b891f621d420c"
+    }
+  }
+}

@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 OPERATIONS = ["append", "derive_messages", "fork_prefix", "jsonl_write", "jsonl_warm_load"]
 
@@ -180,6 +180,7 @@ def main() -> None:
     aggregates, fits = aggregate(samples, args.turns)
     result = {
         "benchmark": "C2 append-only Session/Event Log event-count scaling",
+        "protocol": benchmark_protocol(root, Path(__file__), fixture),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "design": {
             "turns": args.turns,

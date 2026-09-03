@@ -17,6 +17,9 @@ if [[ ! -x "$python" ]]; then
   python="$(command -v python3)"
 fi
 
+"$python" "$BENCH_ROOT/scripts/verify-behavioral-evidence.py" \
+  --root "$BENCH_ROOT" --evidence "$BENCH_ROOT/$evidence"
+
 "$python" "$BENCH_ROOT/scripts/summarize-w4.py" \
   "$evidence/W4/results/w4-recovery-001" \
   "$evidence/W4/results/w4-recovery-002" \
@@ -73,4 +76,4 @@ compare_json "$temp_dir/w7.json" "$BENCH_ROOT/results/w7-long-chain-summary.json
 compare_json "$temp_dir/w8.json" "$BENCH_ROOT/results/w8-code-mode-summary.json"
 compare_json "$temp_dir/w9.json" "$BENCH_ROOT/results/w9-session-summary.json"
 compare_json "$temp_dir/w10.json" "$BENCH_ROOT/results/w10-fs-seam-summary.json"
-echo "[done] frozen evidence reproduces all W4-W10 summaries"
+echo "[done] frozen evidence verifies W1-W3 outcomes and reproduces all W4-W10 summaries"

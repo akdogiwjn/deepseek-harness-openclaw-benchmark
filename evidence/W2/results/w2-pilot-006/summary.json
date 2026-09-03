@@ -1,0 +1,67 @@
+{
+  "task": "W2 Retry-After bug fix",
+  "model": "deepseek-v4-flash",
+  "deepseek_harness": {
+    "valid": true,
+    "verifier_passed": true,
+    "process_exit_code": 0,
+    "runtime_status": "completed",
+    "session_id": "dsh-w2-006",
+    "wall_seconds": 58.440317293046974,
+    "model_steps": 14,
+    "tool_calls": 13,
+    "tools": {
+      "bash": 11,
+      "str_replace_editor": 2
+    },
+    "native_tool_failures": 0,
+    "detected_nonzero_command_results": 2,
+    "llm_retries": 0,
+    "usage": {
+      "input": 24728,
+      "output": 4580,
+      "cache_read": 41728,
+      "reasoning": 2249
+    },
+    "diff_stat": "retry_parser/parser.py | 20 ++++++++++++++++++--\n 1 file changed, 18 insertions(+), 2 deletions(-)",
+    "changed_files": [
+      " M retry_parser/parser.py"
+    ]
+  },
+  "openclaw": {
+    "valid": true,
+    "verifier_passed": true,
+    "process_exit_code": 0,
+    "runtime_status": "ok",
+    "runtime_error": null,
+    "session_id": "c8f65aaf-f757-48b9-bc82-e9c4221d6ee4",
+    "wall_seconds": 63.49073066795245,
+    "assistant_turns": 14,
+    "tool_calls": 16,
+    "tools": [
+      "read",
+      "exec",
+      "edit"
+    ],
+    "native_tool_failures": 0,
+    "usage": {
+      "input": 25898,
+      "output": 4282,
+      "cacheRead": 100608,
+      "reasoningTokens": 1917,
+      "total": 130788,
+      "cost": {
+        "total": 0
+      }
+    },
+    "diff_stat": "retry_parser/parser.py | 17 ++++++++++++-----\n 1 file changed, 12 insertions(+), 5 deletions(-)",
+    "changed_files": [
+      " M retry_parser/parser.py"
+    ]
+  },
+  "notes": [
+    "Token counts are native provider/runtime counters and are not assumed to be directly comparable.",
+    "DSH native tool errors and detected non-zero Bash results are recorded separately.",
+    "No credential or gateway URL is stored in this summary."
+  ]
+}

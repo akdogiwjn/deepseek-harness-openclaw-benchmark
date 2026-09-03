@@ -1,0 +1,71 @@
+{
+  "task": "W3 weighted quota consumption",
+  "model": "deepseek-v4-flash",
+  "deepseek_harness": {
+    "valid": true,
+    "verifier_passed": true,
+    "process_exit_code": 0,
+    "runtime_status": "completed",
+    "session_id": "dsh-w3-005",
+    "wall_seconds": 97.31786195503082,
+    "model_steps": 14,
+    "tool_calls": 22,
+    "tools": {
+      "bash": 5,
+      "str_replace_editor": 17
+    },
+    "native_tool_failures": 1,
+    "detected_nonzero_command_results": 0,
+    "llm_retries": 0,
+    "usage": {
+      "input": 34581,
+      "output": 10581,
+      "cache_read": 80640,
+      "reasoning": 6401
+    },
+    "diff_stat": "quota_guard/service.py | 10 ++++--\n quota_guard/store.py   | 18 ++++++++--\n tests/test_service.py  | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++\n 3 files changed, 116 insertions(+), 5 deletions(-)",
+    "changed_files": [
+      " M quota_guard/service.py",
+      " M quota_guard/store.py",
+      " M tests/test_service.py"
+    ]
+  },
+  "openclaw": {
+    "valid": true,
+    "verifier_passed": true,
+    "process_exit_code": 0,
+    "runtime_status": "ok",
+    "runtime_error": null,
+    "session_id": "a9fe5a46-c891-400f-918e-adf81eaa9dbf",
+    "wall_seconds": 79.50154810003005,
+    "assistant_turns": 10,
+    "tool_calls": 17,
+    "tools": [
+      "read",
+      "exec",
+      "edit"
+    ],
+    "native_tool_failures": 0,
+    "usage": {
+      "input": 19773,
+      "output": 8013,
+      "cacheRead": 71168,
+      "reasoningTokens": 4982,
+      "total": 98954,
+      "cost": {
+        "total": 0
+      }
+    },
+    "diff_stat": "quota_guard/service.py | 23 +++++++++++++++++++----\n quota_guard/store.py   |  4 ++--\n tests/test_service.py  | 41 +++++++++++++++++++++++++++++++++++++++++\n 3 files changed, 62 insertions(+), 6 deletions(-)",
+    "changed_files": [
+      " M quota_guard/service.py",
+      " M quota_guard/store.py",
+      " M tests/test_service.py"
+    ]
+  },
+  "notes": [
+    "Token counts are native provider/runtime counters and are not assumed to be directly comparable.",
+    "DSH native tool errors and detected non-zero Bash results are recorded separately.",
+    "No credential or gateway URL is stored in this summary."
+  ]
+}

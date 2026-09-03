@@ -6,6 +6,21 @@ Host CPU work to the Agent Loop, Session/context processing, tool execution,
 code runtimes, and isolation layers while deterministic adapters remove live
 model and network variance.
 
+Every C1-C8 result records a protocol block containing SHA256 hashes of its
+runner, fixture/controller, and shared perf helper plus the pinned upstream
+revisions. This prevents a result produced by an older runner from silently
+being presented as current. After generating results, validate all sample
+invariants and independently recompute the committed aggregates, fits,
+comparisons, and scaling values with:
+
+```bash
+scripts/cpu/verify-cpu-results.py
+```
+
+The verifier establishes result-to-code provenance and arithmetic consistency;
+it does not turn n=5 same-host pilots into population estimates or eliminate
+OS, thermal, filesystem-cache, JIT, and run-order effects.
+
 ## C1 in-process Agent Loop scaling
 
 C1 runs one real DSH Agent Loop over an in-process deterministic adapter. For
@@ -28,7 +43,7 @@ scripts/cpu/run-c1.py \
   --output results/c1-agent-loop-smoke.json
 ```
 
-Run the initial scaling design:
+Run the current scaling design:
 
 ```bash
 scripts/cpu/run-c1.py \
@@ -122,7 +137,7 @@ scripts/cpu/run-c2.py \
   --output /tmp/c2-session-smoke.json
 ```
 
-Run the initial event-count scaling design:
+Run the current event-count scaling design:
 
 ```bash
 scripts/cpu/run-c2.py \
@@ -169,7 +184,7 @@ scripts/cpu/run-c3.py \
   --output /tmp/c3-context-smoke.json
 ```
 
-Run the initial scaling design:
+Run the current scaling design:
 
 ```bash
 scripts/cpu/run-c3.py \
@@ -212,7 +227,7 @@ scripts/cpu/run-c4.py \
   --output /tmp/c4-shell-smoke.json
 ```
 
-Run the initial scaling design:
+Run the current scaling design:
 
 ```bash
 scripts/cpu/run-c4.py \
@@ -248,7 +263,7 @@ scripts/cpu/run-c5.py \
   --output /tmp/c5-code-mode-smoke.json
 ```
 
-Run the initial scaling design:
+Run the current scaling design:
 
 ```bash
 scripts/cpu/run-c5.py \
@@ -283,7 +298,7 @@ scripts/cpu/run-c6.py \
   --output /tmp/c6-fs-smoke.json
 ```
 
-Run the initial scaling design:
+Run the current scaling design:
 
 ```bash
 scripts/cpu/run-c6.py \
@@ -402,6 +417,7 @@ counts/checks/medians and regenerate the report without hand-copied numbers:
 scripts/cpu/render-c8-report.py \
   --results-dir results \
   --output results/C8_REPORT.md
+scripts/cpu/verify-cpu-results.py
 ```
 
 The primary C8 outputs are construction-free internal CPU and wall time per

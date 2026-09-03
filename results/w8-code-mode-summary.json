@@ -33,6 +33,12 @@
         "assistant_turns": null,
         "bridge_calls": null,
         "tool_summary": null
+      },
+      "dsh_trace": {
+        "outer_tool_calls": 8,
+        "code_dispatch_starts": 0,
+        "code_dispatches": 0,
+        "dispatch_pairs_correlated": true
       }
     },
     "code": {
@@ -64,6 +70,12 @@
         "assistant_turns": null,
         "bridge_calls": null,
         "tool_summary": null
+      },
+      "dsh_trace": {
+        "outer_tool_calls": 1,
+        "code_dispatch_starts": 8,
+        "code_dispatches": 8,
+        "dispatch_pairs_correlated": true
       }
     },
     "paired_change": {

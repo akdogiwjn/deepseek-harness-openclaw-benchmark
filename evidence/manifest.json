@@ -1,6 +1,6 @@
 {
-  "format_version": 1,
-  "scope": "minimal redacted input closure for deterministic W4-W10 summaries",
+  "format_version": 2,
+  "scope": "final-workspace/verifier closure for W1-W3 plus minimal redacted input closure for deterministic W4-W10 summaries",
   "source_revisions": {
     "DSH_REPO_URL": "https://github.com/deepseek-ai/deepseek-harness.git",
     "DSH_COMMIT": "dd6322d604e00eec1ba5e0c8541159906a21094a",
@@ -19,6 +19,7 @@
   "omitted": [
     "API keys and HTTP headers",
     "server readiness logs",
-    "full DSH sessions"
+    "full DSH sessions",
+    "W1-W3 provider transcripts and reasoning; normalized summaries and exact changed-file overlays are retained"
   ]
 }

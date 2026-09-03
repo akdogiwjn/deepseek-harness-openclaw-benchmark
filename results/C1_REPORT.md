@@ -14,8 +14,7 @@ turn boundary before accepting a sample.
 - Affinity: logical CPU 0.
 - Runtime: pinned Node 24.15.0 and DSH revision.
 - Host: ARM64 HiSilicon, 256 logical CPUs, 2 sockets, 4 NUMA nodes.
-- PMU: Linux perf 6.6; all observed event labels carried `:u` because
-  `perf_event_paranoid=2`.
+- PMU: Linux perf 6.6 with user+kernel counting (`perf_event_paranoid=-1`).
 
 Internal CPU/wall measurements cover prompt enqueue through agent idle. Perf
 counters cover the whole Node process, including V8 startup, Harness
@@ -26,35 +25,39 @@ large and must not be confused with prompt-window Agent Loop work.
 
 | Tool steps | Internal CPU (ms) | Internal wall (ms) | Instructions (M) | Cycles (M) | Max RSS (MiB) | IPC | Generic cache MPKI |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 0 | 8.34 | 7.86 | 517.86 | 361.40 | 62.99 | 1.44 | 6.57 |
-| 1 | 13.22 | 12.48 | 534.12 | 375.05 | 64.99 | 1.43 | 6.69 |
-| 4 | 22.52 | 22.51 | 568.06 | 406.84 | 66.99 | 1.40 | 6.76 |
-| 16 | 47.61 | 47.71 | 656.94 | 464.24 | 68.99 | 1.41 | 7.16 |
-| 64 | 137.45 | 136.86 | 1,031.03 | 716.97 | 72.99 | 1.44 | 7.94 |
-| 256 | 470.19 | 471.33 | 2,682.70 | 1,697.74 | 80.99 | 1.58 | 7.97 |
+| 0 | 8.41 | 7.66 | 568.23 | 425.30 | 64.996 | 1.33 | 7.00 |
+| 1 | 12.71 | 12.58 | 589.03 | 440.79 | 66.996 | 1.34 | 7.07 |
+| 4 | 23.70 | 23.67 | 624.26 | 465.78 | 68.996 | 1.33 | 7.15 |
+| 16 | 46.79 | 46.21 | 704.59 | 524.08 | 71.02 | 1.36 | 7.54 |
+| 64 | 138.31 | 138.46 | 1,097.11 | 797.97 | 75.02 | 1.38 | 8.18 |
+| 256 | 466.23 | 467.54 | 2,767.15 | 1,805.28 | 85.00 | 1.53 | 8.23 |
 
 An ordinary least-squares fit over the six step-count medians produced these
 descriptive marginal slopes for this host and fixture:
 
-- internal CPU: 1.787 ms per tool step;
-- whole-process instructions: 8.424 million per tool step;
-- whole-process cycles: 5.172 million per tool step;
-- max RSS: 62.6 KiB per tool step.
+- internal CPU: 1.771 ms per tool step;
+- whole-process instructions: 8.551 million per tool step;
+- whole-process cycles: 5.353 million per tool step;
+- max RSS: 70.7 KiB per tool step.
 
 These slopes combine Agent Loop work with context derivation over a Session that
 grows every step. They are not a fixed-context primitive cost and should not be
 generalized to other models, adapters, Harness compositions, CPUs, or ISAs.
 
-Generic cache MPKI rose from 6.57 at the completion-only baseline to 7.97 at 256
+Generic cache MPKI rose from 7.00 at the completion-only baseline to 8.23 at 256
 tool steps. That is consistent with a growing working set, but C1 alone cannot
 attribute the change to Session traversal, JSON/object growth, or another V8
 effect. A fixed-context loop condition and the planned Session/context
 microbenchmarks are required for that attribution.
 
-The `:u` restriction makes zero perf context-switch and migration counts
-non-interpretable: kernel-side scheduling was excluded. Prompt-window
-`process.resourceUsage()` deltas remain in the raw samples as a separate source.
+This rerun counts both user and kernel execution, so scheduling and page-fault
+counters are no longer discarded solely because of a user-only event suffix.
+The generic cache events remain portable aggregate counters rather than an
+architecture-specific LLC attribution. Prompt-window `process.resourceUsage()`
+deltas remain in the raw samples as a separate source.
 
 This is an n=5 mechanism pilot, not a formal processor comparison. The complete
 samples, exact perf labels, host topology, medians, ranges, derived metrics, and
-linear fits are retained in `results/c1-agent-loop-pilot.json`.
+linear fits are retained in `results/c1-agent-loop-pilot.json`; the committed
+JSON is protocol-hash checked and aggregate-recomputed by
+`scripts/cpu/verify-cpu-results.py`.

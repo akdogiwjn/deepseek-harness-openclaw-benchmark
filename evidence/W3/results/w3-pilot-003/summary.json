@@ -1,0 +1,73 @@
+{
+  "task": "W3 weighted quota consumption",
+  "model": "deepseek-v4-flash",
+  "deepseek_harness": {
+    "valid": true,
+    "verifier_passed": true,
+    "process_exit_code": 0,
+    "runtime_status": "completed",
+    "session_id": "dsh-w3-003",
+    "wall_seconds": 87.94921794405673,
+    "model_steps": 19,
+    "tool_calls": 23,
+    "tools": {
+      "bash": 9,
+      "str_replace_editor": 14
+    },
+    "native_tool_failures": 0,
+    "detected_nonzero_command_results": 1,
+    "llm_retries": 0,
+    "usage": {
+      "input": 29127,
+      "output": 7454,
+      "cache_read": 103424,
+      "reasoning": 3373
+    },
+    "diff_stat": "quota_guard/service.py | 18 +++++++++++++----\n quota_guard/store.py   |  4 ++--\n tests/test_service.py  | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++\n 3 files changed, 68 insertions(+), 6 deletions(-)",
+    "changed_files": [
+      " M quota_guard/service.py",
+      " M quota_guard/store.py",
+      " M tests/test_service.py"
+    ]
+  },
+  "openclaw": {
+    "valid": false,
+    "verifier_passed": false,
+    "process_exit_code": 1,
+    "runtime_status": "error",
+    "runtime_error": {
+      "message": "Provider returned an incomplete or malformed tool call",
+      "kind": "incomplete_turn"
+    },
+    "session_id": "3759fdea-d40d-4236-b114-da95696dc22c",
+    "wall_seconds": 61.546497110044584,
+    "assistant_turns": 7,
+    "tool_calls": 14,
+    "tools": [
+      "read",
+      "exec",
+      "edit"
+    ],
+    "native_tool_failures": 0,
+    "usage": {
+      "input": 21341,
+      "output": 5853,
+      "cacheRead": 42240,
+      "reasoningTokens": 3358,
+      "total": 69434,
+      "cost": {
+        "total": 0
+      }
+    },
+    "diff_stat": "quota_guard/service.py | 22 ++++++++++++++++++----\n quota_guard/store.py   |  4 ++--\n 2 files changed, 20 insertions(+), 6 deletions(-)",
+    "changed_files": [
+      " M quota_guard/service.py",
+      " M quota_guard/store.py"
+    ]
+  },
+  "notes": [
+    "Token counts are native provider/runtime counters and are not assumed to be directly comparable.",
+    "DSH native tool errors and detected non-zero Bash results are recorded separately.",
+    "No credential or gateway URL is stored in this summary."
+  ]
+}

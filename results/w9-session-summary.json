@@ -197,7 +197,7 @@
     }
   },
   "llm_replay": {
-    "scenario": "W9-C keyless LLM replay",
+    "scenario": "W9-C credential-free LLM replay",
     "recorded_model_calls": 2,
     "provider_requests_after_replay": 2,
     "recorded_projection": [
@@ -565,6 +565,7 @@
   "notes": [
     "W9-A uses sdk-minimal only to create the crash, then invokes the official ctx.agents.resume() path because the Python SDK server creates rather than cold-resumes sessions after process restart.",
     "W9-C uses a completed session; LLM replay does not reproduce crash scheduling or external-world rollback.",
+    "W9-C uses no live provider credential; a non-production placeholder satisfies carrier startup validation while the replay adapter owns model output.",
     "Side effects execute independently in fresh recording and replay workspaces."
   ]
 }

@@ -1,6 +1,24 @@
 {
   "benchmark": "C1 in-process deterministic Agent Loop scaling",
-  "created_at": "2026-09-02T01:48:12.039423+00:00",
+  "protocol": {
+    "schema_version": 1,
+    "protocol_sha256": "5611d5583d17c14940a09adaf107ad0aa1950b0c904a116d827e36a7ba5f17fe",
+    "files": {
+      "scripts/cpu/c1-agent-loop.mjs": "98dc810eb4854c86672c99899774f33923653f992416718dbc6e0fd795c06dac",
+      "scripts/cpu/perf_utils.py": "abaf2a5ac45ec33662df0511aa44c8f8a073253bba5a6332855d07857948aab9",
+      "scripts/cpu/run-c1.py": "0bac5455368f81347d08a65c01b2e8a5c4879bbe7496a6bda97bfdfd5b946f77"
+    },
+    "source_revisions": {
+      "DSH_REPO_URL": "https://github.com/deepseek-ai/deepseek-harness.git",
+      "DSH_COMMIT": "dd6322d604e00eec1ba5e0c8541159906a21094a",
+      "OPENCLAW_REPO_URL": "https://github.com/openclaw/openclaw.git",
+      "OPENCLAW_COMMIT": "3c1b351555e0ebc1b022842523191691e89c7684",
+      "NODE_VERSION": "24.15.0",
+      "DSH_PNPM_VERSION": "11.7.0",
+      "OPENCLAW_PNPM_VERSION": "12.1.0"
+    }
+  },
+  "created_at": "2026-09-02T11:59:40.904954+00:00",
   "design": {
     "steps": [
       0,
@@ -12,13 +30,18 @@
     ],
     "repeats": 5,
     "payload_bytes": 64,
+    "warm_turns": 0,
+    "warmup_turns": 0,
     "randomization_seed": 20260902,
     "cpu_affinity": 0,
     "perf_enabled": true,
+    "perf_mode": "user-kernel",
     "perf_events": [
       "task-clock",
-      "cycles",
-      "instructions",
+      "cycles:u",
+      "instructions:u",
+      "cycles:k",
+      "instructions:k",
       "branches",
       "branch-misses",
       "cache-references",
@@ -28,16 +51,18 @@
       "page-faults"
     ],
     "observed_perf_event_labels": {
-      "task-clock": "task-clock:u",
-      "cycles": "cycles:u",
-      "instructions": "instructions:u",
-      "branches": "branches:u",
-      "branch-misses": "branch-misses:u",
-      "cache-references": "cache-references:u",
-      "cache-misses": "cache-misses:u",
-      "context-switches": "context-switches:u",
-      "cpu-migrations": "cpu-migrations:u",
-      "page-faults": "page-faults:u"
+      "task-clock": "task-clock",
+      "cycles_u": "cycles:u",
+      "instructions_u": "instructions:u",
+      "cycles_k": "cycles:k",
+      "instructions_k": "instructions:k",
+      "branches": "branches",
+      "branch-misses": "branch-misses",
+      "cache-references": "cache-references",
+      "cache-misses": "cache-misses",
+      "context-switches": "context-switches",
+      "cpu-migrations": "cpu-migrations",
+      "page-faults": "page-faults"
     },
     "internal_scope": "prompt enqueue through agent idle; setup and teardown excluded",
     "perf_scope": "whole Node fixture process; startup, setup, measured turn, and teardown included",
@@ -65,7 +90,7 @@
       "CPU max MHz": "2900.0000",
       "CPU min MHz": "400.0000"
     },
-    "perf_event_paranoid": "2",
+    "perf_event_paranoid": "-1",
     "node": "v24.15.0",
     "perf": "perf version 6.6.0-145.0.13.139.oe2403.aarch64"
   },
@@ -73,532 +98,532 @@
     "0": {
       "samples": 5,
       "internal_wall_ns": {
-        "median": 7862468.0,
-        "min": 7659704.0,
-        "max": 8254533.0
+        "median": 7657303.0,
+        "min": 7593642.0,
+        "max": 7965417.0
       },
       "internal_cpu_total_us": {
-        "median": 8343.0,
-        "min": 7726.0,
-        "max": 8731.0
+        "median": 8413.0,
+        "min": 8025.0,
+        "max": 8505.0
       },
       "max_rss_kb": {
-        "median": 64500.0,
-        "min": 64488.0,
-        "max": 66544.0
+        "median": 66556.0,
+        "min": 66544.0,
+        "max": 67624.0
       },
       "task_clock_ms": {
-        "median": 145.73,
-        "min": 143.06,
-        "max": 151.27
+        "median": 146.78,
+        "min": 141.37,
+        "max": 148.57
       },
       "cycles": {
-        "median": 361395002.0,
-        "min": 353472478.0,
-        "max": 368866541.0
+        "median": 425301100.0,
+        "min": 409643044.0,
+        "max": 430458010.0
       },
       "instructions": {
-        "median": 517859155.0,
-        "min": 515401161.0,
-        "max": 520433204.0
+        "median": 568230333.0,
+        "min": 567529486.0,
+        "max": 570557960.0
       },
       "branches": {
-        "median": 102653114.0,
-        "min": 102070591.0,
-        "max": 103214611.0
+        "median": 111785595.0,
+        "min": 111675540.0,
+        "max": 112379503.0
       },
       "branch_misses": {
-        "median": 5655072.0,
-        "min": 5559615.0,
-        "max": 5736665.0
+        "median": 5814909.0,
+        "min": 5802076.0,
+        "max": 5906317.0
       },
       "cache_references": {
-        "median": 209532249.0,
-        "min": 209097040.0,
-        "max": 209939673.0
+        "median": 224054586.0,
+        "min": 223912264.0,
+        "max": 225012060.0
       },
       "cache_misses": {
-        "median": 3408977.0,
-        "min": 3362058.0,
-        "max": 3417284.0
+        "median": 3979787.0,
+        "min": 3964266.0,
+        "max": 3998404.0
       },
       "context_switches": {
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "median": 123.0,
+        "min": 115.0,
+        "max": 125.0
       },
       "page_faults": {
-        "median": 6683.0,
-        "min": 6620.0,
-        "max": 6825.0
+        "median": 6837.0,
+        "min": 6762.0,
+        "max": 6995.0
       },
       "ipc": {
-        "median": 1.4376801847780103,
-        "min": 1.4039201104987182,
-        "max": 1.4581083198222862
+        "median": 1.3344181004939795,
+        "min": 1.3248473370886482,
+        "max": 1.3871353153014847
       },
       "branch_mpki": {
-        "median": 10.92499990900779,
-        "min": 10.786966387916227,
-        "max": 11.022865097592812
+        "median": 10.24600332395769,
+        "min": 10.209589714200797,
+        "max": 10.351826482273598
       },
       "cache_mpki": {
-        "median": 6.571011585284341,
-        "min": 6.460114331982553,
-        "max": 6.601830602519964
+        "median": 7.000958535594403,
+        "min": 6.97525453855731,
+        "max": 7.0411915014009505
       }
     },
     "1": {
       "samples": 5,
       "internal_wall_ns": {
-        "median": 12479891.0,
-        "min": 12015745.0,
-        "max": 12930937.0
+        "median": 12576690.0,
+        "min": 12426837.0,
+        "max": 12744482.0
       },
       "internal_cpu_total_us": {
-        "median": 13224.0,
-        "min": 12894.0,
-        "max": 13416.0
+        "median": 12707.0,
+        "min": 12489.0,
+        "max": 12973.0
       },
       "max_rss_kb": {
-        "median": 66548.0,
-        "min": 64924.0,
-        "max": 66748.0
+        "median": 68604.0,
+        "min": 67992.0,
+        "max": 68604.0
       },
       "task_clock_ms": {
-        "median": 151.34,
-        "min": 148.56,
-        "max": 156.6
+        "median": 152.13,
+        "min": 148.43,
+        "max": 155.16
       },
       "cycles": {
-        "median": 375053560.0,
-        "min": 370103521.0,
-        "max": 382400545.0
+        "median": 440787310.0,
+        "min": 430055940.0,
+        "max": 449497766.0
       },
       "instructions": {
-        "median": 534124622.0,
-        "min": 533323587.0,
-        "max": 540270309.0
+        "median": 589026077.0,
+        "min": 586819601.0,
+        "max": 590701912.0
       },
       "branches": {
-        "median": 105884705.0,
-        "min": 105687722.0,
-        "max": 107203975.0
+        "median": 115959680.0,
+        "min": 115459114.0,
+        "max": 116479955.0
       },
       "branch_misses": {
-        "median": 5843914.0,
-        "min": 5789010.0,
-        "max": 6070751.0
+        "median": 6120594.0,
+        "min": 6061533.0,
+        "max": 6243619.0
       },
       "cache_references": {
-        "median": 217672915.0,
-        "min": 215848179.0,
-        "max": 217873787.0
+        "median": 232036611.0,
+        "min": 231835990.0,
+        "max": 233445680.0
       },
       "cache_misses": {
-        "median": 3592345.0,
-        "min": 3547066.0,
-        "max": 3611153.0
+        "median": 4159603.0,
+        "min": 4106214.0,
+        "max": 4202802.0
       },
       "context_switches": {
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "median": 123.0,
+        "min": 119.0,
+        "max": 134.0
       },
       "page_faults": {
-        "median": 6895.0,
-        "min": 6799.0,
-        "max": 7102.0
+        "median": 7122.0,
+        "min": 6964.0,
+        "max": 7157.0
       },
       "ipc": {
-        "median": 1.4306820394030455,
-        "min": 1.3946726644963332,
-        "max": 1.4418831886768242
+        "median": 1.336304525191526,
+        "min": 1.306833199431202,
+        "max": 1.371512429290013
       },
       "branch_mpki": {
-        "median": 10.94110580058599,
-        "min": 10.854592110886706,
-        "max": 11.23650679830344
+        "median": 10.391040802765682,
+        "min": 10.3058527165563,
+        "max": 10.569830354637485
       },
       "cache_mpki": {
-        "median": 6.6900298735339465,
-        "min": 6.565354306745737,
-        "max": 6.760880984063678
+        "median": 7.067238892379293,
+        "min": 6.981408285108983,
+        "max": 7.125481747347481
       }
     },
     "4": {
       "samples": 5,
       "internal_wall_ns": {
-        "median": 22508698.0,
-        "min": 19912302.0,
-        "max": 25447488.0
+        "median": 23672309.0,
+        "min": 20054891.0,
+        "max": 25239501.0
       },
       "internal_cpu_total_us": {
-        "median": 22523.0,
-        "min": 20306.0,
-        "max": 26246.0
+        "median": 23696.0,
+        "min": 20206.0,
+        "max": 25905.0
       },
       "max_rss_kb": {
-        "median": 68596.0,
-        "min": 66544.0,
-        "max": 68632.0
+        "median": 70652.0,
+        "min": 68604.0,
+        "max": 71732.0
       },
       "task_clock_ms": {
-        "median": 164.46,
-        "min": 158.96,
-        "max": 165.84
+        "median": 160.76,
+        "min": 157.96,
+        "max": 165.66
       },
       "cycles": {
-        "median": 406841629.0,
-        "min": 396573849.0,
-        "max": 407979026.0
+        "median": 465778072.0,
+        "min": 457663726.0,
+        "max": 479943950.0
       },
       "instructions": {
-        "median": 568064904.0,
-        "min": 567475961.0,
-        "max": 570329969.0
+        "median": 624262503.0,
+        "min": 621464113.0,
+        "max": 630532803.0
       },
       "branches": {
-        "median": 112882963.0,
-        "min": 112840967.0,
-        "max": 113491639.0
+        "median": 123261657.0,
+        "min": 122714487.0,
+        "max": 124609477.0
       },
       "branch_misses": {
-        "median": 6268117.0,
-        "min": 6223252.0,
-        "max": 6299459.0
+        "median": 6643281.0,
+        "min": 6514576.0,
+        "max": 6780460.0
       },
       "cache_references": {
-        "median": 229863971.0,
-        "min": 229350444.0,
-        "max": 231283933.0
+        "median": 245938259.0,
+        "min": 245796657.0,
+        "max": 246529828.0
       },
       "cache_misses": {
-        "median": 3840256.0,
-        "min": 3838190.0,
-        "max": 3904294.0
+        "median": 4477603.0,
+        "min": 4436093.0,
+        "max": 4504908.0
       },
       "context_switches": {
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "median": 137.0,
+        "min": 122.0,
+        "max": 138.0
       },
       "page_faults": {
-        "median": 7165.0,
-        "min": 7011.0,
-        "max": 7272.0
+        "median": 7354.0,
+        "min": 7041.0,
+        "max": 7519.0
       },
       "ipc": {
-        "median": 1.3962801825277324,
-        "min": 1.3909439574964817,
-        "max": 1.435296783777591
+        "median": 1.3342493997871159,
+        "min": 1.3137634154988307,
+        "max": 1.3640200600036194
       },
       "branch_mpki": {
-        "median": 11.035161055160502,
-        "min": 10.966547356531988,
-        "max": 11.04532163909642
+        "median": 10.641806881038955,
+        "min": 10.482626210791356,
+        "max": 10.845966721009058
       },
       "cache_mpki": {
-        "median": 6.759909959625638,
-        "min": 6.736836934479942,
-        "max": 6.872971684235575
+        "median": 7.150708347519951,
+        "min": 7.106134004015295,
+        "max": 7.204926087180194
       }
     },
     "16": {
       "samples": 5,
       "internal_wall_ns": {
-        "median": 47711863.0,
-        "min": 46270874.0,
-        "max": 48497264.0
+        "median": 46206283.0,
+        "min": 45543074.0,
+        "max": 47288107.0
       },
       "internal_cpu_total_us": {
-        "median": 47613.0,
-        "min": 47487.0,
-        "max": 48388.0
+        "median": 46791.0,
+        "min": 45504.0,
+        "max": 47903.0
       },
       "max_rss_kb": {
-        "median": 70644.0,
-        "min": 70628.0,
-        "max": 70644.0
+        "median": 72724.0,
+        "min": 72696.0,
+        "max": 74748.0
       },
       "task_clock_ms": {
-        "median": 184.65,
-        "min": 181.52,
-        "max": 192.79
+        "median": 180.85,
+        "min": 178.27,
+        "max": 188.55
       },
       "cycles": {
-        "median": 464239666.0,
-        "min": 455744428.0,
-        "max": 480622652.0
+        "median": 524075118.0,
+        "min": 516631408.0,
+        "max": 546363074.0
       },
       "instructions": {
-        "median": 656941008.0,
-        "min": 653629931.0,
-        "max": 663696425.0
+        "median": 704593756.0,
+        "min": 702681992.0,
+        "max": 716118267.0
       },
       "branches": {
-        "median": 131826121.0,
-        "min": 131032298.0,
-        "max": 133128587.0
+        "median": 140165579.0,
+        "min": 139669058.0,
+        "max": 142767415.0
       },
       "branch_misses": {
-        "median": 7315901.0,
-        "min": 7268261.0,
-        "max": 7494581.0
+        "median": 7498122.0,
+        "min": 7360835.0,
+        "max": 7817427.0
       },
       "cache_references": {
-        "median": 265842805.0,
-        "min": 264362597.0,
-        "max": 270842971.0
+        "median": 279649998.0,
+        "min": 279004289.0,
+        "max": 282826840.0
       },
       "cache_misses": {
-        "median": 4700614.0,
-        "min": 4623213.0,
-        "max": 4765203.0
+        "median": 5362092.0,
+        "min": 5310589.0,
+        "max": 5379176.0
       },
       "context_switches": {
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "median": 156.0,
+        "min": 145.0,
+        "max": 162.0
       },
       "page_faults": {
-        "median": 8091.0,
-        "min": 7877.0,
-        "max": 8212.0
+        "median": 8045.0,
+        "min": 7931.0,
+        "max": 8235.0
       },
       "ipc": {
-        "median": 1.4108167760794623,
-        "min": 1.370360017309055,
-        "max": 1.436992932363399
+        "median": 1.358556520899357,
+        "min": 1.3107003402649426,
+        "max": 1.3631888888180024
       },
       "branch_mpki": {
-        "median": 11.11347699692779,
-        "min": 11.02561427273447,
-        "max": 11.40830136760164
+        "median": 10.646715763490535,
+        "min": 10.475343162060144,
+        "max": 10.916390993277092
       },
       "cache_mpki": {
-        "median": 7.155306097134372,
-        "min": 7.0594018256076065,
-        "max": 7.179793080850179
+        "median": 7.540599048631036,
+        "min": 7.441862951388726,
+        "max": 7.634436090574723
       }
     },
     "64": {
       "samples": 5,
       "internal_wall_ns": {
-        "median": 136860493.0,
-        "min": 135957911.0,
-        "max": 139247846.0
+        "median": 138461595.0,
+        "min": 134767926.0,
+        "max": 139845844.0
       },
       "internal_cpu_total_us": {
-        "median": 137454.0,
-        "min": 136623.0,
-        "max": 139677.0
+        "median": 138308.0,
+        "min": 135414.0,
+        "max": 139301.0
       },
       "max_rss_kb": {
-        "median": 74740.0,
-        "min": 74724.0,
-        "max": 76000.0
+        "median": 76824.0,
+        "min": 76796.0,
+        "max": 77408.0
       },
       "task_clock_ms": {
-        "median": 273.94,
-        "min": 271.01,
-        "max": 280.37
+        "median": 275.38,
+        "min": 272.36,
+        "max": 279.46
       },
       "cycles": {
-        "median": 716965141.0,
-        "min": 706655309.0,
-        "max": 726930644.0
+        "median": 797965810.0,
+        "min": 789253758.0,
+        "max": 809841980.0
       },
       "instructions": {
-        "median": 1031034924.0,
-        "min": 1028900286.0,
-        "max": 1035435209.0
+        "median": 1097111718.0,
+        "min": 1090021701.0,
+        "max": 1100692427.0
       },
       "branches": {
-        "median": 211322194.0,
-        "min": 210890522.0,
-        "max": 212424860.0
+        "median": 223454047.0,
+        "min": 221837590.0,
+        "max": 224399587.0
       },
       "branch_misses": {
-        "median": 10824797.0,
-        "min": 10806813.0,
-        "max": 11022287.0
+        "median": 11141811.0,
+        "min": 11010025.0,
+        "max": 11281428.0
       },
       "cache_references": {
-        "median": 418334377.0,
-        "min": 416258054.0,
-        "max": 419003005.0
+        "median": 435717380.0,
+        "min": 434332525.0,
+        "max": 436815302.0
       },
       "cache_misses": {
-        "median": 8186022.0,
-        "min": 8090777.0,
-        "max": 8313531.0
+        "median": 9002504.0,
+        "min": 8876849.0,
+        "max": 9004999.0
       },
       "context_switches": {
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "median": 226.0,
+        "min": 217.0,
+        "max": 237.0
       },
       "page_faults": {
-        "median": 9048.0,
-        "min": 8759.0,
-        "max": 9214.0
+        "median": 9536.0,
+        "min": 9110.0,
+        "max": 9737.0
       },
       "ipc": {
-        "median": 1.4441918439100234,
-        "min": 1.416709154443075,
-        "max": 1.4560143720649525
+        "median": 1.3762181953635333,
+        "min": 1.359144690177706,
+        "max": 1.3813858774176404
       },
       "branch_mpki": {
-        "median": 10.51104954969829,
-        "min": 10.497684348468594,
-        "max": 10.645076489764218
+        "median": 10.19321808027576,
+        "min": 10.10073926959368,
+        "max": 10.24939185849418
       },
       "cache_mpki": {
-        "median": 7.939616602162742,
-        "min": 7.863519050474829,
-        "max": 8.072570439330434
+        "median": 8.180412419608661,
+        "min": 8.083273119876797,
+        "max": 8.261302496765612
       }
     },
     "256": {
       "samples": 5,
       "internal_wall_ns": {
-        "median": 471330691.0,
-        "min": 464279915.0,
-        "max": 481493410.0
+        "median": 467544019.0,
+        "min": 463933371.0,
+        "max": 480579275.0
       },
       "internal_cpu_total_us": {
-        "median": 470187.0,
-        "min": 463552.0,
-        "max": 480590.0
+        "median": 466230.0,
+        "min": 463734.0,
+        "max": 478041.0
       },
       "max_rss_kb": {
-        "median": 82932.0,
-        "min": 82852.0,
-        "max": 84980.0
+        "median": 87036.0,
+        "min": 84988.0,
+        "max": 87072.0
       },
       "task_clock_ms": {
-        "median": 623.72,
-        "min": 615.58,
-        "max": 641.07
+        "median": 622.87,
+        "min": 610.45,
+        "max": 637.17
       },
       "cycles": {
-        "median": 1697735097.0,
-        "min": 1681190907.0,
-        "max": 1735715212.0
+        "median": 1805283236.0,
+        "min": 1769414616.0,
+        "max": 1846796378.0
       },
       "instructions": {
-        "median": 2682699674.0,
-        "min": 2676990702.0,
-        "max": 2686564286.0
+        "median": 2767154909.0,
+        "min": 2763810984.0,
+        "max": 2776037069.0
       },
       "branches": {
-        "median": 566317383.0,
-        "min": 565059591.0,
-        "max": 567193647.0
+        "median": 581613011.0,
+        "min": 581223429.0,
+        "max": 583770756.0
       },
       "branch_misses": {
-        "median": 21215936.0,
-        "min": 20934847.0,
-        "max": 21320496.0
+        "median": 21564875.0,
+        "min": 21287717.0,
+        "max": 21873950.0
       },
       "cache_references": {
-        "median": 1064768806.0,
-        "min": 1061184848.0,
-        "max": 1066468816.0
+        "median": 1089974544.0,
+        "min": 1088408043.0,
+        "max": 1091748133.0
       },
       "cache_misses": {
-        "median": 21326786.0,
-        "min": 21102751.0,
-        "max": 21969156.0
+        "median": 22774932.0,
+        "min": 22268040.0,
+        "max": 22832069.0
       },
       "context_switches": {
-        "median": 0.0,
-        "min": 0.0,
-        "max": 0.0
+        "median": 518.0,
+        "min": 508.0,
+        "max": 528.0
       },
       "page_faults": {
-        "median": 12462.0,
-        "min": 12268.0,
-        "max": 12779.0
+        "median": 12651.0,
+        "min": 12204.0,
+        "max": 12949.0
       },
       "ipc": {
-        "median": 1.5774836431976054,
-        "min": 1.5455874647251753,
-        "max": 1.5974811568499638
+        "median": 1.5336132811682521,
+        "min": 1.5031635875343914,
+        "max": 1.5624407942609648
       },
       "branch_mpki": {
-        "median": 7.9084275461838365,
-        "min": 7.820291263753519,
-        "max": 7.935970901981983
+        "median": 7.800344169022725,
+        "min": 7.692997934724586,
+        "max": 7.879559766786386
       },
       "cache_mpki": {
-        "median": 7.966701559354165,
-        "min": 7.854921287373952,
-        "max": 8.180137357453
+        "median": 8.226135876874807,
+        "min": 8.05700539179853,
+        "max": 8.258707564540694
       }
     }
   },
   "linear_fits_over_step_medians": {
     "internal_wall_ns": {
-      "intercept": 14577006.052868366,
-      "per_tool_step_slope": 1792645.359773577
+      "intercept": 14966089.310461178,
+      "per_tool_step_slope": 1778069.3933643193
     },
     "internal_cpu_total_us": {
-      "intercept": 15000.526434195694,
-      "per_tool_step_slope": 1786.9232885478762
+      "intercept": 15350.940382452201,
+      "per_tool_step_slope": 1771.3764155580259
     },
     "max_rss_kb": {
-      "intercept": 67768.96737907761,
-      "per_tool_step_slope": 62.598814444382135
+      "intercept": 69717.02137232847,
+      "per_tool_step_slope": 70.65651544290102
     },
     "task_clock_ms": {
-      "intercept": 152.43997750281216,
-      "per_tool_step_slope": 1.8451616861675284
+      "intercept": 151.49610798650167,
+      "per_tool_step_slope": 1.8469013257507036
     },
     "cycles": {
-      "intercept": 376401530.80652416,
-      "per_tool_step_slope": 5172495.337715117
+      "intercept": 438945625.0708661,
+      "per_tool_step_slope": 5353421.981157781
     },
     "instructions": {
-      "intercept": 519711683.6771654,
-      "per_tool_step_slope": 8423619.310665712
+      "intercept": 572397494.7570304,
+      "per_tool_step_slope": 8551303.01307278
     },
     "branches": {
-      "intercept": 102545808.14735655,
-      "per_tool_step_slope": 1805312.7012195326
+      "intercept": 112129883.29471312,
+      "per_tool_step_slope": 1828329.2352836397
     },
     "branch_misses": {
-      "intercept": 6117355.076490439,
-      "per_tool_step_slope": 59881.54410867264
+      "intercept": 6371528.443194602,
+      "per_tool_step_slope": 60276.89542766099
     },
     "cache_references": {
-      "intercept": 212022803.23059615,
-      "per_tool_step_slope": 3325156.3155906834
+      "intercept": 226548422.14960632,
+      "per_tool_step_slope": 3366805.997367631
     },
     "cache_misses": {
-      "intercept": 3552923.715410574,
-      "per_tool_step_slope": 69611.31292532715
+      "intercept": 4145872.2947131605,
+      "per_tool_step_slope": 72965.6517059268
     },
     "context_switches": {
-      "intercept": 0.0,
-      "per_tool_step_slope": 0.0
+      "intercept": 126.85714285714286,
+      "per_tool_step_slope": 1.5303728529534981
     },
     "page_faults": {
-      "intercept": 7183.537682789651,
-      "per_tool_step_slope": 21.239806167924026
+      "intercept": 7370.649043869516,
+      "per_tool_step_slope": 21.469518289685936
     },
     "ipc": {
-      "intercept": 1.4140153492385168,
-      "per_tool_step_slope": 0.000624758282887914
+      "intercept": 1.335146944605403,
+      "per_tool_step_slope": 0.0007697312471300477
     },
     "branch_mpki": {
-      "intercept": 11.101072295640984,
-      "per_tool_step_slope": -0.012235228493494751
+      "intercept": 10.585896135278729,
+      "per_tool_step_slope": -0.010546181205633507
     },
     "cache_mpki": {
-      "intercept": 6.902252401355735,
-      "per_tool_step_slope": 0.004894607826864494
+      "intercept": 7.281534368199337,
+      "per_tool_step_slope": 0.0043309293589798535
     }
   },
   "samples": [
@@ -635,15 +660,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 12930937,
-          "cpu_user_us": 12909,
-          "cpu_system_us": 88,
-          "cpu_total_us": 12997,
-          "cpu_utilization": 1.0051089105143733
+          "wall_ns": 12744482,
+          "cpu_user_us": 12778,
+          "cpu_system_us": 59,
+          "cpu_total_us": 12837,
+          "cpu_utilization": 1.0072594555039585
         },
         "resources": {
-          "max_rss_kb": 64924,
-          "minor_page_faults_delta": 309,
+          "max_rss_kb": 68604,
+          "minor_page_faults_delta": 288,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 13,
           "involuntary_context_switches_delta": 3
@@ -658,38 +683,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 156.6,
-        "cycles": 382400545.0,
-        "instructions": 533323587.0,
-        "branches": 105687722.0,
-        "branch-misses": 5789010.0,
-        "cache-references": 215848179.0,
-        "cache-misses": 3554037.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6972.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 12837.0,
+        "internal_wall_ns_per_tool_step": 12744482.0,
+        "ipc": 1.306833199431202,
+        "branch_mpki": 10.358888812918163,
+        "cache_mpki": 7.08838456130575,
+        "process_instructions_per_tool_step": 586819601.0,
+        "process_cycles_per_tool_step": 449039404.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.3946726644963332,
-        "branch_mpki": 10.854592110886706,
-        "cache_mpki": 6.663941154359632,
-        "internal_cpu_us_per_tool_step": 12997.0,
-        "internal_wall_ns_per_tool_step": 12930937.0,
-        "process_instructions_per_tool_step": 533323587.0,
-        "process_cycles_per_tool_step": 382400545.0
+      "perf": {
+        "task-clock": 155.0,
+        "cycles_u": 377575408.0,
+        "instructions_u": 530755647.0,
+        "cycles_k": 71463996.0,
+        "instructions_k": 56063954.0,
+        "branches": 115459114.0,
+        "branch-misses": 6078799.0,
+        "cache-references": 231835990.0,
+        "cache-misses": 4159603.0,
+        "context-switches": 131.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7086.0,
+        "cycles": 449039404.0,
+        "cycles_kernel_ratio": 0.15914860781349158,
+        "instructions": 586819601.0,
+        "instructions_kernel_ratio": 0.09553865260202854
       },
       "sample_index": 1
     },
@@ -732,18 +765,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 25447488,
-          "cpu_user_us": 26118,
-          "cpu_system_us": 128,
-          "cpu_total_us": 26246,
-          "cpu_utilization": 1.0313788142861096
+          "wall_ns": 20054891,
+          "cpu_user_us": 20480,
+          "cpu_system_us": 29,
+          "cpu_total_us": 20509,
+          "cpu_utilization": 1.022643304319131
         },
         "resources": {
-          "max_rss_kb": 68596,
-          "minor_page_faults_delta": 754,
+          "max_rss_kb": 71732,
+          "minor_page_faults_delta": 1016,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 17,
-          "involuntary_context_switches_delta": 5
+          "voluntary_context_switches_delta": 14,
+          "involuntary_context_switches_delta": 4
         },
         "checks": {
           "provider_requests": true,
@@ -755,38 +788,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 165.84,
-        "cycles": 407979026.0,
-        "instructions": 567475961.0,
-        "branches": 112840967.0,
-        "branch-misses": 6223252.0,
-        "cache-references": 229350444.0,
-        "cache-misses": 3840256.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7011.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 5127.25,
+        "internal_wall_ns_per_tool_step": 5013722.75,
+        "ipc": 1.3200586638320306,
+        "branch_mpki": 10.521436097604148,
+        "cache_mpki": 7.150708347519951,
+        "process_instructions_per_tool_step": 155920112.5,
+        "process_cycles_per_tool_step": 118116048.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.3909439574964817,
-        "branch_mpki": 10.966547356531988,
-        "cache_mpki": 6.767257582563925,
-        "internal_cpu_us_per_tool_step": 6561.5,
-        "internal_wall_ns_per_tool_step": 6361872.0,
-        "process_instructions_per_tool_step": 141868990.25,
-        "process_cycles_per_tool_step": 101994756.5
+      "perf": {
+        "task-clock": 163.07,
+        "cycles_u": 402681999.0,
+        "instructions_u": 566102017.0,
+        "cycles_k": 69782193.0,
+        "instructions_k": 57578433.0,
+        "branches": 123261657.0,
+        "branch-misses": 6562014.0,
+        "cache-references": 245938089.0,
+        "cache-misses": 4459757.0,
+        "context-switches": 137.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7478.0,
+        "cycles": 472464192.0,
+        "cycles_kernel_ratio": 0.14769837414472248,
+        "instructions": 623680450.0,
+        "instructions_kernel_ratio": 0.09232040702895208
       },
       "sample_index": 2
     },
@@ -949,18 +990,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 137834207,
-          "cpu_user_us": 133823,
-          "cpu_system_us": 4135,
-          "cpu_total_us": 137958,
-          "cpu_utilization": 1.0008981297364015
+          "wall_ns": 138461595,
+          "cpu_user_us": 130153,
+          "cpu_system_us": 7776,
+          "cpu_total_us": 137929,
+          "cpu_utilization": 0.996153482126217
         },
         "resources": {
-          "max_rss_kb": 74736,
-          "minor_page_faults_delta": 2967,
+          "max_rss_kb": 76824,
+          "minor_page_faults_delta": 3145,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 93,
-          "involuntary_context_switches_delta": 28
+          "voluntary_context_switches_delta": 79,
+          "involuntary_context_switches_delta": 26
         },
         "checks": {
           "provider_requests": true,
@@ -972,38 +1013,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 276.43,
-        "cycles": 719707068.0,
-        "instructions": 1031119306.0,
-        "branches": 211493789.0,
-        "branch-misses": 10824365.0,
-        "cache-references": 417821116.0,
-        "cache-misses": 8203368.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 8977.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2155.140625,
+        "internal_wall_ns_per_tool_step": 2163462.421875,
+        "ipc": 1.3638210170696432,
+        "branch_mpki": 10.19321808027576,
+        "cache_mpki": 8.172387417705076,
+        "process_instructions_per_tool_step": 17142370.59375,
+        "process_cycles_per_tool_step": 12569369.71875
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.432693038384889,
-        "branch_mpki": 10.497684348468594,
-        "cache_mpki": 7.955789356542219,
-        "internal_cpu_us_per_tool_step": 2155.59375,
-        "internal_wall_ns_per_tool_step": 2153659.484375,
-        "process_instructions_per_tool_step": 16111239.15625,
-        "process_cycles_per_tool_step": 11245422.9375
+      "perf": {
+        "task-clock": 277.63,
+        "cycles_u": 719783717.0,
+        "instructions_u": 1027564781.0,
+        "cycles_k": 84655945.0,
+        "instructions_k": 69546937.0,
+        "branches": 223454047.0,
+        "branch-misses": 11183099.0,
+        "cache-references": 435717380.0,
+        "cache-misses": 8966022.0,
+        "context-switches": 217.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 9737.0,
+        "cycles": 804439662.0,
+        "cycles_kernel_ratio": 0.10523591637628628,
+        "instructions": 1097111718.0,
+        "instructions_kernel_ratio": 0.06339093444994086
       },
       "sample_index": 3
     },
@@ -1166,18 +1215,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 136860493,
-          "cpu_user_us": 129731,
-          "cpu_system_us": 7723,
-          "cpu_total_us": 137454,
-          "cpu_utilization": 1.0043365838233536
+          "wall_ns": 139159305,
+          "cpu_user_us": 130535,
+          "cpu_system_us": 7773,
+          "cpu_total_us": 138308,
+          "cpu_utilization": 0.9938825147193714
         },
         "resources": {
-          "max_rss_kb": 76000,
-          "minor_page_faults_delta": 2893,
+          "max_rss_kb": 77408,
+          "minor_page_faults_delta": 3103,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 86,
-          "involuntary_context_switches_delta": 27
+          "voluntary_context_switches_delta": 88,
+          "involuntary_context_switches_delta": 26
         },
         "checks": {
           "provider_requests": true,
@@ -1189,38 +1238,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 273.94,
-        "cycles": 716965141.0,
-        "instructions": 1035435209.0,
-        "branches": 212424860.0,
-        "branch-misses": 11022287.0,
-        "cache-references": 419003005.0,
-        "cache-misses": 8183322.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 9214.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2161.0625,
+        "internal_wall_ns_per_tool_step": 2174364.140625,
+        "ipc": 1.3762181953635333,
+        "branch_mpki": 10.116307803589935,
+        "cache_mpki": 8.083273119876797,
+        "process_instructions_per_tool_step": 17158985.421875,
+        "process_cycles_per_tool_step": 12468215.78125
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4441918439100234,
-        "branch_mpki": 10.645076489764218,
-        "cache_mpki": 7.903268045040952,
-        "internal_cpu_us_per_tool_step": 2147.71875,
-        "internal_wall_ns_per_tool_step": 2138445.203125,
-        "process_instructions_per_tool_step": 16178675.140625,
-        "process_cycles_per_tool_step": 11202580.328125
+      "perf": {
+        "task-clock": 275.38,
+        "cycles_u": 714475119.0,
+        "instructions_u": 1029245315.0,
+        "cycles_k": 83490691.0,
+        "instructions_k": 68929752.0,
+        "branches": 223706147.0,
+        "branch-misses": 11109477.0,
+        "cache-references": 436254206.0,
+        "cache-misses": 8876849.0,
+        "context-switches": 226.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 9593.0,
+        "cycles": 797965810.0,
+        "cycles_kernel_ratio": 0.1046294088715405,
+        "instructions": 1098175067.0,
+        "instructions_kernel_ratio": 0.06276754414785853
       },
       "sample_index": 4
     },
@@ -1263,17 +1320,17 @@
           1
         ],
         "timing": {
-          "wall_ns": 19912302,
-          "cpu_user_us": 16578,
-          "cpu_system_us": 4056,
-          "cpu_total_us": 20634,
-          "cpu_utilization": 1.036243825550657
+          "wall_ns": 20189302,
+          "cpu_user_us": 20184,
+          "cpu_system_us": 22,
+          "cpu_total_us": 20206,
+          "cpu_utilization": 1.0008270716838057
         },
         "resources": {
-          "max_rss_kb": 66544,
-          "minor_page_faults_delta": 969,
+          "max_rss_kb": 70652,
+          "minor_page_faults_delta": 908,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 14,
+          "voluntary_context_switches_delta": 17,
           "involuntary_context_switches_delta": 4
         },
         "checks": {
@@ -1286,38 +1343,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 159.34,
-        "cycles": 398300613.0,
-        "instructions": 570329969.0,
-        "branches": 113491639.0,
-        "branch-misses": 6299459.0,
-        "cache-references": 231211229.0,
-        "cache-misses": 3842220.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7132.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 5051.5,
+        "internal_wall_ns_per_tool_step": 5047325.5,
+        "ipc": 1.3342493997871159,
+        "branch_mpki": 10.482626210791356,
+        "cache_mpki": 7.204926087180194,
+        "process_instructions_per_tool_step": 155366028.25,
+        "process_cycles_per_tool_step": 116444518.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.431908338539263,
-        "branch_mpki": 11.045288416187017,
-        "cache_mpki": 6.736836934479942,
-        "internal_cpu_us_per_tool_step": 5158.5,
-        "internal_wall_ns_per_tool_step": 4978075.5,
-        "process_instructions_per_tool_step": 142582492.25,
-        "process_cycles_per_tool_step": 99575153.25
+      "perf": {
+        "task-clock": 160.76,
+        "cycles_u": 398221381.0,
+        "instructions_u": 565508768.0,
+        "cycles_k": 67556691.0,
+        "instructions_k": 55955345.0,
+        "branches": 122714487.0,
+        "branch-misses": 6514576.0,
+        "cache-references": 245796657.0,
+        "cache-misses": 4477603.0,
+        "context-switches": 122.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7208.0,
+        "cycles": 465778072.0,
+        "cycles_kernel_ratio": 0.14504051405837756,
+        "instructions": 621464113.0,
+        "instructions_kernel_ratio": 0.09003793433845471
       },
       "sample_index": 5
     },
@@ -1354,18 +1419,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 12479891,
-          "cpu_user_us": 13120,
-          "cpu_system_us": 104,
-          "cpu_total_us": 13224,
-          "cpu_utilization": 1.0596246393498148
+          "wall_ns": 12426837,
+          "cpu_user_us": 8403,
+          "cpu_system_us": 4086,
+          "cpu_total_us": 12489,
+          "cpu_utilization": 1.0050023187718644
         },
         "resources": {
-          "max_rss_kb": 66548,
-          "minor_page_faults_delta": 291,
+          "max_rss_kb": 68592,
+          "minor_page_faults_delta": 286,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 9,
-          "involuntary_context_switches_delta": 7
+          "voluntary_context_switches_delta": 8,
+          "involuntary_context_switches_delta": 2
         },
         "checks": {
           "provider_requests": true,
@@ -1377,38 +1442,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 148.56,
-        "cycles": 370103521.0,
-        "instructions": 533646045.0,
-        "branches": 105783703.0,
-        "branch-misses": 5837881.0,
-        "cache-references": 217672915.0,
-        "cache-misses": 3597195.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6799.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 12489.0,
+        "internal_wall_ns_per_tool_step": 12426837.0,
+        "ipc": 1.3141375923990688,
+        "branch_mpki": 10.569830354637485,
+        "cache_mpki": 7.022139112358248,
+        "process_instructions_per_tool_step": 590701912.0,
+        "process_cycles_per_tool_step": 449497766.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4418831886768242,
-        "branch_mpki": 10.939612604081043,
-        "cache_mpki": 6.740788269123216,
-        "internal_cpu_us_per_tool_step": 13224.0,
-        "internal_wall_ns_per_tool_step": 12479891.0,
-        "process_instructions_per_tool_step": 533646045.0,
-        "process_cycles_per_tool_step": 370103521.0
+      "perf": {
+        "task-clock": 155.16,
+        "cycles_u": 383650392.0,
+        "instructions_u": 536110740.0,
+        "cycles_k": 65847374.0,
+        "instructions_k": 54591172.0,
+        "branches": 116479955.0,
+        "branch-misses": 6243619.0,
+        "cache-references": 231841354.0,
+        "cache-misses": 4147991.0,
+        "context-switches": 123.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6964.0,
+        "cycles": 449497766.0,
+        "cycles_kernel_ratio": 0.14649099279394417,
+        "instructions": 590701912.0,
+        "instructions_kernel_ratio": 0.0924174628369918
       },
       "sample_index": 6
     },
@@ -1955,18 +2028,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 464279915,
-          "cpu_user_us": 447057,
-          "cpu_system_us": 16495,
-          "cpu_total_us": 463552,
-          "cpu_utilization": 0.9984321634934391
+          "wall_ns": 475658009,
+          "cpu_user_us": 454703,
+          "cpu_system_us": 19618,
+          "cpu_total_us": 474321,
+          "cpu_utilization": 0.9971891380472898
         },
         "resources": {
-          "max_rss_kb": 82932,
-          "minor_page_faults_delta": 5938,
+          "max_rss_kb": 87072,
+          "minor_page_faults_delta": 6562,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 298,
-          "involuntary_context_switches_delta": 89
+          "voluntary_context_switches_delta": 304,
+          "involuntary_context_switches_delta": 93
         },
         "checks": {
           "provider_requests": true,
@@ -1978,38 +2051,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 615.58,
-        "cycles": 1681190907.0,
-        "instructions": 2685670795.0,
-        "branches": 566691939.0,
-        "branch-misses": 21276832.0,
-        "cache-references": 1066468816.0,
-        "cache-misses": 21969156.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12331.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 1852.81640625,
+        "internal_wall_ns_per_tool_step": 1858039.09765625,
+        "ipc": 1.5239368426840676,
+        "branch_mpki": 7.692997934724586,
+        "cache_mpki": 8.233480867261415,
+        "process_instructions_per_tool_step": 10809198.86328125,
+        "process_cycles_per_tool_step": 7092944.1171875
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.5974811568499638,
-        "branch_mpki": 7.9223529702939635,
-        "cache_mpki": 8.180137357453,
-        "internal_cpu_us_per_tool_step": 1810.75,
-        "internal_wall_ns_per_tool_step": 1813593.41796875,
-        "process_instructions_per_tool_step": 10490901.54296875,
-        "process_cycles_per_tool_step": 6567151.98046875
+      "perf": {
+        "task-clock": 626.46,
+        "cycles_u": 1698792362.0,
+        "instructions_u": 2677536728.0,
+        "cycles_k": 117001332.0,
+        "instructions_k": 89618181.0,
+        "branches": 581613011.0,
+        "branch-misses": 21287717.0,
+        "cache-references": 1088538420.0,
+        "cache-misses": 22783317.0,
+        "context-switches": 523.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12949.0,
+        "cycles": 1815793694.0,
+        "cycles_kernel_ratio": 0.06443536641117997,
+        "instructions": 2767154909.0,
+        "instructions_kernel_ratio": 0.03238639828530106
       },
       "sample_index": 7
     },
@@ -2042,18 +2123,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 7862468,
-          "cpu_user_us": 7950,
-          "cpu_system_us": 2,
-          "cpu_total_us": 7952,
-          "cpu_utilization": 1.0113872641516632
+          "wall_ns": 7657303,
+          "cpu_user_us": 8434,
+          "cpu_system_us": 71,
+          "cpu_total_us": 8505,
+          "cpu_utilization": 1.1107043824699114
         },
         "resources": {
-          "max_rss_kb": 64500,
-          "minor_page_faults_delta": 171,
+          "max_rss_kb": 66556,
+          "minor_page_faults_delta": 166,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 8,
-          "involuntary_context_switches_delta": 2
+          "voluntary_context_switches_delta": 5,
+          "involuntary_context_switches_delta": 1
         },
         "checks": {
           "provider_requests": true,
@@ -2065,34 +2146,42 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 145.27,
-        "cycles": 360100279.0,
-        "instructions": 517626732.0,
-        "branches": 102590842.0,
-        "branch-misses": 5655072.0,
-        "cache-references": 209686618.0,
-        "cache-misses": 3417284.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6634.0
+      "derived": {
+        "ipc": 1.3344181004939795,
+        "branch_mpki": 10.24600332395769,
+        "cache_mpki": 7.03793564657185
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4374516271896585,
-        "branch_mpki": 10.92499990900779,
-        "cache_mpki": 6.601830602519964
+      "perf": {
+        "task-clock": 146.78,
+        "cycles_u": 359998761.0,
+        "instructions_u": 513469894.0,
+        "cycles_k": 65302339.0,
+        "instructions_k": 54059592.0,
+        "branches": 111675540.0,
+        "branch-misses": 5814909.0,
+        "cache-references": 224009554.0,
+        "cache-misses": 3994236.0,
+        "context-switches": 115.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6851.0,
+        "cycles": 425301100.0,
+        "cycles_kernel_ratio": 0.15354378110002537,
+        "instructions": 567529486.0,
+        "instructions_kernel_ratio": 0.09525424375923967
       },
       "sample_index": 8
     },
@@ -2255,18 +2344,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 135957911,
-          "cpu_user_us": 129239,
-          "cpu_system_us": 7831,
-          "cpu_total_us": 137070,
-          "cpu_utilization": 1.0081796564232295
+          "wall_ns": 139845844,
+          "cpu_user_us": 139300,
+          "cpu_system_us": 1,
+          "cpu_total_us": 139301,
+          "cpu_utilization": 0.9961039671654454
         },
         "resources": {
-          "max_rss_kb": 74724,
-          "minor_page_faults_delta": 2522,
+          "max_rss_kb": 76796,
+          "minor_page_faults_delta": 3152,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 84,
-          "involuntary_context_switches_delta": 25
+          "voluntary_context_switches_delta": 90,
+          "involuntary_context_switches_delta": 26
         },
         "checks": {
           "provider_requests": true,
@@ -2278,38 +2367,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 272.53,
-        "cycles": 713310224.0,
-        "instructions": 1031034924.0,
-        "branches": 211322194.0,
-        "branch-misses": 10908313.0,
-        "cache-references": 418391255.0,
-        "cache-misses": 8186022.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 8759.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2176.578125,
+        "internal_wall_ns_per_tool_step": 2185091.3125,
+        "ipc": 1.359144690177706,
+        "branch_mpki": 10.24939185849418,
+        "cache_mpki": 8.180412419608661,
+        "process_instructions_per_tool_step": 17198319.171875,
+        "process_cycles_per_tool_step": 12653780.9375
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4454228879803634,
-        "branch_mpki": 10.579964602634547,
-        "cache_mpki": 7.939616602162742,
-        "internal_cpu_us_per_tool_step": 2141.71875,
-        "internal_wall_ns_per_tool_step": 2124342.359375,
-        "process_instructions_per_tool_step": 16109920.6875,
-        "process_cycles_per_tool_step": 11145472.25
+      "perf": {
+        "task-clock": 279.46,
+        "cycles_u": 724472439.0,
+        "instructions_u": 1032084575.0,
+        "cycles_k": 85369541.0,
+        "instructions_k": 68607852.0,
+        "branches": 224399587.0,
+        "branch-misses": 11281428.0,
+        "cache-references": 436815302.0,
+        "cache-misses": 9004118.0,
+        "context-switches": 237.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 9536.0,
+        "cycles": 809841980.0,
+        "cycles_kernel_ratio": 0.105415060108393,
+        "instructions": 1100692427.0,
+        "instructions_kernel_ratio": 0.06233153814548776
       },
       "sample_index": 9
     },
@@ -2346,18 +2443,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 12644403,
-          "cpu_user_us": 13061,
-          "cpu_system_us": 256,
-          "cpu_total_us": 13317,
-          "cpu_utilization": 1.0531932587090114
+          "wall_ns": 12664810,
+          "cpu_user_us": 12550,
+          "cpu_system_us": 157,
+          "cpu_total_us": 12707,
+          "cpu_utilization": 1.003331277768873
         },
         "resources": {
-          "max_rss_kb": 66548,
-          "minor_page_faults_delta": 292,
+          "max_rss_kb": 68604,
+          "minor_page_faults_delta": 287,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 9,
-          "involuntary_context_switches_delta": 4
+          "voluntary_context_switches_delta": 10,
+          "involuntary_context_switches_delta": 2
         },
         "checks": {
           "provider_requests": true,
@@ -2369,38 +2466,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 150.12,
-        "cycles": 373335659.0,
-        "instructions": 534124622.0,
-        "branches": 105884705.0,
-        "branch-misses": 5843914.0,
-        "cache-references": 217873787.0,
-        "cache-misses": 3611153.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6810.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 12707.0,
+        "internal_wall_ns_per_tool_step": 12664810.0,
+        "ipc": 1.336304525191526,
+        "branch_mpki": 10.391040802765682,
+        "cache_mpki": 7.067238892379293,
+        "process_instructions_per_tool_step": 589026077.0,
+        "process_cycles_per_tool_step": 440787310.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4306820394030455,
-        "branch_mpki": 10.94110580058599,
-        "cache_mpki": 6.760880984063678,
-        "internal_cpu_us_per_tool_step": 13317.0,
-        "internal_wall_ns_per_tool_step": 12644403.0,
-        "process_instructions_per_tool_step": 534124622.0,
-        "process_cycles_per_tool_step": 373335659.0
+      "perf": {
+        "task-clock": 152.13,
+        "cycles_u": 375687459.0,
+        "instructions_u": 533671583.0,
+        "cycles_k": 65099851.0,
+        "instructions_k": 55354494.0,
+        "branches": 115959680.0,
+        "branch-misses": 6120594.0,
+        "cache-references": 232550393.0,
+        "cache-misses": 4162788.0,
+        "context-switches": 119.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7122.0,
+        "cycles": 440787310.0,
+        "cycles_kernel_ratio": 0.14768993916816706,
+        "instructions": 589026077.0,
+        "instructions_kernel_ratio": 0.09397630454992573
       },
       "sample_index": 10
     },
@@ -2437,15 +2542,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 12015745,
-          "cpu_user_us": 9796,
-          "cpu_system_us": 3620,
-          "cpu_total_us": 13416,
-          "cpu_utilization": 1.1165350130183356
+          "wall_ns": 12576690,
+          "cpu_user_us": 4931,
+          "cpu_system_us": 8042,
+          "cpu_total_us": 12973,
+          "cpu_utilization": 1.0315114708241995
         },
         "resources": {
-          "max_rss_kb": 66748,
-          "minor_page_faults_delta": 290,
+          "max_rss_kb": 68604,
+          "minor_page_faults_delta": 287,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 8,
           "involuntary_context_switches_delta": 2
@@ -2460,38 +2565,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 151.34,
-        "cycles": 375053560.0,
-        "instructions": 536969949.0,
-        "branches": 106495105.0,
-        "branch-misses": 5910093.0,
-        "cache-references": 217809375.0,
-        "cache-misses": 3592345.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7102.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 12973.0,
+        "internal_wall_ns_per_tool_step": 12576690.0,
+        "ipc": 1.343398650684142,
+        "branch_mpki": 10.3058527165563,
+        "cache_mpki": 6.981408285108983,
+        "process_instructions_per_tool_step": 588164140.0,
+        "process_cycles_per_tool_step": 437818022.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.431715376865107,
-        "branch_mpki": 11.006375703158763,
-        "cache_mpki": 6.6900298735339465,
-        "internal_cpu_us_per_tool_step": 13416.0,
-        "internal_wall_ns_per_tool_step": 12015745.0,
-        "process_instructions_per_tool_step": 536969949.0,
-        "process_cycles_per_tool_step": 375053560.0
+      "perf": {
+        "task-clock": 151.11,
+        "cycles_u": 371994653.0,
+        "instructions_u": 532092597.0,
+        "cycles_k": 65823369.0,
+        "instructions_k": 56071543.0,
+        "branches": 115740445.0,
+        "branch-misses": 6061533.0,
+        "cache-references": 232036611.0,
+        "cache-misses": 4106214.0,
+        "context-switches": 134.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7157.0,
+        "cycles": 437818022.0,
+        "cycles_kernel_ratio": 0.15034412859322635,
+        "instructions": 588164140.0,
+        "instructions_kernel_ratio": 0.09533315478906959
       },
       "sample_index": 11
     },
@@ -2524,15 +2637,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 7835587,
-          "cpu_user_us": 8573,
-          "cpu_system_us": 158,
-          "cpu_total_us": 8731,
-          "cpu_utilization": 1.1142751653449832
+          "wall_ns": 7955257,
+          "cpu_user_us": 8027,
+          "cpu_system_us": 7,
+          "cpu_total_us": 8034,
+          "cpu_utilization": 1.0098982345887757
         },
         "resources": {
-          "max_rss_kb": 64488,
-          "minor_page_faults_delta": 172,
+          "max_rss_kb": 67624,
+          "minor_page_faults_delta": 166,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 5,
           "involuntary_context_switches_delta": 1
@@ -2547,34 +2660,42 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 145.84,
-        "cycles": 361431752.0,
-        "instructions": 519623268.0,
-        "branches": 103029485.0,
-        "branch-misses": 5686133.0,
-        "cache-references": 209939673.0,
-        "cache-misses": 3409945.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6683.0
+      "derived": {
+        "ipc": 1.3254671692600168,
+        "branch_mpki": 10.351826482273598,
+        "cache_mpki": 6.97525453855731
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4376801847780103,
-        "branch_mpki": 10.942799043402344,
-        "cache_mpki": 6.562340853450773
+      "perf": {
+        "task-clock": 148.57,
+        "cycles_u": 365344644.0,
+        "instructions_u": 516415966.0,
+        "cycles_k": 65113366.0,
+        "instructions_k": 54141994.0,
+        "branches": 112379503.0,
+        "branch-misses": 5906317.0,
+        "cache-references": 224220771.0,
+        "cache-misses": 3979787.0,
+        "context-switches": 125.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6784.0,
+        "cycles": 430458010.0,
+        "cycles_kernel_ratio": 0.1512653138920565,
+        "instructions": 570557960.0,
+        "instructions_kernel_ratio": 0.09489306572815144
       },
       "sample_index": 12
     },
@@ -3121,18 +3242,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 471330691,
-          "cpu_user_us": 469465,
-          "cpu_system_us": 722,
-          "cpu_total_us": 470187,
-          "cpu_utilization": 0.9975734849823306
+          "wall_ns": 467544019,
+          "cpu_user_us": 462203,
+          "cpu_system_us": 4027,
+          "cpu_total_us": 466230,
+          "cpu_utilization": 0.9971895288002818
         },
         "resources": {
-          "max_rss_kb": 82920,
-          "minor_page_faults_delta": 6056,
+          "max_rss_kb": 86924,
+          "minor_page_faults_delta": 6001,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 306,
-          "involuntary_context_switches_delta": 90
+          "voluntary_context_switches_delta": 299,
+          "involuntary_context_switches_delta": 89
         },
         "checks": {
           "provider_requests": true,
@@ -3144,38 +3265,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 623.72,
-        "cycles": 1697735097.0,
-        "instructions": 2678149346.0,
-        "branches": 565233344.0,
-        "branch-misses": 21107210.0,
-        "cache-references": 1064768806.0,
-        "cache-misses": 21548462.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12268.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 1821.2109375,
+        "internal_wall_ns_per_tool_step": 1826343.82421875,
+        "ipc": 1.5336132811682521,
+        "branch_mpki": 7.77702399740977,
+        "cache_mpki": 8.226135876874807,
+        "process_instructions_per_tool_step": 10814868.54296875,
+        "process_cycles_per_tool_step": 7051887.640625
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.5774836431976054,
-        "branch_mpki": 7.881266976961187,
-        "cache_mpki": 8.046027019435682,
-        "internal_cpu_us_per_tool_step": 1836.66796875,
-        "internal_wall_ns_per_tool_step": 1841135.51171875,
-        "process_instructions_per_tool_step": 10461520.8828125,
-        "process_cycles_per_tool_step": 6631777.72265625
+      "perf": {
+        "task-clock": 622.87,
+        "cycles_u": 1695199584.0,
+        "instructions_u": 2680197213.0,
+        "cycles_k": 110083652.0,
+        "instructions_k": 88409134.0,
+        "branches": 582194652.0,
+        "branch-misses": 21531518.0,
+        "cache-references": 1089974544.0,
+        "cache-misses": 22774932.0,
+        "context-switches": 518.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12651.0,
+        "cycles": 1805283236.0,
+        "cycles_kernel_ratio": 0.06097860424600985,
+        "instructions": 2768606347.0,
+        "instructions_kernel_ratio": 0.03193272098642631
       },
       "sample_index": 13
     },
@@ -3208,15 +3337,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 8018180,
-          "cpu_user_us": 8680,
-          "cpu_system_us": 45,
-          "cpu_total_us": 8725,
-          "cpu_utilization": 1.0881521741841664
+          "wall_ns": 7593642,
+          "cpu_user_us": 8364,
+          "cpu_system_us": 49,
+          "cpu_total_us": 8413,
+          "cpu_utilization": 1.107900530470096
         },
         "resources": {
-          "max_rss_kb": 66544,
-          "minor_page_faults_delta": 171,
+          "max_rss_kb": 66556,
+          "minor_page_faults_delta": 167,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 5,
           "involuntary_context_switches_delta": 1
@@ -3231,34 +3360,42 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 151.27,
-        "cycles": 368866541.0,
-        "instructions": 517859155.0,
-        "branches": 102653114.0,
-        "branch-misses": 5598484.0,
-        "cache-references": 209097040.0,
-        "cache-misses": 3408977.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6825.0
+      "derived": {
+        "ipc": 1.3871353153014847,
+        "branch_mpki": 10.251300681619895,
+        "cache_mpki": 7.000958535594403
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4039201104987182,
-        "branch_mpki": 10.81082364953073,
-        "cache_mpki": 6.582826560244938
+      "perf": {
+        "task-clock": 141.37,
+        "cycles_u": 350875796.0,
+        "instructions_u": 514532237.0,
+        "cycles_k": 58767248.0,
+        "instructions_k": 53698096.0,
+        "branches": 111883153.0,
+        "branch-misses": 5825100.0,
+        "cache-references": 225012060.0,
+        "cache-misses": 3978157.0,
+        "context-switches": 123.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6762.0,
+        "cycles": 409643044.0,
+        "cycles_kernel_ratio": 0.14345965069041913,
+        "instructions": 568230333.0,
+        "instructions_kernel_ratio": 0.0945005799259224
       },
       "sample_index": 14
     },
@@ -3301,17 +3438,17 @@
           1
         ],
         "timing": {
-          "wall_ns": 25095904,
-          "cpu_user_us": 26197,
-          "cpu_system_us": 0,
-          "cpu_total_us": 26197,
-          "cpu_utilization": 1.0438755264604136
+          "wall_ns": 23672309,
+          "cpu_user_us": 23678,
+          "cpu_system_us": 18,
+          "cpu_total_us": 23696,
+          "cpu_utilization": 1.0010007895723227
         },
         "resources": {
-          "max_rss_kb": 68632,
-          "minor_page_faults_delta": 916,
+          "max_rss_kb": 70648,
+          "minor_page_faults_delta": 911,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 17,
+          "voluntary_context_switches_delta": 16,
           "involuntary_context_switches_delta": 5
         },
         "checks": {
@@ -3324,38 +3461,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 165.13,
-        "cycles": 407036797.0,
-        "instructions": 568013187.0,
-        "branches": 112882963.0,
-        "branch-misses": 6268117.0,
-        "cache-references": 229718929.0,
-        "cache-misses": 3839718.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7165.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 5924.0,
+        "internal_wall_ns_per_tool_step": 5918077.25,
+        "ipc": 1.3640200600036194,
+        "branch_mpki": 10.641806881038955,
+        "cache_mpki": 7.106134004015295,
+        "process_instructions_per_tool_step": 156065625.75,
+        "process_cycles_per_tool_step": 114415931.5
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.3954836299480806,
-        "branch_mpki": 11.035161055160502,
-        "cache_mpki": 6.759909959625638,
-        "internal_cpu_us_per_tool_step": 6549.25,
-        "internal_wall_ns_per_tool_step": 6273976.0,
-        "process_instructions_per_tool_step": 142003296.75,
-        "process_cycles_per_tool_step": 101759199.25
+      "perf": {
+        "task-clock": 157.96,
+        "cycles_u": 394927213.0,
+        "instructions_u": 567026721.0,
+        "cycles_k": 62736513.0,
+        "instructions_k": 57235782.0,
+        "branches": 123150914.0,
+        "branch-misses": 6643281.0,
+        "cache-references": 246529828.0,
+        "cache-misses": 4436093.0,
+        "context-switches": 137.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7354.0,
+        "cycles": 457663726.0,
+        "cycles_kernel_ratio": 0.13707993322590745,
+        "instructions": 624262503.0,
+        "instructions_kernel_ratio": 0.09168543957861265
       },
       "sample_index": 15
     },
@@ -3422,17 +3567,17 @@
           1
         ],
         "timing": {
-          "wall_ns": 48497264,
-          "cpu_user_us": 48214,
-          "cpu_system_us": 174,
-          "cpu_total_us": 48388,
-          "cpu_utilization": 0.997747006923937
+          "wall_ns": 46091251,
+          "cpu_user_us": 31299,
+          "cpu_system_us": 15799,
+          "cpu_total_us": 47098,
+          "cpu_utilization": 1.021842518442383
         },
         "resources": {
-          "max_rss_kb": 70644,
-          "minor_page_faults_delta": 1636,
+          "max_rss_kb": 73004,
+          "minor_page_faults_delta": 1521,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 34,
+          "voluntary_context_switches_delta": 41,
           "involuntary_context_switches_delta": 10
         },
         "checks": {
@@ -3445,38 +3590,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 191.59,
-        "cycles": 479393006.0,
-        "instructions": 656941008.0,
-        "branches": 131826121.0,
-        "branch-misses": 7494581.0,
-        "cache-references": 264362597.0,
-        "cache-misses": 4700614.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7877.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2943.625,
+        "internal_wall_ns_per_tool_step": 2880703.1875,
+        "ipc": 1.3609761460180334,
+        "branch_mpki": 10.61261462555453,
+        "cache_mpki": 7.634436090574723,
+        "process_instructions_per_tool_step": 44037109.75,
+        "process_cycles_per_tool_step": 32357003.375
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.370360017309055,
-        "branch_mpki": 11.40830136760164,
-        "cache_mpki": 7.155306097134372,
-        "internal_cpu_us_per_tool_step": 3024.25,
-        "internal_wall_ns_per_tool_step": 3031079.0,
-        "process_instructions_per_tool_step": 41058813.0,
-        "process_cycles_per_tool_step": 29962062.875
+      "perf": {
+        "task-clock": 178.66,
+        "cycles_u": 451775029.0,
+        "instructions_u": 644940922.0,
+        "cycles_k": 65937025.0,
+        "instructions_k": 59652834.0,
+        "branches": 140057661.0,
+        "branch-misses": 7477582.0,
+        "cache-references": 279734880.0,
+        "cache-misses": 5379176.0,
+        "context-switches": 162.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7950.0,
+        "cycles": 517712054.0,
+        "cycles_kernel_ratio": 0.12736235227777795,
+        "instructions": 704593756.0,
+        "instructions_kernel_ratio": 0.08466273436575841
       },
       "sample_index": 16
     },
@@ -4023,18 +4176,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 481493410,
-          "cpu_user_us": 452951,
-          "cpu_system_us": 27639,
-          "cpu_total_us": 480590,
-          "cpu_utilization": 0.9981237334068601
+          "wall_ns": 464795932,
+          "cpu_user_us": 452617,
+          "cpu_system_us": 11731,
+          "cpu_total_us": 464348,
+          "cpu_utilization": 0.9990362824431949
         },
         "resources": {
-          "max_rss_kb": 84980,
-          "minor_page_faults_delta": 6163,
+          "max_rss_kb": 87036,
+          "minor_page_faults_delta": 5764,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 303,
-          "involuntary_context_switches_delta": 94
+          "voluntary_context_switches_delta": 286,
+          "involuntary_context_switches_delta": 90
         },
         "checks": {
           "provider_requests": true,
@@ -4046,38 +4199,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 641.07,
-        "cycles": 1735715212.0,
-        "instructions": 2682699674.0,
-        "branches": 566317383.0,
-        "branch-misses": 21215936.0,
-        "cache-references": 1062639919.0,
-        "cache-misses": 21300000.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12473.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 1813.859375,
+        "internal_wall_ns_per_tool_step": 1815609.109375,
+        "ipc": 1.5624407942609648,
+        "branch_mpki": 7.800344169022725,
+        "cache_mpki": 8.258707564540694,
+        "process_instructions_per_tool_step": 10799240.5390625,
+        "process_cycles_per_tool_step": 6911775.84375
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.5455874647251753,
-        "branch_mpki": 7.9084275461838365,
-        "cache_mpki": 7.939763144728365,
-        "internal_cpu_us_per_tool_step": 1877.3046875,
-        "internal_wall_ns_per_tool_step": 1880833.6328125,
-        "process_instructions_per_tool_step": 10479295.6015625,
-        "process_cycles_per_tool_step": 6780137.546875
+      "perf": {
+        "task-clock": 610.45,
+        "cycles_u": 1669137988.0,
+        "instructions_u": 2679141517.0,
+        "cycles_k": 100276628.0,
+        "instructions_k": 85464061.0,
+        "branches": 581358312.0,
+        "branch-misses": 21564875.0,
+        "cache-references": 1091748133.0,
+        "cache-misses": 22832069.0,
+        "context-switches": 508.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12204.0,
+        "cycles": 1769414616.0,
+        "cycles_kernel_ratio": 0.05667220508593335,
+        "instructions": 2764605578.0,
+        "instructions_kernel_ratio": 0.030913654258712488
       },
       "sample_index": 17
     },
@@ -4144,18 +4305,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 48244310,
-          "cpu_user_us": 44137,
-          "cpu_system_us": 4042,
-          "cpu_total_us": 48179,
-          "cpu_utilization": 0.9986462652279616
+          "wall_ns": 46206283,
+          "cpu_user_us": 42870,
+          "cpu_system_us": 3921,
+          "cpu_total_us": 46791,
+          "cpu_utilization": 1.012654491165195
         },
         "resources": {
-          "max_rss_kb": 70644,
-          "minor_page_faults_delta": 1713,
+          "max_rss_kb": 72696,
+          "minor_page_faults_delta": 1696,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 38,
-          "involuntary_context_switches_delta": 9
+          "voluntary_context_switches_delta": 26,
+          "involuntary_context_switches_delta": 8
         },
         "checks": {
           "provider_requests": true,
@@ -4167,38 +4328,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 192.79,
-        "cycles": 480622652.0,
-        "instructions": 663696425.0,
-        "branches": 133128587.0,
-        "branch-misses": 7342130.0,
-        "cache-references": 269472647.0,
-        "cache-misses": 4765203.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 8212.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2924.4375,
+        "internal_wall_ns_per_tool_step": 2887892.6875,
+        "ipc": 1.358556520899357,
+        "branch_mpki": 10.647453073946632,
+        "cache_mpki": 7.540396153675952,
+        "process_instructions_per_tool_step": 44499104.3125,
+        "process_cycles_per_tool_step": 32754694.875
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.3809095810157528,
-        "branch_mpki": 11.062482369104218,
-        "cache_mpki": 7.179793080850179,
-        "internal_cpu_us_per_tool_step": 3011.1875,
-        "internal_wall_ns_per_tool_step": 3015269.375,
-        "process_instructions_per_tool_step": 41481026.5625,
-        "process_cycles_per_tool_step": 30038915.75
+      "perf": {
+        "task-clock": 180.85,
+        "cycles_u": 456913151.0,
+        "instructions_u": 651422136.0,
+        "cycles_k": 67161967.0,
+        "instructions_k": 60563533.0,
+        "branches": 141770749.0,
+        "branch-misses": 7580834.0,
+        "cache-references": 282826840.0,
+        "cache-misses": 5368654.0,
+        "context-switches": 156.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8060.0,
+        "cycles": 524075118.0,
+        "cycles_kernel_ratio": 0.12815332133360316,
+        "instructions": 711985669.0,
+        "instructions_kernel_ratio": 0.08506285398280959
       },
       "sample_index": 18
     },
@@ -4241,15 +4410,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 22508698,
-          "cpu_user_us": 22299,
-          "cpu_system_us": 224,
-          "cpu_total_us": 22523,
-          "cpu_utilization": 1.0006353988133831
+          "wall_ns": 24045034,
+          "cpu_user_us": 16561,
+          "cpu_system_us": 8058,
+          "cpu_total_us": 24619,
+          "cpu_utilization": 1.023870459072755
         },
         "resources": {
-          "max_rss_kb": 68596,
-          "minor_page_faults_delta": 941,
+          "max_rss_kb": 68604,
+          "minor_page_faults_delta": 714,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 17,
           "involuntary_context_switches_delta": 4
@@ -4264,38 +4433,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 164.46,
-        "cycles": 406841629.0,
-        "instructions": 568064904.0,
-        "branches": 112841489.0,
-        "branch-misses": 6236605.0,
-        "cache-references": 229863971.0,
-        "cache-misses": 3904294.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7272.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 6154.75,
+        "internal_wall_ns_per_tool_step": 6011258.5,
+        "ipc": 1.3604827130660206,
+        "branch_mpki": 10.845966721009058,
+        "cache_mpki": 7.19499971511274,
+        "process_instructions_per_tool_step": 156289895.0,
+        "process_cycles_per_tool_step": 114878266.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.3962801825277324,
-        "branch_mpki": 10.978683872362584,
-        "cache_mpki": 6.872971684235575,
-        "internal_cpu_us_per_tool_step": 5630.75,
-        "internal_wall_ns_per_tool_step": 5627174.5,
-        "process_instructions_per_tool_step": 142016226.0,
-        "process_cycles_per_tool_step": 101710407.25
+      "perf": {
+        "task-clock": 158.6,
+        "cycles_u": 397876853.0,
+        "instructions_u": 569833091.0,
+        "cycles_k": 61636211.0,
+        "instructions_k": 55326489.0,
+        "branches": 123672134.0,
+        "branch-misses": 6780460.0,
+        "cache-references": 245938259.0,
+        "cache-misses": 4498023.0,
+        "context-switches": 138.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7041.0,
+        "cycles": 459513064.0,
+        "cycles_kernel_ratio": 0.13413375120059698,
+        "instructions": 625159580.0,
+        "instructions_kernel_ratio": 0.08849978592665891
       },
       "sample_index": 19
     },
@@ -4458,15 +4635,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 139247846,
-          "cpu_user_us": 139575,
-          "cpu_system_us": 102,
-          "cpu_total_us": 139677,
-          "cpu_utilization": 1.0030819435440315
+          "wall_ns": 138024120,
+          "cpu_user_us": 127081,
+          "cpu_system_us": 11896,
+          "cpu_total_us": 138977,
+          "cpu_utilization": 1.0069037208858858
         },
         "resources": {
-          "max_rss_kb": 74740,
-          "minor_page_faults_delta": 2919,
+          "max_rss_kb": 76796,
+          "minor_page_faults_delta": 3021,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 79,
           "involuntary_context_switches_delta": 22
@@ -4481,38 +4658,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 280.37,
-        "cycles": 726930644.0,
-        "instructions": 1029849298.0,
-        "branches": 211061051.0,
-        "branch-misses": 10824797.0,
-        "cache-references": 416258054.0,
-        "cache-misses": 8313531.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 9214.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2171.515625,
+        "internal_wall_ns_per_tool_step": 2156626.875,
+        "ipc": 1.3798104211644162,
+        "branch_mpki": 10.10073926959368,
+        "cache_mpki": 8.261302496765612,
+        "process_instructions_per_tool_step": 17031589.078125,
+        "process_cycles_per_tool_step": 12343426.90625
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.416709154443075,
-        "branch_mpki": 10.51104954969829,
-        "cache_mpki": 8.072570439330434,
-        "internal_cpu_us_per_tool_step": 2182.453125,
-        "internal_wall_ns_per_tool_step": 2175747.59375,
-        "process_instructions_per_tool_step": 16091395.28125,
-        "process_cycles_per_tool_step": 11358291.3125
+      "perf": {
+        "task-clock": 272.58,
+        "cycles_u": 709490270.0,
+        "instructions_u": 1022006508.0,
+        "cycles_k": 80489052.0,
+        "instructions_k": 68015193.0,
+        "branches": 221837590.0,
+        "branch-misses": 11010025.0,
+        "cache-references": 434332525.0,
+        "cache-misses": 9004999.0,
+        "context-switches": 218.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 9459.0,
+        "cycles": 789979322.0,
+        "cycles_kernel_ratio": 0.10188754282355761,
+        "instructions": 1090021701.0,
+        "instructions_kernel_ratio": 0.06239801734002358
       },
       "sample_index": 20
     },
@@ -5059,18 +5244,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 474473384,
-          "cpu_user_us": 460868,
-          "cpu_system_us": 11919,
-          "cpu_total_us": 472787,
-          "cpu_utilization": 0.99644577745166
+          "wall_ns": 480579275,
+          "cpu_user_us": 442575,
+          "cpu_system_us": 35466,
+          "cpu_total_us": 478041,
+          "cpu_utilization": 0.9947183011585341
         },
         "resources": {
-          "max_rss_kb": 82852,
-          "minor_page_faults_delta": 6440,
+          "max_rss_kb": 84988,
+          "minor_page_faults_delta": 6135,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 301,
-          "involuntary_context_switches_delta": 89
+          "voluntary_context_switches_delta": 300,
+          "involuntary_context_switches_delta": 92
         },
         "checks": {
           "provider_requests": true,
@@ -5082,38 +5267,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 626.59,
-        "cycles": 1702605645.0,
-        "instructions": 2676990702.0,
-        "branches": 565059591.0,
-        "branch-misses": 20934847.0,
-        "cache-references": 1061184848.0,
-        "cache-misses": 21326786.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12779.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 1867.34765625,
+        "internal_wall_ns_per_tool_step": 1877262.79296875,
+        "ipc": 1.5031635875343914,
+        "branch_mpki": 7.879559766786386,
+        "cache_mpki": 8.136464837674687,
+        "process_instructions_per_tool_step": 10843894.80078125,
+        "process_cycles_per_tool_step": 7214048.3515625
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.5722905124045914,
-        "branch_mpki": 7.820291263753519,
-        "cache_mpki": 7.966701559354165,
-        "internal_cpu_us_per_tool_step": 1846.82421875,
-        "internal_wall_ns_per_tool_step": 1853411.65625,
-        "process_instructions_per_tool_step": 10456994.9296875,
-        "process_cycles_per_tool_step": 6650803.30078125
+      "perf": {
+        "task-clock": 637.17,
+        "cycles_u": 1730044809.0,
+        "instructions_u": 2687894747.0,
+        "cycles_k": 116751569.0,
+        "instructions_k": 88142322.0,
+        "branches": 583770756.0,
+        "branch-misses": 21873950.0,
+        "cache-references": 1088408043.0,
+        "cache-misses": 22587128.0,
+        "context-switches": 514.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12741.0,
+        "cycles": 1846796378.0,
+        "cycles_kernel_ratio": 0.06321843078685094,
+        "instructions": 2776037069.0,
+        "instructions_kernel_ratio": 0.031751132931287236
       },
       "sample_index": 21
     },
@@ -5180,15 +5373,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 47711863,
-          "cpu_user_us": 47604,
-          "cpu_system_us": 9,
-          "cpu_total_us": 47613,
-          "cpu_utilization": 0.9979279157470753
+          "wall_ns": 47288107,
+          "cpu_user_us": 47835,
+          "cpu_system_us": 68,
+          "cpu_total_us": 47903,
+          "cpu_utilization": 1.0130031214825326
         },
         "resources": {
-          "max_rss_kb": 70628,
-          "minor_page_faults_delta": 1919,
+          "max_rss_kb": 74748,
+          "minor_page_faults_delta": 1739,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 36,
           "involuntary_context_switches_delta": 10
@@ -5203,38 +5396,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 181.52,
-        "cycles": 455744428.0,
-        "instructions": 654901522.0,
-        "branches": 131251879.0,
-        "branch-misses": 7278233.0,
-        "cache-references": 265347035.0,
-        "cache-misses": 4623213.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 8088.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2993.9375,
+        "internal_wall_ns_per_tool_step": 2955506.6875,
+        "ipc": 1.3107003402649426,
+        "branch_mpki": 10.916390993277092,
+        "cache_mpki": 7.441862951388726,
+        "process_instructions_per_tool_step": 44757391.6875,
+        "process_cycles_per_tool_step": 34147692.125
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.436992932363399,
-        "branch_mpki": 11.11347699692779,
-        "cache_mpki": 7.0594018256076065,
-        "internal_cpu_us_per_tool_step": 2975.8125,
-        "internal_wall_ns_per_tool_step": 2981991.4375,
-        "process_instructions_per_tool_step": 40931345.125,
-        "process_cycles_per_tool_step": 28484026.75
+      "perf": {
+        "task-clock": 188.55,
+        "cycles_u": 471862624.0,
+        "instructions_u": 654866707.0,
+        "cycles_k": 74500450.0,
+        "instructions_k": 61251560.0,
+        "branches": 142767415.0,
+        "branch-misses": 7817427.0,
+        "cache-references": 279133898.0,
+        "cache-misses": 5329254.0,
+        "context-switches": 158.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8235.0,
+        "cycles": 546363074.0,
+        "cycles_kernel_ratio": 0.1363570371887907,
+        "instructions": 716118267.0,
+        "instructions_kernel_ratio": 0.08553274343440258
       },
       "sample_index": 22
     },
@@ -5267,18 +5468,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 8254533,
-          "cpu_user_us": 8281,
-          "cpu_system_us": 62,
-          "cpu_total_us": 8343,
-          "cpu_utilization": 1.010717384011912
+          "wall_ns": 7965417,
+          "cpu_user_us": 8021,
+          "cpu_system_us": 4,
+          "cpu_total_us": 8025,
+          "cpu_utilization": 1.007480211017201
         },
         "resources": {
-          "max_rss_kb": 64500,
-          "minor_page_faults_delta": 174,
+          "max_rss_kb": 66556,
+          "minor_page_faults_delta": 173,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 10,
-          "involuntary_context_switches_delta": 2
+          "voluntary_context_switches_delta": 5,
+          "involuntary_context_switches_delta": 1
         },
         "checks": {
           "provider_requests": true,
@@ -5290,34 +5491,42 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 143.06,
-        "cycles": 353472478.0,
-        "instructions": 515401161.0,
-        "branches": 102070591.0,
-        "branch-misses": 5559615.0,
-        "cache-references": 209432078.0,
-        "cache-misses": 3386707.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6620.0
+      "derived": {
+        "ipc": 1.3248473370886482,
+        "branch_mpki": 10.209589714200797,
+        "cache_mpki": 6.975697901571082
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4581083198222862,
-        "branch_mpki": 10.786966387916227,
-        "cache_mpki": 6.571011585284341
+      "perf": {
+        "task-clock": 148.04,
+        "cycles_u": 362119244.0,
+        "instructions_u": 513212929.0,
+        "cycles_k": 66833338.0,
+        "instructions_k": 55083757.0,
+        "branches": 111785595.0,
+        "branch-misses": 5802076.0,
+        "cache-references": 224054586.0,
+        "cache-misses": 3964266.0,
+        "context-switches": 125.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6995.0,
+        "cycles": 428952582.0,
+        "cycles_kernel_ratio": 0.15580588812028645,
+        "instructions": 568296686.0,
+        "instructions_kernel_ratio": 0.0969278166791914
       },
       "sample_index": 23
     },
@@ -5384,15 +5593,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 46270874,
-          "cpu_user_us": 43592,
-          "cpu_system_us": 3926,
-          "cpu_total_us": 47518,
-          "cpu_utilization": 1.026952721921786
+          "wall_ns": 46855512,
+          "cpu_user_us": 42884,
+          "cpu_system_us": 3836,
+          "cpu_total_us": 46720,
+          "cpu_utilization": 0.9971078749496964
         },
         "resources": {
-          "max_rss_kb": 70644,
-          "minor_page_faults_delta": 1764,
+          "max_rss_kb": 72724,
+          "minor_page_faults_delta": 1579,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 31,
           "involuntary_context_switches_delta": 8
@@ -5407,38 +5616,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 184.65,
-        "cycles": 464239666.0,
-        "instructions": 663536817.0,
-        "branches": 132921981.0,
-        "branch-misses": 7315901.0,
-        "cache-references": 270842971.0,
-        "cache-misses": 4725500.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 8098.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2920.0,
+        "internal_wall_ns_per_tool_step": 2928469.5,
+        "ipc": 1.3265191655839788,
+        "branch_mpki": 10.475343162060144,
+        "cache_mpki": 7.630894289375783,
+        "process_instructions_per_tool_step": 43917624.5,
+        "process_cycles_per_tool_step": 33107418.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4292979803238097,
-        "branch_mpki": 11.02561427273447,
-        "cache_mpki": 7.121684703744178,
-        "internal_cpu_us_per_tool_step": 2969.875,
-        "internal_wall_ns_per_tool_step": 2891929.625,
-        "process_instructions_per_tool_step": 41471051.0625,
-        "process_cycles_per_tool_step": 29014979.125
+      "perf": {
+        "task-clock": 182.82,
+        "cycles_u": 457131019.0,
+        "instructions_u": 642526114.0,
+        "cycles_k": 72587669.0,
+        "instructions_k": 60155878.0,
+        "branches": 139669058.0,
+        "branch-misses": 7360835.0,
+        "cache-references": 279004289.0,
+        "cache-misses": 5362092.0,
+        "context-switches": 156.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 8045.0,
+        "cycles": 529718688.0,
+        "cycles_kernel_ratio": 0.1370305987769871,
+        "instructions": 702681992.0,
+        "instructions_kernel_ratio": 0.08560896491566843
       },
       "sample_index": 24
     },
@@ -5471,15 +5688,15 @@
           1
         ],
         "timing": {
-          "wall_ns": 7659704,
-          "cpu_user_us": 7726,
-          "cpu_system_us": 0,
-          "cpu_total_us": 7726,
-          "cpu_utilization": 1.0086551647426585
+          "wall_ns": 7598203,
+          "cpu_user_us": 8445,
+          "cpu_system_us": 20,
+          "cpu_total_us": 8465,
+          "cpu_utilization": 1.1140792105712365
         },
         "resources": {
-          "max_rss_kb": 64996,
-          "minor_page_faults_delta": 172,
+          "max_rss_kb": 66544,
+          "minor_page_faults_delta": 167,
           "major_page_faults_delta": 0,
           "voluntary_context_switches_delta": 5,
           "involuntary_context_switches_delta": 1
@@ -5494,34 +5711,42 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 145.73,
-        "cycles": 361395002.0,
-        "instructions": 520433204.0,
-        "branches": 103214611.0,
-        "branch-misses": 5736665.0,
-        "cache-references": 209532249.0,
-        "cache-misses": 3362058.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6822.0
+      "derived": {
+        "ipc": 1.337810840726228,
+        "branch_mpki": 10.239189567839997,
+        "cache_mpki": 7.0411915014009505
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4400675192514145,
-        "branch_mpki": 11.022865097592812,
-        "cache_mpki": 6.460114331982553
+      "perf": {
+        "task-clock": 146.51,
+        "cycles_u": 359747884.0,
+        "instructions_u": 513791848.0,
+        "cycles_k": 64720948.0,
+        "instructions_k": 54067157.0,
+        "branches": 111768024.0,
+        "branch-misses": 5814416.0,
+        "cache-references": 223912264.0,
+        "cache-misses": 3998404.0,
+        "context-switches": 115.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 6837.0,
+        "cycles": 424468832.0,
+        "cycles_kernel_ratio": 0.15247514804573448,
+        "instructions": 567859005.0,
+        "instructions_kernel_ratio": 0.09521229129755546
       },
       "sample_index": 25
     },
@@ -5564,18 +5789,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 20252707,
-          "cpu_user_us": 20245,
-          "cpu_system_us": 61,
-          "cpu_total_us": 20306,
-          "cpu_utilization": 1.0026314013232898
+          "wall_ns": 25239501,
+          "cpu_user_us": 18238,
+          "cpu_system_us": 7667,
+          "cpu_total_us": 25905,
+          "cpu_utilization": 1.026367359639955
         },
         "resources": {
-          "max_rss_kb": 68596,
-          "minor_page_faults_delta": 935,
+          "max_rss_kb": 70652,
+          "minor_page_faults_delta": 999,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 17,
-          "involuntary_context_switches_delta": 4
+          "voluntary_context_switches_delta": 14,
+          "involuntary_context_switches_delta": 5
         },
         "checks": {
           "provider_requests": true,
@@ -5587,38 +5812,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 158.96,
-        "cycles": 396573849.0,
-        "instructions": 569201170.0,
-        "branches": 113181704.0,
-        "branch-misses": 6287010.0,
-        "cache-references": 231283933.0,
-        "cache-misses": 3838190.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 7185.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 6476.25,
+        "internal_wall_ns_per_tool_step": 6309875.25,
+        "ipc": 1.3137634154988307,
+        "branch_mpki": 10.747731074032638,
+        "cache_mpki": 7.144605290265922,
+        "process_instructions_per_tool_step": 157633200.75,
+        "process_cycles_per_tool_step": 119985987.5
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.435296783777591,
-        "branch_mpki": 11.04532163909642,
-        "cache_mpki": 6.743116849180054,
-        "internal_cpu_us_per_tool_step": 5076.5,
-        "internal_wall_ns_per_tool_step": 5063176.75,
-        "process_instructions_per_tool_step": 142300292.5,
-        "process_cycles_per_tool_step": 99143462.25
+      "perf": {
+        "task-clock": 165.66,
+        "cycles_u": 410767988.0,
+        "instructions_u": 572600277.0,
+        "cycles_k": 69175962.0,
+        "instructions_k": 57932526.0,
+        "branches": 124609477.0,
+        "branch-misses": 6776797.0,
+        "cache-references": 246435966.0,
+        "cache-misses": 4504908.0,
+        "context-switches": 130.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7519.0,
+        "cycles": 479943950.0,
+        "cycles_kernel_ratio": 0.1441334180793403,
+        "instructions": 630532803.0,
+        "instructions_kernel_ratio": 0.0918786869205915
       },
       "sample_index": 26
     },
@@ -5781,18 +6014,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 136221664,
-          "cpu_user_us": 132305,
-          "cpu_system_us": 4318,
-          "cpu_total_us": 136623,
-          "cpu_utilization": 1.0029461980438001
+          "wall_ns": 134767926,
+          "cpu_user_us": 127445,
+          "cpu_system_us": 7969,
+          "cpu_total_us": 135414,
+          "cpu_utilization": 1.0047939744950887
         },
         "resources": {
-          "max_rss_kb": 74740,
-          "minor_page_faults_delta": 2835,
+          "max_rss_kb": 77096,
+          "minor_page_faults_delta": 2606,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 84,
-          "involuntary_context_switches_delta": 27
+          "voluntary_context_switches_delta": 86,
+          "involuntary_context_switches_delta": 24
         },
         "checks": {
           "provider_requests": true,
@@ -5804,38 +6037,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 271.01,
-        "cycles": 706655309.0,
-        "instructions": 1028900286.0,
-        "branches": 210890522.0,
-        "branch-misses": 10806813.0,
-        "cache-references": 418334377.0,
-        "cache-misses": 8090777.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 9048.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2115.84375,
+        "internal_wall_ns_per_tool_step": 2105748.84375,
+        "ipc": 1.3813858774176404,
+        "branch_mpki": 10.219369850877264,
+        "cache_mpki": 8.257178115837899,
+        "process_instructions_per_tool_step": 17035374.921875,
+        "process_cycles_per_tool_step": 12332089.96875
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4560143720649525,
-        "branch_mpki": 10.503265619657919,
-        "cache_mpki": 7.863519050474829,
-        "internal_cpu_us_per_tool_step": 2134.734375,
-        "internal_wall_ns_per_tool_step": 2128463.5,
-        "process_instructions_per_tool_step": 16076566.96875,
-        "process_cycles_per_tool_step": 11041489.203125
+      "perf": {
+        "task-clock": 272.36,
+        "cycles_u": 710143975.0,
+        "instructions_u": 1023656129.0,
+        "cycles_k": 79109783.0,
+        "instructions_k": 66607866.0,
+        "branches": 222006017.0,
+        "branch-misses": 11141811.0,
+        "cache-references": 434534649.0,
+        "cache-misses": 9002504.0,
+        "context-switches": 227.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 9110.0,
+        "cycles": 789253758.0,
+        "cycles_kernel_ratio": 0.10023364754127657,
+        "instructions": 1090263995.0,
+        "instructions_kernel_ratio": 0.06109333730680522
       },
       "sample_index": 27
     },
@@ -5902,18 +6143,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 46783550,
-          "cpu_user_us": 35593,
-          "cpu_system_us": 11894,
-          "cpu_total_us": 47487,
-          "cpu_utilization": 1.015036268089959
+          "wall_ns": 45543074,
+          "cpu_user_us": 45503,
+          "cpu_system_us": 1,
+          "cpu_total_us": 45504,
+          "cpu_utilization": 0.9991420429811128
         },
         "resources": {
-          "max_rss_kb": 70640,
-          "minor_page_faults_delta": 1834,
+          "max_rss_kb": 72696,
+          "minor_page_faults_delta": 1610,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 27,
-          "involuntary_context_switches_delta": 8
+          "voluntary_context_switches_delta": 30,
+          "involuntary_context_switches_delta": 7
         },
         "checks": {
           "provider_requests": true,
@@ -5925,38 +6166,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 183.37,
-        "cycles": 463298950.0,
-        "instructions": 653629931.0,
-        "branches": 131032298.0,
-        "branch-misses": 7268261.0,
-        "cache-references": 265842805.0,
-        "cache-misses": 4688190.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 8091.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 2844.0,
+        "internal_wall_ns_per_tool_step": 2846442.125,
+        "ipc": 1.3631888888180024,
+        "branch_mpki": 10.646715763490535,
+        "cache_mpki": 7.540599048631036,
+        "process_instructions_per_tool_step": 44016637.1875,
+        "process_cycles_per_tool_step": 32289463.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4108167760794623,
-        "branch_mpki": 11.119841144483942,
-        "cache_mpki": 7.172544857037766,
-        "internal_cpu_us_per_tool_step": 2967.9375,
-        "internal_wall_ns_per_tool_step": 2923971.875,
-        "process_instructions_per_tool_step": 40851870.6875,
-        "process_cycles_per_tool_step": 28956184.375
+      "perf": {
+        "task-clock": 178.27,
+        "cycles_u": 451357062.0,
+        "instructions_u": 644641960.0,
+        "cycles_k": 65274346.0,
+        "instructions_k": 59624235.0,
+        "branches": 140165579.0,
+        "branch-misses": 7498122.0,
+        "cache-references": 279649998.0,
+        "cache-misses": 5310589.0,
+        "context-switches": 145.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7931.0,
+        "cycles": 516631408.0,
+        "cycles_kernel_ratio": 0.12634606605256954,
+        "instructions": 704266195.0,
+        "instructions_kernel_ratio": 0.08466150359524213
       },
       "sample_index": 28
     },
@@ -5993,17 +6242,17 @@
           1
         ],
         "timing": {
-          "wall_ns": 12162606,
-          "cpu_user_us": 12846,
-          "cpu_system_us": 48,
-          "cpu_total_us": 12894,
-          "cpu_utilization": 1.0601346454863374
+          "wall_ns": 12460438,
+          "cpu_user_us": 12499,
+          "cpu_system_us": 27,
+          "cpu_total_us": 12526,
+          "cpu_utilization": 1.0052616127940286
         },
         "resources": {
-          "max_rss_kb": 66540,
-          "minor_page_faults_delta": 290,
+          "max_rss_kb": 67992,
+          "minor_page_faults_delta": 288,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 8,
+          "voluntary_context_switches_delta": 10,
           "involuntary_context_switches_delta": 2
         },
         "checks": {
@@ -6016,38 +6265,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 152.32,
-        "cycles": 379760407.0,
-        "instructions": 540270309.0,
-        "branches": 107203975.0,
-        "branch-misses": 6070751.0,
-        "cache-references": 217621238.0,
-        "cache-misses": 3547066.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 6895.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 12526.0,
+        "internal_wall_ns_per_tool_step": 12460438.0,
+        "ipc": 1.371512429290013,
+        "branch_mpki": 10.499782642223167,
+        "cache_mpki": 7.125481747347481,
+        "process_instructions_per_tool_step": 589827067.0,
+        "process_cycles_per_tool_step": 430055940.0
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.4226609700257669,
-        "branch_mpki": 11.23650679830344,
-        "cache_mpki": 6.565354306745737,
-        "internal_cpu_us_per_tool_step": 12894.0,
-        "internal_wall_ns_per_tool_step": 12162606.0,
-        "process_instructions_per_tool_step": 540270309.0,
-        "process_cycles_per_tool_step": 379760407.0
+      "perf": {
+        "task-clock": 148.43,
+        "cycles_u": 369620230.0,
+        "instructions_u": 534335624.0,
+        "cycles_k": 60435710.0,
+        "instructions_k": 55491443.0,
+        "branches": 116251780.0,
+        "branch-misses": 6193056.0,
+        "cache-references": 233445680.0,
+        "cache-misses": 4202802.0,
+        "context-switches": 119.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 7131.0,
+        "cycles": 430055940.0,
+        "cycles_kernel_ratio": 0.14052988083364223,
+        "instructions": 589827067.0,
+        "instructions_kernel_ratio": 0.09408086896086781
       },
       "sample_index": 29
     },
@@ -6594,18 +6851,18 @@
           1
         ],
         "timing": {
-          "wall_ns": 467191295,
-          "cpu_user_us": 461822,
-          "cpu_system_us": 4201,
-          "cpu_total_us": 466023,
-          "cpu_utilization": 0.9974993219854407
+          "wall_ns": 463933371,
+          "cpu_user_us": 439944,
+          "cpu_system_us": 23790,
+          "cpu_total_us": 463734,
+          "cpu_utilization": 0.9995702594112378
         },
         "resources": {
-          "max_rss_kb": 83092,
-          "minor_page_faults_delta": 6088,
+          "max_rss_kb": 87036,
+          "minor_page_faults_delta": 5794,
           "major_page_faults_delta": 0,
-          "voluntary_context_switches_delta": 294,
-          "involuntary_context_switches_delta": 89
+          "voluntary_context_switches_delta": 307,
+          "involuntary_context_switches_delta": 94
         },
         "checks": {
           "provider_requests": true,
@@ -6617,38 +6874,46 @@
           "one_completed_turn": true
         }
       },
-      "perf": {
-        "task-clock": 620.18,
-        "cycles": 1692553123.0,
-        "instructions": 2686564286.0,
-        "branches": 567193647.0,
-        "branch-misses": 21320496.0,
-        "cache-references": 1066218217.0,
-        "cache-misses": 21102751.0,
-        "context-switches": 0.0,
-        "cpu-migrations": 0.0,
-        "page-faults": 12462.0
+      "derived": {
+        "internal_cpu_us_per_tool_step": 1811.4609375,
+        "internal_wall_ns_per_tool_step": 1812239.73046875,
+        "ipc": 1.5559533027087908,
+        "branch_mpki": 7.808594410014835,
+        "cache_mpki": 8.05700539179853,
+        "process_instructions_per_tool_step": 10796136.65625,
+        "process_cycles_per_tool_step": 6938599.40234375
       },
       "perf_event_labels": {
-        "task-clock": "task-clock:u",
-        "cycles": "cycles:u",
-        "instructions": "instructions:u",
-        "branches": "branches:u",
-        "branch-misses": "branch-misses:u",
-        "cache-references": "cache-references:u",
-        "cache-misses": "cache-misses:u",
-        "context-switches": "context-switches:u",
-        "cpu-migrations": "cpu-migrations:u",
-        "page-faults": "page-faults:u"
+        "task-clock": "task-clock",
+        "cycles_u": "cycles:u",
+        "instructions_u": "instructions:u",
+        "cycles_k": "cycles:k",
+        "instructions_k": "instructions:k",
+        "branches": "branches",
+        "branch-misses": "branch-misses",
+        "cache-references": "cache-references",
+        "cache-misses": "cache-misses",
+        "context-switches": "context-switches",
+        "cpu-migrations": "cpu-migrations",
+        "page-faults": "page-faults"
       },
-      "derived": {
-        "ipc": 1.5872850603578958,
-        "branch_mpki": 7.935970901981983,
-        "cache_mpki": 7.854921287373952,
-        "internal_cpu_us_per_tool_step": 1820.40234375,
-        "internal_wall_ns_per_tool_step": 1824965.99609375,
-        "process_instructions_per_tool_step": 10494391.7421875,
-        "process_cycles_per_tool_step": 6611535.63671875
+      "perf": {
+        "task-clock": 612.82,
+        "cycles_u": 1673405250.0,
+        "instructions_u": 2678396412.0,
+        "cycles_k": 102876197.0,
+        "instructions_k": 85414572.0,
+        "branches": 581223429.0,
+        "branch-misses": 21581479.0,
+        "cache-references": 1090633233.0,
+        "cache-misses": 22268040.0,
+        "context-switches": 528.0,
+        "cpu-migrations": 0.0,
+        "page-faults": 12209.0,
+        "cycles": 1776281447.0,
+        "cycles_kernel_ratio": 0.05791660841458983,
+        "instructions": 2763810984.0,
+        "instructions_kernel_ratio": 0.030904635843215827
       },
       "sample_index": 30
     }
@@ -6658,6 +6923,7 @@
     "The Session context grows with tool steps; C1 does not isolate fixed-context loop cost.",
     "Whole-process perf counters include Node/V8 startup and Harness composition; slope estimates amortize that fixed intercept.",
     "No claim of cross-ISA instruction equivalence is made.",
-    "A :u event label means the host restricted perf to user space; software scheduling counters may then read zero and must not be interpreted as absence of context switches."
+    "cycles:u/cycles:k and instructions:u/instructions:k are sampled directly and summed into cycles/instructions with derived *_kernel_ratio; a perf restriction to user space omits the :k fields.",
+    "Warm mode still includes one process startup per sample in whole-process perf; only the internal prompt-window timing is steady-state."
   ]
 }

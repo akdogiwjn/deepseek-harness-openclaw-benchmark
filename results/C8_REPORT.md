@@ -26,57 +26,57 @@ Linear fits over point medians:
 
 | Subtest | CPU slope (us/node) | CPU intercept (us) |
 | --- | ---: | ---: |
-| cold | 18.31 | 3366 |
-| incremental | 1.19 | 140 |
-| repeat | 1.20 | -80 |
+| cold | 18.50 | 4217 |
+| incremental | 1.23 | 104 |
+| repeat | 1.15 | -12 |
 
 Repeat medians:
 
 | Surface nodes | internal CPU (us) | wall (us) |
 | ---: | ---: | ---: |
 | 10 | 51 | 51 |
-| 100 | 135 | 132 |
-| 1,000 | 1051 | 1051 |
-| 5,000 | 5649 | 5664 |
-| 10,000 | 12113 | 12149 |
+| 100 | 137 | 134 |
+| 1,000 | 1081 | 1086 |
+| 5,000 | 5694 | 5719 |
+| 10,000 | 11561 | 11618 |
 
 Cold shape replay at 1,000 surface nodes (five durable events per node
 in every condition):
 
 | Shape | internal CPU (us) | wall (us) | heuristic tokens/node |
 | --- | ---: | ---: | ---: |
-| text | 33535 | 33543 | 74.0 |
-| tool-call | 34458 | 34487 | 79.0 |
-| tool-result | 34644 | 34670 | 76.0 |
+| text | 33532 | 33586 | 74.0 |
+| tool-call | 33673 | 33687 | 79.0 |
+| tool-result | 34832 | 34887 | 76.0 |
 
 Schema header measurement:
 
 | Tools | schema bytes | schema tokens | internal CPU (us) |
 | ---: | ---: | ---: | ---: |
-| 8 | 4,865 | 1,221 | 142 |
-| 32 | 19,479 | 4,874 | 135 |
-| 128 | 77,971 | 19,497 | 201 |
-| 512 | 312,211 | 78,057 | 572 |
+| 8 | 4,865 | 1,221 | 132 |
+| 32 | 19,479 | 4,874 | 140 |
+| 128 | 77,971 | 19,497 | 218 |
+| 512 | 312,211 | 78,057 | 582 |
 
 ## Interpretation
 
-1. Repeat measurement is linear over this range at 1.20
+1. Repeat measurement is linear over this range at 1.15
    us of CPU per retained surface node. This is the steady-state full-surface
    reprice + clone cost, not event replay.
 
-2. Cold first measurement is about 15.2x more expensive per surface
+2. Cold first measurement is about 16.0x more expensive per surface
    node for this fixed three-event text-turn log because it must also fold every
    unread event and price the original message.
 
-3. Incremental append + measure tracks repeat scan (1.19
-   vs 1.20 us/node). Append synchronizes the new
+3. Incremental append + measure tracks repeat scan (1.23
+   vs 1.15 us/node). Append synchronizes the new
    tail, but the following measure still reprices and clones the complete surface.
 
-4. Cold replay shape differed by 3.3% peak-to-peak at 1,000
+4. Cold replay shape differed by 3.9% peak-to-peak at 1,000
    nodes in this ASCII 256 B fixture. This result includes message derivation and
    heuristic pricing, but does not cover reasoning, images, or provider image pricing.
 
-5. Schema's marginal fitted cost is 1.46 us per decimal KB over
+5. Schema's marginal fitted cost is 1.49 us per decimal KB over
    the measured range. The total measurement also contains the fixed 32-node surface
    scan, represented by the fitted intercept; marginal schema cost must not be confused
    with total `measure()` latency.
@@ -96,4 +96,6 @@ Schema header measurement:
 All table values are generated from the corresponding
 `results/c8-token-meter-*-pilot.json` files by
 `scripts/cpu/render-c8-report.py`; the generator validates sample counts, fixture
-checks, and aggregate medians before writing this report.
+checks, and aggregate medians before writing this report. Run
+`scripts/cpu/verify-cpu-results.py` to additionally verify protocol hashes and
+recompute every C8 aggregate and linear fit from the committed samples.

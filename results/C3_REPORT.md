@@ -20,8 +20,7 @@ then the same Node/V8 JSON primitives used at the adapter's transport boundary.
 - Affinity: logical CPU 0.
 - Runtime: pinned Node 24.15.0 and DSH revision.
 - Host: ARM64 HiSilicon, 256 logical CPUs, 2 sockets, 4 NUMA nodes.
-- PMU: Linux perf 6.6; observed event labels carried `:u` because
-  `perf_event_paranoid=2`.
+- PMU: Linux perf 6.6 with user+kernel counting (`perf_event_paranoid=-1`).
 
 Every sample verifies the three-event Session, exact derived and wire payloads,
 request JSON round trip, one decoded SSE data event, and exact response payload.
@@ -32,23 +31,23 @@ and framed SSE add 164 and 186 bytes respectively.
 
 | Context | Derive CPU (us) | Wire assembly CPU (us) | JSON encode CPU (ms) | JSON decode CPU (ms) | SSE + JSON CPU (ms) | Max RSS (MiB) |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 4 KiB | 41.7 | 99.7 | 0.015 | 0.015 | 2.25 | 50.98 |
-| 16 KiB | 41.0 | 100.3 | 0.025 | 0.020 | 2.27 | 50.99 |
-| 64 KiB | 41.7 | 100.0 | 0.075 | 0.056 | 2.97 | 52.99 |
-| 256 KiB | 41.7 | 100.7 | 0.339 | 0.521 | 3.73 | 54.99 |
-| 1 MiB | 41.0 | 102.7 | 1.478 | 0.827 | 6.08 | 68.99 |
-| 4 MiB | 42.0 | 104.0 | 4.745 | 2.421 | 17.53 | 143.28 |
-| 16 MiB | 44.7 | 104.7 | 15.938 | 11.034 | 42.56 | 338.14 |
+| 4 KiB | 41.7 | 99.7 | 0.015 | 0.015 | 2.103 | 50.99 |
+| 16 KiB | 41.0 | 99.7 | 0.025 | 0.020 | 2.259 | 50.99 |
+| 64 KiB | 41.3 | 99.7 | 0.075 | 0.056 | 2.956 | 52.98 |
+| 256 KiB | 41.0 | 100.3 | 0.319 | 0.520 | 3.608 | 54.98 |
+| 1 MiB | 40.3 | 100.7 | 1.444 | 0.816 | 5.901 | 68.99 |
+| 4 MiB | 41.7 | 103.7 | 4.642 | 2.337 | 17.156 | 142.45 |
+| 16 MiB | 41.3 | 105.0 | 15.430 | 10.706 | 41.940 | 336.71 |
 
 Ordinary least-squares fits over the seven context-size medians give these
 descriptive slopes on this host:
 
-- JSON request encoding: 0.947 ns of CPU per logical context byte;
-- JSON request decoding: 0.650 ns of CPU per logical context byte;
-- SSE framing plus response JSON decoding: 2.395 ns of CPU per logical byte;
-- whole-process instructions: 100.69 per logical context byte;
-- whole-process cycles: 36.72 per logical context byte;
-- process maximum RSS: 18.04 bytes per logical context byte.
+- JSON request encoding: 0.917 ns of CPU per logical context byte;
+- JSON request decoding: 0.630 ns of CPU per logical context byte;
+- SSE framing plus response JSON decoding: 2.362 ns of CPU per logical byte;
+- whole-process instructions: 110.99 per logical context byte;
+- whole-process cycles: 45.18 per logical context byte;
+- process maximum RSS: 17.95 bytes per logical context byte.
 
 The scoped operations are each repeated three times. Whole-process perf and
 maximum RSS include all repetitions across all operations, Node/V8 startup,
@@ -66,7 +65,7 @@ counts, flattening multiple text blocks, images, tool results, compaction, or
 token counting can force different work.
 
 SSE has a substantial fixed per-stream cost at the small sizes, so dividing the
-4 KiB sample by bytes produces a misleading 548 ns/byte. The fitted slope and
+4 KiB sample by bytes produces a misleading per-byte value. The fitted slope and
 large-size values better describe the byte-dependent component. The response
 payload is deliberately grown with request context only to provide the same
 byte axis; request and response sizes are independent in real workloads. The
@@ -76,3 +75,5 @@ translation state machine.
 This is an n=5 mechanism pilot, not a processor comparison. The complete
 samples, exact perf labels, host metadata, medians, ranges, checks, normalized
 metrics, and fits are retained in `results/c3-context-json-pilot.json`.
+`scripts/cpu/verify-cpu-results.py` independently checks the committed protocol
+hashes, sample invariants, aggregates, and fitted slopes.

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 CONDITIONS = [(backend, workload) for backend in ("local", "sandbox") for workload in ("read", "write")]
 
@@ -122,6 +122,7 @@ def main() -> None:
               f"wall_us/op={sample['fixture']['timing']['wall_ns_per_operation']/1000:.1f}", flush=True)
     aggregates, fits, comparisons = summarize(samples, args.counts)
     result = {"benchmark": "C6 DSH local-vs-sandbox filesystem scaling", "created_at": datetime.now(timezone.utc).isoformat(),
+              "protocol": benchmark_protocol(root, Path(__file__), fixture),
               "design": {"conditions": [f"{b}-{w}" for b, w in CONDITIONS], "operations": args.counts,
                          "repeats": args.repeats, "payload_bytes": args.payload_bytes, "randomization_seed": args.seed,
                          "cpu_affinity": None if args.cpu < 0 else args.cpu, "perf_enabled": use_perf,

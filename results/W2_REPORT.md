@@ -28,3 +28,9 @@ Two earlier DSH trials were infrastructure-invalid and are excluded: one ended
 after gateway transport retries, and one was interrupted by the outer command
 transport during a streamed tool call. They remain useful evidence about failure
 and recovery semantics but are not agent outcomes.
+
+The exact changed files for all ten valid final workspaces and their normalized
+pair summaries are frozen under `evidence/W2/`. The repository reproduction
+script rebuilds each workspace from the committed template, reruns this external
+verifier, and regenerates the n=5 aggregate; model reasoning and provider
+transcripts remain deliberately omitted.

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,55 @@ EXPECTED_MARKERS = [f"W8_STEP_{step:03d}" for step in range(1, 9)]
 
 def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def validate_dsh_trace(result_dir: Path, mode: str) -> dict[str, Any]:
+    trace_path = result_dir / "dsh.trace.jsonl"
+    if not trace_path.is_file():
+        raise ValueError(f"{result_dir}: frozen DSH trace is missing")
+    rows = read_jsonl(trace_path)
+    calls = [row for row in rows if row.get("type") == "tool/call"]
+    starts = [row for row in rows if row.get("type") == "tool/code-dispatch-start"]
+    dispatches = [row for row in rows if row.get("type") == "tool/code-dispatch"]
+    if mode == "direct":
+        if len(calls) != 8 or any(row.get("data", {}).get("name") != "bash" for row in calls):
+            raise ValueError(f"{result_dir}: direct DSH trace does not contain eight bash calls")
+        if starts or dispatches:
+            raise ValueError(f"{result_dir}: direct DSH trace unexpectedly contains code dispatches")
+    else:
+        if len(calls) != 1 or calls[0].get("data", {}).get("name") != "run_code":
+            raise ValueError(f"{result_dir}: PTC trace does not contain one outer run_code call")
+        if len(starts) != 8 or len(dispatches) != 8:
+            raise ValueError(f"{result_dir}: PTC trace does not contain eight dispatch pairs")
+        start_ids = [row.get("data", {}).get("subCallId") for row in starts]
+        dispatch_ids = [row.get("data", {}).get("subCallId") for row in dispatches]
+        if start_ids != dispatch_ids or len(set(start_ids)) != 8:
+            raise ValueError(f"{result_dir}: PTC dispatch correlation is incomplete")
+        if any(row.get("data", {}).get("name") != "bash" for row in starts + dispatches):
+            raise ValueError(f"{result_dir}: PTC dispatch used an unexpected tool")
+        if any(row.get("data", {}).get("isError") is not False for row in dispatches):
+            raise ValueError(f"{result_dir}: a PTC dispatch failed")
+        markers = []
+        for row in starts:
+            command = row.get("data", {}).get("arguments", {}).get("command", "")
+            match = re.search(r"W8_STEP_\d{3}", command)
+            markers.append(match.group(0) if match else None)
+        if markers != EXPECTED_MARKERS:
+            raise ValueError(f"{result_dir}: PTC dispatch order differs from the workspace markers")
+    return {
+        "outer_tool_calls": len(calls),
+        "code_dispatch_starts": len(starts),
+        "code_dispatches": len(dispatches),
+        "dispatch_pairs_correlated": mode == "direct" or len(starts) == len(dispatches) == 8,
+    }
 
 
 def summarize(result_dir: Path) -> dict[str, Any]:
@@ -44,6 +94,7 @@ def summarize(result_dir: Path) -> dict[str, Any]:
         raise ValueError(f"{result_dir}: provider detected the wrong mode")
     if requests[0]["detected_runtime"] != case["runtime"]:
         raise ValueError(f"{result_dir}: provider detected the wrong runtime")
+    dsh_trace = validate_dsh_trace(result_dir, case["mode"]) if case["runtime"] == "dsh" else None
 
     process_started = datetime.fromisoformat(raw["started_at"]).timestamp()
     first_request = requests[0]["time_ns"] / 1_000_000_000
@@ -77,6 +128,7 @@ def summarize(result_dir: Path) -> dict[str, Any]:
             "bridge_calls": stdout.get("bridgeCalls"),
             "tool_summary": stdout.get("toolSummary"),
         },
+        **({"dsh_trace": dsh_trace} if dsh_trace is not None else {}),
     }
 
 

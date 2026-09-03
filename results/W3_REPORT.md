@@ -39,3 +39,10 @@ The result is directly relevant to harness analysis: on a longer tool trajectory
 the two runtimes differed less in the final code strategy than in whether a
 malformed model tool event was recoverable. More models and task families are
 needed before generalizing beyond this provider/model/runtime combination.
+
+The exact changed/untracked files for all ten final workspaces and the five
+normalized pair summaries are frozen under `evidence/W3/`. The repository
+reproduction script rebuilds each workspace, reruns the hidden verifier including
+the added-test requirement, and regenerates the n=5 aggregate. The malformed
+provider fragment remains unavailable, so W4—not these artifacts—owns the
+deterministic malformed-event mechanism claim.

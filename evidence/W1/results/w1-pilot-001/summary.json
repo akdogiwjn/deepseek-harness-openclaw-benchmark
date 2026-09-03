@@ -1,0 +1,49 @@
+{
+  "task": "W1 exact YAML field edit",
+  "model": "deepseek-v4-flash",
+  "credential_source": "OpenCode configuration with environment reference",
+  "deepseek_harness": {
+    "session_id": "dsh-w1-002",
+    "success": true,
+    "verifier_passed": true,
+    "wall_seconds": 16.90213795704767,
+    "model_steps": 6,
+    "tool_calls": 6,
+    "tool_failures": 0,
+    "tools_used": [
+      "str_replace_editor",
+      "bash"
+    ],
+    "usage": {
+      "input_tokens": 5067,
+      "cache_read_tokens": 5632,
+      "output_tokens": 777,
+      "reasoning_tokens": 200
+    }
+  },
+  "openclaw": {
+    "session_id": "1c0095f8-4c79-4b5a-96f4-bfc234e736cd",
+    "success": true,
+    "verifier_passed": true,
+    "assistant_turns": 5,
+    "tool_calls": 5,
+    "tool_failures": 0,
+    "tools_used": [
+      "exec",
+      "read",
+      "edit"
+    ],
+    "usage": {
+      "input_tokens": 11148,
+      "cache_read_tokens": 14336,
+      "output_tokens": 702,
+      "reasoning_tokens": 137,
+      "provider_reported_total_tokens": 26186
+    }
+  },
+  "notes": [
+    "Both runs changed only service.timeout from 30 to 45 and passed the external verifier.",
+    "Token counters are native runtime/provider reports and require normalization before direct comparison.",
+    "No API key or gateway URL is stored in this result file."
+  ]
+}

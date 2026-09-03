@@ -53,7 +53,7 @@ recorded_session="$(find "$BENCH_ROOT/sessions/dsh-home/sessions" \
 [[ -n "$recorded_session" ]] || { echo "recorded session not found" >&2; exit 1; }
 cp "$recorded_session" "$result_dir/recorded-session.jsonl"
 
-# Replay must remain keyless and must not contact the recording provider.
+# Replay must not require a live provider credential or contact the recording provider.
 cleanup
 trap - EXIT
 requests_before="$(wc -l <"$request_log")"
@@ -130,7 +130,7 @@ checks = {
 if not all(checks.values()):
     raise SystemExit(f"W9 replay checks failed: {checks}")
 case = {
-    "scenario": "W9-C keyless LLM replay",
+    "scenario": "W9-C credential-free LLM replay",
     "recorded_model_calls": before,
     "provider_requests_after_replay": after,
     "recorded_projection": projection(record_events),

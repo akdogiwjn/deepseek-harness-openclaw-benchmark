@@ -94,6 +94,10 @@ Raw process records, verifier records, normalized pair summaries, and aggregates
 are stored below `results/`. Infrastructure-invalid runs are retained but excluded
 from agent success-rate calculations.
 
+The five valid final-workspace overlays and normalized summaries are frozen under
+`evidence/W2/`. `scripts/reproduce-evidence.sh` reconstructs every workspace,
+reruns the external verifier, and rebuilds the committed n=5 aggregate.
+
 The completed W2 run contains five valid interleaved pairs. See
 `results/W2_REPORT.md` and `results/w2-aggregate-n5.json` for the report and
 machine-readable aggregate.
@@ -102,7 +106,8 @@ machine-readable aggregate.
 
 W3 adds weighted, atomic quota consumption to a multi-module Python package and
 requires the agent to add focused tests. Five interleaved pairs are complete.
-See `results/W3_REPORT.md` and `results/w3-aggregate-n5.json`.
+See `results/W3_REPORT.md` and `results/w3-aggregate-n5.json`. Its ten final
+workspaces are likewise reconstructible from the overlays under `evidence/W3/`.
 
 ## W4 malformed tool-call recovery
 
@@ -153,8 +158,9 @@ See `results/W8_REPORT.md` and `results/w8-code-mode-summary.json`.
 
 W9 is a DSH white-box mechanism suite with three independent deterministic
 cases: a real hard crash followed by `ctx.agents.resume()` repair, a live Session
-prefix fork with an open-turn negative case, and keyless `llm-replay` of a
-normally completed session. See `results/W9_REPORT.md` and
+prefix fork with an open-turn negative case, and credential-free `llm-replay`
+without a live provider credential for a normally completed session. See
+`results/W9_REPORT.md` and
 `results/w9-session-summary.json`.
 
 The Python sdk-minimal carrier creates rather than cold-resumes a Session when a
@@ -203,20 +209,53 @@ path (`TokenMeter.measure`) rather than a tokenizer, with cold, incremental,
 repeat, and surface-shape subtests under `run-c8.py`; see
 `results/C8_REPORT.md` for the pilot. That report is generated from the seven
 validated pilot JSON files by `scripts/cpu/render-c8-report.py`, rather than from
-hand-copied measurements.
+hand-copied measurements. Every C1-C8 JSON also binds itself to the exact runner,
+fixture, shared perf helper, and pinned upstream revisions through a protocol
+hash. Validate those hashes, every sample invariant, and independently
+recomputed aggregates/fits with:
+
+```bash
+scripts/cpu/verify-cpu-results.py
+```
+
+These remain same-host n=5 mechanism pilots. Protocol validation closes
+code/result drift; it does not justify cross-processor rankings or statistical
+claims about broader workloads.
+
+After bootstrap, run the complete source/evidence/CPU/syntax audit with one
+command:
+
+```bash
+scripts/verify-repository.sh
+```
 
 ## Frozen evidence
 
-The redacted minimal raw inputs for deterministic W4-W10 are committed under
-`evidence/`. They include request logs, process records, case metadata, required
-workspace outputs, and selected structured trace events. Verify their SHA256
-manifest and rebuild every committed summary with:
+The redacted evidence for W1-W10 is committed under `evidence/`. W1-W3 retain
+normalized summaries and exact final-workspace overlays; W4-W10 retain request
+logs, process records, case metadata, required workspace outputs, and selected
+structured trace events. Verify the SHA256 manifest, rerun W1-W3 external
+verifiers, rebuild their aggregates, and rebuild every W4-W10 summary with:
 
 ```bash
 scripts/reproduce-evidence.sh
 ```
 
 See `evidence/README.md` for the redaction and omission policy.
+
+## Interpretation boundary
+
+- W1-W3 compare the two native-minimal runtime packages under intentionally
+  different tool surfaces; they do not isolate pure Harness overhead.
+- W4-W8 are deterministic mechanism cases. Their conclusions apply to the
+  injected protocol path and pinned revisions, not universal model quality or
+  runtime robustness.
+- W9-W10 are DSH-only white-box cases and provide no cross-runtime ranking.
+- C1-C8 attribute local host mechanisms on one ARM64 host with five repetitions
+  per point. Treat slopes, crossovers, and scale-out knees as pilot observations.
+- W2/W3 final-state correctness is publicly reconstructible, but provider
+  reasoning/transcripts are intentionally omitted; W3 therefore cannot identify
+  the exact malformed streamed field from frozen evidence.
 
 ## State
 

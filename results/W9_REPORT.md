@@ -2,7 +2,7 @@
 
 W9 is a DSH white-box mechanism study, not a DSH-versus-OpenClaw ranking. Three
 deterministic cases test whether the persisted Session event log supports cold
-recovery, prefix forking, and keyless model-stream replay.
+recovery, prefix forking, and model-stream replay without a live provider credential.
 
 ## W9-A crash and resume
 
@@ -39,12 +39,15 @@ The six-event parent prefix equaled the child's seed exactly. The child recorded
 An explicit boundary inside an open turn rejected with `OPEN_TURN`; the closed
 `turn/end` boundary succeeded.
 
-## W9-C keyless LLM replay
+## W9-C credential-free LLM replay
 
 A separate normally completed session recorded two model calls: one bash call
 and one final text response. The recording provider was then stopped. The
 `llm-replay` adapter booted a fresh real agent loop and reproduced both calls
-without increasing the provider request count beyond two.
+without increasing the provider request count beyond two. The carrier still
+received a non-production placeholder environment value because its startup
+validation requires the variable to exist; the replay adapter replaced the live
+provider and the endpoint was deliberately unreachable.
 
 The normalized turn, step, assistant message, tool call, and tool result
 projections matched. The complete normalized `assistant/chunk` projections also

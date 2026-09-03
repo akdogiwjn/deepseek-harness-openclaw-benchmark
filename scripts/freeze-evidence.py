@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze the minimal, redacted input closure for deterministic W4-W10 summaries."""
+"""Freeze redacted behavioral and deterministic benchmark evidence."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import json
 import re
 import shutil
 import socket
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -46,14 +47,47 @@ GROUPS = {
     "W10": ["w10-local-a-003", "w10-sandbox-b-004", "w10-local-aprime-003"],
 }
 
+BEHAVIORAL_PAIRS = {
+    "W1": {
+        "w1-pilot-001": {
+            "deepseek_harness": "w1-dsh-001",
+            "openclaw": "w1-openclaw-001",
+        },
+    },
+    "W2": {
+        # The first two attempts were infrastructure-invalid. The first valid
+        # OpenClaw workspace retained the earlier numeric suffix, so record the
+        # historical mapping explicitly instead of inferring it from pair ids.
+        "w2-pilot-003": {"deepseek_harness": "w2-dsh-003", "openclaw": "w2-openclaw-002"},
+        "w2-pilot-004": {"deepseek_harness": "w2-dsh-004", "openclaw": "w2-openclaw-003"},
+        "w2-pilot-005": {"deepseek_harness": "w2-dsh-005", "openclaw": "w2-openclaw-004"},
+        "w2-pilot-006": {"deepseek_harness": "w2-dsh-006", "openclaw": "w2-openclaw-005"},
+        "w2-pilot-007": {"deepseek_harness": "w2-dsh-007", "openclaw": "w2-openclaw-006"},
+    },
+    "W3": {
+        **{
+            f"w3-pilot-{number:03d}": {
+                "deepseek_harness": f"w3-dsh-{number:03d}",
+                "openclaw": f"w3-openclaw-{number:03d}",
+            }
+            for number in range(1, 6)
+        },
+    },
+}
+
 TRACE_SESSION_IDS = {
     "w4-recovery-001": "dsh-w4-001",
     "w6-dsh-nonzero-001": "dsh-w6-dsh-nonzero-001",
     "w6-dsh-nonzero-002": "dsh-w6-dsh-nonzero-002",
     "w6-dsh-invalid-args-001": "dsh-w6-dsh-invalid-args-001",
+    "w8-dsh-direct-01": "dsh-w8-dsh-direct-01",
+    "w8-dsh-code-01": "dsh-w8-dsh-code-01",
 }
 
-TRACE_TYPES = {"assistant/message", "tool/call", "tool/result", "llm/retry", "turn/end"}
+TRACE_TYPES = {
+    "assistant/message", "tool/call", "tool/result", "llm/retry", "turn/end",
+    "tool/code-dispatch-start", "tool/code-dispatch",
+}
 
 
 def sanitize_string(value: str, root: Path) -> str:
@@ -131,6 +165,66 @@ def freeze_trace(root: Path, session_id: str, target: Path) -> None:
     )
 
 
+def git_paths(workspace: Path, *args: str) -> list[str]:
+    completed = subprocess.run(
+        ["git", "-C", str(workspace), *args, "-z"],
+        check=True,
+        capture_output=True,
+    )
+    return [item.decode("utf-8") for item in completed.stdout.split(b"\0") if item]
+
+
+def freeze_workspace_overlay(workspace: Path, target: Path) -> dict[str, Any]:
+    changed = git_paths(workspace, "diff", "--name-only", "HEAD")
+    untracked = git_paths(workspace, "ls-files", "--others", "--exclude-standard")
+    paths = sorted(set(changed + untracked))
+    deleted: list[str] = []
+    hashes: dict[str, str] = {}
+    files_root = target / "files"
+    for relative in paths:
+        source = workspace / relative
+        if not source.exists():
+            deleted.append(relative)
+            continue
+        if not source.is_file():
+            raise ValueError(f"behavioral evidence supports files only: {source}")
+        destination = files_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+        hashes[relative] = sha256(destination)
+    return {
+        "workspace": workspace.name,
+        "changed_or_untracked_files": paths,
+        "deleted_files": deleted,
+        "file_sha256": hashes,
+    }
+
+
+def freeze_behavioral_groups(root: Path, evidence: Path, refresh: bool) -> None:
+    for group, pairs in BEHAVIORAL_PAIRS.items():
+        group_root = evidence / group
+        if refresh and group_root.exists():
+            shutil.rmtree(group_root)
+        for pair_name, workspaces in pairs.items():
+            source_summary = root / "results" / pair_name / "summary.json"
+            if not source_summary.is_file():
+                raise FileNotFoundError(source_summary)
+            target = group_root / "results" / pair_name
+            target.mkdir(parents=True, exist_ok=True)
+            copy_json(source_summary, target / "summary.json", root)
+            workspace_manifest = {
+                runtime: freeze_workspace_overlay(
+                    root / "workspaces" / workspace_name,
+                    target / "workspaces" / runtime,
+                )
+                for runtime, workspace_name in workspaces.items()
+            }
+            (target / "workspace-manifest.json").write_text(
+                json.dumps(workspace_manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -148,6 +242,8 @@ def main() -> None:
     if evidence.exists() and not args.refresh:
         parser.error("evidence already exists; pass --refresh to overwrite the known artifact set")
     evidence.mkdir(exist_ok=True)
+
+    freeze_behavioral_groups(root, evidence, args.refresh)
 
     for group, names in GROUPS.items():
         group_root = evidence / group
@@ -203,8 +299,8 @@ def main() -> None:
             key, value = line.split("=", 1)
             revisions[key] = value
     manifest = {
-        "format_version": 1,
-        "scope": "minimal redacted input closure for deterministic W4-W10 summaries",
+        "format_version": 2,
+        "scope": "final-workspace/verifier closure for W1-W3 plus minimal redacted input closure for deterministic W4-W10 summaries",
         "source_revisions": revisions,
         "redactions": [
             "benchmark absolute root -> $BENCH_ROOT",
@@ -212,7 +308,12 @@ def main() -> None:
             "host name -> $HOST",
             "W6 request messages compacted to assistant tool calls and tool results",
         ],
-        "omitted": ["API keys and HTTP headers", "server readiness logs", "full DSH sessions"],
+        "omitted": [
+            "API keys and HTTP headers",
+            "server readiness logs",
+            "full DSH sessions",
+            "W1-W3 provider transcripts and reasoning; normalized summaries and exact changed-file overlays are retained",
+        ],
     }
     (evidence / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

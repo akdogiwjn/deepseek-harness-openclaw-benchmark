@@ -10,8 +10,10 @@ an optional event only drops that counter instead of disabling perf entirely.
 from __future__ import annotations
 
 import math
+import hashlib
 import shutil
 import subprocess
+from pathlib import Path
 
 REQUIRED_EVENTS = ["task-clock", "cycles:u", "instructions:u"]
 KERNEL_SPLIT_EVENTS = ["cycles:k", "instructions:k"]
@@ -20,6 +22,41 @@ OPTIONAL_EVENTS = [
     "context-switches", "cpu-migrations", "page-faults",
 ]
 _SPLIT_NAMES = frozenset(("cycles", "instructions"))
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def benchmark_protocol(root: Path, *benchmark_files: Path) -> dict[str, object]:
+    """Bind one result to the exact runner/fixture bytes and pinned upstream revisions."""
+    shared = Path(__file__).resolve()
+    files = sorted({shared, *(path.resolve() for path in benchmark_files)})
+    file_hashes = {
+        str(path.relative_to(root)): _sha256(path)
+        for path in files
+    }
+    revisions = dict(
+        line.split("=", 1)
+        for line in (root / "configs" / "revisions.env").read_text(encoding="utf-8").splitlines()
+        if line and not line.startswith("#")
+    )
+    identity = hashlib.sha256()
+    for path, digest in file_hashes.items():
+        identity.update(path.encode("utf-8"))
+        identity.update(b"\0")
+        identity.update(digest.encode("ascii"))
+        identity.update(b"\n")
+    return {
+        "schema_version": 1,
+        "protocol_sha256": identity.hexdigest(),
+        "files": file_hashes,
+        "source_revisions": revisions,
+    }
 
 
 def _run(perf: str, events: list[str]) -> bool:

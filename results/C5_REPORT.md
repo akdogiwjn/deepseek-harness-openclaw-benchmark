@@ -21,7 +21,7 @@ This is a DSH internal A/B, not a DSH-versus-OpenClaw comparison.
 - Affinity: logical CPU 0.
 - Runtime: pinned Node 24.15.0 and DSH revision.
 - Host: ARM64 HiSilicon, 256 logical CPUs, 2 sockets, 4 NUMA nodes.
-- PMU: Linux perf 6.6; all observed labels carried `:u`.
+- PMU: Linux perf 6.6 with user+kernel counting (`perf_event_paranoid=-1`).
 
 Every sample verifies provider request count and presented tool name, exact noop
 invocation count and payloads, outer tool calls/results, PTC dispatch
@@ -31,16 +31,16 @@ start/settle counts, Agent steps, and one completed turn.
 
 | Operations | Native requests | PTC requests | Native wall (ms) | PTC wall (ms) | Native instructions (M) | PTC instructions (M) | Native RSS (MiB) | PTC RSS (MiB) |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 0 | 1 | 2 | 9.4 | 100.5 | 524.7 | 1,056.2 | 65.0 | 97.0 |
-| 1 | 2 | 2 | 14.4 | 103.9 | 541.3 | 1,066.0 | 65.0 | 98.5 |
-| 4 | 5 | 2 | 24.2 | 108.4 | 584.8 | 1,080.2 | 67.0 | 97.9 |
-| 16 | 17 | 2 | 46.7 | 135.6 | 675.5 | 1,114.0 | 69.0 | 100.1 |
-| 64 | 65 | 2 | 135.8 | 156.5 | 1,095.1 | 1,178.4 | 73.0 | 100.2 |
-| 256 | 257 | 2 | 466.7 | 272.7 | 2,687.1 | 1,563.6 | 81.0 | 112.1 |
-| 1,024 | 1,025 | 2 | 3,159.0 | 547.4 | 17,380.0 | 2,528.9 | 146.2 | 116.4 |
+| 0 | 1 | 2 | 9.7 | 102.2 | 578.2 | 1,153.4 | 65.0 | 98.6 |
+| 1 | 2 | 2 | 14.2 | 105.4 | 599.8 | 1,159.3 | 65.0 | 98.9 |
+| 4 | 5 | 2 | 24.3 | 110.5 | 646.3 | 1,176.0 | 67.0 | 99.0 |
+| 16 | 17 | 2 | 47.8 | 136.0 | 738.8 | 1,217.4 | 69.0 | 99.6 |
+| 64 | 65 | 2 | 138.2 | 159.0 | 1,165.1 | 1,281.9 | 72.9 | 100.4 |
+| 256 | 257 | 2 | 479.1 | 277.3 | 2,778.9 | 1,688.0 | 81.0 | 112.5 |
+| 1,024 | 1,025 | 2 | 3,170.9 | 554.2 | 17,884.8 | 2,678.2 | 147.7 | 116.5 |
 
-PTC has a substantial fixed cost: even a zero-subcall program took about 100 ms
-and 1.06 billion whole-process user-space instructions, versus 9.4 ms and 0.52
+PTC has a substantial fixed cost: even a zero-subcall program took about 102 ms
+and 1.15 billion whole-process instructions, versus 9.7 ms and 0.58
 billion for Native completion-only. That fixed cost includes the extra Agent
 step, PTC bridge, TypeScript stripping, fresh worker creation, message ports,
 and worker teardown.
@@ -48,8 +48,8 @@ and worker teardown.
 As operation count grows, Native performs one complete provider/Agent step per
 tool while PTC remains at two provider requests. Session event count is exactly
 `15 + 10N` for Native and `25 + 2N` for PTC in this fixture. At 64 operations,
-PTC was still 15% slower and used 8% more instructions. At 256 it used 42% less
-wall time and 42% fewer instructions; at 1,024 it used 83% less wall time and
+PTC was still 15% slower and used 10% more instructions. At 256 it used 42% less
+wall time and 39% fewer instructions; at 1,024 it used 83% less wall time and
 85% fewer instructions.
 
 The observed crossover therefore lies between 64 and 256 no-op operations for
@@ -65,7 +65,8 @@ single linear slope over all seven points has a negative Native intercept and
 is descriptive only; the pointwise medians are the primary result.
 
 Whole-process perf includes Node/V8 startup, Harness composition, the measured
-turn, worker lifecycle, and teardown. The `:u` restriction excludes kernel work
-and makes zero scheduling counters non-interpretable. This is an n=5 mechanism
-pilot, not a real-model performance claim or processor comparison. Complete
-samples and fits are in `results/c5-code-mode-cpu-pilot.json`.
+turn, worker lifecycle, and teardown. This rerun includes user and kernel PMU
+work, but it remains an n=5 mechanism pilot, not a real-model performance claim
+or processor comparison. Complete samples and fits are in
+`results/c5-code-mode-cpu-pilot.json`; `scripts/cpu/verify-cpu-results.py`
+checks protocol hashes, invariants, aggregates, and fits.

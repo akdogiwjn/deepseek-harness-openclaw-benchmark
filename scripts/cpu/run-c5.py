@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from perf_utils import parse_perf, probe_perf
+from perf_utils import benchmark_protocol, parse_perf, probe_perf
 
 MODES = ["native", "ptc"]
 
@@ -138,6 +138,7 @@ def main() -> None:
     aggregates, fits, comparisons = summarize(samples, args.counts)
     result = {
         "benchmark": "C5 DSH native-vs-PTC Agent Loop scaling", "created_at": datetime.now(timezone.utc).isoformat(),
+        "protocol": benchmark_protocol(root, Path(__file__), fixture),
         "design": {"modes": MODES, "operations": args.counts, "repeats": args.repeats,
                    "payload_bytes": args.payload_bytes, "randomization_seed": args.seed,
                    "cpu_affinity": None if args.cpu < 0 else args.cpu, "perf_enabled": use_perf,

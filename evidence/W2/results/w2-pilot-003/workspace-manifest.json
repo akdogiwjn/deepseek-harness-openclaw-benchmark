@@ -1,0 +1,22 @@
+{
+  "deepseek_harness": {
+    "workspace": "w2-dsh-003",
+    "changed_or_untracked_files": [
+      "retry_parser/parser.py"
+    ],
+    "deleted_files": [],
+    "file_sha256": {
+      "retry_parser/parser.py": "12fe80487324dd6afefd4670ae5c422c1dd5bdffb041b85270fe8ec17a9183f5"
+    }
+  },
+  "openclaw": {
+    "workspace": "w2-openclaw-002",
+    "changed_or_untracked_files": [
+      "retry_parser/parser.py"
+    ],
+    "deleted_files": [],
+    "file_sha256": {
+      "retry_parser/parser.py": "1bbf6d65fb6e13369bd68c17869adc377494a824abd8c8e169b363035d03b994"
+    }
+  }
+}
