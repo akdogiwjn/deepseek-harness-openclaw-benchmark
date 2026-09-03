@@ -67,7 +67,7 @@ def main() -> None:
     figure_counts = {}
     for report_name, html_name, chapter_count in (
         ("report.md", "report.html", 12),
-        ("report_showcase.md", "report_showcase.html", 13),
+        ("report_showcase.md", "report_showcase.html", 12),
     ):
         reports[report_name], figure_counts[report_name] = validate_document(
             report_name, html_name, chapter_count)
@@ -97,6 +97,7 @@ def main() -> None:
         "因此不再增加一张独立 C1 图", "RSS 不增加第三个图轴", "不被包装成新的",
         "deterministic mechanism tests", "white-box mechanism tests", "calibrated fixture",
         "pinned Runtime", "先建立这个边界",
+        "## 11. 实验证据、可信度与边界", "### 11.2 Provenance",
     )
     for phrase in editorial_asides:
         if phrase in showcase:

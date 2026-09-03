@@ -304,7 +304,7 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 
 ---
 
-## 9. 从 Harness 设计到 Host CPU 工作
+## 9. 这些设计为什么会影响 Host CPU
 
 前面的 W 系列回答“Runtime 怎么工作”；C 系列进一步测量这些机制在 Host 侧形成的工作。
 
@@ -317,91 +317,68 @@ OpenClaw 是参照 Runtime，不是被打分的“旧框架”。下表先回答
 | Recovery Semantics | W4 / W6 | Agent Loop 控制流 | C1（辅助证据） |
 | Multi-Agent Scale | — | 调度、内存与 Runtime 密度 | C7 |
 
-CPU 分析用于说明软件机制会形成 Host workload，不是处理器排名。当前数据来自单一 {{META_HOST_MACHINE}} 主机、固定拓扑与确定性测试场景。
+这些 CPU 实验用于说明软件机制会形成哪些 Host 工作，不用于处理器排名。当前数据来自单一 {{META_HOST_MACHINE}} 主机、固定拓扑与确定性测试场景。
 
 ---
 
-## 10. CPU 数据得到的主要观察
+## 10. 这些设计最终让 Host CPU 多做了什么
 
-**控制面（Control Plane）。** C1 使用确定性的进程内 LLM 和 no-op Tool，观察 Agent Loop 随 Tool Step 增长的本地 CPU 成本。Cold 测试从 {{C1_INITIAL_STEPS}} 增长到 {{C1_FINAL_STEPS}} steps 时，内部 CPU 时间从 {{C1_INITIAL_CPU_MS}} ms 增长到 {{C1_FINAL_CPU_MS}} ms。由于同一 append-only Session 的 Context 也随 step 增长，这表示控制面与 growing-state 的组合成本，而不是纯 `while` loop overhead。
+前面的实验主要验证 DeepSeek Harness 如何组织状态和执行。进一步观察 Host CPU，可以看到这些设计并不只有软件结构上的变化：Session 越长，需要处理的状态越多；Tool 越碎，进程和编排开销越明显；PTC 会改变本地执行粒度；多个 Agent 并发时，还会带来额外的 CPU 和内存压力。
 
-### 10.1 长生命周期 Agent 会形成扩大的状态工作集
+C1 还表明，随着 Agent Step 增多，Agent Loop 本身以及同步增长的 Session/Context 会形成持续增加的本地 CPU 工作。由于两者在当前测试中同时增长，C1 不能解释为纯 Agent Loop 的单步开销。
 
-C2 把 Session append、derive、fork、persist 和 load 的 slope 分开；C3 固定消息形状并扩大 Context Bytes；C8 区分 Cold Replay、Warm Repeat 与 Incremental pressure accounting。
+### 10.1 Agent 运行越久，状态处理成本越高
 
-<p align="center"><img src="figures/data/c2-session-cost.svg" width="940" alt="C2 Session 状态操作的每事件 CPU slope"></p>
-<p align="center"><sub>图 10-1　固定 event shape 下，append slope={{C2_APPEND_CPU_US}} μs/event，deriveMessages slope={{C2_DERIVE_MESSAGES_CPU_US}} μs/event。</sub></p>
+Agent 每执行一步，都可能产生新的 Session Event、Tool Result 和 Context。Runtime 需要保存这些状态，并在下一次模型请求前重新整理、序列化和检查 Context 大小。因此，长时间运行的 Agent 不只是模型 Token 变多，Host CPU 也会处理越来越多状态。
+
+C3 中，当 Context 墛长到 {{C3_MAX_CONTEXT_MIB}} MiB 时，本地 SSE + JSON 处理约需要 {{C3_SSE_JSON_MS}} ms CPU 时间。
 
 <p align="center"><img src="figures/data/c3-context-serialization.svg" width="980" alt="C3 Context 大小与 JSON、SSE 处理 CPU 时间"></p>
-<p align="center"><sub>图 10-2　Context 扩大到 {{C3_MAX_CONTEXT_BYTES}} B 时，JSON encode={{C3_JSON_ENCODE_MS}} ms、decode={{C3_JSON_DECODE_MS}} ms、SSE+JSON={{C3_SSE_JSON_MS}} ms。</sub></p>
+<p align="center"><sub>图 10-1　Context 扩大到 {{C3_MAX_CONTEXT_MIB}} MiB 时，JSON encode={{C3_JSON_ENCODE_MS}} ms、decode={{C3_JSON_DECODE_MS}} ms、SSE+JSON={{C3_SSE_JSON_MS}} ms。</sub></p>
+
+C8 还显示，即使 Session 不再新增事件，对当前 Context 的重复计量成本仍会随着 Context 增大而增加。Cold/Repeat 边际 slope 比为 {{C8_COLD_REPEAT_RATIO}}×；该比值包含 Cold durable-history replay，不是端到端 latency 倍率。
 
 <p align="center"><img src="figures/data/c8-context-pressure.svg" width="980" alt="C8 TokenMeter Context Pressure 的 Cold 与 Warm 结果"></p>
-<p align="center"><sub>图 10-3　Cold/Repeat 边际 slope 比为 {{C8_COLD_REPEAT_RATIO}}×；Incremental 使用 effective surface，不使用 initial surface。</sub></p>
+<p align="center"><sub>图 10-2　Cold、Incremental 与 Warm Repeat 的 CPU 成本均随当前或有效 Surface 规模增长。</sub></p>
 
-**研究推断。** Long-lived Agent 更像 growing-state workload：即使没有新 event，Warm Repeat 仍随 surface 增长。但这些 slope 是当前固定测试场景的机制成本，不等于生产端到端 latency；C8 也不是 tokenizer benchmark。
+C2 还确认了 Session 的 append、fork、持久化和加载本身都有独立 CPU 成本。这些数字来自当前固定测试场景，不等同于生产端到端 latency；C8 也不是 tokenizer benchmark。
 
-### 10.2 Tiny Tool 下，Runtime Boundary 可能比 Tool 更显著
+### 10.2 Tool 很短时，执行 Tool 的外围开销可能更明显
 
-C4 比较 managed、raw one-shot 与 persistent process；C5 比较 Native Agent Loop 与 PTC program worker。两者共同说明，Tool 很短时，process lifecycle 与重复 orchestration boundary 可能占据显著比例。
+如果 Tool 自己只需要很短时间，但 Runtime 每次都要创建进程、建立 pipe、等待退出、记录结果并再次进入 Agent Loop，那么真正耗时的可能不是 Tool 本身，而是 Tool 周围的执行边界。
+
+C4 在 {{C4_OPERATION_COUNT}} 次微操作下，DSH managed 模式约为 {{C4_MANAGED}} ms/op，而 persistent control 约为 {{C4_PERSISTENT}} ms/op。这里的 persistent 只是机制对照，不代表 OpenClaw 的实现。
 
 <p align="center"><img src="figures/data/c4-process-lifecycle.svg" width="940" alt="C4 不同 Process lifecycle 的单次执行时间"></p>
-<p align="center"><sub>图 10-4　{{C4_OPERATION_COUNT}} 次微操作下，managed={{C4_MANAGED}} ms/op、one-shot={{C4_RAW_ONESHOT}} ms/op、persistent control={{C4_PERSISTENT}} ms/op。</sub></p>
+<p align="center"><sub>图 10-3　短 Tool 场景中，进程生命周期会形成明显的外围开销。</sub></p>
+
+这也解释了 PTC 为什么值得关注。PTC 不是让单个 Tool 变快，而是把多个 Tool 放进一次本地 Program execution 中，减少重复进入 Model/Harness 编排链路的次数。
+
+在当前确定性测试场景的 {{C5_OPERATION_COUNT}} 次操作点，Native 约为 {{C5_NATIVE_SELECTED_MS}} ms，PTC 约为 {{C5_PTC_SELECTED_MS}} ms。低操作数时 PTC 有额外启动成本，因此这个结果不能理解成“PTC 永远更快”。
 
 <p align="center"><img src="figures/data/c5-native-vs-ptc.svg" width="980" alt="C5 Native 与 PTC 随操作数增长的执行时间"></p>
-<p align="center"><sub>图 10-5　PTC 有固定 worker cost；当前 crossover 位于 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} 次操作之间，不是生产阈值。</sub></p>
+<p align="center"><sub>图 10-4　当前测试中，Native 与 PTC 的 crossover 位于 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} 次操作之间，不是生产阈值。</sub></p>
 
-在 {{C5_OPERATION_COUNT}} 次操作点，Native={{C5_NATIVE_SELECTED_MS}} ms，PTC={{C5_PTC_SELECTED_MS}} ms。真实 provider latency、Program 生成质量与 Tool 计算都可能改变 crossover；当前结论只描述本地执行粒度。
+### 10.3 Sandbox / Policy 也会产生实际 CPU 工作
 
-### 10.3 Policy 也是 Runtime 工作
+W10 中，换成 `fs-sandbox` 后，Harness 会检查路径是否位于允许范围内。这样的检查需要路径规范化、containment 判断和 Policy decision，因此也会消耗 CPU。
 
-W10 证明替换 `ctx.fs` provider 会改变 outside-path policy。C6 在 {{C6_OPERATION_COUNT}} 次允许写入下，记录 sandbox/local wall={{C6_WALL_RATIO_SELECTED}}×、CPU={{C6_CPU_RATIO_SELECTED}}×。C6 不是 container、seccomp、Firecracker 或远程 E2B benchmark，只说明 path normalization、containment check 和 policy decision 会形成可测 Host 工作。
+C6 中，{{C6_OPERATION_COUNT}} 次允许写入时，sandbox/local 的 wall time 比约为 {{C6_WALL_RATIO_SELECTED}}×，CPU 比约为 {{C6_CPU_RATIO_SELECTED}}×。这里测的只是 DSH filesystem policy，不是完整 VM、container、Firecracker 或远程 E2B sandbox 的成本。
 
-### 10.4 多 Agent 变成 Runtime Density 问题
+### 10.4 多个 Agent 同时运行后，问题不再只是单任务速度
+
+单个 Agent 时通常关注一次任务需要多久；当一台机器同时运行几十个 Agent 时，还需要关注总吞吐、并行效率和每个 Runtime 占用的内存。
+
+C7 中，{{C7_AGENT_COUNT}} 个独立 Agent 进程达到约 {{C7_SELECTED_AGENTS_PER_SECOND}} Agents/s，并行效率约为 {{C7_SELECTED_EFFICIENCY_PCT}}%；summed child max RSS 约为 {{C7_SELECTED_SUM_RSS_GIB}} GiB，最大单个 child RSS 为 {{C7_SELECTED_MAX_CHILD_RSS_MIB}} MiB。
 
 <p align="center"><img src="figures/data/c7-agent-scale.svg" width="980" alt="C7 Multi-Agent 吞吐与并行效率"></p>
-<p align="center"><sub>图 10-6　{{C7_AGENT_COUNT}} Agents 时吞吐达到 {{C7_SELECTED_AGENTS_PER_SECOND}} Agents/s，并行效率为 {{C7_SELECTED_EFFICIENCY_PCT}}%。</sub></p>
+<p align="center"><sub>图 10-5　多个独立 Agent 并发运行时的总吞吐与并行效率。</sub></p>
 
-该点 summed child max RSS={{C7_SELECTED_SUM_RSS_GIB}} GiB，最大单 child RSS={{C7_SELECTED_MAX_CHILD_RSS_MIB}} MiB。规模面同时关联 core、memory capacity 与 scheduler；固定单机结果不支持 ARM/x86、厂商或生产部署排名。
-
----
-
-## 11. 实验证据、可信度与边界
-
-### 11.1 三种证据等级
-
-| 类型 | 可以复查什么 | 不能自动重建什么 |
-|---|---|---|
-| W1–W3 真实任务 | frozen workspace、diff、hidden verifier outcome | 完整 reasoning/provider transcript 与所有 runtime metadata |
-| W4–W10 机制实验 | 固定 request、runtime artifact、机制 summary | 真实模型 workload 的总体分布 |
-| C1–C8 CPU Pilot | raw samples、protocol binding、aggregate/fit 一致性 | 跨机器、跨 ISA 的普遍性能结论 |
-
-本报告严格模式从 frozen evidence 重建 W1–W3 outcome、W4–W10 summary，并用 protocol-bound runner logic 从 C raw samples 重算 aggregate/fit。它验证 committed result 与当前固定版本逻辑一致，不是对 aggregation formula 的第二套独立实现。
-
-### 11.2 Provenance
-
-| 项目 | 值 |
-|---|---|
-| 报告输入 SHA256 | `{{REPORT_INPUT_SHA256}}` |
-| 生成时 Git 状态 | `{{GIT_STATUS_AT_GENERATION}}` |
-| DeepSeek Harness | `{{DEEPSEEK_HARNESS_COMMIT}}` |
-| OpenClaw | `{{OPENCLAW_COMMIT}}` |
-| Node.js | `{{NODE_VERSION}}` |
-| Host architecture | `{{META_HOST_MACHINE}}` |
-| perf mode | `{{PERF_MODE}}` |
-| Evidence verification | `{{EVIDENCE_VERIFICATION}}` |
-
-### 11.3 本报告明确不声称什么
-
-- 不声称 DeepSeek 首次发明 Plugin、Session persistence、Compaction 或 code execution；
-- 不声称 DSH 全面优于 OpenClaw；
-- 不把 W3 的 {{W3_DSH_SUCCESS}}/{{W3_DSH_TOTAL}} vs {{W3_OPENCLAW_SUCCESS}}/{{W3_OPENCLAW_TOTAL}} 外推为普遍可靠性排名；
-- 不声称 PTC 永远更快或 {{C5_CROSSOVER_LOW}}～{{C5_CROSSOVER_HIGH}} 是生产阈值；
-- 不把 Replay model stream 等同于重复外部副作用；
-- 不把 C1–C8 用作 ARM/x86 或 CPU 厂商排名。
+因此，多 Agent 部署最终会同时受到 CPU 核数、调度和内存容量影响。固定单机结果不支持 ARM/x86、厂商或生产部署排名。
 
 ---
 
-## 12. 总结
+## 11. 总结
 
 DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能”，而是一套更显式的 Agent Runtime 组织方式：
 

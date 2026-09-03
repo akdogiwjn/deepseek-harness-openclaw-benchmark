@@ -130,6 +130,7 @@
   },
   "c3": {
     "max_context_bytes": 16777216,
+    "max_context_mib": 16.0,
     "json_encode_ms": 15.43,
     "json_decode_ms": 10.706,
     "sse_json_ms": 41.940333333333335

@@ -206,6 +206,7 @@ def build_metrics(data: dict) -> dict:
                ("append_cpu_us", "derive_messages_cpu_us", "fork_prefix_cpu_us",
                 "jsonl_write_cpu_us", "jsonl_warm_load_cpu_us")},
         "c3": {"max_context_bytes": int(max_context),
+               "max_context_mib": int(max_context) / 1024 / 1024,
                "json_encode_ms": c3["aggregates"][max_context]["json_encode_request_cpu_us"]["median"] / 1000,
                "json_decode_ms": c3["aggregates"][max_context]["json_decode_request_cpu_us"]["median"] / 1000,
                "sse_json_ms": c3["aggregates"][max_context]["sse_frame_and_json_decode_cpu_us"]["median"] / 1000},
@@ -410,7 +411,7 @@ def main() -> None:
     write_report("report.template.md", "report.md", "report.html",
                  "DeepSeek Harness 新特性与运行时机制调研", metrics, provenance)
     write_report("report_showcase.template.md", "report_showcase.md", "report_showcase.html",
-                 "DeepSeek Harness 技术展示版", metrics, provenance)
+                 "DeepSeek Harness 核心设计与机制验证", metrics, provenance)
     subprocess.run([sys.executable, str(REPORT_ROOT / "scripts" / "validate_report.py")], cwd=ROOT, check=True)
     print("built detailed and showcase Markdown/HTML reports; "
           f"evidence={provenance['evidence_verification']}")
