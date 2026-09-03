@@ -2,6 +2,11 @@
 
 This directory contains source-pinned local builds and isolated experiment state for a first native-minimal comparison.
 
+## Research reports
+
+- [DeepSeek Harness 新型 Agent Harness 机制调研](deepseek_harness_report/report.md)：以 DSH Feature 为主线，串联 pinned source、W1–W10 行为证据与 C1–C8 Host CPU 影响。
+- [Harness CPU interactive report](harness_cpu_report/dist/index.html)：以 Runtime/CPU workload decomposition 为主的离线长页。
+
 ## Installed revisions
 
 - DeepSeek Harness: `dd6322d604e00eec1ba5e0c8541159906a21094a`
