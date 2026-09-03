@@ -38,18 +38,18 @@ CPU 微基准实验 C1–C8
         ↓ 拆解 Host CPU 工作</code></pre>
 <p>真实任务接近实际使用，但模型输出、网络与执行路径会引入大量变量，因此适合发现现象，不适合单独解释原因。W4–W8 使用固定输入和脚本化 provider 隔离单个机制；W9–W10 直接验证 DSH 的 Session 和 filesystem capability。确认机制后，C1–C8 再去掉真实模型网络延迟，测量 Host 侧工作。</p>
 <h3 id="2-2-harness-行为实验-w1-w10">2.2 Harness 行为实验 W1–W10</h3>
-<div class="table-wrap"><table><thead><tr><th>实验</th><th>测试内容</th><th>为什么做</th><th>主要回答的问题</th><th>主要结果</th></tr></thead><tbody><tr><td>W1</td><td>Exact File Edit</td><td>最基础基线测试</td><td>是否能完成明确、可验证的文件修改</td><td>两侧均完成任务，并通过外部 verifier</td></tr><tr><td>W2</td><td>Python Bug Fix</td><td>小型真实 Coding Task</td><td>是否具备读代码、修改、测试和验证闭环</td><td>DSH 4/5；OpenClaw 5/5</td></tr><tr><td>W3</td><td>Multi-module Feature</td><td>更长的真实执行链</td><td>是否出现值得进一步隔离的稳定性现象</td><td>DSH 5/5；OpenClaw 2/5，观察到 <code>incomplete_turn</code></td></tr><tr><td>W4</td><td>Malformed Tool Call</td><td>固定格式异常的 provider event</td><td>错误被结构化并继续，还是终止 Turn</td><td>DSH 将异常转成模型可见的错误后继续并完成；OpenClaw 固定版本测试场景以 <code>incomplete_turn</code> 结束</td></tr><tr><td>W5</td><td>Automatic Compaction</td><td>固定长 Tool Result</td><td>Compaction 如何触发，之后能否继续</td><td>DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 次压缩后的模型请求体均下降</td></tr><tr><td>W6</td><td>Tool Failure</td><td>固定缺少必填参数 / 子进程退出码 17</td><td>普通 Tool Failure 与格式异常事件是否属于同一边界</td><td>两侧在缺少必填参数和子进程退出码 17 两类错误后均继续执行</td></tr><tr><td>W7</td><td>Long Tool Chain</td><td>连续 20 次 Tool Call</td><td>Context、模型请求体与 Tool state 如何累积</td><td>两侧均完成 20-step Tool Chain；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result</td></tr><tr><td>W8</td><td>Direct vs PTC</td><td>相同 8 个底层操作</td><td>模型请求次数下降是否来自编排折叠，而非漏做工作</td><td>DSH 向模型 Provider 发出的请求从 9 次降至 2 次，底层操作仍为 8 个</td></tr><tr><td>W9</td><td>Resume / Fork / Replay</td><td>DSH Session 白盒实验</td><td>Event Log 如何支持恢复、分支和重放</td><td>已持久化日志保持一致；无结果的 Tool Call 未被重新执行；Fork 成功；Replay 未访问在线模型 Provider</td></tr><tr><td>W10</td><td>Filesystem Seam</td><td><code>local → sandbox → local</code></td><td>capability/provider 是否为可观察边界</td><td>local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>实验</th><th>测试内容</th><th>为什么做</th><th>主要回答的问题</th><th>主要结果</th></tr></thead><tbody><tr><td>W1</td><td>Exact File Edit</td><td>最基础基线测试</td><td>是否能完成明确、可验证的文件修改</td><td>两侧均完成任务，并通过外部 verifier</td></tr><tr><td>W2</td><td>Python Bug Fix</td><td>小型真实 Coding Task</td><td>是否具备读代码、修改、测试和验证闭环</td><td>DSH 4/5；OpenClaw 5/5</td></tr><tr><td>W3</td><td>Multi-module Feature</td><td>更长的真实执行链</td><td>是否出现值得进一步隔离的稳定性现象</td><td>DSH 5/5；OpenClaw 2/5，观察到 <code>incomplete_turn</code></td></tr><tr><td>W4</td><td>Malformed Tool Call</td><td>固定格式异常的 provider event</td><td>错误被结构化并继续，还是终止 Turn</td><td>DSH 将异常转成模型可见的错误后继续并完成；OpenClaw 固定版本测试场景以 <code>incomplete_turn</code> 结束</td></tr><tr><td>W5</td><td>Automatic Compaction</td><td>固定长 Tool Result</td><td>Compaction 如何触发，之后能否继续</td><td>DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 次压缩后的模型请求体均下降</td></tr><tr><td>W6</td><td>Tool Failure</td><td>固定缺少必填参数 / 子进程退出码 17</td><td>普通 Tool Failure 与格式异常事件是否属于同一边界</td><td>两侧在缺少必填参数和子进程退出码 17 两类错误后均继续执行</td></tr><tr><td>W7</td><td>长工具调用链</td><td>连续 20 次 Tool 调用</td><td>Context、模型请求体与 Tool state 如何累积</td><td>两侧均完成连续 20 次 Tool 调用；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result</td></tr><tr><td>W8</td><td>Direct vs PTC</td><td>相同 8 个底层操作</td><td>模型请求次数下降是否来自编排折叠，而非漏做工作</td><td>DSH 向模型 Provider 发出的请求从 9 次降至 2 次，底层操作仍为 8 个</td></tr><tr><td>W9</td><td>Resume / Fork / Replay</td><td>DSH Session 白盒实验</td><td>Event Log 如何支持恢复、分支和重放</td><td>已持久化日志保持一致；无结果的 Tool Call 未被重新执行；Fork 成功；Replay 未访问在线模型 Provider</td></tr><tr><td>W10</td><td>Filesystem Seam</td><td><code>local → sandbox → local</code></td><td>capability/provider 是否为可观察边界</td><td>local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复</td></tr></tbody></table></div>
 <p>W1–W3 为真实 Agent 任务；W4–W8 为确定性机制实验；W9–W10 为 DSH 白盒机制实验。W9/W10 没有完全对等的 OpenClaw 实验，因此不用于两套 Runtime 排名。</p>
 <h3 id="2-3-为什么-w3-之后需要-w4">2.3 为什么 W3 之后需要 W4</h3>
 <p>W1 只验证最基础的 exact edit。W2 是 <code>Retry-After</code> parser Bug：Agent 需要运行测试、阅读代码、修改实现并再次验证，DSH 完成 4/5，OpenClaw 完成 5/5。样本数只有 5，wall-time 分布也不用于性能排名。</p>
 <p>W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补充测试，执行链更长。DSH 完成 5/5，OpenClaw 完成 2/5；部分失败表现为 <code>incomplete_turn</code>。这只能说明真实任务里观察到了差异，不能说明差异一定来自某个 Harness 机制。因此 W4 固定格式异常的 provider event，只观察恢复路径。</p>
 <h3 id="2-4-cpu-实验-c1-c8">2.4 CPU 实验 C1–C8</h3>
-<div class="table-wrap"><table><thead><tr><th>实验</th><th>测什么</th><th>对应 Runtime 工作</th></tr></thead><tbody><tr><td>C1</td><td>Agent Loop 随 Tool Step 增长</td><td>控制面</td></tr><tr><td>C2</td><td>Event 追加、消息派生、分叉、持久化与加载</td><td>状态面</td></tr><tr><td>C3</td><td>Context JSON 编解码与 SSE 流解析</td><td>状态处理 / 序列化</td></tr><tr><td>C4</td><td>DSH 管理路径、直接单次进程与持久进程</td><td>进程 / Tool 边界</td></tr><tr><td>C5</td><td>常规 Tool 调用与 PTC</td><td>执行粒度</td></tr><tr><td>C6</td><td>Local FS 与 Sandbox FS Policy</td><td>Capability / Policy</td></tr><tr><td>C7</td><td>1→32 个独立 Agent</td><td>多 Agent 扩展</td></tr><tr><td>C8</td><td>TokenMeter / Context Pressure</td><td>Context 管理</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>实验</th><th>测什么</th><th>对应 Runtime 工作</th></tr></thead><tbody><tr><td>C1</td><td>Agent Loop 随 Tool Step 增长</td><td>控制面</td></tr><tr><td>C2</td><td>Event 追加、消息派生、分叉、持久化与加载</td><td>状态面</td></tr><tr><td>C3</td><td>Context JSON 编解码与 SSE 流解析</td><td>状态处理 / 序列化</td></tr><tr><td>C4</td><td>DSH 管理路径、直接单次进程与持久进程</td><td>进程 / Tool 边界</td></tr><tr><td>C5</td><td>常规 Tool 调用与 PTC</td><td>执行粒度</td></tr><tr><td>C6</td><td>本地文件系统与 Sandbox 文件策略</td><td>文件系统策略检查</td></tr><tr><td>C7</td><td>1→32 个独立 Agent</td><td>多 Agent 扩展</td></tr><tr><td>C8</td><td>TokenMeter 的 Context 大小/压力计量</td><td>Context 管理</td></tr></tbody></table></div>
 <hr>
 <h2 id="3-everything-is-a-plugin-把-runtime-能力变成可组合边界">3. Everything is a Plugin：把 Runtime 能力变成可组合边界</h2>
 <h3 id="3-1-它解决什么问题">3.1 它解决什么问题</h3>
 <p>一个 Agent Runtime 同时包含模型调用、工具、文件系统、Session、Context、Sandbox 与 Code Runtime。如果这些能力全部直接固定在 Agent Loop 内部，更换文件系统策略或执行环境时会影响上层调用路径。DSH 希望把“使用能力的组件”和“真正实现能力的组件”分开。</p>
-<p><strong>Provider</strong> 是某项 Runtime capability 的具体实现。Consumer 只依赖稳定 Capability / Service，启动时的 composition 决定实际 Provider：</p>
+<p><strong>Provider</strong> 是某项 Runtime capability 的具体实现。使用能力的组件只依赖稳定的 Capability / Service，启动时的 composition 决定实际 Provider：</p>
 <pre><code class="language-text">Consumer → Capability / Service → Provider
 tool-fs  → ctx.fs              → fs-local / fs-sandbox</code></pre>
 <h3 id="3-2-profile-bundle-patch-与-cordis">3.2 Profile、Bundle、Patch 与 Cordis</h3>
@@ -61,8 +61,8 @@ tool-fs  → ctx.fs              → fs-local / fs-sandbox</code></pre>
 <h3 id="3-3-ctx-fs-与-w10">3.3 <code>ctx.fs</code> 与 W10</h3>
 <p><code>tool-fs</code> 通过稳定的 <code>ctx.fs</code> capability 使用底层 provider；上层 Tool 不变时，provider 可以在 local 和 sandbox 实现之间替换。</p>
 <p align="center"><img src="../figures/architecture/capability-seam.svg" width="900" alt="tool-fs 通过 ctx.fs 使用 local 或 sandbox Provider"></p>
-<p align="center"><sub>图 3-2　Consumer 与 Provider 分离后，替换实现可以改变 Policy，而不改上层 Tool 调用。</sub></p>
-<p><strong>测试目的。</strong> 验证架构文档中的 <code>ctx.fs</code> 是否真的是可替换 Provider Boundary。</p>
+<p align="center"><sub>图 3-2　使用能力的组件与 Provider 分离后，替换实现可以改变访问策略，而不改上层 Tool 调用。</sub></p>
+<p><strong>测试目的。</strong> 验证架构文档中的 <code>ctx.fs</code> 是否真的是可替换的 Provider 边界。</p>
 <p><strong>测试方法。</strong> 保持 Agent Loop、<code>tool-fs</code> 和脚本化调用不变，只执行 <code>fs-local → fs-sandbox → fs-local</code>。</p>
 <div class="table-wrap"><table><thead><tr><th>Provider</th><th>workspace 内写入</th><th>workspace 外写入</th></tr></thead><tbody><tr><td>fs-local</td><td>成功</td><td><code>OUTSIDE_CHANGED</code></td></tr><tr><td>fs-sandbox</td><td>成功</td><td><code>FS_SANDBOX_DENIED</code></td></tr><tr><td>再切回 fs-local</td><td>成功</td><td>切回 local 后恢复原有行为</td></tr></tbody></table></div>
 <p><strong>实际结论。</strong> 当前固定版本中，替换 <code>ctx.fs</code> 的 Provider 会改变真实的文件系统策略。W10 只直接验证了这一处 capability 边界，不能据此推断所有 capability 都具有相同行为。相关 Host CPU 成本见第 10 章。</p>
@@ -148,10 +148,11 @@ W6 固定格式正常的 Tool Failure
 <p>C3 使用相同规模的测试数据分别测量请求 JSON 编解码和模拟响应的流式解析路径。测试数据达到 16 MiB 时，JSON 编码约需 15.43 ms CPU 时间，JSON 解码约需 10.71 ms，SSE 流解析与 JSON 解码路径约需 41.94 ms。SSE（Server-Sent Events）是 LLM API 常用的 HTTP 流式传输格式，Harness 需要从中解析携带模型增量或 Tool Event 的 JSON 数据。</p>
 <p align="center"><img src="../figures/data/c3-context-serialization.svg" width="980" alt="C3 Context 大小与 JSON、SSE 处理 CPU 时间"></p>
 <p align="center"><sub>图 10-1　随着测试数据增大，本地 JSON 编解码以及 SSE 流解析与 JSON 解码的 CPU 时间均随之增加。</sub></p>
-<p>C8 比较了三种 Context 计量路径：<strong>Cold</strong> 表示从完整 Session 历史重新建立计量状态；<strong>Incremental</strong> 表示在已有状态上新增一段 Context 后继续计量；<strong>Warm Repeat</strong> 表示 Context 和计量状态都已同步，只重复进行计量。三种路径的 CPU 成本都会随 Context 规模增加，其中 Cold 路径增长最快。在当前测试中，Cold 的边际增长斜率约为 Warm Repeat 的 16.0 倍。这里比较的是 Context 增大时额外增加的 CPU 成本，不是端到端延迟的倍数。</p>
+<p>C8 比较了三种 Context 计量路径：<strong>Cold</strong> 表示第一次从已有 Session 历史建立 TokenMeter 状态；<strong>Incremental</strong> 表示在已有状态上新增一段 Context 后继续计量；<strong>Warm Repeat</strong> 表示 Context 不变、计量状态已经同步时重复计量。</p>
+<p>三种路径的 CPU 成本都会随着 Context 规模增加。约 10,000 个 Context 节点时，Cold 单次计量约需 186.6 ms，Incremental 约需 12.5 ms，Warm Repeat 约需 11.6 ms。这说明首次从完整历史建立计量状态明显更重；状态建立后，Incremental 与 Warm Repeat 在当前固定测试场景中的成本已经比较接近。三种测量窗口的操作并不完全相同，不能将这些数值理解为可互换的端到端延迟。</p>
 <p align="center"><img src="../figures/data/c8-context-pressure.svg" width="980" alt="C8 TokenMeter Context Pressure 的 Cold 与 Warm 结果"></p>
-<p align="center"><sub>图 10-2　随着 Context 规模增加，三种 TokenMeter 计量路径的 CPU 成本都在增长；从完整历史重新建立状态的 Cold 路径成本最高。</sub></p>
-<p>C2 还确认了 Session 的追加、分叉、持久化和加载本身都有独立 CPU 成本。这些数字来自当前固定测试场景，不等同于生产端到端延迟；C8 也不是分词器性能测试。</p>
+<p align="center"><sub>图 10-2　Cold 路径明显高于已有状态下的 Incremental 和 Warm Repeat；后两者在大 Context 下成本接近。</sub></p>
+<p>C2 还确认了 Session 的追加、分叉、持久化和加载本身都有独立 CPU 成本。Incremental 的横轴按计量过程中实际经历的平均 Context 规模计算。这些数字来自当前固定测试场景，不等同于生产端到端延迟；C8 测量的是 DSH TokenMeter 的 Context 大小和压力计量路径，不是分词器性能测试。</p>
 <h3 id="10-2-tool-很短时-执行-tool-的外围开销可能更明显">10.2 Tool 很短时，执行 Tool 的外围开销可能更明显</h3>
 <p>如果 Tool 自己只需要很短时间，但 Runtime 每次都要创建进程、建立进程间通信管道、等待退出、记录结果并再次进入 Agent Loop，那么真正耗时的可能不是 Tool 本身，而是 Tool 周围的执行边界。</p>
 <p>C4 使用非常短的命令比较三种进程执行方式。<strong>DSH 管理路径</strong>通过 Harness 的正常进程管理流程执行；<strong>直接单次进程</strong>绕过 DSH 管理封装，每次直接启动一个新进程，执行一次后退出；<strong>持久进程</strong>则保持同一个 Shell 进程运行，后续操作复用该进程。后两者用于拆分进程创建和 Runtime 管理成本，不代表 OpenClaw 的实现。</p>
@@ -164,7 +165,7 @@ W6 固定格式正常的 Tool Failure
 <p align="center"><sub>图 10-4　PTC 有固定启动成本；随着连续 Tool 操作增加，减少重复 Agent/Runtime 编排所节省的时间开始超过这部分成本。</sub></p>
 <h3 id="10-3-sandbox-policy-也会产生实际-cpu-工作">10.3 Sandbox / Policy 也会产生实际 CPU 工作</h3>
 <p>W10 中，换成 <code>fs-sandbox</code> 后，Harness 会检查路径是否位于允许范围内。这样的检查需要路径规范化、确认目标路径是否在允许范围内，并执行最终策略判断，因此也会消耗 CPU。</p>
-<p>C6 中，1000 次允许写入时，sandbox/local 的执行时间比约为 1.06 倍，CPU 时间比约为 1.10 倍。这里测的只是 DSH filesystem policy，不是完整 VM、container、Firecracker 或远程 E2B sandbox 的成本。</p>
+<p>C6 中，1000 次允许写入时，sandbox/local 的执行时间比约为 1.06 倍，CPU 时间比约为 1.10 倍。这里测的只是 DSH 文件系统策略检查，不是完整 VM、container、Firecracker 或远程 E2B sandbox 的成本。</p>
 <h3 id="10-4-多个-agent-同时运行后-问题不再只是单任务速度">10.4 多个 Agent 同时运行后，问题不再只是单任务速度</h3>
 <p>单个 Agent 时通常关注一次任务需要多久；当一台机器同时运行几十个 Agent 时，还需要关注总吞吐、并行效率和每个 Runtime 占用的内存。</p>
 <p>C7 中，32 个独立 Agent 进程达到约 83.17 Agents/s，并行效率约为 72.8%。所有 Agent 子进程的最大驻留内存（RSS）累加约为 2.07 GiB，单个子进程最高约为 71.4 MiB。</p>
@@ -174,6 +175,6 @@ W6 固定格式正常的 Tool Failure
 <hr>
 <h2 id="11-总结">11. 总结</h2>
 <p>DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能”，而是一套更显式的 Agent Runtime 组织方式：</p>
-<ol><li>Everything is a Plugin 把 Runtime 子系统放进统一 composition，并通过 capability/provider seam 分离 consumer 与实现；</li><li>Session Event Log 把 Session 建模成 durable execution state，Model Context 由日志派生；</li><li>Context Management 把 TokenMeter 与 Compaction 放入可组合 lifecycle；</li><li>PTC 把多次模型可见 Tool Round Trip 改为一次 Program Execution boundary；</li><li>W4/W6 进一步表明，Recovery 取决于错误在哪一层被结构化。</li></ol>
-<p>这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。</p>
+<ol><li>Everything is a Plugin 把 Runtime 能力组织为可组合、可替换的边界；</li><li>Session Event Log 把 Agent 的执行过程保存为结构化事件流，模型 Context 可以从日志派生；</li><li>Context Management 把 Context 大小计量和压缩放进 Runtime；</li><li>PTC 把多次模型可见的 Tool 调用合并进一次本地 Program 执行；</li><li>W4/W6 表明，错误在哪一层被结构化，会影响 Agent 是否获得继续恢复的机会。</li></ol>
+<p>这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把组合、状态和执行机制放进统一的 Runtime 组织方式，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。</p>
 <p><strong>因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把组合、状态和执行边界提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。</strong></p></main></body></html>

@@ -42,7 +42,7 @@ def build_metrics(data: dict) -> dict:
     w1, w2, w3, w4, w5, w6, w7, w8, w9, w10 = (data[key] for key in
         ("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10"))
     c1, c2, c3, c4, c5, c6, c7 = (data[key] for key in ("c1", "c2", "c3", "c4", "c5", "c6", "c7"))
-    cold, repeat = data["c8_cold"], data["c8_repeat"]
+    cold, incremental, repeat = data["c8_cold"], data["c8_incremental"], data["c8_repeat"]
     w5d, w5o = w5["calibrated_main_pair"]["deepseek_harness"], w5["calibrated_main_pair"]["openclaw"]
     w8d, w8o = w8["deepseek_harness"], w8["openclaw"]
     cold_slope = cold["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"]
@@ -64,6 +64,17 @@ def build_metrics(data: dict) -> dict:
         raise ValueError("C5 Native/PTC series have no measured crossover bracket")
     c6_count = max(c6["aggregates"]["local-write"], key=int)
     c7_agents = max(c7["aggregates"], key=int)
+    c8_counts = sorted(set(cold["aggregates"]) & set(incremental["aggregates"]) &
+                       set(repeat["aggregates"]), key=int)
+    c8_selected = c8_counts[-1]
+    c8_effective_nodes = {
+        float(sample["fixture"]["effective_surface_nodes"])
+        for sample in incremental["samples"]
+        if sample["fixture"]["surface_events"] == int(c8_selected)
+    }
+    if len(c8_effective_nodes) != 1:
+        raise ValueError(f"ambiguous C8 effective Context scale: {sorted(c8_effective_nodes)}")
+    c8_effective_nodes = c8_effective_nodes.pop()
     child_exit = int(re.search(r"exits (\d+)", w6["scenarios"]["nonzero_child_exit"]["stimulus"]).group(1))
     w1_both_verified = all((w1[runtime][field]
                             for runtime in ("deepseek_harness", "openclaw")
@@ -97,7 +108,7 @@ def build_metrics(data: dict) -> dict:
                   f'{len(w5d["compaction_boundaries"])} 次压缩后的模型请求体'
                   f'{"均下降" if w5_boundaries_reduced else "未全部下降"}')
     w7_summary = (
-        f'两侧均完成 {w7["deepseek_harness"]["tool_calls"]}-step Tool Chain；历史 Tool Result 均保留，'
+        f'两侧均完成连续 {w7["deepseek_harness"]["tool_calls"]} 次 Tool 调用；历史 Tool Result 均保留，'
         f'Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH '
         f'{w7["deepseek_harness"]["final_request_tool_result_count"]}、OpenClaw '
         f'{w7["openclaw"]["final_request_tool_result_count"]} 个 Tool Result'
@@ -251,7 +262,16 @@ def build_metrics(data: dict) -> dict:
                "selected_max_child_rss_display_mib": f'{c7["aggregates"][c7_agents]["max_child_max_rss_kb"]["median"] / 1024:.1f}'},
         "c8": {"cold_slope": cold_slope, "repeat_slope": repeat_slope,
                "cold_repeat_ratio": cold_slope / repeat_slope,
-               "cold_repeat_ratio_display": f'{cold_slope / repeat_slope:.1f}'},
+               "cold_repeat_ratio_display": f'{cold_slope / repeat_slope:.1f}',
+               "selected_context_nodes": int(c8_selected),
+               "selected_context_nodes_display": f'{int(c8_selected):,}',
+               "incremental_effective_nodes": c8_effective_nodes,
+               "cold_selected_ms": cold["aggregates"][c8_selected]["internal_cpu_us_per_measure"]["median"] / 1000,
+               "incremental_selected_ms": incremental["aggregates"][c8_selected]["internal_cpu_us_per_measure"]["median"] / 1000,
+               "repeat_selected_ms": repeat["aggregates"][c8_selected]["internal_cpu_us_per_measure"]["median"] / 1000,
+               "cold_selected_display_ms": f'{cold["aggregates"][c8_selected]["internal_cpu_us_per_measure"]["median"] / 1000:.1f}',
+               "incremental_selected_display_ms": f'{incremental["aggregates"][c8_selected]["internal_cpu_us_per_measure"]["median"] / 1000:.1f}',
+               "repeat_selected_display_ms": f'{repeat["aggregates"][c8_selected]["internal_cpu_us_per_measure"]["median"] / 1000:.1f}'},
     }
 
 

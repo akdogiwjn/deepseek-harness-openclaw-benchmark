@@ -102,6 +102,7 @@ def main() -> None:
         "closed-turn boundary", "committed prefix", "dangling call", "live provider",
         "SSE parsing", "实际参与计量的 Context 节点", "Runtime Density",
         "不被包装成", "malformed provider event", "Native Tool Calling",
+        "Cold 路径增长最快", "边际增长斜率约为 Warm Repeat", "μs/有效节点",
     )
     for phrase in editorial_asides:
         if phrase in showcase:
@@ -150,6 +151,11 @@ def main() -> None:
         benchmark = root.attrib.get("data-benchmark")
         if benchmark and int(root.attrib.get("data-series-count", -1)) != expected_series[benchmark]:
             raise ValueError(f"{benchmark} SVG series count mismatch")
+        if benchmark == "C8":
+            c8_legend = ("Cold · 历史重建", "Incremental · 新增后计量",
+                         "Warm Repeat · 状态不变")
+            if any(label not in text for label in c8_legend):
+                raise ValueError("C8 SVG is missing its color-keyed path legend")
     sys.path.insert(0, str(ROOT / "harness_cpu_report"))
     from data_loader import load_cpu_results  # noqa: E402
     from derive import build_charts  # noqa: E402

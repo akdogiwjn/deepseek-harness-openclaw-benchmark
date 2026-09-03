@@ -84,7 +84,7 @@ CPU 微基准实验 C1–C8
 | W4 | Malformed Tool Call | 固定格式异常的 provider event | 错误被结构化并继续，还是终止 Turn | DSH 将异常转成模型可见的错误后继续并完成；OpenClaw 固定版本测试场景以 `incomplete_turn` 结束 |
 | W5 | Automatic Compaction | 固定长 Tool Result | Compaction 如何触发，之后能否继续 | DSH 与 OpenClaw 在校准后的固定测试场景中均记录到 3 次 Compaction；DSH 3 次压缩后的模型请求体均下降 |
 | W6 | Tool Failure | 固定缺少必填参数 / 子进程退出码 17 | 普通 Tool Failure 与格式异常事件是否属于同一边界 | 两侧在缺少必填参数和子进程退出码 17 两类错误后均继续执行 |
-| W7 | Long Tool Chain | 连续 20 次 Tool Call | Context、模型请求体与 Tool state 如何累积 | 两侧均完成 20-step Tool Chain；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result |
+| W7 | 长工具调用链 | 连续 20 次 Tool 调用 | Context、模型请求体与 Tool state 如何累积 | 两侧均完成连续 20 次 Tool 调用；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result |
 | W8 | Direct vs PTC | 相同 8 个底层操作 | 模型请求次数下降是否来自编排折叠，而非漏做工作 | DSH 向模型 Provider 发出的请求从 9 次降至 2 次，底层操作仍为 8 个 |
 | W9 | Resume / Fork / Replay | DSH Session 白盒实验 | Event Log 如何支持恢复、分支和重放 | 已持久化日志保持一致；无结果的 Tool Call 未被重新执行；Fork 成功；Replay 未访问在线模型 Provider |
 | W10 | Filesystem Seam | `local → sandbox → local` | capability/provider 是否为可观察边界 | local provider 允许 workspace 外写入，sandbox provider 拒绝；切回 local 后原行为恢复 |
@@ -106,9 +106,9 @@ W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补�
 | C3 | Context JSON 编解码与 SSE 流解析 | 状态处理 / 序列化 |
 | C4 | DSH 管理路径、直接单次进程与持久进程 | 进程 / Tool 边界 |
 | C5 | 常规 Tool 调用与 PTC | 执行粒度 |
-| C6 | Local FS 与 Sandbox FS Policy | Capability / Policy |
+| C6 | 本地文件系统与 Sandbox 文件策略 | 文件系统策略检查 |
 | C7 | 1→32 个独立 Agent | 多 Agent 扩展 |
-| C8 | TokenMeter / Context Pressure | Context 管理 |
+| C8 | TokenMeter 的 Context 大小/压力计量 | Context 管理 |
 
 ---
 
@@ -118,7 +118,7 @@ W3 要在多个 Python 模块中增加 weighted atomic quota consumption 并补�
 
 一个 Agent Runtime 同时包含模型调用、工具、文件系统、Session、Context、Sandbox 与 Code Runtime。如果这些能力全部直接固定在 Agent Loop 内部，更换文件系统策略或执行环境时会影响上层调用路径。DSH 希望把“使用能力的组件”和“真正实现能力的组件”分开。
 
-**Provider** 是某项 Runtime capability 的具体实现。Consumer 只依赖稳定 Capability / Service，启动时的 composition 决定实际 Provider：
+**Provider** 是某项 Runtime capability 的具体实现。使用能力的组件只依赖稳定的 Capability / Service，启动时的 composition 决定实际 Provider：
 
 ```text
 Consumer → Capability / Service → Provider
@@ -145,9 +145,9 @@ Profile 选择有序 Bundle，随后应用 Patch，最终由 Cordis 形成运行
 `tool-fs` 通过稳定的 `ctx.fs` capability 使用底层 provider；上层 Tool 不变时，provider 可以在 local 和 sandbox 实现之间替换。
 
 <p align="center"><img src="figures/architecture/capability-seam.svg" width="900" alt="tool-fs 通过 ctx.fs 使用 local 或 sandbox Provider"></p>
-<p align="center"><sub>图 3-2　Consumer 与 Provider 分离后，替换实现可以改变 Policy，而不改上层 Tool 调用。</sub></p>
+<p align="center"><sub>图 3-2　使用能力的组件与 Provider 分离后，替换实现可以改变访问策略，而不改上层 Tool 调用。</sub></p>
 
-**测试目的。** 验证架构文档中的 `ctx.fs` 是否真的是可替换 Provider Boundary。
+**测试目的。** 验证架构文档中的 `ctx.fs` 是否真的是可替换的 Provider 边界。
 
 **测试方法。** 保持 Agent Loop、`tool-fs` 和脚本化调用不变，只执行 `fs-local → fs-sandbox → fs-local`。
 
@@ -340,12 +340,14 @@ C3 使用相同规模的测试数据分别测量请求 JSON 编解码和模拟�
 <p align="center"><img src="figures/data/c3-context-serialization.svg" width="980" alt="C3 Context 大小与 JSON、SSE 处理 CPU 时间"></p>
 <p align="center"><sub>图 10-1　随着测试数据增大，本地 JSON 编解码以及 SSE 流解析与 JSON 解码的 CPU 时间均随之增加。</sub></p>
 
-C8 比较了三种 Context 计量路径：**Cold** 表示从完整 Session 历史重新建立计量状态；**Incremental** 表示在已有状态上新增一段 Context 后继续计量；**Warm Repeat** 表示 Context 和计量状态都已同步，只重复进行计量。三种路径的 CPU 成本都会随 Context 规模增加，其中 Cold 路径增长最快。在当前测试中，Cold 的边际增长斜率约为 Warm Repeat 的 16.0 倍。这里比较的是 Context 增大时额外增加的 CPU 成本，不是端到端延迟的倍数。
+C8 比较了三种 Context 计量路径：**Cold** 表示第一次从已有 Session 历史建立 TokenMeter 状态；**Incremental** 表示在已有状态上新增一段 Context 后继续计量；**Warm Repeat** 表示 Context 不变、计量状态已经同步时重复计量。
+
+三种路径的 CPU 成本都会随着 Context 规模增加。约 10,000 个 Context 节点时，Cold 单次计量约需 186.6 ms，Incremental 约需 12.5 ms，Warm Repeat 约需 11.6 ms。这说明首次从完整历史建立计量状态明显更重；状态建立后，Incremental 与 Warm Repeat 在当前固定测试场景中的成本已经比较接近。三种测量窗口的操作并不完全相同，不能将这些数值理解为可互换的端到端延迟。
 
 <p align="center"><img src="figures/data/c8-context-pressure.svg" width="980" alt="C8 TokenMeter Context Pressure 的 Cold 与 Warm 结果"></p>
-<p align="center"><sub>图 10-2　随着 Context 规模增加，三种 TokenMeter 计量路径的 CPU 成本都在增长；从完整历史重新建立状态的 Cold 路径成本最高。</sub></p>
+<p align="center"><sub>图 10-2　Cold 路径明显高于已有状态下的 Incremental 和 Warm Repeat；后两者在大 Context 下成本接近。</sub></p>
 
-C2 还确认了 Session 的追加、分叉、持久化和加载本身都有独立 CPU 成本。这些数字来自当前固定测试场景，不等同于生产端到端延迟；C8 也不是分词器性能测试。
+C2 还确认了 Session 的追加、分叉、持久化和加载本身都有独立 CPU 成本。Incremental 的横轴按计量过程中实际经历的平均 Context 规模计算。这些数字来自当前固定测试场景，不等同于生产端到端延迟；C8 测量的是 DSH TokenMeter 的 Context 大小和压力计量路径，不是分词器性能测试。
 
 ### 10.2 Tool 很短时，执行 Tool 的外围开销可能更明显
 
@@ -369,7 +371,7 @@ PTC 每次都要先启动 Program Worker，因此存在固定启动成本。在�
 
 W10 中，换成 `fs-sandbox` 后，Harness 会检查路径是否位于允许范围内。这样的检查需要路径规范化、确认目标路径是否在允许范围内，并执行最终策略判断，因此也会消耗 CPU。
 
-C6 中，1000 次允许写入时，sandbox/local 的执行时间比约为 1.06 倍，CPU 时间比约为 1.10 倍。这里测的只是 DSH filesystem policy，不是完整 VM、container、Firecracker 或远程 E2B sandbox 的成本。
+C6 中，1000 次允许写入时，sandbox/local 的执行时间比约为 1.06 倍，CPU 时间比约为 1.10 倍。这里测的只是 DSH 文件系统策略检查，不是完整 VM、container、Firecracker 或远程 E2B sandbox 的成本。
 
 ### 10.4 多个 Agent 同时运行后，问题不再只是单任务速度
 
@@ -388,12 +390,12 @@ C7 中，32 个独立 Agent 进程达到约 83.17 Agents/s，并行效率约为 
 
 DeepSeek Harness 当前版本最值得研究的，不是某个孤立“新功能”，而是一套更显式的 Agent Runtime 组织方式：
 
-1. Everything is a Plugin 把 Runtime 子系统放进统一 composition，并通过 capability/provider seam 分离 consumer 与实现；
-2. Session Event Log 把 Session 建模成 durable execution state，Model Context 由日志派生；
-3. Context Management 把 TokenMeter 与 Compaction 放入可组合 lifecycle；
-4. PTC 把多次模型可见 Tool Round Trip 改为一次 Program Execution boundary；
-5. W4/W6 进一步表明，Recovery 取决于错误在哪一层被结构化。
+1. Everything is a Plugin 把 Runtime 能力组织为可组合、可替换的边界；
+2. Session Event Log 把 Agent 的执行过程保存为结构化事件流，模型 Context 可以从日志派生；
+3. Context Management 把 Context 大小计量和压缩放进 Runtime；
+4. PTC 把多次模型可见的 Tool 调用合并进一次本地 Program 执行；
+5. W4/W6 表明，错误在哪一层被结构化，会影响 Agent 是否获得继续恢复的机会。
 
-这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把这些机制统一放进 composition、state 和 execution model，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
+这些概念并非全部由 DeepSeek 在 Agent 行业首次提出。DSH 的特点在于把组合、状态和执行机制放进统一的 Runtime 组织方式，并让边界更显式、更容易替换、观察和验证。W1–W10 提供从真实任务到白盒机制的证据链；C1–C8 则说明这些抽象最终会落成控制、状态、执行与规模四类 Host 工作。
 
 **因此，本次调研最重要的结论不是哪套 Harness 赢了，而是 DeepSeek Harness 把组合、状态和执行边界提升成了更显式的架构对象；这些边界既可以通过机制实验验证，也会进一步形成可测的 Host workload。**

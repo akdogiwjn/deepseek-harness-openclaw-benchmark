@@ -160,10 +160,21 @@ def data_c7(spec, cpu):
 
 
 def data_c8(spec, cpu):
-    p=svg_open(980,800,"C8",len(spec["series"]));p += [svg_text(25,28,"全部数量级 · Cold 与 Warm",17,anchor="start",weight=750),line_panel(spec,spec["series"],0,75,980,330,True,True,spec.get("xTicks"),"每次计量的 CPU 时间（μs）· 对数刻度","Context 规模（节点数）· 对数刻度"),svg_text(25,440,"增量与重复计量细节",17,anchor="start",weight=750),line_panel(spec,spec["series"][1:],0,450,980,330,True,False,spec.get("xTicks"),"每次计量的 CPU 时间（μs）","Context 规模（节点数）· 对数刻度")]
-    d=cpu["C8"]["data"];slopes=[("Cold",d["cold"],"μs/节点"),("增量",d["incremental"],"μs/有效节点"),("重复",d["repeat"],"μs/节点")];x=50
-    for name,data,unit in slopes:
-        slope=data["linear_fits"]["internal_cpu_us_per_measure"]["per_surface_node_slope"];p.append(svg_badge(x,40,f'{name} {slope:.3f} {unit}',width=275));x+=292.5
+    p=svg_open(980,800,"C8",len(spec["series"]))
+    p.append(svg_text(25,25,"首次从完整历史建立状态的成本明显更高",17,anchor="start",weight=750))
+    fills=(LIGHT_THEME["blue_fill"],LIGHT_THEME["teal_fill"],LIGHT_THEME["purple_fill"])
+    labels=("Cold · 历史重建", "Incremental · 新增后计量", "Warm Repeat · 状态不变")
+    for i,(item,label,fill) in enumerate(zip(spec["series"],labels,fills)):
+        selected=item["points"][-1]["y"] / 1000
+        p.append(svg_badge(25+i*318,38,f"{label} · {selected:.1f} ms",fill,item["color"],292))
+    p.append(line_panel(spec,spec["series"],0,75,980,330,True,True,spec.get("xTicks"),
+                        "单次计量 CPU 时间（μs）· 对数刻度","Context 规模 · 对数刻度"))
+    p.append(svg_text(25,440,"已有计量状态后，Incremental 与 Warm Repeat 成本接近",17,
+                      anchor="start",weight=750))
+    p.append(line_panel(spec,spec["series"][1:],0,450,980,320,True,False,spec.get("xTicks"),
+                        "单次计量 CPU 时间（μs）","Context 规模 · 对数刻度"))
+    p.append(svg_text(25,795,"注：Incremental 横轴使用计量过程中经历的平均 Context 规模。",
+                      14,LIGHT_THEME["muted"],anchor="start"))
     return finish(p)
 
 

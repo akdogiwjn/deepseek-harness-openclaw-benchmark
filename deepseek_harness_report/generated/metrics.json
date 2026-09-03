@@ -80,7 +80,7 @@
     "both_completed": true,
     "history_verified": true,
     "pairing_verified": true,
-    "summary": "两侧均完成 20-step Tool Chain；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result",
+    "summary": "两侧均完成连续 20 次 Tool 调用；历史 Tool Result 均保留，Tool Call 与 Tool Result 配对校验通过；最终一次模型请求分别保留 DSH 20、OpenClaw 20 个 Tool Result",
     "dsh_final_markers": 20,
     "openclaw_final_markers": 20,
     "dsh_request_growth_bytes": 4920,
@@ -204,6 +204,15 @@
     "cold_slope": 18.498889690768394,
     "repeat_slope": 1.1536321272033994,
     "cold_repeat_ratio": 16.035345457665827,
-    "cold_repeat_ratio_display": "16.0"
+    "cold_repeat_ratio_display": "16.0",
+    "selected_context_nodes": 10000,
+    "selected_context_nodes_display": "10,000",
+    "incremental_effective_nodes": 10010.5,
+    "cold_selected_ms": 186.623,
+    "incremental_selected_ms": 12.541,
+    "repeat_selected_ms": 11.56084,
+    "cold_selected_display_ms": "186.6",
+    "incremental_selected_display_ms": "12.5",
+    "repeat_selected_display_ms": "11.6"
   }
 }
